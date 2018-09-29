@@ -1,0 +1,24 @@
+{
+  "name": "easy-share",
+  "version": "0.0.1",
+  "description": "make your website more easy to share",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js"
+  },
+  "keywords": [
+    "website",
+    "share",
+    "guide"
+  ],
+  "author": "rowthan",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.9",
+    "webpack-merge": "^4.1.4"
+  }
+}

@@ -1,0 +1,11 @@
+export default{
+    MENUID:"easyshare-menu",
+
+    WAITING:"WAITING",
+    RECORDING:"RECORDING",
+    PAUSE:"PAUSE",
+    RECORDED:"RECORDED",
+    FINNISHED:"FINNISHED",
+
+    REPLAYFINISHED:"REPLAYFINISHED"
+}
