@@ -18,14 +18,21 @@ return touch ? {
 }
 : e => {
    var e = event || window.event;
-   var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-   var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-   var x = e.pageX || e.clientX + scrollX;
-   var y = e.pageY || e.clientY + scrollY;
+   var x = e.pageX || e.clientX + getScroll().x;
+   var y = e.pageY || e.clientY + getScroll().y;
    return { 'x': x, 'y': y };
 }
  
+function getScroll(){
+    var x = document.documentElement.scrollLeft || document.body.scrollLeft;
+    var y = document.documentElement.scrollTop || document.body.scrollTop;
+    return {x,y}
+}
 
+function setScroll(x=0,y=0){
+    document.documentElement.scrollLeft = document.body.scrollLeft = x;
+    document.documentElement.scrollTop =  document.body.scrollTop = y;
+}
 
 export default function Easyshare(options={autoReplay:true}){
     this.options = options
@@ -87,7 +94,7 @@ export default function Easyshare(options={autoReplay:true}){
         }
         const {x,y,targetId} = this.steps[step]
 
-
+        
         getoPosition(x,y,()=>{
             if(this.steps.length===step+1){
                 this.status = constant.REPLAYFINISHED
@@ -115,22 +122,20 @@ function getText(e) {
 }
 
 
-function getoPosition(x=0,y=0,callback){
+function getoPosition(targetX=0,targetY=0,callback){
+    // console.log("target position:",targetX,targetY)
     const timer = setInterval(function () {
-        //获取scrollTop
-        const scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
-        const scrollLeft=document.documentElement.scrollLeft||document.body.scrollLeft;
-        const step =  y - scrollTop
-        const ispeed=Math.floor(step/6);
-        //修改前
-        const lastScrollTop = document.documentElement.scrollTop||document.body.scrollTop
-        const lastScrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
-        //修改后
-        document.documentElement.scrollTop=document.body.scrollTop=scrollTop+ispeed;
-        document.documentElement.scrollLeft=document.body.scrollLeft=scrollLeft+ispeed
-        const currentScrollTop = document.documentElement.scrollTop||document.body.scrollTop
-        const currentScrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft
-        if(lastScrollTop === currentScrollTop && lastScrollLeft === currentScrollLeft){
+        //移动前
+        const { x:beforeScrollLeft,y:beforeScrollTop} = getScroll();
+        const distanceX = targetX - beforeScrollLeft
+        , distanceY =  targetY - beforeScrollTop
+        
+        //移动后
+        setScroll(beforeScrollLeft+Math.floor(distanceX/6),Math.floor(beforeScrollTop+distanceY/6))
+        
+        const {x:afterScrollLeft,y:afterScrollTop} = getScroll()
+        
+        if(beforeScrollTop === afterScrollTop && beforeScrollLeft === afterScrollLeft){
             clearInterval(timer)
             callback()
         }
