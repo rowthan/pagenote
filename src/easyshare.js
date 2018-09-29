@@ -17,7 +17,7 @@ return touch ? {
 } : { x: 0, y: 0 }
 }
 : e => {
-    var e = event || window.event;
+   var e = event || window.event;
    var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
    var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
    var x = e.pageX || e.clientX + scrollX;
@@ -39,7 +39,7 @@ export default function Easyshare(options={autoReplay:true}){
     
     menuEl.onclick = (e)=> {
         if(this.status!=constant.WAITING){
-            console.log("当前状态不可记录")
+            alert("当前状态不可记录")
             return false;
         }
         this.record()
@@ -56,8 +56,8 @@ export default function Easyshare(options={autoReplay:true}){
             this.status = constant.WAITING
             
             targetInfo = {
-                x:x,
-                y:y,
+                x:document.documentElement.scrollLeft,
+                y:document.documentElement.scrollTop,
                 text:selectd.text,
                 id: selectd.id ? selectd.id.wid : null
             }
@@ -77,7 +77,6 @@ export default function Easyshare(options={autoReplay:true}){
         this.status = constant.RECORDING
         
         this.steps.push(targetInfo)
-        console.log(targetInfo)
         this.status = constant.RECORDED
         typeof callback === "function" &&callback()
     }
@@ -86,9 +85,10 @@ export default function Easyshare(options={autoReplay:true}){
         if(this.steps.length<step+1){
             return 
         }
-        const {x,y,text,targetId} = this.steps[step]
+        const {x,y,targetId} = this.steps[step]
 
-        goTop(y,()=>{
+
+        getoPosition(x,y,()=>{
             if(this.steps.length===step+1){
                 this.status = constant.REPLAYFINISHED
                 return;
@@ -115,21 +115,22 @@ function getText(e) {
 }
 
 
-function getoPosition(target=0,callback){
-    // target = target>document.body.scrollHeight?document.body.scrollHeight:target
+function getoPosition(x=0,y=0,callback){
     const timer = setInterval(function () {
         //获取scrollTop
         const scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
-        const step =  target - scrollTop
+        const scrollLeft=document.documentElement.scrollLeft||document.body.scrollLeft;
+        const step =  y - scrollTop
         const ispeed=Math.floor(step/6);
-        console.log(target,scrollTop,step,ispeed)
         //修改前
         const lastScrollTop = document.documentElement.scrollTop||document.body.scrollTop
+        const lastScrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
         //修改后
         document.documentElement.scrollTop=document.body.scrollTop=scrollTop+ispeed;
+        document.documentElement.scrollLeft=document.body.scrollLeft=scrollLeft+ispeed
         const currentScrollTop = document.documentElement.scrollTop||document.body.scrollTop
-        console.log("modify:",lastScrollTop,currentScrollTop)
-        if(Math.abs(ispeed)<10 || lastScrollTop === currentScrollTop){
+        const currentScrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft
+        if(lastScrollTop === currentScrollTop && lastScrollLeft === currentScrollLeft){
             clearInterval(timer)
             callback()
         }
