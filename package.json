@@ -20,5 +20,8 @@
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {
+    "whats-element": "^1.0.3"
   }
 }
