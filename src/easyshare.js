@@ -39,20 +39,46 @@ function focusOnElement(element){
 }
 
 function hightLightElement(element){
-    console.log("hightligth target")
+    // console.log("hightligth target")
     element.style.background = "#e8d2bb"
 }
 
 export default function Easyshare(options={autoReplay:true,hightligth:true}){
     this.options = options
-    this.steps = []
-    this.replayStep = null
+    this.recordedSteps = []
     let status = constant.PAUSE
     let targetInfo = {}
-    drawMenu();
 
-    const menuEl = document.getElementById(constant.MENUID)
+    window.addEventListener("load", (event)=> {
+        const search = window.location.search
+        if(search.indexOf("easyshare")>0){
+            const searchArray = search.substr(1).split("&");
+            for(let i=0 ; i < searchArray.length; i++){
+                const queryPar  = searchArray[i]
+                if(queryPar.indexOf("easyshare")>-1){
+                    const pair = queryPar.split("=");
+                    if(pair.length===2){
+                        const values = pair[1]
+                        const replaySteps = []
+                        values.split("a").forEach(value=>{
+                            const tempStep = {
+                                x:value.split("-")[0],
+                                y:value.split("-")[1]
+                            }
+                            replaySteps.push(tempStep)
+                        })
+                        this.replay(0,replaySteps)
+                    }
+                    break
+                }
+            }
+        }
+    });
+
+    drawMenu();
     
+    const menuEl = document.getElementById(constant.MENUID),
+    shareEl = document.getElementById(constant.SHAREID)
     menuEl.onclick = (e)=> {
         if(this.status===constant.RECORDED){
             console.log("已经记录")
@@ -65,6 +91,29 @@ export default function Easyshare(options={autoReplay:true,hightligth:true}){
         this.record()
         menuEl.innerHTML = status
     }
+    shareEl.onclick = (e) => {
+        if(this.recordedSteps.length===0)return;
+        // 生成分享链接 记录数据 ?share=0-123a0-234
+        let share = "&easyshare="
+        this.recordedSteps.forEach((step,index) => {
+            index!=0?share +="a":"";
+            share += step.x+"-"+step.y
+        });
+        let currentUrl = window.location.href,
+        indexShare = currentUrl.indexOf("&easyshare")
+        if(window.location.search==""){
+            currentUrl += "?"
+        }
+        if(indexShare>-1){
+            currentUrl = currentUrl.substr(0,indexShare)
+        }
+        if(options.autoReplay){
+            share += "&autoreplay=true"
+        }
+        history.pushState("", "EasyShare 预览", currentUrl+share);
+    }
+
+    
 
     document.addEventListener( MOUSE_UP , (e)=>{
         const selectd = getText(e);
@@ -73,11 +122,12 @@ export default function Easyshare(options={autoReplay:true,hightligth:true}){
             return
         } 
         
+        const shareContainer = document.getElementById(constant.EASYSHARECONTAINER)
         //存在选中内容 并且 状态为暂停时 显示锚点按钮 存储相关信息
         if(selectd.text){
             const { x, y } = getXY(e)
-            menuEl.style.transform = `translateX(${x}px) translateY(${y}px)`
-            menuEl.style.display = "block"
+            shareContainer.style.transform = `translateX(${x}px) translateY(${y}px)`
+            shareContainer.style.display = "block"
             this.status = constant.WAITING
             
             targetInfo = {
@@ -88,7 +138,7 @@ export default function Easyshare(options={autoReplay:true,hightligth:true}){
             }
         }else{
             targetInfo = {}
-            menuEl.style.display = "none"
+            shareContainer.style.display = "none"
             this.status = constant.PAUSE
         }
     } );
@@ -102,16 +152,17 @@ export default function Easyshare(options={autoReplay:true,hightligth:true}){
     this.record = function(callback){
         this.status = constant.RECORDING
         
-        this.steps.push(targetInfo)
+        this.recordedSteps.push(targetInfo)
         this.status = constant.RECORDED
         typeof callback === "function" &&callback()
     }
 
-    this.replay = function(step=0){
-        if(this.steps.length<step+1){
+    this.replay = function(step=0,replaySteps=null){
+        replaySteps = replaySteps || this.recordedSteps;
+        if(replaySteps<step+1){
             return 
         }
-        const {x,y,id} = this.steps[step]
+        const {x,y,id} = replaySteps[step]
 
         const targetEl = whats.getTarget(id);
        
@@ -119,12 +170,13 @@ export default function Easyshare(options={autoReplay:true,hightligth:true}){
             hightLightElement(targetEl)
         }
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
+        this.status = constant.REPLAYING
         getoPosition(x,y,()=>{
-            if(this.steps.length===step+1){
+            if(replaySteps.length===step+1){
                 this.status = constant.REPLAYFINISHED
                 return;
             }else if(options.autoReplay){
-                setTimeout(()=>this.replay(step+1),5000)
+                setTimeout(()=>this.replay(step+1,replaySteps),5000)
             }
         })
     }
