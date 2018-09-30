@@ -34,18 +34,31 @@ function setScroll(x=0,y=0){
     document.documentElement.scrollTop =  document.body.scrollTop = y;
 }
 
-export default function Easyshare(options={autoReplay:true}){
+function focusOnElement(element){
+
+}
+
+function hightLightElement(element){
+    console.log("hightligth target")
+    element.style.background = "#e8d2bb"
+}
+
+export default function Easyshare(options={autoReplay:true,hightligth:true}){
     this.options = options
     this.steps = []
     this.replayStep = null
     let status = constant.PAUSE
-    let targetInfo ={}
+    let targetInfo = {}
     drawMenu();
 
     const menuEl = document.getElementById(constant.MENUID)
     
     menuEl.onclick = (e)=> {
-        if(this.status!=constant.WAITING){
+        if(this.status===constant.RECORDED){
+            console.log("已经记录")
+            return
+        }
+        else if(this.status!=constant.WAITING){
             alert("当前状态不可记录")
             return false;
         }
@@ -54,8 +67,13 @@ export default function Easyshare(options={autoReplay:true}){
     }
 
     document.addEventListener( MOUSE_UP , (e)=>{
-        // handle mouseup
         const selectd = getText(e);
+        if(selectd.text===targetInfo.text){
+            console.log("不再监听")
+            return
+        } 
+        
+        //存在选中内容 并且 状态为暂停时 显示锚点按钮 存储相关信息
         if(selectd.text){
             const { x, y } = getXY(e)
             menuEl.style.transform = `translateX(${x}px) translateY(${y}px)`
@@ -69,6 +87,7 @@ export default function Easyshare(options={autoReplay:true}){
                 id: selectd.id ? selectd.id.wid : null
             }
         }else{
+            targetInfo = {}
             menuEl.style.display = "none"
             this.status = constant.PAUSE
         }
@@ -92,9 +111,14 @@ export default function Easyshare(options={autoReplay:true}){
         if(this.steps.length<step+1){
             return 
         }
-        const {x,y,targetId} = this.steps[step]
+        const {x,y,id} = this.steps[step]
 
-        
+        const targetEl = whats.getTarget(id);
+       
+        if(targetEl && options.hightligth){
+            hightLightElement(targetEl)
+        }
+        //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
         getoPosition(x,y,()=>{
             if(this.steps.length===step+1){
                 this.status = constant.REPLAYFINISHED
