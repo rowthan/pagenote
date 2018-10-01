@@ -9,7 +9,19 @@ module.exports = {
   //loader: resolve the files except javascript
   module: {
     rules: [
-      { test: /\.txt$/, use: 'raw-loader' }
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: [
+              ["transform-react-jsx", { "pragma":"h" }]
+            ]
+          },
+        }
+      },
     ]
   }
 };

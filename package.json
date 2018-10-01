@@ -16,12 +16,17 @@
   "author": "rowthan",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "hyperapp": "^1.2.9",
     "whats-element": "^1.0.3"
   }
 }
