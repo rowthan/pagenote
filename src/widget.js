@@ -1,16 +1,17 @@
 import {  h,app } from "hyperapp"
+import constant from './constant'
 export default function widget(easyshare){
   const state = {
-    status: easyshare.status,
-    recordedSteps: easyshare.recordedSteps,
-    mousePosition :{x:easyshare.mousePosition.x,y:easyshare.mousePosition.y}
+    status: "",
+    recordedSteps: [],
+    mPos :{}
   }
     
   const actions = {
     refershState: value => state =>({
       status: easyshare.status,
       recordedSteps: easyshare.recordedSteps,
-      mousePosition :{x:easyshare.mousePosition.x,y:easyshare.mousePosition.y}
+      mPos :{x:easyshare.mPos.x,y:easyshare.mPos.y}
     })
   }
 
@@ -28,10 +29,10 @@ export default function widget(easyshare){
   
 
   const view = (state, actions) => (
-    <div oncreate={easyshare.onStateChange = function(){actions.refershState();console.log(state)}}>
-      <div style={{position:"absolute",left:state.mousePosition.x+"px",top:state.mousePosition.y+"px",transition:".5s"}}>
+    <div oncreate={easyshare.onStateChange = function(){actions.refershState()}}>
+      <div style={{position:"absolute",left:state.mPos.x+"px",top:state.mPos.y+"px",transition:".5s"}}>
         {
-          state.status == "WAITING"
+          state.status === constant.WAITING
           &&
           <span>
             <RecordButton status={state.status} onclick={()=>{record(actions)}}></RecordButton>  

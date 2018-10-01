@@ -1,4 +1,4 @@
-const getoPosition = function(targetX=0,targetY=0,callback){
+const gotoPosition = function(targetX=0,targetY=0,callback){
     // console.log("target position:",targetX,targetY)
     const timer = setInterval(function () {
         //移动前
@@ -38,26 +38,24 @@ return touch ? {
 hightLightElement = function (element){
     // console.log("hightligth target")
     element.style.background = "#e8d2bb"
-},
-focusOnElement = function(element){
-
 }
 
 
+const documentTarget = document.documentElement || document.body
 function getScroll(){
-    var x = document.documentElement.scrollLeft || document.body.scrollLeft;
-    var y = document.documentElement.scrollTop || document.body.scrollTop;
+    var x = documentTarget.scrollLeft || documentTarget.scrollLeft;
+    var y = documentTarget.scrollTop || documentTarget.scrollTop;
     return {x,y}
 }
 
 function setScroll(x=0,y=0){
-    document.documentElement.scrollLeft = document.body.scrollLeft = x;
-    document.documentElement.scrollTop =  document.body.scrollTop = y;
+    documentTarget.scrollLeft = documentTarget.scrollLeft = x;
+    documentTarget.scrollTop =  documentTarget.scrollTop = y;
 }
 
 export {
-    drawMenu,
-    getoPosition,
+    gotoPosition,
     getXY,
-    hightLightElement
+    hightLightElement,
+    getScroll
 }
