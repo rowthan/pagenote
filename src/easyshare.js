@@ -27,11 +27,12 @@ export default function Easyshare(options){
                     values.split("a").forEach(value=>{
                         const tempStep = {
                             x:value.split("-")[0],
-                            y:value.split("-")[1]
+                            y:value.split("-")[1],
                         }
                         replaySteps.push(tempStep)
                     })
-                    this.replay(0,replaySteps)
+                    this.status = constant.INITCOMPELETE
+                    this.recordedSteps = replaySteps
                 }
                 break
             }
