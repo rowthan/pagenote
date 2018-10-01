@@ -1,6 +1,8 @@
 export default{
     SHARENAME:"easyshare",
     WAITING:"WAITING",
+
+    INITCOMPELETE:"INITCOMPELETE",
     RECORDING:"RECORDING",
     PAUSE:"PAUSE",
     RECORDED:"RECORDED",
