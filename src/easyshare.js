@@ -8,6 +8,7 @@ const whats = new whatselement({draw:false}),
 export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,hightligth:true},options)
     this.recordedSteps = []
+    this.running = null
     this.mPos = {x:0,y:0}
     let status = constant.PAUSE,targetInfo = {}, nameid = constant.SHARENAME
 
@@ -78,9 +79,10 @@ export default function Easyshare(options){
         this.status = constant.RECORDED
     }
 
-    this.replay = function(step=0,replaySteps){
+    this.replay = function(step=0,replaySteps,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
+            this.running = null
             this.status = constant.REPLAYFINISHED
             return 
         }
@@ -89,10 +91,11 @@ export default function Easyshare(options){
         targetEl && this.options.hightligth &&  hightLightElement(targetEl)
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
+        this.running = step
         this.status = constant.REPLAYING
         gotoPosition(x,y,()=>{
             if(this.options.autoReplay){
-                setTimeout(()=>this.replay(step+1,replaySteps),1000)
+                setTimeout(()=>this.replay(step+1,replaySteps),timeout)
             }
         })
     }
