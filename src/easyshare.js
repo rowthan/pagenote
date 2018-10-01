@@ -53,13 +53,13 @@ export default function Easyshare(options){
                 x:x,
                 y:y
             }
-            this.status = constant.WAITING
             targetInfo = {
                 x:scrollLeft,
                 y:scrollTop,
                 text:selectdText,
                 id: whats.getUniqueId(e.target).wid
             }
+            this.status = this.status != constant.REPLAYING? constant.WAITING : constant.REPLAYING
         }else{
             targetInfo = {}
             this.status = constant.PAUSE
@@ -79,6 +79,7 @@ export default function Easyshare(options){
         this.status = constant.RECORDED
     }
 
+    //TODO 支持一步一步播放
     this.replay = function(step=0,replaySteps,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
