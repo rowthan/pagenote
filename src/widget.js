@@ -4,15 +4,26 @@ export default function widget(easyshare){
   const state = {
     status: "",
     recordedSteps: easyshare.recordedSteps,
-    mPos :{}
+    mPos :{},
+    running:null
   }
     
   const actions = {
     refershState: value => state =>({
       status: easyshare.status,
       recordedSteps: easyshare.recordedSteps,
-      mPos :{x:easyshare.mPos.x,y:easyshare.mPos.y}
+      mPos :{x:easyshare.mPos.x,y:easyshare.mPos.y},
+      running:easyshare.running
     })
+  }
+
+  const aftercreate = (actions)=>{
+    setTimeout(()=>{
+      actions.refershState()
+      if(window.location.search.indexOf("autoreplay")>-1){
+        easyshare.replay()
+      }
+    },1000)
   }
 
   const record = (actions)=>{
@@ -27,17 +38,21 @@ export default function widget(easyshare){
     </button>
   )
   
-  const StepSign = ({step,running=false})=>(
+  const StepSign = ({step,running=false,index})=>(
     <span style={{display: "block",
-                    width: "20px",
-                    height: "20px",
-                    background: running?"pink":"green",
+                    position:"absolute",
+                    top:index*15+"px",
+                    right:running?"10px":"0px",
+                    width: running?"20px":"8px",
+                    height: running?"20px":"8px",
+                    background: running?"red":"pink",
                     overflow: "hidden",
-                    borderRadius: "10px",
-                    marginBottom:"5px",
-                    textAlign:"center"}}>
+                    borderRadius: "50%",
+            
+                    textAlign:"center",
+                    transition:".5s"}}>
                     {
-                      step.text?step.text.substr(0,1):step.y
+                      (running && step.text)?step.text.substr(0,1):""
                     }
     </span>
   )
@@ -45,7 +60,7 @@ export default function widget(easyshare){
 
   const view = (state, actions) => (
     <div oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};
-    setTimeout(function(){actions.refershState()},1000)}}>
+    aftercreate(actions)}}>
       <div style={{position:"absolute",left:state.mPos.x+"px",top:state.mPos.y+"px",transition:".5s"}}>
         {
           state.status === constant.WAITING
@@ -53,24 +68,22 @@ export default function widget(easyshare){
           <span>
             <RecordButton status={state.status} onclick={()=>{record(actions)}}></RecordButton>  
           </span>
-         
         }
       </div>
-      <aside style={{position:"fixed",top:0,right:0}}>
-        <div>
+      <aside style={{position:"fixed",top:20,right:0}}>
+        <div style={{position:"relative"}}>
           {
-            state.recordedSteps.map(record=>(
-              <StepSign step = {record}/>
+            state.recordedSteps.map((record,index)=>(
+              <StepSign step = {record} running={index===state.running} index={index}/>
             ))
           }
-        </div>
-        {
-          state.recordedSteps.length>0 && 
-            <button onclick={easyshare.makelink}>
-              生成链接
-            </button>
-        }
-         
+          {
+            state.recordedSteps.length>0 && 
+              <button onclick={easyshare.makelink} style={{position:"absolute",right:0,top:state.recordedSteps.length*15+"px"}}>
+                生成链接
+              </button>
+          }
+        </div> 
       </aside>
     </div>
   )
