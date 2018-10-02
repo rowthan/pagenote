@@ -27,11 +27,9 @@ export default function widget(easyshare){
   }
 
   const record = (actions)=>{
-    if(easyshare.status!=constant.REPLAYING){
       easyshare.record()
       actions.refershState()
     }
-  }
 
 
   const RecordButton = ({status,onclick}) =>(
@@ -64,7 +62,7 @@ export default function widget(easyshare){
     aftercreate(actions)}}>
       <div style={{position:"absolute",left:state.mPos.x+"px",top:state.mPos.y+"px",transition:".5s"}}>
         {
-          (state.status === constant.WAITING || state.status === constant.REPLAYING)
+          (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&
           <span>
             <RecordButton status={state.status} onclick={()=>{record(actions)}}></RecordButton>  
