@@ -59,7 +59,7 @@ export default function Easyshare(options){
                 text:selectdText,
                 id: whats.getUniqueId(e.target).wid
             }
-            this.status = this.status != constant.REPLAYING? constant.WAITING : constant.REPLAYING
+            this.status = (this.status === constant.REPLAYING || this.status===constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
             targetInfo = {}
             this.status = constant.PAUSE
@@ -68,19 +68,21 @@ export default function Easyshare(options){
 
     this.onStateChange = function(){}
     
-    this.finished = function(){
-        this.status = constant.FINNISHED
-        this.recordedSteps = []
-    }
 
-    this.record = function(){
+    this.record = function(forceRecord=false){
+        // 如果当前状态不为等待记录 且不是强行记录时
+        if(!forceRecord && this.status!=constant.WAITING){
+            console.log("当前状态不可记录")
+            return false;
+        }
         this.status = constant.RECORDING       
         this.recordedSteps.push(targetInfo)
         this.status = constant.RECORDED
+        return true
     }
 
     //TODO 支持一步一步播放
-    this.replay = function(step=0,replaySteps,timeout=5000){
+    this.replay = function(step=0,replaySteps,timeout=5000,autoNext=true){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
             this.running = null
@@ -95,7 +97,7 @@ export default function Easyshare(options){
         this.running = step
         this.status = constant.REPLAYING
         gotoPosition(x,y,()=>{
-            if(this.options.autoReplay){
+            if(autoNext){
                 setTimeout(()=>this.replay(step+1,replaySteps),timeout)
             }
         })
