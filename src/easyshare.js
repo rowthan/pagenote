@@ -8,7 +8,7 @@ const whats = new whatselement({draw:false}),
 export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,hightligth:true},options)
     this.recordedSteps = []
-    this.running = null
+    this.runindex = null
     this.mPos = {x:0,y:0}
     let status = constant.PAUSE,targetInfo = {}, nameid = constant.SHARENAME
 
@@ -59,7 +59,7 @@ export default function Easyshare(options){
                 text:selectdText,
                 id: whats.getUniqueId(e.target).wid
             }
-            this.status = (this.status === constant.REPLAYING || this.status===constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
+            this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
             targetInfo = {}
             this.status = constant.PAUSE
@@ -81,11 +81,11 @@ export default function Easyshare(options){
         return true
     }
 
-    //TODO 支持一步一步播放
-    this.replay = function(step=0,replaySteps,timeout=5000,autoNext=true){
+    let timer = null
+    this.replay = function(step=0,replaySteps,autoNext=true,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
-            this.running = null
+            this.runindex = null
             this.status = constant.REPLAYFINISHED
             return 
         }
@@ -94,11 +94,16 @@ export default function Easyshare(options){
         targetEl && this.options.hightligth &&  hightLightElement(targetEl)
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
-        this.running = step
+        this.runindex = step
+        //TODO 防抖
         this.status = constant.REPLAYING
+        
         gotoPosition(x,y,()=>{
             if(autoNext){
-                setTimeout(()=>this.replay(step+1,replaySteps),timeout)
+                timer = setTimeout(()=>this.replay(step+1,replaySteps),timeout)
+            }else{
+                this.status = constant.REPLAYFINISHED
+                clearTimeout(timer)
             }
         })
     }
