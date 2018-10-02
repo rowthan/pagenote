@@ -5,7 +5,7 @@ export default function widget(easyshare){
     status: "",
     recordedSteps: easyshare.recordedSteps,
     mPos :{},
-    running:null
+    runindex:null
   }
     
   const actions = {
@@ -13,7 +13,7 @@ export default function widget(easyshare){
       status: easyshare.status,
       recordedSteps: easyshare.recordedSteps,
       mPos :{x:easyshare.mPos.x,y:easyshare.mPos.y},
-      running:easyshare.running
+      runindex:easyshare.runindex
     })
   }
 
@@ -49,10 +49,13 @@ export default function widget(easyshare){
                     overflow: "hidden",
                     borderRadius: "50%",
                     textAlign:"center",
-                    transition:".5s"}}>
-                    {
-                      (running && step.text)?step.text.substr(0,1):""
-                    }
+                    transition:".5s",
+                    cursor:"pointer"}}
+          onclick={()=>{easyshare.replay(index,null,false)}}
+    >
+        {
+          (running && step.text)?step.text.substr(0,1):""
+        }
     </span>
   )
 
@@ -73,7 +76,7 @@ export default function widget(easyshare){
         <div style={{position:"relative"}}>
           {
             state.recordedSteps.map((record,index)=>(
-              <StepSign step = {record} running={index===state.running} index={index}/>
+              <StepSign step = {record} running={index===state.runindex} index={index}/>
             ))
           }
           {
