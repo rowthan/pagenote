@@ -81,7 +81,8 @@ export default function Easyshare(options){
         return true
     }
 
-    let timer = null
+    let nextTimer = null
+    let runningTimer = null
     this.replay = function(step=0,replaySteps,autoNext=true,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
@@ -95,15 +96,14 @@ export default function Easyshare(options){
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
         this.runindex = step
-        //TODO 防抖
         this.status = constant.REPLAYING
-        
-        gotoPosition(x,y,()=>{
+        clearInterval(runningTimer)
+        runningTimer = gotoPosition(x,y,()=>{
             if(autoNext){
-                timer = setTimeout(()=>this.replay(step+1,replaySteps),timeout)
+                nextTimer = setTimeout(()=>this.replay(step+1,replaySteps),timeout)
             }else{
                 this.status = constant.REPLAYFINISHED
-                clearTimeout(timer)
+                clearTimeout(nextTimer)
             }
         })
     }
