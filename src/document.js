@@ -1,5 +1,4 @@
 const gotoPosition = function(targetX=0,targetY=0,callback){
-    // console.log("target position:",targetX,targetY)
     const timer = setInterval(function () {
         //移动前
         const { x:beforeScrollLeft,y:beforeScrollTop} = getScroll();
@@ -13,9 +12,10 @@ const gotoPosition = function(targetX=0,targetY=0,callback){
         
         if(beforeScrollTop === afterScrollTop && beforeScrollLeft === afterScrollLeft){
             clearInterval(timer)
-            callback()
+            typeof callback === "function" && callback()
         }
     },30)
+    return timer
 }
 
 const IS_TOUCH = 'ontouchstart' in window,
