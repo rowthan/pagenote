@@ -86,7 +86,6 @@ export default function Easyshare(options){
     this.replay = function(step=0,replaySteps,autoNext=true,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<step+1){
-            this.runindex = null
             this.status = constant.REPLAYFINISHED
             return 
         }
