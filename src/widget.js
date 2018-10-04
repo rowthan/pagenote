@@ -34,23 +34,28 @@ export default function widget(easyshare){
 
   const RecordButton = ({status,onclick}) =>(
     <button onclick={onclick}>
-      {status}
+      {status===constant.WAITING && "记录此处"}
+      {status===constant.REPLAYING && "结束播放后可进行记录"}
+      {status===constant.PLAYANDWAIT && "结束播放后可进行记录"}
     </button>
   )
   
   const StepSign = ({step,running=false,index})=>(
-    <span style={{display: "block",
+    <span title={step.text?step.text:"点击"}
+          style={{display: "block",
                     position:"absolute",
-                    top:index*15+"px",
-                    right:running?"10px":"0px",
-                    width: running?"20px":"8px",
-                    height: running?"20px":"8px",
-                    background: running?"red":"pink",
+                    right:0,
+                    top:(index+1)*15+"px",
+                    width: "8px",
+                    height: "8px",
+                    transform: `scale(${running?2:1})`,
+                    background: running?"#cdef5b":"#ffc0cb",
                     overflow: "hidden",
                     borderRadius: "50%",
                     textAlign:"center",
                     transition:".5s",
                     cursor:"pointer"}}
+          
           onclick={()=>{easyshare.replay(index,null,false)}}
     >
         {
@@ -72,20 +77,51 @@ export default function widget(easyshare){
           </span>
         }
       </div>
-      <aside style={{position:"fixed",top:20,right:0}}>
-        <div style={{position:"relative"}}>
-          {
-            state.recordedSteps.map((record,index)=>(
-              <StepSign step = {record} running={index===state.runindex} index={index}/>
-            ))
-          }
-          {
+      <aside style={{position:"fixed",top:0,right:0}}>
+        
+          <div style={{position:"relative",right:"6px"}}>
+            {
+              state.recordedSteps.map((record,index)=>(
+                <StepSign step = {record} running={index===state.runindex} index={index}/>
+              ))
+            }
+           </div>
+          <span title="菜单"
+            style={{display: "block",
+                      position:"absolute",
+                      right:0,
+                      top:state.recordedSteps.length*15+20+"px",
+                      width: "20px",
+                      height: "18px",
+                      transform: "scale(1)",
+                      background: "#e6e6e6",
+                      overflow: "hidden",
+                      borderRadius: "25%",
+                      textAlign:"center",
+                      transition:".5s",
+                      cursor:"pointer"}}
+            
+            onclick={()=>{easyshare.replay(index,null,false)}}
+          >
+            <svg viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z"></path>
+            </svg>
+          </span>
+          {/* {
             state.recordedSteps.length>0 && 
-              <button onclick={easyshare.makelink} style={{position:"absolute",right:0,top:state.recordedSteps.length*15+"px"}}>
-                生成链接
-              </button>
-          }
-        </div> 
+              <div onclick={easyshare.makelink} 
+              style={{position:"absolute",
+                      background:"#f4f5f5",
+                      boxShadow:"0 2px 4px 0 rgba(0,0,0,.04)",
+                      height:"20px",
+                      width:"20px",
+              right:0,
+
+              top:state.recordedSteps.length*15+"px"}}>
+                s
+              </div>
+          } */}
+        
       </aside>
     </div>
   )
