@@ -75,7 +75,8 @@ export default function Easyshare(options){
             console.log("当前状态不可记录")
             return false;
         }
-        this.status = constant.RECORDING       
+        this.status = constant.RECORDING
+        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
         this.recordedSteps.push(targetInfo)
         this.status = constant.RECORDED
         return true
@@ -89,9 +90,9 @@ export default function Easyshare(options){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const {x,y,id} = replaySteps[step], targetEl = whats.getTarget(id)
+        const {x,y,id,text} = replaySteps[step], targetEl = whats.getTarget(id)
 
-        targetEl && this.options.hightligth &&  hightLightElement(targetEl)
+        targetEl && this.options.hightligth &&  hightLightElement(targetEl,text)
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
         this.runindex = step

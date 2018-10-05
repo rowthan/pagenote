@@ -35,9 +35,11 @@ return touch ? {
    return { 'x': x, 'y': y };
 },
 
-hightLightElement = function (element){
-    // console.log("hightligth target")
-    element.style.background = "#e8d2bb"
+hightLightElement = function (element,text){
+    const regex = new RegExp(text,"g")
+    element.innerHTML = element.innerHTML.replace(regex,"<b data-hightlight='easyshare' style='color:red'>"+text+"</b>")
+    //TODO 增加背景突显动画
+    element.style.background = "#f3f0ed"
 }
 
 
