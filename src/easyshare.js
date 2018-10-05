@@ -43,6 +43,9 @@ export default function Easyshare(options){
 
     document.addEventListener( MOUSE_UP , (e)=>{
         const selectdText = document.getSelection().toString().trim();
+        if(this.status == constant.WAITING && selectdText===targetInfo.text){
+            return
+        }
         if(selectdText){
             const { x, y } = getXY(e)
             const {x:scrollLeft,y:scrollTop} = getScroll()
