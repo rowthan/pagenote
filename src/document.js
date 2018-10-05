@@ -53,9 +53,15 @@ function setScroll(x=0,y=0){
     documentTarget.scrollTop =  documentTarget.scrollTop = y;
 }
 
+function getViewPosition(elem) { // crossbrowser version
+    var box = elem.getBoundingClientRect();
+    return { top: box.top, left: box.left };
+}
+
 export {
     gotoPosition,
     getXY,
     hightLightElement,
-    getScroll
+    getScroll,
+    getViewPosition
 }
