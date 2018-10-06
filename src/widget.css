@@ -1,0 +1,65 @@
+.shadow {
+    position: relative;
+}
+.box {
+    width: 80px;
+    display: block;
+    height: 24px;
+    position: relative;
+    border-radius: 5px;
+    /* background: linear-gradient(to right, #abbd73 35%, #d6e2ad 100%); */
+    background: #000000b5;
+    margin-bottom: 10px;
+    color: darkslategray;
+    box-shadow: 1px 2px 1px -1px #777;
+    transition: background 200ms ease-in-out;
+    text-align: right;
+}
+.box:hover {
+    background: linear-gradient(to right, #abbd73 0%, #abbd73 100%);
+}
+
+.shadow:before {
+    content: "";
+    /* z-index: -1;
+    position: absolute;
+    
+    bottom: 13px;
+    right: 7px;
+    width: 75%;
+    top: 0;
+    box-shadow: 0 15px 10px #777;
+    -webkit-transform: rotate(4deg);
+    transform: rotate(4deg);
+    transition: all 150ms ease-in-out; */
+    content:'';
+    
+    border: 15px solid;  
+    border-color:transparent  red  transparent transparent;   
+    position: absolute;  
+    
+}
+
+/* .shadow:hover::before {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    bottom: 20px;
+    z-index: -10;
+} */
+
+.box a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.circle {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.5), inset 0 0 0 25px antiquewhite;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    text-align: right;
+}
