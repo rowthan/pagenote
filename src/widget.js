@@ -4,10 +4,13 @@ import constant from './constant'
 import { getViewPosition,hightLightElement } from "./document";
 export default function widget(easyshare){
   const state = {
+    //来自easyshare的状态
     status: "",
     recordedSteps: easyshare.recordedSteps,
-    mPos :{},
+    targetInfo: easyshare.targetInfo,
     runindex:null,
+
+    //自定义state
     ballPos:{},
     showBall:false
   }
@@ -16,7 +19,7 @@ export default function widget(easyshare){
     refershState: value => state =>({
       status: easyshare.status,
       recordedSteps: easyshare.recordedSteps,
-      mPos :{x:easyshare.mPos.x,y:easyshare.mPos.y},
+      targetInfo: easyshare.targetInfo,
       runindex:easyshare.runindex
     }),
     setBallPos: value=> state =>({
@@ -92,7 +95,7 @@ export default function widget(easyshare){
   )
 
   const StepTag = ({step,running=false,index})=>(
-    <div style={{position:"absolute",top:step.mPos.y+"px",left:step.mPos.x+"px"}}>
+    <div style={{position:"absolute",top:step.y+"px",left:step.x+"px"}}>
       <aside title="点击查看"  class={style.point}
         onclick={()=>{easyshare.replay(index,null,false,step.isActive)}} >
       </aside>
@@ -106,7 +109,7 @@ export default function widget(easyshare){
   const view = (state, actions) => (
     <div oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};
     aftercreate(actions)}}>
-      <div style={{position:"absolute",left:state.mPos.x+"px",top:state.mPos.y+"px",transition:".5s"}}>
+      <div style={{position:"absolute",left:state.targetInfo.x+"px",top:state.targetInfo.y+"px",transition:".5s"}}>
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&

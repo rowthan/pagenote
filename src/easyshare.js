@@ -9,8 +9,8 @@ export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,hightligth:true},options)
     this.recordedSteps = []
     this.runindex = null
-    this.mPos = {x:0,y:0}
-    let status = constant.PAUSE,targetInfo = {}, nameid = constant.SHARENAME
+    this.targetInfo = {}
+    let status = constant.PAUSE, nameid = constant.SHARENAME
 
     window.addEventListener("load", (event)=> {
         const search = window.location.search
@@ -43,27 +43,20 @@ export default function Easyshare(options){
 
     document.addEventListener( MOUSE_UP , (e)=>{
         const selectdText = document.getSelection().toString().trim();
-        if(this.status == constant.WAITING && selectdText===targetInfo.text){
+        if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
         if(selectdText){
             const { x, y } = getXY(e)
-            const {x:scrollLeft,y:scrollTop} = getScroll()
-            this.mPos = {
+            this.targetInfo = {
                 x:x,
-                y:y
-            }
-            //TODO X,Y 不用存储
-            targetInfo = {
-                x:scrollLeft,
-                y:scrollTop,
-                mPos:this.mPos,
+                y:y,
                 text:selectdText,
                 id: whats.getUniqueId(e.target).wid
             }
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
-            targetInfo = {}
+            this.targetInfo = {}
             this.status = constant.PAUSE
         }
     } )
@@ -79,7 +72,7 @@ export default function Easyshare(options){
         }
         this.status = constant.RECORDING
         // hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
-        this.recordedSteps.push(targetInfo)
+        this.recordedSteps.push(this.targetInfo)
         this.status = constant.RECORDED
         return true
     }
@@ -110,7 +103,10 @@ export default function Easyshare(options){
         this.status = constant.REPLAYING
         runStep.isActive = true
         clearInterval(runningTimer)
-        runningTimer = gotoPosition(x,y,()=>{
+        console.log(x,y)
+        const gotoX = x-window.innerWidth/2,
+              gotoY = y-window.innerHeight/2
+        runningTimer = gotoPosition(gotoX,gotoY,()=>{
             if(autoNext){
                 nextTimer = setTimeout(()=>this.replay(index+1,replaySteps),timeout)
             }else{
