@@ -15,4 +15,37 @@
     top: 7px;
     left: -10px;
     border-radius: 5px;
+    cursor: pointer;
+    transition:0.3s
+}
+.point:hover{
+    transform: scale(2)
+}
+
+.menu{
+    position:absolute;
+    right:0px;
+    width: 20px;
+    height: 18px;
+    transform: scale(1);
+    background: #e6e6e6;
+    border-radius: 25%;
+    text-align:center;
+    transition:.5s;
+    cursor:pointer;
+    box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
+}
+
+.stepSign{
+    display: block;
+    position:absolute;
+    right:0;
+    top:0;
+    width: 8px;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 50%;
+    text-align:center;
+    transition:.5s;
+    cursor:pointer
 }

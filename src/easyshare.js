@@ -86,24 +86,33 @@ export default function Easyshare(options){
 
     let nextTimer = null
     let runningTimer = null
-    this.replay = function(step=0,replaySteps,autoNext=true,timeout=5000){
+    this.replay = function(index=0,replaySteps,autoNext=true,revert=false,timeout=5000){
         replaySteps = replaySteps || this.recordedSteps;
-        if(replaySteps.length<step+1){
+        if(replaySteps.length<index+1){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const {x,y,id,text} = replaySteps[step], targetEl = whats.getTarget(id)
+
+        const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = whats.getTarget(id)
+
+        // 清除高亮
+        if(revert){
+            runStep.isActive = false
+            hightLightElement(targetEl,text,true)
+            return
+        }
+
 
         targetEl && this.options.hightligth &&  hightLightElement(targetEl,text)
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
-        this.runindex = step
+        this.runindex = index
         this.status = constant.REPLAYING
-        replaySteps[step].isActive = true
+        runStep.isActive = true
         clearInterval(runningTimer)
         runningTimer = gotoPosition(x,y,()=>{
             if(autoNext){
-                nextTimer = setTimeout(()=>this.replay(step+1,replaySteps),timeout)
+                nextTimer = setTimeout(()=>this.replay(index+1,replaySteps),timeout)
             }else{
                 this.status = constant.REPLAYFINISHED
                 clearTimeout(nextTimer)

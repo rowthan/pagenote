@@ -78,28 +78,24 @@ export default function widget(easyshare){
   )
   
   const StepSign = ({step,running=false,index})=>(
-    <span title={step.text?step.text:"点击"}
-          style={{display: "block",
-                    position:"absolute",
-                    right:0,
-                    top:(index+1)*15+"px",
-                    width: "8px",
-                    height: "8px",
-                    transform: `scale(${running?2:1})`,
-                    background: running?"#cdef5b":"#ffc0cb",
-                    overflow: "hidden",
-                    borderRadius: "50%",
-                    textAlign:"center",
-                    transition:".5s",
-                    cursor:"pointer"}}
-          onclick={()=>{easyshare.replay(index,null,false)}}
+    <span title={step.text?step.text:"点击"} 
+          className={style.stepSign}
+          style={{
+            top:(index+1)*15+"px",
+            transform: `scale(${step.isActive?2:1})`,
+            //TODO running 增加动画效果
+            background: step.isActive?"#cdef5b":"#ffc0cb",
+          }}
+          onclick={()=>{easyshare.replay(index,null,false,step.isActive)}}
     >
     </span>
   )
 
   const StepTag = ({step,running=false,index})=>(
     <div style={{position:"absolute",top:step.mPos.y+"px",left:step.mPos.x+"px"}}>
-      <aside class={style.point}></aside>
+      <aside title="点击查看"  class={style.point}
+        onclick={()=>{easyshare.replay(index,null,false,step.isActive)}} >
+      </aside>
       {
         step.isActive && <span className={style.box}>{step.text}</span>
       }
@@ -144,21 +140,12 @@ export default function widget(easyshare){
            </div>
           {
             <div title="菜单"
+              className={style.menu}
               id="easyshare-menu"
               style={{
-                      position:"absolute",
-                      visibility:state.recordedSteps.length>0?"visible":"hidden",
-                      right:0,
-                      top:state.recordedSteps.length*15+20+"px",
-                      width: "20px",
-                      height: "18px",
-                      transform: "scale(1)",
-                      background: "#e6e6e6",
-                      borderRadius: "25%",
-                      textAlign:"center",
-                      transition:".5s",
-                        cursor:"pointer",
-                        boxShadow:"0 2px 4px 0 rgba(0,0,0,.04)"}}
+                visibility:state.recordedSteps.length>0?"visible":"hidden",
+                top:state.recordedSteps.length*15+20+"px",
+              }}
               onclick={getPosition}
           >
             <svg viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
