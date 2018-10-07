@@ -35,9 +35,13 @@ return touch ? {
    return { 'x': x, 'y': y };
 },
 
-hightLightElement = function (element,text){
-    const regex = new RegExp(text,"g")
-    element.innerHTML = element.innerHTML.replace(regex,"<b data-hightlight='easyshare' style='color:red'>"+text+"</b>")
+hightLightElement = function (element,text,revert){
+    const left = '<b data-hightlight="easyshare" style="color:red">',
+        right = '</b>',addColor = left+text+right,
+        after = revert?text:addColor
+    let finder = new RegExp(revert?addColor:text,"g")
+        console.log(finder.test(element.innerHTML))
+    element.innerHTML = element.innerHTML.replace(finder,after)
     //TODO 增加背景突显动画
     element.style.background = "#f3f0ed"
 }
