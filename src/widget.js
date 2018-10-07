@@ -99,9 +99,9 @@ export default function widget(easyshare){
 
   const StepTag = ({step,running=false,index})=>(
     <div style={{position:"absolute",top:step.mPos.y+"px",left:step.mPos.x+"px"}}>
-      <aside class="point"></aside>
+      <aside class={style.point}></aside>
       {
-        step.isActive && <span className="box">{step.text}</span>
+        step.isActive && <span className={style.box}>{step.text}</span>
       }
     </div>
   )
