@@ -53,9 +53,11 @@ export default function Easyshare(options){
                 x:x,
                 y:y
             }
+            //TODO X,Y 不用存储
             targetInfo = {
                 x:scrollLeft,
                 y:scrollTop,
+                mPos:this.mPos,
                 text:selectdText,
                 id: whats.getUniqueId(e.target).wid
             }
@@ -76,7 +78,7 @@ export default function Easyshare(options){
             return false;
         }
         this.status = constant.RECORDING
-        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
+        // hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
         this.recordedSteps.push(targetInfo)
         this.status = constant.RECORDED
         return true
@@ -97,6 +99,7 @@ export default function Easyshare(options){
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
         this.runindex = step
         this.status = constant.REPLAYING
+        replaySteps[step].isActive = true
         clearInterval(runningTimer)
         runningTimer = gotoPosition(x,y,()=>{
             if(autoNext){

@@ -1,6 +1,7 @@
 import {  h,app } from "hyperapp"
+import style from "./widget.css"
 import constant from './constant'
-import { getViewPosition } from "./document";
+import { getViewPosition,hightLightElement } from "./document";
 export default function widget(easyshare){
   const state = {
     status: "",
@@ -96,6 +97,15 @@ export default function widget(easyshare){
     </span>
   )
 
+  const StepTag = ({step,running=false,index})=>(
+    <div style={{position:"absolute",top:step.mPos.y+"px",left:step.mPos.x+"px"}}>
+      <aside class="point"></aside>
+      {
+        step.isActive && <span className="box">{step.text}</span>
+      }
+    </div>
+  )
+
 
   const view = (state, actions) => (
     <div oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};
@@ -115,6 +125,14 @@ export default function widget(easyshare){
         height:"20px",width:"20px",background:"#f36b5d",borderRadius:"8px"}}>
         </div>
       }
+
+      <div>
+        {
+          state.recordedSteps.map((record,index)=>(
+            <StepTag step={record} index={index}></StepTag>
+          ))
+        }
+      </div>
       
       <aside style={{position:"fixed",top:0,right:0}}>
           <div style={{position:"relative",right:"6px"}}>
@@ -148,7 +166,6 @@ export default function widget(easyshare){
             </svg>
               </div>
           }
-        
       </aside>
     </div>
   )
