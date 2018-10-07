@@ -36,6 +36,10 @@ return touch ? {
 },
 
 hightLightElement = function (element,text,revert){
+    element.style.background = "#f3f0ed"
+    if(!text){
+        return
+    }
     const left = '<b data-hightlight="easyshare" style="color:red">',
         right = '</b>',addColor = left+text+right,
         after = revert?text:addColor
@@ -43,7 +47,7 @@ hightLightElement = function (element,text,revert){
         console.log(finder.test(element.innerHTML))
     element.innerHTML = element.innerHTML.replace(finder,after)
     //TODO 增加背景突显动画
-    element.style.background = "#f3f0ed"
+    
 }
 
 
