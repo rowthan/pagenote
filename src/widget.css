@@ -1,7 +1,7 @@
 .box {
     border-radius: 5px;
     /* background: linear-gradient(to right, #abbd73 35%, #d6e2ad 100%); */
-    background: #00000085;
+    background: rgba(0,0,0,.52);
     color:#fff;
     box-shadow: 0px 0px 1px 2px #fff;
     transition: background 200ms ease-in-out;
@@ -10,7 +10,7 @@
     width: 10px;
     height: 10px;
     position: absolute;
-    background: #00000085;
+    background: rgba(0,0,0,.52);
     box-shadow: 0px 0px 0px 1px #fff;
     top: 7px;
     left: -10px;
