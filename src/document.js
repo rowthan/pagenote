@@ -36,18 +36,34 @@ return touch ? {
 },
 
 hightLightElement = function (element,text,revert){
-    element.style.background = "#f3f0ed"
-    if(!text){
+    if(!element || text===undefined){
         return
     }
-    const left = '<b data-hightlight="easyshare" style="color:red">',
-        right = '</b>',addColor = left+text+right,
-        after = revert?text:addColor
-    let finder = new RegExp(revert?addColor:text,"g")
-        console.log(finder.test(element.innerHTML))
+    //还原高亮
+    if(revert===true){
+        const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
+        for(let i=0; i<highlightElements.length; i++){
+            console.log(i)
+            const ele = highlightElements[i]
+            //如果不是easyshare高亮处理的元素 且不是该文本高亮的内容时候
+            if(ele.dataset["highlight"]===undefined && ele.dataset['originText']!=text){
+                continue;
+            }
+            //TODO 优化 不通过 parent来修改
+            ele.outerHTML = text
+        }
+        return;
+    }
+    //高亮
+    const originhtml = text || element.innerHTML;//TODO 对原先的 html 引号做处理
+    const left = '<b data-highlight="easyshare" data-originText="'+text+'" data-originhtml="'+originhtml+'" style="color:red">',
+        right = '</b>',
+        after = left+text+right
+    let finder = new RegExp(text,"g")
     element.innerHTML = element.innerHTML.replace(finder,after)
+    //TODO 还原背景色
+    // element.style.background = "#f3f0ed"
     //TODO 增加背景突显动画
-    
 }
 
 
