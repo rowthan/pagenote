@@ -13,28 +13,29 @@ export default function Easyshare(options){
     let status = constant.PAUSE, nameid = constant.SHARENAME
 
     window.addEventListener("load", (event)=> {
-        const search = window.location.search
+        const search = decodeURI(window.location.search)
         if(search.indexOf(nameid)===-1){
             return
         }
         const searchArray = search.substr(1).split("&");
         for(let i=0 ; i < searchArray.length; i++){
-            const queryPar  = searchArray[i]
-            if(queryPar.indexOf(nameid)>-1){
-                const pair = queryPar.split("=");
-                if(pair.length===2){
-                    const values = pair[1]
+            const queryPar  = searchArray[i],
+            index = queryPar.indexOf("=")
+            if(index>-1){
+                const values = queryPar.substring(index+1)
                     const replaySteps = []
-                    values.split("a").forEach(value=>{
-                        const tempStep = {
-                            x:value.split("-")[0],
-                            y:value.split("-")[1],
+                values.split("__").forEach(value=>{
+                    const values = value.split("-"),
+                        tempStep = {
+                            x:values[0],
+                            y:values[1],
+                            id:values[2],
+                            text:values[3]
                         }
                         replaySteps.push(tempStep)
                     })
                     this.status = constant.INITCOMPELETE
                     this.recordedSteps = replaySteps
-                }
                 break
             }
         }
@@ -52,6 +53,7 @@ export default function Easyshare(options){
                 x:x,
                 y:y,
                 text:selectdText,
+                //TODO 优化whatselement
                 id: whats.getUniqueId(e.target).wid
             }
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
@@ -73,6 +75,7 @@ export default function Easyshare(options){
         this.status = constant.RECORDING
         // hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
         this.recordedSteps.push(this.targetInfo)
+        this.makelink()
         this.status = constant.RECORDED
         return true
     }
@@ -80,22 +83,21 @@ export default function Easyshare(options){
     let nextTimer = null
     let runningTimer = null
     this.replay = function(index=0,replaySteps,autoNext=true,revert=false,timeout=5000){
+        //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<index+1){
             this.status = constant.REPLAYFINISHED
             return 
         }
-
-        const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = whats.getTarget(id)
-
-        // 清除高亮
+        const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
+        //TODO 简化此段代码逻辑 清除高亮 
         if(revert){
             runStep.isActive = false
-            hightLightElement(targetEl,text,true)
+            hightLightElement(targetEl,text,revert)
             return
         }
 
-
+        //TODO 删除 highlight 参数
         targetEl && this.options.hightligth &&  hightLightElement(targetEl,text)
        
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
@@ -103,7 +105,6 @@ export default function Easyshare(options){
         this.status = constant.REPLAYING
         runStep.isActive = true
         clearInterval(runningTimer)
-        console.log(x,y)
         const gotoX = x-window.innerWidth/2,
               gotoY = y-window.innerHeight/2
         runningTimer = gotoPosition(gotoX,gotoY,()=>{
@@ -117,14 +118,15 @@ export default function Easyshare(options){
     }
 
     this.makelink = () => {
+        //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
         if(this.recordedSteps.length===0)return;
         // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
         let share = "&"+nameid+"=",
             currentUrl = window.location.href,
             indexShare = currentUrl.indexOf("&"+nameid)
         this.recordedSteps.forEach((step,index) => {
-            index!=0?share +="a":"";
-            share += step.x+"-"+step.y
+            index!=0?share +="__":"";
+            share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
         });
         
         if(window.location.search==""){
