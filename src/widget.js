@@ -1,7 +1,8 @@
 import {  h,app } from "hyperapp"
 import style from "./widget.css"
 import constant from './constant'
-import { getViewPosition,hightLightElement } from "./document";
+import { getViewPosition } from "./document";
+//TODO 增加dev 视图展示所有state信息 方便手机端调试
 export default function widget(easyshare){
   const state = {
     //来自easyshare的状态
@@ -81,13 +82,13 @@ export default function widget(easyshare){
   )
   
   const StepSign = ({step,running=false,index})=>(
-    <span title={step.text?step.text:"点击"} 
+    <span title="点击"
           className={style.stepSign}
           style={{
             top:(index+1)*15+"px",
-            transform: `scale(${step.isActive?2:1})`,
+            transform: `scale(${running?2:1})`,
             //TODO running 增加动画效果
-            background: step.isActive?"#cdef5b":"#ffc0cb",
+            background: step.isActive?"#cdef5b":"#b7b7b7",
           }}
           onclick={()=>{easyshare.replay(index,null,false,step.isActive)}}
     >
@@ -96,9 +97,10 @@ export default function widget(easyshare){
 
   const StepTag = ({step,running=false,index})=>(
     <div style={{position:"absolute",top:step.y+"px",left:step.x+"px"}}>
-      <aside title="点击查看"  class={style.point}
+      <aside title="点击查看"  class={style.point} style={{transform:`scale(${step.isActive?2:1})`}}
         onclick={()=>{easyshare.replay(index,null,false,step.isActive)}} >
       </aside>
+      {/* //通过 css 控制显示与否 */}
       {
         step.isActive && <span className={style.box}>{step.text}</span>
       }
