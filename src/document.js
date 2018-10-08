@@ -39,21 +39,22 @@ hightLightElement = function (element,text,revert){
     if(!element || text===undefined){
         return
     }
-    //还原高亮
-    if(revert===true){
-        const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
-        for(let i=0; i<highlightElements.length; i++){
-            console.log(i)
-            const ele = highlightElements[i]
-            //如果不是easyshare高亮处理的元素 且不是该文本高亮的内容时候
-            if(ele.dataset["highlight"]===undefined && ele.dataset['originText']!=text){
-                continue;
-            }
-            //TODO 优化 不通过 parent来修改
-            ele.outerHTML = text
+    const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
+    //还原高亮，即便是高亮 也要先还原高亮
+    for(let i=0; i<highlightElements.length; i++){
+        const ele = highlightElements[i]
+        //如果不是easyshare高亮处理的元素 且不是该文本高亮的内容时候
+        if(ele.dataset["highlight"]===undefined && ele.dataset['originText']!=text){
+            continue;
         }
-        return;
+        ele.outerHTML = text
     }
+
+    // 如果是还原 则不进行之后操作
+    if(revert){
+        return
+    }
+    
     //高亮
     const originhtml = text || element.innerHTML;//TODO 对原先的 html 引号做处理
     const left = '<b data-highlight="easyshare" data-originText="'+text+'" data-originhtml="'+originhtml+'" style="color:red">',
