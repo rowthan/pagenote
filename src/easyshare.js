@@ -6,7 +6,7 @@ const whats = new whatselement({draw:false}),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
 export default function Easyshare(options){
-    this.options = Object.assign({autoReplay:true,hightligth:true},options)
+    this.options = Object.assign({autoReplay:true},options)
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
@@ -90,24 +90,16 @@ export default function Easyshare(options){
             return 
         }
         const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
-        //TODO 简化此段代码逻辑 清除高亮 
-        if(revert){
-            runStep.isActive = false
-            hightLightElement(targetEl,text,revert)
-            return
-        }
-
-        //TODO 删除 highlight 参数
-        targetEl && this.options.hightligth &&  hightLightElement(targetEl,text)
-       
-        //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
+        
+        clearInterval(runningTimer)
+        //开始滚动
         this.runindex = index
         this.status = constant.REPLAYING
-        runStep.isActive = true
-        clearInterval(runningTimer)
+        runStep.isActive = !revert
         const gotoX = x-window.innerWidth/2,
               gotoY = y-window.innerHeight/2
         runningTimer = gotoPosition(gotoX,gotoY,()=>{
+            this.runindex = null
             if(autoNext){
                 nextTimer = setTimeout(()=>this.replay(index+1,replaySteps),timeout)
             }else{
@@ -115,6 +107,8 @@ export default function Easyshare(options){
                 clearTimeout(nextTimer)
             }
         })
+        targetEl &&  hightLightElement(targetEl,text,revert)
+        //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
     this.makelink = () => {
