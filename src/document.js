@@ -92,6 +92,5 @@ export {
     gotoPosition,
     getXY,
     hightLightElement,
-    getScroll,
     getViewPosition
 }

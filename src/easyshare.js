@@ -1,4 +1,4 @@
-import {gotoPosition,getXY,getScroll,hightLightElement} from './document'
+import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatselement from 'whats-element'
 
