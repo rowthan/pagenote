@@ -80,8 +80,15 @@ export default function Easyshare(options){
         return true
     }
     this.remove = function(stepIndex){
-        this.replay(stepIndex,null,false,true)
-        this.recordedSteps.splice(stepIndex,1)
+        if(stepIndex<0){
+            while(this.recordedSteps.length>0){
+                this.replay(0,null,false,true)
+                this.recordedSteps.splice(0,1)
+            }
+        }else{
+            this.replay(stepIndex,null,false,true)
+            this.recordedSteps.splice(stepIndex,1)
+        }
         this.makelink()
     }
 
@@ -120,29 +127,34 @@ export default function Easyshare(options){
         //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
        
         // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
-        let share = "&"+nameid+"=",
-            currentUrl = window.location.href,
-            indexShare = currentUrl.indexOf("&"+nameid)
-        
-        if(window.location.search==""){
-            currentUrl += "?"
-        }
-        if(indexShare>-1){
-            currentUrl = currentUrl.substr(0,indexShare)
-        }
-
-        if(this.recordedSteps.length===0){
-            share=""
-        }else{
-            this.recordedSteps.forEach((step,index) => {
-                index!=0?share +="__":"";
-                share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
-            });
-            if(this.options.autoReplay){
-                share += "&autoreplay=true"
+        try{
+            let share = "&"+nameid+"=",
+                currentUrl = location.href,
+                indexShare = currentUrl.indexOf("&"+nameid)
+            
+            if(location.search==""){
+                currentUrl += "?"
             }
+            if(indexShare>-1){
+                currentUrl = currentUrl.substr(0,indexShare)
+            }
+
+            if(this.recordedSteps.length===0){
+                share=""
+            }else{
+                this.recordedSteps.forEach((step,index) => {
+                    index!=0?share +="__":"";
+                    share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
+                });
+                if(this.options.autoReplay){
+                    share += "&autoreplay=true"
+                }
+            }
+            history.pushState("", nameid, currentUrl+share);
+        }catch(e){
+            this.recordedSteps.splice(-1,1)
+            throw Error("makelink faild",e)
         }
-        history.pushState("", nameid, currentUrl+share);
     }
 
     Object.defineProperty(this,"status",{get:()=>{return status},set:(value=>{
