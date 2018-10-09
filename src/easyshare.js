@@ -12,8 +12,9 @@ export default function Easyshare(options){
     this.targetInfo = {}
     let status = constant.PAUSE, nameid = constant.SHARENAME
 
+    const location = window.location
     window.addEventListener("load", (event)=> {
-        const search = decodeURI(window.location.search)
+        const search = decodeURI(location.search)
         if(search.indexOf(nameid)===-1){
             return
         }
@@ -82,11 +83,11 @@ export default function Easyshare(options){
     this.remove = function(stepIndex){
         if(stepIndex<0){
             while(this.recordedSteps.length>0){
-                this.replay(0,null,false,true)
+                this.replay(0,true)
                 this.recordedSteps.splice(0,1)
             }
         }else{
-            this.replay(stepIndex,null,false,true)
+            this.replay(stepIndex,true)
             this.recordedSteps.splice(stepIndex,1)
         }
         this.makelink()
@@ -94,7 +95,7 @@ export default function Easyshare(options){
 
     let nextTimer = null
     let runningTimer = null
-    this.replay = function(index=0,replaySteps,autoNext=true,revert=false,timeout=5000){
+    this.replay = function(index=0,revert,autoNext,replaySteps,timeout=5000){
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
         if(replaySteps.length<index+1){
@@ -113,7 +114,7 @@ export default function Easyshare(options){
         runningTimer = gotoPosition(gotoX,gotoY,()=>{
             this.runindex = null
             if(autoNext){
-                nextTimer = setTimeout(()=>this.replay(index+1,replaySteps),timeout)
+                nextTimer = setTimeout(()=>this.replay(index+1,revert,autoNext,replaySteps,timeout),timeout)
             }else{
                 this.status = constant.REPLAYFINISHED
                 clearTimeout(nextTimer)
