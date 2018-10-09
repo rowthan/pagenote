@@ -35,7 +35,7 @@ export default function widget(easyshare){
     setTimeout(()=>{
       actions.refershState()
       if(window.location.search.indexOf("autoreplay")>-1){
-        easyshare.replay()
+        easyshare.replay(0,false,true)
       }
     },1000)
   }
@@ -83,7 +83,7 @@ export default function widget(easyshare){
             //TODO running 增加动画效果
             background: step.isActive?"#cdef5b":"#b7b7b7",
           }}
-          onclick={()=>{easyshare.replay(index,null,false,step.isActive)}}
+          onclick={()=>{easyshare.replay(index,step.isActive)}}
     >
     </span>
   )
