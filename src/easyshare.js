@@ -79,6 +79,11 @@ export default function Easyshare(options){
         this.status = constant.RECORDED
         return true
     }
+    this.remove = function(stepIndex){
+        this.replay(stepIndex,null,false,true)
+        this.recordedSteps.splice(stepIndex,1)
+        this.makelink()
+    }
 
     let nextTimer = null
     let runningTimer = null
@@ -113,15 +118,11 @@ export default function Easyshare(options){
 
     this.makelink = () => {
         //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
-        if(this.recordedSteps.length===0)return;
+       
         // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
         let share = "&"+nameid+"=",
             currentUrl = window.location.href,
             indexShare = currentUrl.indexOf("&"+nameid)
-        this.recordedSteps.forEach((step,index) => {
-            index!=0?share +="__":"";
-            share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
-        });
         
         if(window.location.search==""){
             currentUrl += "?"
@@ -129,8 +130,17 @@ export default function Easyshare(options){
         if(indexShare>-1){
             currentUrl = currentUrl.substr(0,indexShare)
         }
-        if(this.options.autoReplay){
-            share += "&autoreplay=true"
+
+        if(this.recordedSteps.length===0){
+            share=""
+        }else{
+            this.recordedSteps.forEach((step,index) => {
+                index!=0?share +="__":"";
+                share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
+            });
+            if(this.options.autoReplay){
+                share += "&autoreplay=true"
+            }
         }
         history.pushState("", nameid, currentUrl+share);
     }
