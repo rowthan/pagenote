@@ -2,15 +2,16 @@
     max-width: 250px;
     min-width: 100px;
     min-height: 20px;
+    padding-left: 10px;
     font-size: 14px;
     line-height: 20px;
     border-radius: 5px;
-    /* background: linear-gradient(to right, #abbd73 35%, #d6e2ad 100%); */
     background: rgba(0,0,0,.52);
     color:#fff;
     box-shadow: 0px 0px 1px 2px #fff;
     transition: background 200ms ease-in-out;
 }
+/* //这是一个测试 */
 .point{
     position: absolute;
     width: 10px;
@@ -23,13 +24,16 @@
     cursor: pointer;
     transition:0.3s
 }
-.point:hover{
-    transform: scale(2) !important
+.point.active,.point:hover{
+    transform: scale(2)
 }
 
 .delete{
     position:absolute;
     right: -22px;
+    height: 20px;
+    background:rgba(0,0,0,.52);
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -58,5 +62,8 @@
     border-radius: 50%;
     text-align:center;
     transition:.5s;
-    cursor:pointer
+    cursor:pointer;
+}
+.stepSign.active{
+    background: red;
 }
