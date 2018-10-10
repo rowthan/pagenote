@@ -1,5 +1,6 @@
 const path = require('path');
-
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -24,7 +25,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [ 'style-loader', {
+        use: [ MiniCssExtractPlugin.loader, {
           loader: 'css-loader',
           options: {
               modules: true,
@@ -33,5 +34,21 @@ module.exports = {
         },]
       },
     ]
-  }
+  },
+  optimization: {
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: {discardComments:{removeAll: true}},
+        canPrint: true
+      })
+    ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "easyshare.css",
+      chunkFilename: "[id].css"
+    }),
+  ]
 };
