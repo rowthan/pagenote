@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "hyperapp": "^1.2.9",
-    "whats-element": "^1.0.3"
+    "whats-element": "^1.1.0"
   }
 }

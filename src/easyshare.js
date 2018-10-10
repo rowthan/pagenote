@@ -1,8 +1,8 @@
 import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
-import whatselement from 'whats-element'
+import whatsPure from 'whats-element/pure'
 
-const whats = new whatselement({draw:false}),
+const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
 export default function Easyshare(options){
