@@ -10,9 +10,7 @@ export default function Easyshare(options){
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
-    let status = constant.PAUSE, nameid = constant.SHARENAME
-
-    const location = window.location
+    let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location
     window.addEventListener("load", (event)=> {
         const search = decodeURI(location.search)
         if(search.indexOf(nameid)===-1){
