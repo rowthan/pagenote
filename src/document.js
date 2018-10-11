@@ -24,28 +24,27 @@ hightLightElement = function (element,text,revert){
     const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
     //还原高亮，即便是高亮 也要先还原高亮
     for(let i=0; i<highlightElements.length; i++){
-        const ele = highlightElements[i]
-        //如果不是easyshare高亮处理的元素 且不是该文本高亮的内容时候
-        if(ele.dataset["highlight"]===undefined && ele.dataset['originText']!=text){
+        const ele = highlightElements[i],originText = ele.dataset['origintext']
+        //如果是其他步骤高亮的则不还原
+        if(originText!=text){
             continue;
         }
-        ele.outerHTML = text
+        ele.outerHTML = originText
     }
-
     // 如果是还原 则不进行之后操作
     if(revert){
+        element.classList.remove("easyshare_highlight")
         return
     }
     
     //高亮
     const originhtml = text || element.innerHTML;//TODO 对原先的 html 引号做处理
-    const left = '<b data-highlight="easyshare" data-originText="'+text+'" data-originhtml="'+originhtml+'" style="color:red">',
+    const left = '<b data-highlight="easyshare" data-origintext="'+text+'" data-originhtml="'+originhtml+'" style="color:red">',
         right = '</b>',
         after = left+text+right
     let finder = new RegExp(text,"g")
     element.innerHTML = element.innerHTML.replace(finder,after)
-    //TODO 还原背景色
-    // element.style.background = "#f3f0ed"
+    element.classList.add("easyshare_highlight")
     //TODO 增加背景突显动画
 }
 
