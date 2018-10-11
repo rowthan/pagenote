@@ -41,7 +41,8 @@ export default function widget(easyshare){
 
     //自定义state
     ballPos:{},
-    showBall:false
+    showBall:false,
+    showMenu:false
   }
     
   const actions = {
@@ -120,6 +121,23 @@ export default function widget(easyshare){
           <path fill-rule="evenodd" d="M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z"></path>
         </svg>
       </div>
+      {
+        state.showMenu && 
+        <div style={{position:"fixed",width:"300px",height:"100px",
+          background:"pink",top:"30%",left:"calc(50% - 150px)"}}>
+          <div>
+            基础信息 、设置、签名
+          </div>
+          {/* remove 后需要清空 state值 */}
+          <button onclick={()=>{easyshare.remove(-1);actions.toggleMenu()}}>删除所有</button>
+          <button>还原所有</button>
+          打开网页时，自动播放
+          这是来自 user 的分享
+          <p>
+            已记录{easyshare.recordedSteps.length}条标记。
+          </p>
+        </div>
+      }
     </div>
   )
   //TODO 在视口范围内则激活 否则关闭

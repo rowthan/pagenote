@@ -41,7 +41,7 @@ export default function Easyshare(options){
         }
     });
     
-
+    //TODO 移动设备兼容性  设置监听黑名单 如widget中所有元素不参与点击事件
     document.addEventListener( MOUSE_UP , (e)=>{
         const selectdText = document.getSelection().toString().trim();
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
