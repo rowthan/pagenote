@@ -56,6 +56,9 @@ export default function widget(easyshare){
     }),
     toggleShowBall: value=> state => ({
       showBall:value
+    }),
+    toggleMenu: value=> state=>({
+      showMenu:!state.showMenu
     })
   }
 
@@ -109,10 +112,8 @@ export default function widget(easyshare){
         position:"absolute",
         visibility:state.recordedSteps.length>0?"visible":"hidden",
         right:0,
-        paddingRight:"40px",
         top:state.recordedSteps.length*15+20+"px",
       }}
-      
     >
       <div className={style.menu} style="position:absolute;right:0;" onclick={actions.toggleMenu}>
         <svg  viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
@@ -144,7 +145,6 @@ export default function widget(easyshare){
           <path d="M192 448l640 0 0 128-640 0 0-128Z" p-id="4227" fill="#fff"></path>
         </svg>
       </aside>
-      {/* TODO 通过 css 控制显示与否,如果定位点过于偏向右边时 在左边展示 */}
       {
         step.isActive && 
         <div className={style.box}>
@@ -161,33 +161,25 @@ export default function widget(easyshare){
 
 
   const view = (state, actions) => (
-    <div oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};
-    aftercreate(actions)}}>
+    <div oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};aftercreate(actions)}}>
       <div style={{position:"absolute",left:state.targetInfo.x+"px",top:state.targetInfo.y+"px",transition:".5s"}}>
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&
-          <span>
-            <RecordButton status={state.status} onclick={(e)=>{record(e,actions)}}></RecordButton>  
-          </span>
+          <RecordButton status={state.status} onclick={(e)=>{record(e,actions)}}></RecordButton>  
         }
+      </div>
+      <div className={`${style.recordBall} ${state.showBall?style.recording:""}`} 
+          style={{top:state.ballPos.top+"px",left:state.ballPos.left+"px"
+        }}>
       </div>
       {
-        state.showBall &&
-        <div style={{position:"fixed",top:state.ballPos.top+"px",left:state.ballPos.left+"px",
-        height:"20px",width:"20px",background:"#f36b5d",borderRadius:"8px"}}>
-        </div>
+        state.recordedSteps.map((record,index)=>(
+          <StepTag step={record} index={index}></StepTag>
+        ))
       }
-
-      <div>
-        {
-          state.recordedSteps.map((record,index)=>(
-            <StepTag step={record} index={index}></StepTag>
-          ))
-        }
-      </div>
-      <aside style={{position:"fixed",right:0,
-          top:window.innerHeight/2-(state.recordedSteps.length+2)*15/2+"px"}}>
+      
+      <aside style={{position:"fixed",right:0,top:window.innerHeight/2-(state.recordedSteps.length+1)*15/2+"px"}}>
           <div style={{position:"relative",right:"6px"}}>
             {
               state.recordedSteps.map((record,index)=>(

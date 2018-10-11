@@ -66,3 +66,17 @@
 .stepSign.active{
     background: red;
 }
+
+
+
+.recordBall{
+    display: none;
+    position:fixed;
+    height:20px;
+    width:20px;
+    background:#f36b5d;
+    border-radius:8px
+}
+.recordBall.recording{
+    display: block;
+}
