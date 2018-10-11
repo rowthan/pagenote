@@ -18,7 +18,7 @@ return touch ? {
 },
 
 hightLightElement = function (element,text,revert){
-    if(!element || text===undefined){
+    if(!element || !text){
         return
     }
     const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
