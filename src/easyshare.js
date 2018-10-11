@@ -24,12 +24,13 @@ export default function Easyshare(options){
                 const values = queryPar.substring(index+1)
                     const replaySteps = []
                 values.split("__").forEach(value=>{
-                    const values = value.split("-"),
+                    const values = value.split("-"),length = values.length,
                         tempStep = {
                             x:values[0],
                             y:values[1],
                             id:values[2],
-                            text:values[3]
+                            text:values[3],
+                            tip:values[4] || values[3]
                         }
                         replaySteps.push(tempStep)
                     })
@@ -52,6 +53,7 @@ export default function Easyshare(options){
                 x:x,
                 y:y,
                 text:selectdText,
+                tip:selectdText,
                 //TODO 优化whatselement
                 id: whats.getUniqueId(e.target).wid
             }
@@ -148,7 +150,7 @@ export default function Easyshare(options){
             }else{
                 this.recordedSteps.forEach((step,index) => {
                     index!=0?share +="__":"";
-                    share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text.substring(0,15)}`
+                    share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text?step.text.substring(0,15):""}-${step.tip?step.tip:""}`
                 });
                 if(this.options.autoReplay){
                     share += "&autoreplay=true"
