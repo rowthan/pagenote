@@ -2,6 +2,34 @@ import {  h,app } from "hyperapp"
 import style from "./widget.css"
 import constant from './constant'
 import { getViewPosition } from "./document";
+
+var css = {
+  menu:`.menu{
+      position:absolute;
+      right:0px;
+      width: 20px;
+      height: 18px;
+      transform: scale(1);
+      background: #e6e6e6;
+      border-radius: 25%;
+      text-align:center;
+      transition:.5s;
+      cursor:pointer;
+      box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
+  }`,
+  easyshare_highlight:`
+    .easyshare_highlight{
+      background:#f1f1f1;
+    }
+  `
+}
+
+var styles = document.createElement("style")
+for(let c in css){
+  styles.innerHTML += css[c].replace(/\s*/g,"");
+}
+document.head.appendChild(styles)
+
 //TODO 增加dev 视图展示所有state信息 方便手机端调试
 export default function widget(easyshare){
   const state = {
@@ -158,8 +186,6 @@ export default function widget(easyshare){
           ))
         }
       </div>
-      
-      <aside style={{position:"fixed",top:0,right:0}}>
       <aside style={{position:"fixed",right:0,
           top:window.innerHeight/2-(state.recordedSteps.length+2)*15/2+"px"}}>
           <div style={{position:"relative",right:"6px"}}>
