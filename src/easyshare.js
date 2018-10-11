@@ -6,7 +6,7 @@ const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
 export default function Easyshare(options){
-    this.options = Object.assign({autoReplay:true},options)
+    this.options = Object.assign({autoReplay:true,maxMarkNumber:10},options)
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
@@ -66,6 +66,11 @@ export default function Easyshare(options){
     
 
     this.record = function(forceRecord=false){
+        const maxNn = this.options.maxMarkNumber
+        if(this.recordedSteps.length>=maxNn){
+            alert("标记失败！本网页最大标记数量为 "+maxNn)
+            return false
+        }
         // 如果当前状态不为等待记录 且不是强行记录时
         if(!forceRecord && this.status!=constant.WAITING){
             console.log("当前状态不可记录")
