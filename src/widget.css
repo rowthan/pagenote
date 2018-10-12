@@ -1,3 +1,6 @@
+#easyshareContainer svg{vertical-align: text-bottom}
+
+
 .box {
     max-width: 250px;
     min-width: 100px;
@@ -28,14 +31,19 @@
     transform: scale(2)
 }
 
-.edit{
+.edit,.delete{
     position:absolute;
-    top:3px;
     right: -22px;
     height: 20px;
     background:rgba(0,0,0,.52);
     border-radius: 5px;
     cursor: pointer;
+}
+.edit{
+    top:3px;
+}
+.delete{
+    bottom: 0;
 }
 
 .menu{

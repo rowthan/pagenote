@@ -79,7 +79,8 @@ export default function Easyshare(options){
             return false;
         }
         this.status = constant.RECORDING
-        // hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)       
+        hightLightElement(whats.getTarget(this.targetInfo.id),this.targetInfo.text)    
+        this.targetInfo.isActive = true   
         this.recordedSteps.push(this.targetInfo)
         this.makelink()
         this.status = constant.RECORDED
