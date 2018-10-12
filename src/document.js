@@ -18,7 +18,7 @@ return touch ? {
 },
 
 hightLightElement = function (element,text,revert){
-    if(!element || text===undefined){
+    if(!element || !text){
         return
     }
     const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
@@ -44,6 +44,7 @@ hightLightElement = function (element,text,revert){
         after = left+text+right
     let finder = new RegExp(text,"g")
     element.innerHTML = element.innerHTML.replace(finder,after)
+    //TODO 不能直接加 class 避免定位不准确 影响判断 可通过 data- 来做样式调整
     element.classList.add("easyshare_highlight")
     //TODO 增加背景突显动画
 }
