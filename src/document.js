@@ -17,7 +17,7 @@ return touch ? {
    return { 'x': x, 'y': y };
 },
 
-hightLightElement = function (element,text,revert){
+hightLightElement = function (element,text,hightlight=true){
     if(!element || !text){
         return
     }
@@ -32,7 +32,7 @@ hightLightElement = function (element,text,revert){
         ele.outerHTML = originText
     }
     // 如果是还原 则不进行之后操作
-    if(revert){
+    if(!hightlight){
         element.classList.remove("easyshare_highlight")
         return
     }
