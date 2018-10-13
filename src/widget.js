@@ -67,7 +67,7 @@ export default function widget(easyshare){
     setTimeout(()=>{
       actions.refershState()
       if(window.location.search.indexOf("autoreplay")>-1){
-        easyshare.replay(0,false,true)
+        easyshare.replay(0,true,true,true)
       }
     },1000)
   }
@@ -150,7 +150,7 @@ export default function widget(easyshare){
             //TODO running 增加动画效果
             background: step.isActive?"#cdef5b":"#b7b7b7",
           }}
-          onclick={()=>{easyshare.replay(index,step.isActive)}}
+          onclick={()=>{easyshare.replay(index,true,!step.isActive)}}
     >
     </span>
   )
@@ -158,7 +158,7 @@ export default function widget(easyshare){
   const StepTag = ({step,index,actions})=>(
     <div style={{position:"absolute",top:step.y+"px",left:step.x+"px"}}>
       <aside title="点击查看"  class={`${style.point} ${step.isActive?style.active:""}`}
-        onclick={()=>{step.writing=false;easyshare.replay(index,step.isActive)}} >
+        onclick={()=>{step.writing=false;easyshare.replay(index,false,!step.isActive)}} >
         <svg style={{position:"absolute",display:step.isActive?"":"none"}}  viewBox="0 0 1024 1024" version="1.1" width="10" height="10">
           <path d="M192 448l640 0 0 128-640 0 0-128Z" p-id="4227" fill="#fff"></path>
         </svg>
@@ -172,7 +172,7 @@ export default function widget(easyshare){
             style={{width:"100%",border:`${step.writing?1:0}px solid`}}>
             {step.tip}
           </div>
-          <span className={style.edit} onclick={()=>{step.writing=true;easyshare.status = constant.ABORTAUTOPLAY}}>
+          <span className={style.edit} onclick={()=>{step.writing=true;easyshare.replay(index)}}>
               <svg style="" viewBox="0 0 1024 1024" version="1.1" width="20" height="20"> 
               <path d="M924.766 187.485c-32.297-32.412-62.339-68.774-99.757-95.411-34.261-7.093-50.787 29.928-74.311 47.237 39.777 46.201 86.117 87.013 128.923 130.718 19.407-23.095 65.369-46.724 45.145-82.543zM903.499 362.026c-27.158 27.294-55.258 53.806-81.519 82.146-0.648 109.327 0.273 218.642-0.375 327.946-0.545 40.3-35.851 76.004-76.13 77.445-165.797 0.65-331.717 0.65-497.513 0.127-44.75-1.191-80.6-44.103-77.048-88.058-0.125-158.274-0.125-316.403 0-474.533-3.406-43.84 32.55-85.968 76.797-87.535 109.85-1.451 219.739 0.125 329.462-0.794 28.495-25.717 54.737-53.942 82.063-80.976-146.242 0-292.337-0.773-438.557 0.397-68.274 1.18-129.445 60.898-130.614 129.403-0.272 184.515-0.793 368.895 0.25 553.399 0.272 66.414 56.7 124.012 122.091 130.322l574.541 0c61.944-10.884 115.115-64.972 115.907-129.403 1.839-146.576 0.399-293.297 0.649-439.883zM859.669 290.243c-43.058-43.309-86.365-86.357-129.946-129.142-95.309 94.619-190.867 188.987-285.63 284.128 42.91 43.182 86.094 86.22 129.674 128.871 95.433-94.484 190.718-189.238 285.902-283.856zM373.604 643.78c58.392-15.877 89.499-25.874 147.911-41.616 15.607-4.973 25.989-7.98 33.992-11.167-41.345-39.369-88.852-87.891-130.072-127.523-17.32 60.106-34.534 120.201-51.832 180.305z" p-id="2079" fill="#ffffff">
               </path>

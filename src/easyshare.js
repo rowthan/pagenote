@@ -89,17 +89,17 @@ export default function Easyshare(options){
     this.remove = function(stepIndex){
         if(stepIndex<0){
             while(this.recordedSteps.length>0){
-                this.replay(0,true)
+                this.replay(0,false,false)
                 this.recordedSteps.splice(0,1)
             }
         }else{
-            this.replay(stepIndex,true)
+            this.replay(stepIndex,false,false)
             this.recordedSteps.splice(stepIndex,1)
         }
         this.makelink()
     }
 
-    this.replay = function(index=0,revert,autoNext,replaySteps,timeout=5000){
+    this.replay = function(index=0,goto=true,hightlight=true,autoNext,replaySteps,timeout=5000){
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
         const runStep = replaySteps[index]
@@ -110,22 +110,33 @@ export default function Easyshare(options){
         const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
         
         clearInterval(runningTimer)
+        clearTimeout(nextTimer)
+        runningTimer = null
+        nextTimer = null
         //开始滚动
         this.runindex = index
         this.status = constant.REPLAYING
-        runStep.isActive = !revert
-        const gotoX = x-window.innerWidth/2,
-              gotoY = y-window.innerHeight/2
-        runningTimer = gotoPosition(gotoX,gotoY,()=>{
+        runStep.isActive = hightlight
+        
+        targetEl &&  hightLightElement(targetEl,text,hightlight)
+        if(goto){
+            const gotoX = x-window.innerWidth/2,gotoY = y-window.innerHeight/2;
+            runningTimer = gotoPosition(gotoX,gotoY,()=>{
+                this.runindex = null
+                if(autoNext){
+                    nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
+                        ,autoNext,replaySteps,timeout),timeout)
+                }else{
+                    this.status = constant.REPLAYFINISHED
+                    clearTimeout(nextTimer)
+                }
+            })
+        }else{
             this.runindex = null
-            if(autoNext){
-                nextTimer = setTimeout(()=>this.replay(index+1,revert,autoNext,replaySteps,timeout),timeout)
-            }else{
-                this.status = constant.REPLAYFINISHED
-                clearTimeout(nextTimer)
-            }
-        })
-        targetEl &&  hightLightElement(targetEl,text,revert)
+            this.status = constant.REPLAYFINISHED
+        }
+        
+
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
