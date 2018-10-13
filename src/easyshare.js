@@ -10,7 +10,7 @@ export default function Easyshare(options){
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
-    let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location
+    let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location, nextTimer = null, runningTimer = null
     window.addEventListener("load", (event)=> {
         const search = decodeURI(location.search)
         if(search.indexOf(nameid)===-1){
@@ -99,16 +99,15 @@ export default function Easyshare(options){
         this.makelink()
     }
 
-    let nextTimer = null
-    let runningTimer = null
     this.replay = function(index=0,revert,autoNext,replaySteps,timeout=5000){
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
-        if(replaySteps.length<index+1){
+        const runStep = replaySteps[index]
+        if(!runStep){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
+        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
         
         clearInterval(runningTimer)
         //开始滚动
