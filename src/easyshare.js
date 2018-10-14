@@ -55,6 +55,7 @@ export default function Easyshare(options){
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
+        e.target.classList.remove("easyshare_highlight")
         if(selectdText){
             const { x, y } = getXY(e)
             this.targetInfo = {
@@ -162,8 +163,6 @@ export default function Easyshare(options){
 
     //success no return; failed return errorMsg
     this.makelink = () => {
-        //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
-        // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
         try{
             let share = "&"+nameid+"=",
                 currentUrl = location.href,
