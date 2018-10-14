@@ -1,7 +1,8 @@
 import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatsPure from 'whats-element/pure'
-
+//whats getTarget try catch 
+//TODO 不能返回带#号
 const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
@@ -11,6 +12,8 @@ export default function Easyshare(options){
     this.runindex = null
     this.targetInfo = {}
     let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location, nextTimer = null, runningTimer = null
+    //做成可配置项
+    const splitStep = "e_o",splitValue=":)",nullValue = "",numberAfter="_hash_",numberCode = "#"//中文 ! # & @ 不能作为分割词 (→o←) -_-||
     window.addEventListener("load", (event)=> {
         const search = decodeURI(location.search)
         if(search.indexOf(nameid)===-1){
@@ -21,14 +24,14 @@ export default function Easyshare(options){
             const queryPar  = searchArray[i],
             index = queryPar.indexOf("=")
             if(index>-1){
-                const values = queryPar.substring(index+1)
-                    const replaySteps = []
-                values.split("__").forEach(value=>{
-                    const values = value.split("-"),length = values.length,
+                const values = queryPar.substring(index+1),replaySteps = []
+                //获取到EasyShare数据字符串 解析为对象
+                values.split(splitStep).forEach(value=>{
+                    const values = value.split(splitValue),
                         tempStep = {
                             x:values[0],
                             y:values[1],
-                            id:values[2],
+                            id:(values[2]||"").replace(numberCode,numberAfter),
                             text:values[3],
                             tip:values[4] || values[3]
                         }
@@ -40,6 +43,8 @@ export default function Easyshare(options){
             }
         }
     });
+
+    
     
     //TODO 移动设备兼容性  设置监听黑名单 如widget中所有元素不参与点击事件
     document.addEventListener( MOUSE_UP , (e)=>{
@@ -78,10 +83,15 @@ export default function Easyshare(options){
             console.log("当前状态不可记录")
             return false;
         }
+        const targetInfo = this.targetInfo;
+        if([splitStep,splitValue,numberCode].indexOf(targetInfo.tip)>0 || [splitStep,splitValue,numberCode].indexOf(targetInfo.text)>0){
+            alert(`选中文字、提示信息不得包含：${splitStep} 或 ${splitValue} 或者 ${numberCode}`)
+            return false;
+        }
         this.status = constant.RECORDING
-        hightLightElement(whats.getTarget(this.targetInfo.id),this.targetInfo.text)    
-        this.targetInfo.isActive = true   
-        this.recordedSteps.push(this.targetInfo)
+        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)    
+        targetInfo.isActive = true   
+        this.recordedSteps.push(targetInfo)
         this.makelink()
         this.status = constant.RECORDED
         return true
@@ -142,7 +152,6 @@ export default function Easyshare(options){
 
     this.makelink = () => {
         //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
-       
         // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
         try{
             let share = "&"+nameid+"=",
@@ -160,8 +169,17 @@ export default function Easyshare(options){
                 share=""
             }else{
                 this.recordedSteps.forEach((step,index) => {
-                    index!=0?share +="__":"";
-                    share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text?step.text.substring(0,15):""}-${step.tip?step.tip:""}`
+                    step.id = step.id.replace(numberAfter,numberCode)
+                    share += index!=0 ? splitStep:"";
+                    var keys = ["x","y","id","text","tip"]
+                    keys.forEach((key,keyindex)=>{
+                        let value = step[key] || nullValue
+                        if((key=="id" && value.length > 35) || (key=="tip" && value===step["text"])){
+                            value = nullValue
+                        }
+
+                        share += keyindex!=0 ? splitValue+value : value
+                    })
                 });
                 if(this.options.autoReplay){
                     share += "&autoreplay=true"
