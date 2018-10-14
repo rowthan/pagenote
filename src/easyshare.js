@@ -7,18 +7,21 @@ const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
 export default function Easyshare(options){
-    this.options = Object.assign({autoReplay:true,maxMarkNumber:10},options)
+    this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
     let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location, nextTimer = null, runningTimer = null
     //做成可配置项
-    const splitStep = "e_o",splitValue=":)",nullValue = "",numberAfter="_hash_",numberCode = "#"//中文 ! # & @ 不能作为分割词 (→o←) -_-||
+    const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,
+    nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
+    NOCODE = [splitStep,splitValue];
     window.addEventListener("load", (event)=> {
-        const search = decodeURI(location.search)
+        const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         if(search.indexOf(nameid)===-1){
             return
         }
+
         const searchArray = search.substr(1).split("&");
         for(let i=0 ; i < searchArray.length; i++){
             const queryPar  = searchArray[i],
@@ -31,7 +34,7 @@ export default function Easyshare(options){
                         tempStep = {
                             x:values[0],
                             y:values[1],
-                            id:(values[2]||"").replace(numberCode,numberAfter),
+                            id:values[2],
                             text:values[3],
                             tip:values[4] || values[3]
                         }
@@ -57,7 +60,7 @@ export default function Easyshare(options){
             this.targetInfo = {
                 x:x,
                 y:y,
-                text:selectdText,
+                text:selectdText.substring(0,30),
                 tip:selectdText,
                 //TODO 优化whatselement
                 id: whats.getUniqueId(e.target).wid
@@ -84,10 +87,14 @@ export default function Easyshare(options){
             return false;
         }
         const targetInfo = this.targetInfo;
-        if([splitStep,splitValue,numberCode].indexOf(targetInfo.tip)>0 || [splitStep,splitValue,numberCode].indexOf(targetInfo.text)>0){
-            alert(`选中文字、提示信息不得包含：${splitStep} 或 ${splitValue} 或者 ${numberCode}`)
-            return false;
+        
+        for(let i=0; i < NOCODE.length; i++){
+            if(targetInfo.tip.indexOf(NOCODE[i])>-1 || targetInfo.text.indexOf(NOCODE[i])>-1){
+                alert(`选中文字、提示信息不得包含：${NOCODE} 中任意一个`)
+                return false;
+            }
         }
+       
         this.status = constant.RECORDING
         hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)    
         targetInfo.isActive = true   
@@ -169,12 +176,11 @@ export default function Easyshare(options){
                 share=""
             }else{
                 this.recordedSteps.forEach((step,index) => {
-                    step.id = step.id.replace(numberAfter,numberCode)
                     share += index!=0 ? splitStep:"";
                     var keys = ["x","y","id","text","tip"]
                     keys.forEach((key,keyindex)=>{
-                        let value = step[key] || nullValue
-                        if((key=="id" && value.length > 35) || (key=="tip" && value===step["text"])){
+                        let value = (step[key] || nullValue).toString().replace(new RegExp(numberCode,"g"),numberAfter)
+                        if((key=="id" && value.length > 35) || (key=="tip" && step["tip"]===step["text"])){
                             value = nullValue
                         }
 
