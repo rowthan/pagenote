@@ -1,30 +1,36 @@
 import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatsPure from 'whats-element/pure'
-
+//whats getTarget try catch 
+//TODO 不能返回带#号
 const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
 
 export default function Easyshare(options){
-    this.options = Object.assign({autoReplay:true,maxMarkNumber:10},options)
+    this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
-    let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location
+    let status=null,nextTimer = null, runningTimer = null
+    //做成可配置项
+    const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
+    nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
+    NOCODE = [splitStep,splitValue];
     window.addEventListener("load", (event)=> {
-        const search = decodeURI(location.search)
+        const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         if(search.indexOf(nameid)===-1){
             return
         }
+
         const searchArray = search.substr(1).split("&");
         for(let i=0 ; i < searchArray.length; i++){
             const queryPar  = searchArray[i],
             index = queryPar.indexOf("=")
             if(index>-1){
-                const values = queryPar.substring(index+1)
-                    const replaySteps = []
-                values.split("__").forEach(value=>{
-                    const values = value.split("-"),length = values.length,
+                const values = queryPar.substring(index+1),replaySteps = []
+                //获取到EasyShare数据字符串 解析为对象
+                values.split(splitStep).forEach(value=>{
+                    const values = value.split(splitValue),
                         tempStep = {
                             x:values[0],
                             y:values[1],
@@ -40,6 +46,8 @@ export default function Easyshare(options){
             }
         }
     });
+
+    
     
     //TODO 移动设备兼容性  设置监听黑名单 如widget中所有元素不参与点击事件
     document.addEventListener( MOUSE_UP , (e)=>{
@@ -47,12 +55,13 @@ export default function Easyshare(options){
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
+        e.target.classList.remove("easyshare_highlight")
         if(selectdText){
             const { x, y } = getXY(e)
             this.targetInfo = {
                 x:x,
                 y:y,
-                text:selectdText,
+                text:selectdText.substring(0,30),
                 tip:selectdText,
                 //TODO 优化whatselement
                 id: whats.getUniqueId(e.target).wid
@@ -66,7 +75,7 @@ export default function Easyshare(options){
 
     this.onStateChange = function(){}
     
-
+    // success: true,faild:false
     this.record = function(forceRecord=false){
         const maxNn = this.options.maxMarkNumber
         if(this.recordedSteps.length>=maxNn){
@@ -78,62 +87,82 @@ export default function Easyshare(options){
             console.log("当前状态不可记录")
             return false;
         }
+        const targetInfo = this.targetInfo;
+        
         this.status = constant.RECORDING
-        hightLightElement(whats.getTarget(this.targetInfo.id),this.targetInfo.text)    
-        this.targetInfo.isActive = true   
-        this.recordedSteps.push(this.targetInfo)
-        this.makelink()
+        
+        this.recordedSteps.push(targetInfo)
+        //记录内容字符串存储过程错误，进行回滚操作
+        const storeResult = this.makelink()
+        if(storeResult){
+            alert("存储失败："+storeResult)
+            this.recordedSteps.splice(-1,1)
+            this.status = constant.RECORDFAIL
+            return false
+        }
+        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)    
+        targetInfo.isActive = true   
         this.status = constant.RECORDED
         return true
     }
+    
     this.remove = function(stepIndex){
+        //删除所有
         if(stepIndex<0){
             while(this.recordedSteps.length>0){
-                this.replay(0,true)
+                this.replay(0,false,false)
                 this.recordedSteps.splice(0,1)
             }
         }else{
-            this.replay(stepIndex,true)
+            this.replay(stepIndex,false,false)
             this.recordedSteps.splice(stepIndex,1)
         }
         this.makelink()
     }
 
-    let nextTimer = null
-    let runningTimer = null
-    this.replay = function(index=0,revert,autoNext,replaySteps,timeout=5000){
+    this.replay = function(index=0,goto=true,hightlight=true,autoNext,replaySteps,timeout=5000){
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
-        if(replaySteps.length<index+1){
+        const runStep = replaySteps[index]
+        if(!runStep){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const runStep = replaySteps[index], {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
+        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
         
         clearInterval(runningTimer)
+        clearTimeout(nextTimer)
+        runningTimer = null
+        nextTimer = null
         //开始滚动
         this.runindex = index
         this.status = constant.REPLAYING
-        runStep.isActive = !revert
-        const gotoX = x-window.innerWidth/2,
-              gotoY = y-window.innerHeight/2
-        runningTimer = gotoPosition(gotoX,gotoY,()=>{
+        runStep.isActive = hightlight
+        
+        targetEl &&  hightLightElement(targetEl,text,hightlight)
+        if(goto){
+            const gotoX = x-window.innerWidth/2,gotoY = y-window.innerHeight/2;
+            runningTimer = gotoPosition(gotoX,gotoY,()=>{
+                this.runindex = null
+                if(autoNext){
+                    nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
+                        ,autoNext,replaySteps,timeout),timeout)
+                }else{
+                    this.status = constant.REPLAYFINISHED
+                    clearTimeout(nextTimer)
+                }
+            })
+        }else{
             this.runindex = null
-            if(autoNext){
-                nextTimer = setTimeout(()=>this.replay(index+1,revert,autoNext,replaySteps,timeout),timeout)
-            }else{
-                this.status = constant.REPLAYFINISHED
-                clearTimeout(nextTimer)
-            }
-        })
-        targetEl &&  hightLightElement(targetEl,text,revert)
+            this.status = constant.REPLAYFINISHED
+        }
+        
+
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
+    //success no return; failed return errorMsg
     this.makelink = () => {
-        //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
-       
-        // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
         try{
             let share = "&"+nameid+"=",
                 currentUrl = location.href,
@@ -150,8 +179,22 @@ export default function Easyshare(options){
                 share=""
             }else{
                 this.recordedSteps.forEach((step,index) => {
-                    index!=0?share +="__":"";
-                    share += `${step.x}-${step.y}-${(step.id && step.id.length<15)?step.id:"_"}-${step.text?step.text.substring(0,15):""}-${step.tip?step.tip:""}`
+                    share += index!=0 ? splitStep:"";
+                    var keys = ["x","y","id","text","tip"]
+                    keys.forEach((key,keyindex)=>{
+                        let value = (step[key] || nullValue).toString().replace(new RegExp(numberCode,"g"),numberAfter)
+                        
+                        NOCODE.forEach(code=>{
+                            if(value.indexOf(code)>-1){
+                                throw Error(`选中文字、提示信息不得包含：${code}`)
+                            }
+                        })
+                        
+                        if((key=="id" && value.length > 35) || (key=="tip" && step["tip"]===step["text"])){
+                            value = nullValue
+                        }
+                        share += keyindex!=0 ? splitValue+value : value
+                    })
                 });
                 if(this.options.autoReplay){
                     share += "&autoreplay=true"
@@ -159,8 +202,7 @@ export default function Easyshare(options){
             }
             history.pushState("", nameid, currentUrl+share);
         }catch(e){
-            this.recordedSteps.splice(-1,1)
-            throw Error("makelink faild",e)
+            return e.message
         }
     }
 

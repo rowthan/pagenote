@@ -17,7 +17,7 @@ return touch ? {
    return { 'x': x, 'y': y };
 },
 
-hightLightElement = function (element,text,revert){
+hightLightElement = function (element,text,hightlight=true){
     if(!element || !text){
         return
     }
@@ -32,7 +32,7 @@ hightLightElement = function (element,text,revert){
         ele.outerHTML = originText
     }
     // 如果是还原 则不进行之后操作
-    if(revert){
+    if(!hightlight){
         element.classList.remove("easyshare_highlight")
         return
     }
@@ -41,8 +41,10 @@ hightLightElement = function (element,text,revert){
     const originhtml = text || element.innerHTML;//TODO 对原先的 html 引号做处理
     const left = '<b data-highlight="easyshare" data-origintext="'+text+'" data-originhtml="'+originhtml+'" style="color:red">',
         right = '</b>',
-        after = left+text+right
-    let finder = new RegExp(text,"g")
+        after = left+text+right,
+        replaceWhat = text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),
+        finder = new RegExp(replaceWhat, 'g');
+    //不可直接全部替换 只能替换 innnerText 避免误操作 如 finder 为class时
     element.innerHTML = element.innerHTML.replace(finder,after)
     //TODO 不能直接加 class 避免定位不准确 影响判断 可通过 data- 来做样式调整
     element.classList.add("easyshare_highlight")
