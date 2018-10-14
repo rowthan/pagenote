@@ -11,7 +11,7 @@ export default function Easyshare(options){
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
-    let nextTimer = null, runningTimer = null
+    let status=null,nextTimer = null, runningTimer = null
     //做成可配置项
     const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
     nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
