@@ -11,9 +11,9 @@ export default function Easyshare(options){
     this.recordedSteps = []
     this.runindex = null
     this.targetInfo = {}
-    let status = constant.PAUSE, nameid = constant.SHARENAME,location = window.location, nextTimer = null, runningTimer = null
+    let nextTimer = null, runningTimer = null
     //做成可配置项
-    const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,
+    const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
     nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
     NOCODE = [splitStep,splitValue];
     window.addEventListener("load", (event)=> {
@@ -74,7 +74,7 @@ export default function Easyshare(options){
 
     this.onStateChange = function(){}
     
-
+    // success: true,faild:false
     this.record = function(forceRecord=false){
         const maxNn = this.options.maxMarkNumber
         if(this.recordedSteps.length>=maxNn){
@@ -88,22 +88,25 @@ export default function Easyshare(options){
         }
         const targetInfo = this.targetInfo;
         
-        for(let i=0; i < NOCODE.length; i++){
-            if(targetInfo.tip.indexOf(NOCODE[i])>-1 || targetInfo.text.indexOf(NOCODE[i])>-1){
-                alert(`选中文字、提示信息不得包含：${NOCODE} 中任意一个`)
-                return false;
-            }
-        }
-       
         this.status = constant.RECORDING
+        
+        this.recordedSteps.push(targetInfo)
+        //记录内容字符串存储过程错误，进行回滚操作
+        const storeResult = this.makelink()
+        if(storeResult){
+            alert("存储失败："+storeResult)
+            this.recordedSteps.splice(-1,1)
+            this.status = constant.RECORDFAIL
+            return false
+        }
         hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)    
         targetInfo.isActive = true   
-        this.recordedSteps.push(targetInfo)
-        this.makelink()
         this.status = constant.RECORDED
         return true
     }
+    
     this.remove = function(stepIndex){
+        //删除所有
         if(stepIndex<0){
             while(this.recordedSteps.length>0){
                 this.replay(0,false,false)
@@ -157,6 +160,7 @@ export default function Easyshare(options){
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
+    //success no return; failed return errorMsg
     this.makelink = () => {
         //TODO 生成的url带特殊字符的进行替换处理 并在解析时还原
         // 生成分享链接,记录数据:  http://www.baidu.com?share=0-123a0-234
@@ -180,10 +184,16 @@ export default function Easyshare(options){
                     var keys = ["x","y","id","text","tip"]
                     keys.forEach((key,keyindex)=>{
                         let value = (step[key] || nullValue).toString().replace(new RegExp(numberCode,"g"),numberAfter)
+                        
+                        NOCODE.forEach(code=>{
+                            if(value.indexOf(code)>-1){
+                                throw Error(`选中文字、提示信息不得包含：${code}`)
+                            }
+                        })
+                        
                         if((key=="id" && value.length > 35) || (key=="tip" && step["tip"]===step["text"])){
                             value = nullValue
                         }
-
                         share += keyindex!=0 ? splitValue+value : value
                     })
                 });
@@ -193,8 +203,7 @@ export default function Easyshare(options){
             }
             history.pushState("", nameid, currentUrl+share);
         }catch(e){
-            this.recordedSteps.splice(-1,1)
-            throw Error("makelink faild",e)
+            return e.message
         }
     }
 

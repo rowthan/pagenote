@@ -194,8 +194,17 @@ export default function widget(easyshare){
              
              <span>
               <span style={{fontSize:"12px",color:"#bbb"}}> Tip:放弃保存请点击左上角，关闭编辑窗口</span>
-              <a style={{float:"right",height:"20px",background:"#fff",borderRadius:"5px"}} href="javascript:;" title="保存" onclick={()=>{
-                const value = step.modify!=undefined?step.modify:step.tip ;step.tip = value; step.writing=false; easyshare.makelink()}}>
+              <a style={{float:"right",height:"20px",background:"#fff",borderRadius:"5px"}} href="javascript:;" 
+                title="保存" onclick={()=>{
+                const value = step.modify!=undefined?step.modify:step.tip ;
+                const originTip = step.tip;
+                step.tip = value; 
+                const result = easyshare.makelink();
+                const saveResult = result == undefined;
+                !saveResult && alert(result)
+                step.writing = !saveResult
+                step.tip = saveResult?value:originTip
+                }}>
                   <svg viewBox="0 0 1024 1024" version="1.1" width="20" height="20">
                       <path d="M725.333333 128 213.333333 128C166.4 128 128 166.4 128 213.333333l0 597.333333c0 46.933333 38.4 85.333333 85.333333 85.333333l597.333333 0c46.933333 0 85.333333-38.4 85.333333-85.333333L896 298.666667 725.333333 128zM512 810.666667c-72.533333 0-128-55.466667-128-128s55.466667-128 128-128c72.533333 0 128 55.466667 128 128S584.533333 810.666667 512 810.666667zM640 384 213.333333 384 213.333333 213.333333l426.666667 0L640 384z"  fill="#949494"></path>
                   </svg>
