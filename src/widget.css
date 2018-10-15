@@ -89,3 +89,8 @@
 .recordBall.recording{
     display: block;
 }
+
+
+:global(.easyshare_highlight) {
+    background:#f1f1f1;
+}
