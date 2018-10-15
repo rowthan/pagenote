@@ -2,21 +2,20 @@ import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatsPure from 'whats-element/pure'
 //whats getTarget try catch 
-//TODO 不能返回带#号
 const whats = new whatsPure(),
-      MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
+      MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup',NULL = null
 
 export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
-    this.runindex = null
+    this.runindex = NULL
     this.targetInfo = {}
-    let status=null,nextTimer = null, runningTimer = null
+    let status=NULL,nextTimer = NULL, runningTimer = NULL
     //做成可配置项
     const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
     nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
     NOCODE = [splitStep,splitValue];
-    window.addEventListener("load", (event)=> {
+    window.addEventListener("load", ()=> {
         const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         if(search.indexOf(nameid)===-1){
             return
@@ -62,7 +61,6 @@ export default function Easyshare(options){
                 y:y,
                 text:selectdText.substring(0,30),
                 tip:selectdText,
-                //TODO 优化whatselement
                 id: whats.getUniqueId(e.target).wid
             }
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
@@ -127,12 +125,11 @@ export default function Easyshare(options){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
+        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : NULL
         
         clearInterval(runningTimer)
         clearTimeout(nextTimer)
-        runningTimer = null
-        nextTimer = null
+        runningTimer = nextTimer = NULL
         //开始滚动
         this.runindex = index
         this.status = constant.REPLAYING
@@ -142,7 +139,7 @@ export default function Easyshare(options){
         if(goto){
             const gotoX = x-window.innerWidth/2,gotoY = y-window.innerHeight/2;
             runningTimer = gotoPosition(gotoX,gotoY,()=>{
-                this.runindex = null
+                this.runindex = NULL
                 if(autoNext){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
                         ,autoNext,replaySteps,timeout),timeout)
@@ -152,11 +149,9 @@ export default function Easyshare(options){
                 }
             })
         }else{
-            this.runindex = null
+            this.runindex = NULL
             this.status = constant.REPLAYFINISHED
         }
-        
-
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
