@@ -3,8 +3,7 @@ import constant from './constant'
 import whatsPure from 'whats-element/pure'
 //whats getTarget try catch 
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
-const whats = new whatsPure(),
-      MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup',NULL = null
+const whats = new whatsPure(),NULL = null
 
 export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
@@ -90,10 +89,10 @@ export default function Easyshare(options){
     this.onStateChange = function(){}
     
     // success: true,faild:false
-    this.record = function(forceRecord=false){
+    this.record = function(forceRecord=false){   
         const maxNn = this.options.maxMarkNumber
         if(this.recordedSteps.length>=maxNn){
-            alert("标记失败！本网页最大标记数量为 "+maxNn)
+            alert("标记失败！最大标记数量为 "+maxNn)
             return false
         }
         // 如果当前状态不为等待记录 且不是强行记录时
@@ -109,7 +108,7 @@ export default function Easyshare(options){
         //记录内容字符串存储过程错误，进行回滚操作
         const storeResult = this.makelink()
         if(storeResult){
-            alert("存储失败："+storeResult)
+            alert(storeResult)
             this.recordedSteps.splice(-1,1)
             this.status = constant.RECORDFAIL
             return false
@@ -221,5 +220,5 @@ export default function Easyshare(options){
         status=value;
         this.onStateChange(status)
     })})
-    Object.defineProperty(this,"version",{value:"0.0.2"})
+    Object.defineProperty(this,"version",{value:"0.0.5"})
 }
