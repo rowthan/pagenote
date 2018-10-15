@@ -3,32 +3,27 @@ import style from "./widget.css"
 import constant from './constant'
 import { getViewPosition } from "./document";
 
-var css = {
-  menu:`.menu{
-      position:absolute;
-      right:0px;
-      width: 20px;
-      height: 18px;
-      transform: scale(1);
-      background: #e6e6e6;
-      border-radius: 25%;
-      text-align:center;
-      transition:.5s;
-      cursor:pointer;
-      box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
-  }`,
-  easyshare_highlight:`
-    .easyshare_highlight{
-      background:#f1f1f1;
-    }
-  `
-}
+// var css = {
+//   menu:`.menu{
+//       position:absolute;
+//       right:0px;
+//       width: 20px;
+//       height: 18px;
+//       transform: scale(1);
+//       background: #e6e6e6;
+//       border-radius: 25%;
+//       text-align:center;
+//       transition:.5s;
+//       cursor:pointer;
+//       box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
+//   }`
+// }
 
-var styles = document.createElement("style")
-for(let c in css){
-  styles.innerHTML += css[c].replace(/\s*/g,"");
-}
-document.head.appendChild(styles)
+// var styles = document.createElement("style")
+// for(let c in css){
+//   styles.innerHTML += css[c].replace(/\s*/g,"");
+// }
+// document.head.appendChild(styles)
 
 //TODO 增加dev 视图展示所有state信息 方便手机端调试
 export default function widget(easyshare){
@@ -99,7 +94,7 @@ export default function widget(easyshare){
   }
 
   const RecordButton = ({status,onclick}) =>(
-    <button onclick={onclick}>
+    <button id="record" onclick={onclick}>
       {status===constant.WAITING && "记录此处"}
       {status===constant.REPLAYING && "结束播放后可进行记录"}
       {status===constant.PLAYANDWAIT && "结束播放后可进行记录"}
@@ -116,7 +111,7 @@ export default function widget(easyshare){
         top:state.recordedSteps.length*15+20+"px",
       }}
     >
-      <div className={style.menu} style="position:absolute;right:0;" onclick={actions.toggleMenu}>
+      <div className={style.menu} onclick={actions.toggleMenu}>
         <svg  viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
           <path fill-rule="evenodd" d="M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z"></path>
         </svg>
@@ -177,11 +172,6 @@ export default function widget(easyshare){
               <path d="M924.766 187.485c-32.297-32.412-62.339-68.774-99.757-95.411-34.261-7.093-50.787 29.928-74.311 47.237 39.777 46.201 86.117 87.013 128.923 130.718 19.407-23.095 65.369-46.724 45.145-82.543zM903.499 362.026c-27.158 27.294-55.258 53.806-81.519 82.146-0.648 109.327 0.273 218.642-0.375 327.946-0.545 40.3-35.851 76.004-76.13 77.445-165.797 0.65-331.717 0.65-497.513 0.127-44.75-1.191-80.6-44.103-77.048-88.058-0.125-158.274-0.125-316.403 0-474.533-3.406-43.84 32.55-85.968 76.797-87.535 109.85-1.451 219.739 0.125 329.462-0.794 28.495-25.717 54.737-53.942 82.063-80.976-146.242 0-292.337-0.773-438.557 0.397-68.274 1.18-129.445 60.898-130.614 129.403-0.272 184.515-0.793 368.895 0.25 553.399 0.272 66.414 56.7 124.012 122.091 130.322l574.541 0c61.944-10.884 115.115-64.972 115.907-129.403 1.839-146.576 0.399-293.297 0.649-439.883zM859.669 290.243c-43.058-43.309-86.365-86.357-129.946-129.142-95.309 94.619-190.867 188.987-285.63 284.128 42.91 43.182 86.094 86.22 129.674 128.871 95.433-94.484 190.718-189.238 285.902-283.856zM373.604 643.78c58.392-15.877 89.499-25.874 147.911-41.616 15.607-4.973 25.989-7.98 33.992-11.167-41.345-39.369-88.852-87.891-130.072-127.523-17.32 60.106-34.534 120.201-51.832 180.305z" p-id="2079" fill="#ffffff">
               </path>
               </svg>
-
-              {/* <svg  viewBox="0 0 1024 1024" version="1.1"  width="20" height="20">
-                  <path d="M808 602.9c-23.6 164.2-181.8 285.5-358.7 248.3C336.9 827.6 245.6 736.8 222 624.4c-40.3-192 92-361.8 290.4-361.8v99.2l248-148.8-248-148.8v99.2c-248 0-438 222.4-388.6 476.5 30.1 154.7 155 279.4 309.7 309.5C668 995 875.6 833.9 906.2 616.1c4.2-29.6-19.7-55.8-49.5-55.8h0.1c-24.7 0-45.3 18.2-48.8 42.6z" p-id="3506" fill="#ffffff">
-                  </path>
-              </svg> */}
           </span>
           {
             step.writing &&
@@ -221,7 +211,13 @@ export default function widget(easyshare){
 
   const view = (state, actions) => (
     <div id={style.easyshareContainer} oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};aftercreate(actions)}}>
-      <div style={{position:"absolute",left:state.targetInfo.x+"px",top:state.targetInfo.y+"px",transition:".5s"}}>
+      <div style={{
+        position:"absolute",
+        left:state.targetInfo.x +"px",
+        top:state.targetInfo.y+"px",
+        transition:".5s",
+        userSelect:"none"
+        }}>
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&

@@ -2,21 +2,20 @@ import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatsPure from 'whats-element/pure'
 //whats getTarget try catch 
-//TODO 不能返回带#号
-const whats = new whatsPure(),
-      MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup'
+//将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
+const whats = new whatsPure(),NULL = null
 
 export default function Easyshare(options){
     this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
-    this.runindex = null
+    this.runindex = NULL
     this.targetInfo = {}
-    let status=null,nextTimer = null, runningTimer = null
+    let status=NULL,nextTimer = NULL, runningTimer = NULL
     //做成可配置项
     const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
     nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
     NOCODE = [splitStep,splitValue];
-    window.addEventListener("load", (event)=> {
+    window.addEventListener("load", ()=> {
         const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         if(search.indexOf(nameid)===-1){
             return
@@ -48,38 +47,52 @@ export default function Easyshare(options){
     });
 
     
+    let levent = null
     
-    //TODO 移动设备兼容性  设置监听黑名单 如widget中所有元素不参与点击事件
-    document.addEventListener( MOUSE_UP , (e)=>{
+    if("ontouchstart" in window){
+        document.addEventListener("touchstart",(e)=>{
+            levent = e
+        })
+        document.onselectionchange = (e)=>{
+            if(levent.target && levent.target.id!="record"){
+                handleUp.call(this,getXY(levent))
+            }
+        }
+    }else{
+        document.addEventListener("mouseup" , (e)=>{
+            handleUp.call(this,{x:e.pageX,y:e.pageY})
+        } )
+    }
+    function handleUp(position){
+        
         const selectdText = document.getSelection().toString().trim();
+
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
-        e.target.classList.remove("easyshare_highlight")
         if(selectdText){
-            const { x, y } = getXY(e)
             this.targetInfo = {
-                x:x,
-                y:y,
+                x:position.x,
+                y:position.y,
                 text:selectdText.substring(0,30),
                 tip:selectdText,
-                //TODO 优化whatselement
-                id: whats.getUniqueId(e.target).wid
+                id: whats.getUniqueId(document.getSelection().anchorNode.parentNode).wid
             }
+            
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
             this.targetInfo = {}
             this.status = constant.PAUSE
         }
-    } )
+    }
 
     this.onStateChange = function(){}
     
     // success: true,faild:false
-    this.record = function(forceRecord=false){
+    this.record = function(forceRecord=false){   
         const maxNn = this.options.maxMarkNumber
         if(this.recordedSteps.length>=maxNn){
-            alert("标记失败！本网页最大标记数量为 "+maxNn)
+            alert("标记失败！最大标记数量为 "+maxNn)
             return false
         }
         // 如果当前状态不为等待记录 且不是强行记录时
@@ -95,7 +108,7 @@ export default function Easyshare(options){
         //记录内容字符串存储过程错误，进行回滚操作
         const storeResult = this.makelink()
         if(storeResult){
-            alert("存储失败："+storeResult)
+            alert(storeResult)
             this.recordedSteps.splice(-1,1)
             this.status = constant.RECORDFAIL
             return false
@@ -128,12 +141,11 @@ export default function Easyshare(options){
             this.status = constant.REPLAYFINISHED
             return 
         }
-        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : null
+        const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : NULL
         
         clearInterval(runningTimer)
         clearTimeout(nextTimer)
-        runningTimer = null
-        nextTimer = null
+        runningTimer = nextTimer = NULL
         //开始滚动
         this.runindex = index
         this.status = constant.REPLAYING
@@ -143,7 +155,7 @@ export default function Easyshare(options){
         if(goto){
             const gotoX = x-window.innerWidth/2,gotoY = y-window.innerHeight/2;
             runningTimer = gotoPosition(gotoX,gotoY,()=>{
-                this.runindex = null
+                this.runindex = NULL
                 if(autoNext){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
                         ,autoNext,replaySteps,timeout),timeout)
@@ -153,11 +165,9 @@ export default function Easyshare(options){
                 }
             })
         }else{
-            this.runindex = null
+            this.runindex = NULL
             this.status = constant.REPLAYFINISHED
         }
-        
-
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
 
@@ -210,5 +220,5 @@ export default function Easyshare(options){
         status=value;
         this.onStateChange(status)
     })})
-    Object.defineProperty(this,"version",{value:"0.0.2"})
+    Object.defineProperty(this,"version",{value:"0.0.5"})
 }
