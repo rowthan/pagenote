@@ -2,6 +2,7 @@ import {gotoPosition,getXY,hightLightElement} from './document'
 import constant from './constant'
 import whatsPure from 'whats-element/pure'
 //whats getTarget try catch 
+//将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 const whats = new whatsPure(),
       MOUSE_UP = 'ontouchstart' in window ? 'touchend' : 'mouseup',NULL = null
 
@@ -47,28 +48,44 @@ export default function Easyshare(options){
     });
 
     
+    let levent = null
     
-    //TODO 移动设备兼容性  设置监听黑名单 如widget中所有元素不参与点击事件
-    document.addEventListener( MOUSE_UP , (e)=>{
+    if("ontouchstart" in window){
+        document.addEventListener("touchstart",(e)=>{
+            levent = e
+        })
+        document.onselectionchange = (e)=>{
+            if(levent.target && levent.target.id!="record"){
+                handleUp.call(this,getXY(levent))
+            }
+        }
+    }else{
+        document.addEventListener("mouseup" , (e)=>{
+            handleUp.call(this,{x:e.pageX,y:e.pageY})
+        } )
+    }
+    function handleUp(position){
+        
         const selectdText = document.getSelection().toString().trim();
+
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
         if(selectdText){
-            const { x, y } = getXY(e)
             this.targetInfo = {
-                x:x,
-                y:y,
+                x:position.x,
+                y:position.y,
                 text:selectdText.substring(0,30),
                 tip:selectdText,
-                id: whats.getUniqueId(e.target).wid
+                id: whats.getUniqueId(document.getSelection().anchorNode.parentNode).wid
             }
+            
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
             this.targetInfo = {}
             this.status = constant.PAUSE
         }
-    } )
+    }
 
     this.onStateChange = function(){}
     
