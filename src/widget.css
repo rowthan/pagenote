@@ -94,3 +94,11 @@
 :global(.easyshare_highlight) {
     background:#f1f1f1;
 }
+
+:global(b[data-highlight='easyshare']){
+    color: green
+}
+
+:global([data-highlightbk='yes']){
+    background: #f1f1f1;
+}
