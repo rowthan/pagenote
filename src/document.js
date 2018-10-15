@@ -24,7 +24,7 @@ hightLightElement = function (element,text,hightlight=true){
     const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
     //还原高亮，即便是高亮 也要先还原高亮
     for(let i=0; i<highlightElements.length; i++){
-        const ele = highlightElements[i],originText = ele.dataset['origintext']
+        const ele = highlightElements[i],originText = ele.dataset['origintext'] || ele.outerHTML
         //如果是其他步骤高亮的则不还原
         if(originText!=text){
             continue;
@@ -33,21 +33,21 @@ hightLightElement = function (element,text,hightlight=true){
     }
     // 如果是还原 则不进行之后操作
     if(!hightlight){
-        element.classList.remove("easyshare_highlight")
+        element.dataset.highlightbk="no"
         return
     }
     
     //高亮
-    const left = '<b data-highlight="easyshare" data-origintext="'+text+'" style="color:red">',
+    const left = '<b data-highlight="easyshare" data-origintext="'+text+'">',
         right = '</b>',
         replaceWhat = ">.*?"+text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+".*?<",
         finder = new RegExp(replaceWhat, 'g');
 
     // 存在错误的情况，元素属性中包含使用引号值中包含 <> 符号 时
+    element.dataset.highlightbk="yes"
     element.outerHTML = element.outerHTML.replace(finder,function(matched){
         return matched.replace(text,left+text+right)
     })
-    element.classList.add("easyshare_highlight")
     //TODO 增加背景突显动画
 }
 

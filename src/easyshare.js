@@ -55,7 +55,6 @@ export default function Easyshare(options){
         if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
             return
         }
-        e.target.classList.remove("easyshare_highlight")
         if(selectdText){
             const { x, y } = getXY(e)
             this.targetInfo = {
