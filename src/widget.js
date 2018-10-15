@@ -94,7 +94,7 @@ export default function widget(easyshare){
   }
 
   const RecordButton = ({status,onclick}) =>(
-    <button onclick={onclick}>
+    <button id="record" onclick={onclick}>
       {status===constant.WAITING && "记录此处"}
       {status===constant.REPLAYING && "结束播放后可进行记录"}
       {status===constant.PLAYANDWAIT && "结束播放后可进行记录"}
@@ -111,7 +111,7 @@ export default function widget(easyshare){
         top:state.recordedSteps.length*15+20+"px",
       }}
     >
-      <div className={style.menu} style="position:absolute;right:0;" onclick={actions.toggleMenu}>
+      <div className={style.menu} onclick={actions.toggleMenu}>
         <svg  viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
           <path fill-rule="evenodd" d="M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z"></path>
         </svg>
@@ -211,7 +211,13 @@ export default function widget(easyshare){
 
   const view = (state, actions) => (
     <div id={style.easyshareContainer} oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};aftercreate(actions)}}>
-      <div style={{position:"absolute",left:state.targetInfo.x+"px",top:state.targetInfo.y+"px",transition:".5s"}}>
+      <div style={{
+        position:"absolute",
+        left:state.targetInfo.x +"px",
+        top:state.targetInfo.y+"px",
+        transition:".5s",
+        userSelect:"none"
+        }}>
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&
