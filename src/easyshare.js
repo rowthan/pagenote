@@ -182,7 +182,11 @@ export default function Easyshare(options){
                     clearTimeout(nextTimer)
                 }
             })
-        }else{
+        }else if(autoNext){
+            nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
+                ,autoNext,replaySteps,timeout),timeout)
+        }
+        else{
             this.runindex = NULL
             this.status = constant.REPLAYFINISHED
         }
