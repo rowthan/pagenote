@@ -72,7 +72,8 @@ export default function Easyshare(options){
         })
         document.onselectionchange = (e)=>{
             if(levent.target && levent.target.id!="record"){
-                handleUp.call(this,getXY(levent))
+                const{x,y}=getXY(levent)
+                handleUp.call(this,{x,y:y+24})
             }
         }
     }else{
@@ -171,8 +172,7 @@ export default function Easyshare(options){
         
         targetEl &&  hightLightElement(targetEl,text,hightlight)
         if(goto){
-            const gotoX = x-window.innerWidth/2,gotoY = y-window.innerHeight/2;
-            runningTimer = gotoPosition(gotoX,gotoY,()=>{
+            runningTimer = gotoPosition(x-window.innerWidth/2,y-window.innerHeight/2,()=>{
                 this.runindex = NULL
                 if(autoNext){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
