@@ -273,4 +273,4 @@ Easyshare.prototype.CONSTANT = {
     REPLAYFINISHED:9
 }
 
-Easyshare.prototype.version = "0.0.5"
+Easyshare.prototype.version = "0.0.6"
