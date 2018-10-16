@@ -6,10 +6,11 @@ const whats = new whatsPure()
 
 export default function Easyshare(options){
     this.options = 
-    Object.assign({playSetting:{auto:1,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
+    Object.assign({playSetting:{auto:true,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
     this.runindex = NULL
     this.target = {}
+    this.url = window.location.href
     let status=NULL,
         nextTimer = NULL, 
         runningTimer = NULL,
@@ -24,7 +25,7 @@ export default function Easyshare(options){
           splitValue= OPTIONS.valueSplit,
           playSetting = OPTIONS.playSetting,
           webPlaySetting = Object.assign({},playSetting),
-          nameid = constant.SHARENAME,
+          nameid = constant.ID,
           location = window.location,
           emptyString = "",
           numberAfter="_hash-",
@@ -55,13 +56,15 @@ export default function Easyshare(options){
                     }
                     S.push(tempStep)
                 })
-                this.status = constant.INITCOMPELETE
+                this.status = constant.READY
         }
         if(playsetting){
             playsetting.split("_").forEach(set=>{
                 const keyvalue = set.split("-")
                 playSetting[keyvalue[0]] = keyvalue[1]
             })
+            //将string转为 boolean 类型
+            playSetting.auto = playSetting.auto && playSetting.auto == "true"
         }
         //能自动优化为 && 
         if(playSetting.auto){
@@ -147,6 +150,7 @@ export default function Easyshare(options){
                 this.replay(0,false,false)
                 S.splice(0,1)
             }
+            this.status = constant.PAUSE
         }else{
             this.replay(stepIndex,false,false)
             S.splice(stepIndex,1)
@@ -164,7 +168,7 @@ export default function Easyshare(options){
         const runStep = replaySteps[index]
         if(!runStep){
             this.runindex = NULL
-            this.status = constant.REPLAYFINISHED
+            this.status = constant.DONE
             return 
         }
         const {x,y,id,text} = runStep, targetEl = id ? whats.getTarget(id) : NULL
@@ -185,7 +189,7 @@ export default function Easyshare(options){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
                         ,autoNext,replaySteps,timeout),timeout)
                 }else{
-                    this.status = constant.REPLAYFINISHED
+                    this.status = constant.DONE
                     clearTimeout(nextTimer)
                 }
             })
@@ -195,7 +199,7 @@ export default function Easyshare(options){
         }
         else{
             this.runindex = NULL
-            this.status = constant.REPLAYFINISHED
+            this.status = constant.DONE
         }
         //TODO 存在 targetEl 时，使用定位该元素窗口居中效果 否则 使用滚动效果
     }
@@ -246,6 +250,7 @@ export default function Easyshare(options){
                     index++
                 }
             }
+            this.url = currentUrl+share
             history.pushState(emptyString, nameid, currentUrl+share);
         }catch(e){
             return e.message
@@ -260,9 +265,9 @@ export default function Easyshare(options){
 }
 
 Easyshare.prototype.CONSTANT = {
-    SHARENAME:"easyshare",
+    ID:"easyshare",
     WAITING:0,
-    INITCOMPELETE:1,
+    READY:1,
     RECORDING:2,
     PAUSE:3,
     RECORDED:4,
@@ -270,7 +275,7 @@ Easyshare.prototype.CONSTANT = {
     FINNISHED:6,
     REPLAYING:7,
     PLAYANDWAIT:8,
-    REPLAYFINISHED:9
+    DONE:9// 播放完毕
 }
 
 Easyshare.prototype.version = "0.0.6"

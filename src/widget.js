@@ -32,6 +32,7 @@ export default function widget(easyshare){
     steps: easyshare.recordedSteps,
     targetInfo: easyshare.target,
     runindex:null,
+    url:easyshare.url,
 
     //自定义state
     ballPos:{},
@@ -46,7 +47,8 @@ export default function widget(easyshare){
       status: easyshare.status,
       steps: easyshare.recordedSteps,
       targetInfo: easyshare.target,
-      runindex:easyshare.runindex
+      runindex:easyshare.runindex,
+      url:easyshare.url
     }),
     setBallPos: value=> state =>({
       ballPos: value
@@ -61,7 +63,6 @@ export default function widget(easyshare){
 
   const record = (e,actions)=>{
     e.stopPropagation()
-    e.preventDefault()
 
     let {top:startTop,left : startLeft} = getViewPosition(e.currentTarget)
     let {top:targetTop,left: targetLeft} = getViewPosition(document.getElementById("easyshare-menu"))
@@ -109,19 +110,39 @@ export default function widget(easyshare){
       </div>
       {
         state.showMenu && 
-        <div style={{position:"fixed",width:"300px",height:"100px",
-          background:"pink",top:"30%",left:"calc(50% - 150px)"}}>
-          <div>
-            基础信息 、设置、签名
-          </div>
-          {/* remove 后需要清空 state值 */}
-          <button onclick={()=>{easyshare.remove(-1);actions.toggleMenu()}}>删除所有</button>
-          <button>还原所有</button>
-          打开网页时，自动播放
-          来自 user 的分享
-          <p>
-            已记录{state.steps.length}条标记。
+        <div className={style.menuContainer}>
+         
+          <p>
+              <label><input type="checkbox" checked={easyshare.options.playSetting.auto}
+                onclick={(e)=>{easyshare.options.playSetting.auto = e.target.checked==true;
+                  easyshare.makelink()
+                  actions.refershState()
+                }}
+              />打开网页时候自动点亮标记
+              </label> 
           </p>
+          <div>
+            <button onclick={()=>{const result = window.confirm("确认删除所有标记？");if(result){easyshare.remove(-1);actions.toggleMenu()}}}>删除所有标记</button>
+            <button onclick={()=>{easyshare.replay(0,false,easyshare.highlightAll==true,true,null,300);easyshare.highlightAll=!easyshare.highlightAll}}>
+              {`${easyshare.highlightAll==true?"点亮":"隐藏"}所有标记`}
+            </button>
+          </div>
+         
+          
+          <input style={{opacity:0}} value={state.url} readonly id="easyshare-url"/>
+          <div style="color:#b7b7b7">
+            已记录 <b>{state.steps.length}</b> 条标记。
+            <br/>
+            复制地址栏URL或 <a href="javascript:;" onclick={(e)=>{
+              const url = document.getElementById("easyshare-url");
+              url.focus();
+              url.setSelectionRange(0, url.value.length);
+              document.execCommand('copy', true);
+              e.target.innerText = "已复制"
+              }}>获取链接</a>
+            <br/> 
+            分享给好友，即可让对方看见你的标记。
+          </div>
         </div>
       }
     </div>
