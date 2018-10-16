@@ -1,7 +1,6 @@
 
 
 const IS_TOUCH = 'ontouchstart' in window,
-//TODO 优化移动设备
  getXY = IS_TOUCH
 ? e => {
 const touch = e.touches[0] || e.changedTouches[0]
@@ -14,14 +13,16 @@ return touch ? {
    var e = event || window.event;
    var x = e.pageX || e.clientX + getScroll().x;
    var y = e.pageY || e.clientY + getScroll().y;
-   return { 'x': x, 'y': y };
+   return {x, y};
 },
 
-hightLightElement = function (element,text,hightlight=true){
+
+hightLightElement = function (element,text,hightlight){
     if(!element || !text){
         return
     }
-    const highlightElements = element.querySelectorAll("b[data-highlight='easyshare']")
+    
+    const highlightElements = element.querySelectorAll("b[data-highlight='y']")
     //还原高亮，即便是高亮 也要先还原高亮
     for(let i=0; i<highlightElements.length; i++){
         const ele = highlightElements[i],originText = ele.dataset['origintext'] || ele.outerHTML
@@ -33,26 +34,26 @@ hightLightElement = function (element,text,hightlight=true){
     }
     // 如果是还原 则不进行之后操作
     if(!hightlight){
-        element.dataset.highlightbk="no"
+        element.dataset.highlightbk="n"
         return
     }
     
     //高亮
-    const left = '<b data-highlight="easyshare" data-origintext="'+text+'">',
+    const left = '<b data-highlight="y" data-origintext="'+text+'">',
         right = '</b>',
-        replaceWhat = ">.*?"+text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+".*?<",
-        finder = new RegExp(replaceWhat, 'g');
+        replaceWhat = ">.*?"+text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+".*?<";
+        
 
     // 存在错误的情况，元素属性中包含使用引号值中包含 <> 符号 时
-    element.dataset.highlightbk="yes"
-    element.outerHTML = element.outerHTML.replace(finder,function(matched){
+    element.dataset.highlightbk="y"
+    element.outerHTML = element.outerHTML.replace(new RegExp(replaceWhat, 'g'),(matched)=>{
         return matched.replace(text,left+text+right)
     })
     //TODO 增加背景突显动画
 }
 
 
-const gotoPosition = function(targetX=0,targetY=0,callback){
+const gotoPosition = function(targetX,targetY,callback){
     const timer = setInterval(function () {
         //移动前
         const { x:beforeScrollLeft,y:beforeScrollTop} = getScroll();
@@ -60,7 +61,7 @@ const gotoPosition = function(targetX=0,targetY=0,callback){
         , distanceY =  targetY - beforeScrollTop
         
         //移动后
-        setScroll(beforeScrollLeft+Math.floor(distanceX/6),Math.floor(beforeScrollTop+distanceY/6))
+        setScroll(beforeScrollLeft+distanceX/6,beforeScrollTop+distanceY/6)
         
         const {x:afterScrollLeft,y:afterScrollTop} = getScroll()
         
@@ -84,6 +85,8 @@ function setScroll(x,y){
     documentTarget.scrollTop = y;
     window.scrollTo(x,y)
 }
+
+//TODO 获取元素位于body相对位置信息 getViewPosition + getScroll
 
 function getViewPosition(elem) { // crossbrowser version
     var box = elem.getBoundingClientRect();
