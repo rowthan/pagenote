@@ -1,5 +1,4 @@
 import {gotoPosition,getXY,hightLightElement} from './document'
-import constant from './constant'
 import whatsPure from 'whats-element/pure'
 //whats getTarget try catch 
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
@@ -17,6 +16,7 @@ export default function Easyshare(options){
     const splitStep = this.options.stepSplit,
           splitValue=this.options.valueSplit,
           playSetting = this.options.playSetting,
+          constant = this.CONSTANT,
           webPlaySetting = Object.assign({},playSetting),
           nameid = constant.SHARENAME,
           location = window.location,
@@ -250,4 +250,16 @@ export default function Easyshare(options){
         this.onStateChange(status)
     })})
     Object.defineProperty(this,"version",{value:"0.0.5"})
+}Easyshare.prototype.CONSTANT = {
+    SHARENAME:"easyshare",
+    WAITING:0,
+    INITCOMPELETE:1,
+    RECORDING:2,
+    PAUSE:3,
+    RECORDED:4,
+    RECORDFAIL:5,
+    FINNISHED:6,
+    REPLAYING:7,
+    PLAYANDWAIT:8,
+    REPLAYFINISHED:9
 }

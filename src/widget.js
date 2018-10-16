@@ -1,6 +1,5 @@
 import {  h,app } from "hyperapp"
 import style from "./widget.css"
-import constant from './constant'
 import { getViewPosition } from "./document";
 
 // var css = {
@@ -39,6 +38,8 @@ export default function widget(easyshare){
     showBall:false,
     showMenu:false
   }
+
+  const constant = easyshare.CONSTANT
     
   const actions = {
     refershState: value => state =>({
