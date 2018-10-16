@@ -6,43 +6,60 @@ import whatsPure from 'whats-element/pure'
 const whats = new whatsPure(),NULL = null
 
 export default function Easyshare(options){
-    this.options = Object.assign({autoReplay:true,maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
+    this.options = Object.assign({playSetting:{auto:1,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
     this.runindex = NULL
     this.targetInfo = {}
-    let status=NULL,nextTimer = NULL, runningTimer = NULL
-    //做成可配置项
-    const splitStep = this.options.stepSplit,splitValue=this.options.valueSplit,nameid = constant.SHARENAME,location = window.location,
-    nullValue = "",numberAfter="_hash_",numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
-    NOCODE = [splitStep,splitValue];
+    let status=NULL,
+        nextTimer = NULL, 
+        runningTimer = NULL
+
+    const splitStep = this.options.stepSplit,
+          splitValue=this.options.valueSplit,
+          playSetting = this.options.playSetting,
+          webPlaySetting = Object.assign({},playSetting),
+          nameid = constant.SHARENAME,
+          location = window.location,
+          nullValue = "",
+          numberAfter="_hash_",
+          numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
+          NOCODE = [splitStep,splitValue];
     window.addEventListener("load", ()=> {
         const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
-        if(search.indexOf(nameid)===-1){
-            return
-        }
-
+        
         const searchArray = search.substr(1).split("&");
+        const searchObject = {}
         for(let i=0 ; i < searchArray.length; i++){
             const queryPar  = searchArray[i],
             index = queryPar.indexOf("=")
-            if(index>-1){
-                const values = queryPar.substring(index+1),replaySteps = []
-                //获取到EasyShare数据字符串 解析为对象
-                values.split(splitStep).forEach(value=>{
-                    const values = value.split(splitValue),
-                        tempStep = {
-                            x:values[0],
-                            y:values[1],
-                            id:values[2],
-                            text:values[3],
-                            tip:values[4] || values[3]
-                        }
-                        replaySteps.push(tempStep)
-                    })
-                    this.status = constant.INITCOMPELETE
-                    this.recordedSteps = replaySteps
-                break
-            }
+            searchObject[queryPar.substring(0,index)] = queryPar.substring(index+1)
+        }
+        const stepsString = searchObject[nameid],playsetting = searchObject["esplay"],replaySteps=[];
+        if(stepsString){
+            //获取到EasyShare数据字符串 解析为对象
+            stepsString.split(splitStep).forEach(value=>{
+                const values = value.split(splitValue),
+                    tempStep = {
+                        x:values[0],
+                        y:values[1],
+                        id:values[2],
+                        text:values[3],
+                        tip:values[4] || values[3]
+                    }
+                    replaySteps.push(tempStep)
+                })
+                this.status = constant.INITCOMPELETE
+                this.recordedSteps = replaySteps
+        }
+        if(playsetting){
+            playsetting.split("_").forEach(set=>{
+                const keyvalue = set.split("-")
+                playSetting[keyvalue[0]] = keyvalue[1]
+            })
+        }
+
+        if(playSetting.auto){
+            easyshare.replay(0,false,true,true,null,playSetting.dura)
         }
     });
 
@@ -133,11 +150,12 @@ export default function Easyshare(options){
         this.makelink()
     }
 
-    this.replay = function(index=0,goto=true,hightlight=true,autoNext,replaySteps,timeout=5000){
+    this.replay = function(index=0,goto=true,hightlight=true,autoNext,replaySteps,timeout=playSetting.dura){
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         replaySteps = replaySteps || this.recordedSteps;
         const runStep = replaySteps[index]
         if(!runStep){
+            this.runindex = NULL
             this.status = constant.REPLAYFINISHED
             return 
         }
@@ -206,8 +224,15 @@ export default function Easyshare(options){
                         share += keyindex!=0 ? splitValue+value : value
                     })
                 });
-                if(this.options.autoReplay){
-                    share += "&autoreplay=true"
+                
+                let index = 0
+                for(let i in playSetting){
+                    if(playSetting[i]==webPlaySetting[i]){
+                        continue
+                    }
+                    const value = `${i}-${playSetting[i]}`;
+                    share += !index ? "&esplay="+value : "_"+value
+                    index++
                 }
             }
             history.pushState("", nameid, currentUrl+share);
