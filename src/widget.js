@@ -29,8 +29,8 @@ export default function widget(easyshare){
   const state = {
     //来自easyshare的状态
     status: "",
-    recordedSteps: easyshare.recordedSteps,
-    targetInfo: easyshare.targetInfo,
+    steps: easyshare.recordedSteps,
+    targetInfo: easyshare.target,
     runindex:null,
 
     //自定义state
@@ -44,8 +44,8 @@ export default function widget(easyshare){
   const actions = {
     refershState: value => state =>({
       status: easyshare.status,
-      recordedSteps: easyshare.recordedSteps,
-      targetInfo: easyshare.targetInfo,
+      steps: easyshare.recordedSteps,
+      targetInfo: easyshare.target,
       runindex:easyshare.runindex
     }),
     setBallPos: value=> state =>({
@@ -59,12 +59,6 @@ export default function widget(easyshare){
     })
   }
 
-  const aftercreate = (actions)=>{
-    setTimeout(()=>{
-      actions.refershState()
-    },1000)
-  }
-
   const record = (e,actions)=>{
     e.stopPropagation()
     e.preventDefault()
@@ -75,11 +69,11 @@ export default function widget(easyshare){
     const a = (targetTop/targetLeft-startTop/startLeft)/(targetLeft - startLeft);
     const b = targetTop/targetLeft - a*targetLeft;
     
-    let inc = 30;
+
     actions.toggleShowBall(true)
     const move = setInterval(()=>{
       if(startLeft<=targetLeft){
-        startLeft += targetLeft-startLeft<=10 ? 1 : inc;
+        startLeft += targetLeft-startLeft<=10 ? 1 : 30;
         startTop = a*startLeft*startLeft + b*startLeft
         actions.setBallPos({left:startLeft,top:startTop})
       }
@@ -93,20 +87,19 @@ export default function widget(easyshare){
 
   const RecordButton = ({status,onclick}) =>(
     <button id="record" onclick={onclick}>
-      {status===constant.WAITING && "记录此处"}
-      {status===constant.REPLAYING && "结束播放后可进行记录"}
-      {status===constant.PLAYANDWAIT && "结束播放后可进行记录"}
+      {status===constant.WAITING && "标记此处"}
+      {[constant.REPLAYING,constant.PLAYANDWAIT].indexOf(status)>-1 && "结束播放后可进行记录"}
     </button>
   )
 
   const Menu = ({state,actions})=>(
-    <div title="菜单"
+    <div
       id="easyshare-menu"
       style={{
         position:"absolute",
-        visibility:state.recordedSteps.length>0?"visible":"hidden",
+        visibility:state.steps.length>0?"visible":"hidden",
         right:0,
-        top:state.recordedSteps.length*15+20+"px",
+        top:state.steps.length*15+20+"px",
       }}
     >
       <div className={style.menu} onclick={actions.toggleMenu}>
@@ -125,9 +118,9 @@ export default function widget(easyshare){
           <button onclick={()=>{easyshare.remove(-1);actions.toggleMenu()}}>删除所有</button>
           <button>还原所有</button>
           打开网页时，自动播放
-          这是来自 user 的分享
+          来自 user 的分享
           <p>
-            已记录{easyshare.recordedSteps.length}条标记。
+            已记录{state.steps.length}条标记。
           </p>
         </div>
       }
@@ -136,12 +129,10 @@ export default function widget(easyshare){
   //TODO 在视口范围内则激活 否则关闭
   const StepSign = ({step,running=false,index})=>(
     <span title="点击"
-          className={style.stepSign}
+          className={`${style.stepSign} ${running?style.running:""} ${step.isActive?style.isActive:""}`}
           style={{
-            top:(index+1)*15+"px",
-            transform: `scale(${running?2:1})`,
+            top:(index+1)*15+"px"
             //TODO running 增加动画效果
-            background: step.isActive?"#cdef5b":"#b7b7b7",
           }}
           onclick={()=>{easyshare.replay(index,true,!step.isActive)}}
     >
@@ -150,12 +141,12 @@ export default function widget(easyshare){
 
   const StepTag = ({step,index,actions})=>(
     <div style={{position:"absolute",top:step.y+"px",left:step.x+"px"}}>
-      <aside title="点击查看"  class={`${style.point} ${step.isActive?style.active:""}`}
+      <div title="查看"  class={`${style.point} ${step.isActive?style.active:""}`}
         onclick={()=>{step.writing=false;easyshare.replay(index,false,!step.isActive)}} >
         <svg style={{position:"absolute",display:step.isActive?"":"none"}}  viewBox="0 0 1024 1024" version="1.1" width="10" height="10">
           <path d="M192 448l640 0 0 128-640 0 0-128Z" p-id="4227" fill="#fff"></path>
         </svg>
-      </aside>
+      </div>
       {
         step.isActive && 
         <div className={style.box}>
@@ -181,7 +172,7 @@ export default function widget(easyshare){
               </a>
   
              <span>
-              <span style={{fontSize:"12px",color:"#bbb"}}> Tip:放弃保存请点击左上角，关闭编辑窗口。</span>
+              <span style={{fontSize:"12px",color:"#bbb"}}> Tip:放弃保存请点击左上角，关闭编辑窗口</span>
               <a style={{float:"right",height:"20px",background:"#fff",borderRadius:"5px"}} href="javascript:;" 
                 title="保存" onclick={()=>{
                 const value = step.modify!=undefined?step.modify:step.tip ;
@@ -209,7 +200,8 @@ export default function widget(easyshare){
 
 
   const view = (state, actions) => (
-    <div id={style.easyshareContainer} oncreate={()=>{easyshare.onStateChange = function(){actions.refershState()};aftercreate(actions)}}>
+    <div id={style.easyshareContainer} 
+      oncreate={()=>{easyshare.onStateChange = actions.refershState; setTimeout(()=>{actions.refershState()},0)}}>
       <div style={{
         position:"absolute",
         left:state.targetInfo.x +"px",
@@ -220,7 +212,7 @@ export default function widget(easyshare){
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&
-          <RecordButton status={state.status} onclick={(e)=>{record(e,actions)}}></RecordButton>  
+          <RecordButton status={state.status} onclick={(e)=>{record(e,actions)}}/>
         }
       </div>
       <div className={`${style.recordBall} ${state.showBall?style.recording:""}`} 
@@ -228,15 +220,15 @@ export default function widget(easyshare){
         }}>
       </div>
       {
-        state.recordedSteps.map((record,index)=>(
+        state.steps.map((record,index)=>(
           <StepTag key={index} step={record} index={index} actions={actions}></StepTag>
         ))
       }
       
-      <aside style={{position:"fixed",right:0,top:window.innerHeight/2-(state.recordedSteps.length+1)*15/2+"px"}}>
+      <aside style={{position:"fixed",right:0,top:window.innerHeight/2-(state.steps.length+1)*15/2+"px"}}>
           <div style={{position:"relative",right:"6px"}}>
             {
-              state.recordedSteps.map((record,index)=>(
+              state.steps.map((record,index)=>(
                 <StepSign  key={index} step = {record} running={index===state.runindex} index={index}/>
               ))
             }

@@ -12,7 +12,7 @@
     background: rgba(0,0,0,.52);
     color:#fff;
     box-shadow: 0px 0px 1px 2px #fff;
-    transition: background 200ms ease-in-out;
+    transition: all 0.2s;
 }
 /* //这是一个测试 */
 .point{
@@ -71,9 +71,13 @@
     text-align:center;
     transition:.5s;
     cursor:pointer;
+    background: #b7b7b7;
 }
-.stepSign.active{
-    background: red;
+.stepSign.running{
+    transform: scale(2)
+}
+.stepSign.isActive{
+    background: #cdef5b;
 }
 
 
@@ -91,14 +95,11 @@
 }
 
 
-:global(.easyshare_highlight) {
-    background:#f1f1f1;
-}
 
-:global(b[data-highlight='easyshare']){
+:global(b[data-highlight='y']){
     color: green
 }
 
-:global([data-highlightbk='yes']){
+:global([data-highlightbk='y']){
     background: #f1f1f1;
 }

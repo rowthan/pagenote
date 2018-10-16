@@ -1,29 +1,36 @@
 import {gotoPosition,getXY,hightLightElement} from './document'
 import whatsPure from 'whats-element/pure'
-//whats getTarget try catch 
+//whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
-const whats = new whatsPure(),NULL = null
+const whats = new whatsPure()
 
 export default function Easyshare(options){
-    this.options = Object.assign({playSetting:{auto:1,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
+    this.options = 
+    Object.assign({playSetting:{auto:1,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
     this.recordedSteps = []
     this.runindex = NULL
-    this.targetInfo = {}
+    this.target = {}
     let status=NULL,
         nextTimer = NULL, 
-        runningTimer = NULL
+        runningTimer = NULL,
+        targetInfo = this.target
+        
 
-    const splitStep = this.options.stepSplit,
-          splitValue=this.options.valueSplit,
-          playSetting = this.options.playSetting,
+    const UNDEFINED = undefined,
+          NULL = null,
           constant = this.CONSTANT,
+          OPTIONS = this.options,
+          splitStep = OPTIONS.stepSplit,
+          splitValue= OPTIONS.valueSplit,
+          playSetting = OPTIONS.playSetting,
           webPlaySetting = Object.assign({},playSetting),
           nameid = constant.SHARENAME,
           location = window.location,
-          nullValue = "",
-          numberAfter="_hash_",
+          emptyString = "",
+          numberAfter="_hash-",
           numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
-          NOCODE = [splitStep,splitValue];
+          NOCODE = [splitStep,splitValue],
+          S = this.recordedSteps;
     window.addEventListener("load", ()=> {
         const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         
@@ -34,7 +41,7 @@ export default function Easyshare(options){
             index = queryPar.indexOf("=")
             searchObject[queryPar.substring(0,index)] = queryPar.substring(index+1)
         }
-        const stepsString = searchObject[nameid],playsetting = searchObject["esplay"],replaySteps=[];
+        const stepsString = searchObject[nameid],playsetting = searchObject["esplay"];
         if(stepsString){
             //获取到EasyShare数据字符串 解析为对象
             stepsString.split(splitStep).forEach(value=>{
@@ -46,10 +53,9 @@ export default function Easyshare(options){
                         text:values[3],
                         tip:values[4] || values[3]
                     }
-                    replaySteps.push(tempStep)
+                    S.push(tempStep)
                 })
                 this.status = constant.INITCOMPELETE
-                this.recordedSteps = replaySteps
         }
         if(playsetting){
             playsetting.split("_").forEach(set=>{
@@ -57,7 +63,7 @@ export default function Easyshare(options){
                 playSetting[keyvalue[0]] = keyvalue[1]
             })
         }
-
+        //能自动优化为 && 
         if(playSetting.auto){
             easyshare.replay(0,false,true,true,null,playSetting.dura)
         }
@@ -85,11 +91,11 @@ export default function Easyshare(options){
         
         const selectdText = document.getSelection().toString().trim();
 
-        if(this.status == constant.WAITING && selectdText === this.targetInfo.text){
+        if(this.status == constant.WAITING && selectdText === targetInfo.text){
             return
         }
         if(selectdText){
-            this.targetInfo = {
+            this.target = targetInfo =  {
                 x:position.x,
                 y:position.y,
                 text:selectdText.substring(0,30),
@@ -99,7 +105,7 @@ export default function Easyshare(options){
             
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
         }else{
-            this.targetInfo = {}
+            this.target = targetInfo = {}
             this.status = constant.PAUSE
         }
     }
@@ -107,31 +113,28 @@ export default function Easyshare(options){
     this.onStateChange = function(){}
     
     // success: true,faild:false
-    this.record = function(forceRecord=false){   
-        const maxNn = this.options.maxMarkNumber
-        if(this.recordedSteps.length>=maxNn){
+    this.record = function(forceRecord){   
+        const maxNn = OPTIONS.maxMarkNumber
+        if(S.length>=maxNn){
             alert("标记失败！最大标记数量为 "+maxNn)
             return false
         }
         // 如果当前状态不为等待记录 且不是强行记录时
         if(!forceRecord && this.status!=constant.WAITING){
-            console.log("当前状态不可记录")
             return false;
         }
-        const targetInfo = this.targetInfo;
-        
         this.status = constant.RECORDING
         
-        this.recordedSteps.push(targetInfo)
+        S.push(targetInfo)
         //记录内容字符串存储过程错误，进行回滚操作
         const storeResult = this.makelink()
         if(storeResult){
             alert(storeResult)
-            this.recordedSteps.splice(-1,1)
+            S.splice(-1,1)
             this.status = constant.RECORDFAIL
             return false
         }
-        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text)    
+        hightLightElement(whats.getTarget(targetInfo.id),targetInfo.text,true)    
         targetInfo.isActive = true   
         this.status = constant.RECORDED
         return true
@@ -140,20 +143,24 @@ export default function Easyshare(options){
     this.remove = function(stepIndex){
         //删除所有
         if(stepIndex<0){
-            while(this.recordedSteps.length>0){
+            while(S.length>0){
                 this.replay(0,false,false)
-                this.recordedSteps.splice(0,1)
+                S.splice(0,1)
             }
         }else{
             this.replay(stepIndex,false,false)
-            this.recordedSteps.splice(stepIndex,1)
+            S.splice(stepIndex,1)
         }
         this.makelink()
     }
 
-    this.replay = function(index=0,goto=true,hightlight=true,autoNext,replaySteps,timeout=playSetting.dura){
+    this.replay = function(index,goto,hightlight,autoNext,replaySteps,timeout){
+        index = index || 0
+        goto = goto!=UNDEFINED ? goto : true
+        hightlight = hightlight!=UNDEFINED ? hightlight : true;
+        timeout = timeout != UNDEFINED ? timeout : playSetting.dura
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
-        replaySteps = replaySteps || this.recordedSteps;
+        replaySteps = replaySteps || S;
         const runStep = replaySteps[index]
         if(!runStep){
             this.runindex = NULL
@@ -207,23 +214,23 @@ export default function Easyshare(options){
                 currentUrl = currentUrl.substr(0,indexShare)
             }
 
-            if(this.recordedSteps.length===0){
+            if(S.length===0){
                 share=""
             }else{
-                this.recordedSteps.forEach((step,index) => {
+                S.forEach((step,index) => {
                     share += index!=0 ? splitStep:"";
                     var keys = ["x","y","id","text","tip"]
                     keys.forEach((key,keyindex)=>{
-                        let value = (step[key] || nullValue).toString().replace(new RegExp(numberCode,"g"),numberAfter)
+                        let value = (step[key] || emptyString).toString().replace(new RegExp(numberCode,"g"),numberAfter)
                         
                         NOCODE.forEach(code=>{
                             if(value.indexOf(code)>-1){
-                                throw Error(`选中文字、提示信息不得包含：${code}`)
+                                throw Error(`不得包含：${code}`)
                             }
                         })
                         
                         if((key=="id" && value.length > 35) || (key=="tip" && step["tip"]===step["text"])){
-                            value = nullValue
+                            value = emptyString
                         }
                         share += keyindex!=0 ? splitValue+value : value
                     })
@@ -239,18 +246,20 @@ export default function Easyshare(options){
                     index++
                 }
             }
-            history.pushState("", nameid, currentUrl+share);
+            history.pushState(emptyString, nameid, currentUrl+share);
         }catch(e){
             return e.message
         }
     }
 
+    //TODO 滚动到此 自动展开 ，视线离开 自动收缩
     Object.defineProperty(this,"status",{get:()=>{return status},set:(value=>{
         status=value;
         this.onStateChange(status)
     })})
-    Object.defineProperty(this,"version",{value:"0.0.5"})
-}Easyshare.prototype.CONSTANT = {
+}
+
+Easyshare.prototype.CONSTANT = {
     SHARENAME:"easyshare",
     WAITING:0,
     INITCOMPELETE:1,
@@ -263,3 +272,5 @@ export default function Easyshare(options){
     PLAYANDWAIT:8,
     REPLAYFINISHED:9
 }
+
+Easyshare.prototype.version = "0.0.5"
