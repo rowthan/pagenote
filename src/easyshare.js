@@ -4,10 +4,11 @@ import whatsPure from 'whats-element/pure'
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 const whats = new whatsPure()
 
-export default function Easyshare(options){
+export default function EasyShare(id,options){
+    this.id = id || "easyshare-container"
     this.options = 
     Object.assign({playSetting:{auto:true,dura:100},maxMarkNumber:10,
-        stepSplit:"e_o",valueSplit:":)",blacklist:["easyshare-container"]
+        stepSplit:"e_o",valueSplit:":)",blacklist:[this.id]
     },options)
     this.recordedSteps = []
     this.runindex = NULL
@@ -74,8 +75,8 @@ export default function Easyshare(options){
             easyshare.replay(0,false,true,true,null,playSetting.dura)
         }
         setTimeout(()=>{
-            this.options.blacklist.forEach((id)=>{
-                const white = whats.getTarget(id);
+            this.options.blacklist.forEach((elementid)=>{
+                const white = whats.getTarget(elementid);
                 if(white){
                     blackNodes.push(white)
                 } 
@@ -201,7 +202,7 @@ export default function Easyshare(options){
         
         targetEl &&  hightLightElement(targetEl,text,hightlight)
         if(goto){
-            runningTimer = gotoPosition(x-window.innerWidth/2,y-window.innerHeight/2,()=>{
+            runningTimer = gotoPosition(x-window.innerWidth/2,y-window.innerHeight/3,()=>{
                 this.runindex = NULL
                 if(autoNext){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
@@ -282,7 +283,7 @@ export default function Easyshare(options){
     })})
 }
 
-Easyshare.prototype.CONSTANT = {
+EasyShare.prototype.CONSTANT = {
     ID:"easyshare",
     WAITING:0,
     READY:1,
@@ -296,4 +297,4 @@ Easyshare.prototype.CONSTANT = {
     DONE:9// 播放完毕
 }
 
-Easyshare.prototype.version = "0.0.6"
+EasyShare.prototype.version = "0.1.0"

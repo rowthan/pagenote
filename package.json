@@ -1,6 +1,6 @@
 {
   "name": "easy-share",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "make your website more easy to share",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
+    "copy-webpack-plugin": "^4.5.3",
     "css-loader": "^1.0.0",
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
