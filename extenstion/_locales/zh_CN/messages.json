@@ -1,0 +1,11 @@
+{
+    "extensionName": {
+      "message": "web-note"
+    },
+    "extensionDescription": {
+      "message": "note something on you visiting page, anywhere."
+    },
+    "browserActionTitle": {
+      "message": "web-note"
+    }
+  }
