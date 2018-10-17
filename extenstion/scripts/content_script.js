@@ -1,0 +1,1 @@
+var easyshare = new EasyShare("yes-container")
