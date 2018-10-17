@@ -1,6 +1,3 @@
-#easyshareContainer svg{vertical-align: text-bottom}
-
-
 .box {
     max-width: 250px;
     min-width: 100px;
@@ -58,6 +55,19 @@
     cursor:pointer;
     box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
 }
+.menuContainer{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    min-width: 200px;
+    
+    font-size: 14px;
+    padding: 10px;
+    background: #f7f7f7;
+    box-shadow: 0 1px 2px 0 #676767;
+    border-radius: 5px;
+}
 
 .stepSign{
     display: block;
@@ -80,7 +90,13 @@
     background: #cdef5b;
 }
 
-
+.close{
+    position: absolute;
+    right: 0;
+    top: 0;
+    /* height: 20px; */
+    border-radius: 5px;
+}
 
 .recordBall{
     display: none;
@@ -102,4 +118,21 @@
 
 :global([data-highlightbk='y']){
     background: #f1f1f1;
+}
+
+.esLight{
+    position: absolute;
+    height: 25px;
+    top:-25px;
+    right: -2px;
+}
+.esLight #light{
+    fill:#fff;
+}
+.esLight #sunshine{
+    display: none;
+}
+.esLight.lightAll #light,.esLight.lightAll #sunshine{
+    display: block;
+    fill:#FAC546;
 }
