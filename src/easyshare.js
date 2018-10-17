@@ -202,7 +202,7 @@ export default function EasyShare(id,options){
         
         targetEl &&  hightLightElement(targetEl,text,hightlight)
         if(goto){
-            runningTimer = gotoPosition(x-window.innerWidth/2,y-window.innerHeight/2,()=>{
+            runningTimer = gotoPosition(x-window.innerWidth/2,y-window.innerHeight/3,()=>{
                 this.runindex = NULL
                 if(autoNext){
                     nextTimer = setTimeout(()=>this.replay(index+1,goto,hightlight
