@@ -119,3 +119,20 @@
 :global([data-highlightbk='y']){
     background: #f1f1f1;
 }
+
+.esLight{
+    position: absolute;
+    height: 25px;
+    top:-25px;
+    right: -2px;
+}
+.esLight #light{
+    fill:#fff;
+}
+.esLight #sunshine{
+    display: none;
+}
+.esLight.lightAll #light,.esLight.lightAll #sunshine{
+    display: block;
+    fill:#FAC546;
+}
