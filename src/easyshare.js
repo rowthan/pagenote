@@ -6,7 +6,9 @@ const whats = new whatsPure()
 
 export default function Easyshare(options){
     this.options = 
-    Object.assign({playSetting:{auto:true,dura:100},maxMarkNumber:10,stepSplit:"e_o",valueSplit:":)"},options)
+    Object.assign({playSetting:{auto:true,dura:100},maxMarkNumber:10,
+        stepSplit:"e_o",valueSplit:":)",blacklist:["easyshare-container"]
+    },options)
     this.recordedSteps = []
     this.runindex = NULL
     this.target = {}
@@ -31,7 +33,8 @@ export default function Easyshare(options){
           numberAfter="_hash-",
           numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
           NOCODE = [splitStep,splitValue],
-          S = this.recordedSteps;
+          S = this.recordedSteps,
+          blackNodes = [];
     window.addEventListener("load", ()=> {
         const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
         
@@ -70,6 +73,14 @@ export default function Easyshare(options){
         if(playSetting.auto){
             easyshare.replay(0,false,true,true,null,playSetting.dura)
         }
+        setTimeout(()=>{
+            this.options.blacklist.forEach((id)=>{
+                const white = whats.getTarget(id);
+                if(white){
+                    blackNodes.push(white)
+                } 
+            })
+        },0)
     });
 
     
@@ -91,8 +102,15 @@ export default function Easyshare(options){
         } )
     }
     function handleUp(position){
-        
-        const selectdText = document.getSelection().toString().trim();
+        const selection = document.getSelection(),
+              targetElment = selection.anchorNode.parentNode;
+             
+        for(let i of blackNodes){
+            if(i.contains(targetElment)){
+                return
+            }
+        }
+        const selectdText = selection.toString().trim();
 
         if(this.status == constant.WAITING && selectdText === targetInfo.text){
             return
@@ -103,7 +121,7 @@ export default function Easyshare(options){
                 y:position.y,
                 text:selectdText.substring(0,30),
                 tip:selectdText,
-                id: whats.getUniqueId(document.getSelection().anchorNode.parentNode).wid
+                id: whats.getUniqueId(targetElment).wid
             }
             
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
