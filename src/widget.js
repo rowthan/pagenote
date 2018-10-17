@@ -232,7 +232,7 @@ export default function widget(easyshare){
 
 
   const view = (state, actions) => (
-    <div id="easyshare-container" 
+    <div
       oncreate={()=>{easyshare.onStateChange = actions.refershState; setTimeout(()=>{actions.refershState()},0)}}>
       <div style={{
         position:"absolute",
@@ -279,6 +279,7 @@ export default function widget(easyshare){
               
             </svg>
           </a>
+          }
           
           <div style={{position:"relative",right:"6px"}}>
             {
@@ -291,5 +292,8 @@ export default function widget(easyshare){
       </aside>
     </div>
   )
-  app(state, actions, view, document.body)
+  const root = document.createElement("div");
+  root.id = easyshare.id;
+  document.body.append(root)
+  app(state, actions, view, root)
 }
