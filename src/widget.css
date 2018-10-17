@@ -90,7 +90,13 @@
     background: #cdef5b;
 }
 
-
+.close{
+    position: absolute;
+    right: 0;
+    top: 0;
+    /* height: 20px; */
+    border-radius: 5px;
+}
 
 .recordBall{
     display: none;
