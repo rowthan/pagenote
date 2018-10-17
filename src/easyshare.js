@@ -297,4 +297,4 @@ EasyShare.prototype.CONSTANT = {
     DONE:9// 播放完毕
 }
 
-EasyShare.prototype.version = "0.0.6"
+EasyShare.prototype.version = "0.1.0"
