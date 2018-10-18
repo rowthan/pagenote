@@ -1,4 +1,6 @@
+
 .box {
+    display: none;
     max-width: 250px;
     min-width: 100px;
     min-height: 20px;
@@ -10,6 +12,10 @@
     color:#fff;
     box-shadow: 0px 0px 1px 2px #fff;
     transition: all 0.2s;
+}
+
+.box.show{
+    display: block;
 }
 /* //这是一个测试 */
 .point{
@@ -27,10 +33,18 @@
 .point.active,.point:hover{
     transform: scale(2)
 }
+.stepTag .menuContainer{
+    z-index: 9999;
+}
+.stapTag:hover .point{
+    transform: scale(2)
+}
+
+
 
 .edit,.delete{
     position:absolute;
-    right: -22px;
+    right: -20px;
     height: 20px;
     background:rgba(0,0,0,.52);
     border-radius: 5px;
