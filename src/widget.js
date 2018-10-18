@@ -132,6 +132,7 @@ export default function widget(easyshare){
               />打开网页时候自动点亮标记
               </label> 
           </p>
+          {/* TODO 使用说明 使用手册 */}
           <div>
             <button onclick={()=>{const result = window.confirm("确认删除所有标记？");if(result){easyshare.remove(-1);actions.toggleMenu()}}}>删除所有标记</button>
             <button onclick={toggleAllLight}>
@@ -294,6 +295,7 @@ export default function widget(easyshare){
   )
   const root = document.createElement("div");
   root.id = easyshare.id;
+  root.dataset.easyshare = root.id;
   document.body.append(root)
   app(state, actions, view, root)
 }
