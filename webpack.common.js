@@ -1,7 +1,7 @@
 const path = require('path');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -50,13 +50,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "easyshare.css",
       chunkFilename: "[id].css"
-    }),
-    new CopyWebpackPlugin([{
-      from:"dist/easyshare.js",
-      to :path.resolve(__dirname, 'extenstion/scripts/')
-    },{
-      from:"dist/easyshare.css",
-      to :path.resolve(__dirname, 'extenstion/css/')
-    }])
+    })
   ]
 };
