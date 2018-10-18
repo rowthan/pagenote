@@ -211,8 +211,8 @@ export default function widget(easyshare){
                 const originTip = step.tip;
                 step.tip = value; 
                 const result = easyshare.makelink();
-                const saveResult = result == undefined;
-                !saveResult && alert(result)
+                const saveResult = result.result;
+                !saveResult && alert(result.msg)
                 step.writing = !saveResult
                 step.tip = saveResult?value:originTip
                 actions.refershState()

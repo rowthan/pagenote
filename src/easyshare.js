@@ -161,8 +161,8 @@ export default function EasyShare(id,options){
         S.push(targetInfo)
         //记录内容字符串存储过程错误，进行回滚操作
         const storeResult = this.makelink()
-        if(storeResult){
-            alert(storeResult)
+        if(!storeResult.result){
+            alert(storeResult.msg)
             S.splice(-1,1)
             this.status = constant.RECORDFAIL
             return false
@@ -291,8 +291,15 @@ export default function EasyShare(id,options){
             this.url = encodeURI(location.protocol+"//"+location.host+location.pathname+finalQuery+location.hash) 
             
             history.pushState(emptyString, nameid, this.url);
+            return {
+                result:true,
+                url:this.url
+            }
         }catch(e){
-            return e.message
+            return {
+                result:false,
+                msg:e.message
+            }
         }
     }
 
