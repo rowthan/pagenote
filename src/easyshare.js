@@ -33,6 +33,8 @@ export default function EasyShare(id,options){
           emptyString = "",
           numberAfter="_hash-",
           numberCode = "#", //中文 ! # & @ 不能作为分割词。 建议使用非对称 (→o←) -_-||
+          andCode = "&",
+          andAfter = "_and-",
           NOCODE = [splitStep,splitValue],
           S = this.recordedSteps,
           blackNodes = [];
@@ -44,9 +46,10 @@ export default function EasyShare(id,options){
         const searchArray = search.substr(1).split("&");
         for(let i=0 ; i < searchArray.length; i++){
             const queryPar  = searchArray[i].split("="),
-            name = queryPar[0]
+            name = queryPar[0],
+            value = queryPar[1]
+            searchObject[name] = value===UNDEFINED ? value : value.replace(new RegExp(andAfter,"g"),andCode);
             searchNames.push(name)
-            searchObject[name] = queryPar[1]
         }
 
         return {
@@ -261,7 +264,9 @@ export default function EasyShare(id,options){
                     share += index!=0 ? splitStep:"";
                     var keys = ["x","y","id","text","tip"]
                     keys.forEach((key,keyindex)=>{
-                        let value = (step[key] || emptyString).toString().replace(new RegExp(numberCode,"g"),numberAfter)
+                        let value = (step[key] || emptyString).toString()
+                        .replace(new RegExp(numberCode,"g"),numberAfter)
+                        .replace(new RegExp(andCode,"g"),andAfter)
                         
                         NOCODE.forEach(code=>{
                             if(value.indexOf(code)>-1){
