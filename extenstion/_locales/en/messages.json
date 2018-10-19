@@ -1,0 +1,11 @@
+{
+    "extensionName": {
+      "message": "page-mark"
+    },
+    "extensionDescription": {
+      "message": "make the web page as a notebook. mark and note something on you visiting page. store in your pc to remind yourself or share the url to your firends to recap your notes  "
+    },
+    "browserActionTitle": {
+      "message": "page-mark"
+    }
+  }
