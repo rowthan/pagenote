@@ -19,26 +19,25 @@ return touch ? {
 
 highlight = function (node,reg){
     if (node.nodeType == 3) {  
-        var match = node.data.match(new RegExp(reg));
+        const match = node.data.match(new RegExp(reg));
         if (match) {
-            var highlightEl = document.createElement("b");
+            const highlightEl = document.createElement("b");
             highlightEl.dataset.highlight="y"
-            var wordNode = node.splitText(match.index);
-            wordNode.splitText(match[0].length);
-            var wordClone = wordNode.cloneNode(true);
-            highlightEl.appendChild(wordClone);
-            wordNode.parentNode.replaceChild(highlightEl, wordNode);
-            return 1;
+            const wordNode = node.splitText(match.index)
+            wordNode.splitText(match[0].length); // 切割成前 关键词 后三个Text 节点
+            const wordClone = wordNode.cloneNode(true);//省略构建一个文本节点
+            highlightEl.appendChild(wordClone);//highlight 节点构建成功
+            wordNode.parentNode.replaceChild(highlightEl, wordNode);// 替换该文本节点
         }
     } else if (node.nodeType == 1 && node.childNodes&& // only element nodes that have children
         !/(script|style)/i.test(node.tagName) // ignore script
         && node.dataset.highlight!="y"
     ) { 
         for (var i = 0; i < node.childNodes.length; i++) {
-            i += highlight(node.childNodes[i], reg);
+            highlight(node.childNodes[i], reg);
+            i++
         }
     }  
-    return 0
 },
 
 
