@@ -220,7 +220,7 @@ export default function widget(easyshare){
 
   const view = (state, actions) => (
     <div
-      oncreate={()=>{easyshare.onStateChange = actions.refershState; setTimeout(()=>{actions.refershState()},0)}}>
+      oncreate={()=>{easyshare.addListener(actions.refershState); setTimeout(()=>{actions.refershState()},0)}}>
       <div style={{
         position:"absolute",
         left:state.targetInfo.x +"px",

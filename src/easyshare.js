@@ -146,7 +146,55 @@ export default function EasyShare(id,options){
         }
     }
 
-    this.onStateChange = function(){}
+    this.init = function(initData){
+        const searchObject = formatSearch(initData || location.search).searchObject
+        const stepsString = searchObject[nameid] || "",playsetting = searchObject["esplay"] || "";
+        //格式化结果
+        this.data = "&"+nameid + "=" + stepsString + "&esplay=" + playsetting
+        if(stepsString){
+            //获取到EasyShare数据字符串 解析为对象
+            stepsString.split(splitStep).forEach(value=>{
+                const values = value.split(splitValue),
+                    tempStep = {
+                        x:values[0],
+                        y:values[1],
+                        id:values[2],
+                        text:values[3],
+                        tip:values[4] || values[3]
+                    }
+                    S.push(tempStep)
+                })
+                this.status = constant.READY
+        }
+        if(playsetting){
+            playsetting.split("_").forEach(set=>{
+                const keyvalue = set.split("-")
+                playSetting[keyvalue[0]] = keyvalue[1]
+            })
+            //将string转为 boolean 类型
+            playSetting.auto = playSetting.auto && playSetting.auto == "true"
+        }
+        //能自动优化为 && 
+        if(playSetting.auto){
+            easyshare.replay(0,false,true,true,null,playSetting.dura)
+        }
+        //格式化URL
+        this.makelink()
+        setTimeout(()=>{
+            OPTIONS.blacklist.forEach((elementid)=>{
+                const white = whats.getTarget(elementid);
+                if(white){
+                    blackNodes.push(white)
+                } 
+            })
+        },0)
+    }
+
+    this.addListener = function(fun){
+        if(typeof fun == "function"){
+            CALLBACKFUN.push(fun)
+        }
+    }
     
     // success: true,faild:false
     this.record = function(forceRecord){   
