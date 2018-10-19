@@ -4,23 +4,32 @@ import whatsPure from 'whats-element/pure'
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 const whats = new whatsPure()
 
+//增加开关 是否开启
 export default function EasyShare(id,options){
     this.id = id || "easyshare-container"
     this.options = 
-    Object.assign({playSetting:{auto:true,dura:100},maxMarkNumber:10,
-        stepSplit:"e_o",valueSplit:":)",blacklist:[this.id]
+    Object.assign({playSetting:{auto:true,dura:100},
+        maxMarkNumber:10,
+        stepSplit:"e_o",
+        valueSplit:":)",
+        blacklist:[this.id],
+        saveInURL:true
     },options)
     this.recordedSteps = []
     this.runindex = NULL
     this.target = {}
+    //用户用户复制的 分享的URL
     this.url = window.location.href
+    //只提供读方法
+    this.data = "" //EasyShare 使用的原始数据字符串
     let status=NULL,
         nextTimer = NULL, 
         runningTimer = NULL,
         targetInfo = this.target
         
 
-    const UNDEFINED = undefined,
+    const CALLBACKFUN = [],
+          UNDEFINED = undefined,
           NULL = null,
           constant = this.CONSTANT,
           OPTIONS = this.options,
@@ -39,12 +48,15 @@ export default function EasyShare(id,options){
           S = this.recordedSteps,
           blackNodes = [];
 
-    function formatSearch(){
+    //input format: ?a=b&b=123
+    function formatSearch(inputSearch){
+        inputSearch = inputSearch || location.search
         const searchObject = {}
         const searchNames = [] //存储先后顺序避免发生错误
-        const search = decodeURI(location.search).replace(new RegExp(numberAfter,"g"),numberCode)
-        const searchArray = search.substr(1).split("&");
+        const search = decodeURI(inputSearch).replace(new RegExp(numberAfter,"g"),numberCode)
+        const searchArray = search.substr(1).split("&");//去掉 ? 符号
         for(let i=0 ; i < searchArray.length; i++){
+            if(searchArray[i]==="")continue
             const queryPar  = searchArray[i].split("="),
             name = queryPar[0],
             value = queryPar[1]
@@ -59,7 +71,6 @@ export default function EasyShare(id,options){
     }
 
     let levent = null
-    
     if("ontouchstart" in window){
         document.addEventListener("touchstart",(e)=>{
             levent = e
@@ -248,25 +259,25 @@ export default function EasyShare(id,options){
     this.makelink = () => {
         try{
             //构建 search 对象，并置空 EasyShare 赋值的内容
-            const {searchObject,searchNames} = formatSearch()
+            const {searchObject,searchNames} = formatSearch(location.search)
                   searchObject[nameid] = NULL
                   searchObject["esplay"] = NULL
 
-            let newSearch = "?"
+            let originSearch = "?"
             //构建search原本键值对
             for(let [i,name] of searchNames.entries()){
                 if([nameid,"esplay"].indexOf(name)>-1){
                     continue
                 }
                 let value = searchObject[name]=== UNDEFINED ? "" : "="+searchObject[name] 
-                newSearch += (i != 0 ? "&" : "") + name + value
+                originSearch += (i != 0 ? "&" : "") + name + value
             }
             
             //构建 EasyShare 键值对
             let share = ""
             if(S.length>0){
-                share = newSearch[newSearch.length-1]==="&" ? "":"&"
-                share += nameid+"="
+                // share = originSearch[originSearch.length-1]==="&" ? "":"&"
+                share += "&"+nameid+"="
                 S.forEach((step,index) => {
                     share += index!=0 ? splitStep:"";
                     var keys = ["x","y","id","text","tip"]
@@ -298,11 +309,15 @@ export default function EasyShare(id,options){
                     index++
                 }
             }
-            const finalQuery = newSearch += share;
+            const finalQuery = originSearch += share;
+            this.data = share
+            //TODO 博客地址中文hash后 地址解析不正确 放弃encodeURL?
+            this.url = location.protocol+"//"+location.host+location.pathname+finalQuery+location.hash
+            if(OPTIONS.saveInURL){
+                history.pushState(emptyString, nameid, this.url);
+            }
             
-            this.url = encodeURI(location.protocol+"//"+location.host+location.pathname+finalQuery+location.hash) 
-            
-            history.pushState(emptyString, nameid, this.url);
+            this.status = constant.SYNCED
             return {
                 result:true,
                 url:this.url
@@ -318,7 +333,9 @@ export default function EasyShare(id,options){
     //TODO 滚动到此 自动展开 ，视线离开 自动收缩
     Object.defineProperty(this,"status",{get:()=>{return status},set:(value=>{
         status=value;
-        this.onStateChange(status)
+        CALLBACKFUN.forEach(fun=>{
+            fun(status)
+        })
     })})
 }
 
@@ -333,7 +350,8 @@ EasyShare.prototype.CONSTANT = {
     FINNISHED:6,
     REPLAYING:7,
     PLAYANDWAIT:8,
-    DONE:9// 播放完毕
+    DONE:9,// 播放完毕
+    SYNCED:10 // 存储数据和内存对象已经同步
 }
 
 EasyShare.prototype.version = "0.1.0"
