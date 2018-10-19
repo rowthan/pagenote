@@ -17,6 +17,31 @@ return touch ? {
 },
 
 
+highlight = function (node,reg){
+    if (node.nodeType == 3) {  
+        var match = node.data.match(new RegExp(reg));
+        if (match) {
+            var highlightEl = document.createElement("b");
+            highlightEl.dataset.highlight="y"
+            var wordNode = node.splitText(match.index);
+            wordNode.splitText(match[0].length);
+            var wordClone = wordNode.cloneNode(true);
+            highlightEl.appendChild(wordClone);
+            wordNode.parentNode.replaceChild(highlightEl, wordNode);
+            return 1;
+        }
+    } else if (node.nodeType == 1 && node.childNodes&& // only element nodes that have children
+        !/(script|style)/i.test(node.tagName) // ignore script
+        && node.dataset.highlight!="y"
+    ) { 
+        for (var i = 0; i < node.childNodes.length; i++) {
+            i += highlight(node.childNodes[i], reg);
+        }
+    }  
+    return 0
+},
+
+
 hightLightElement = function (element,text,hightlight){
     if(!element || !text){
         return
@@ -25,7 +50,7 @@ hightLightElement = function (element,text,hightlight){
     const highlightElements = element.querySelectorAll("b[data-highlight='y']")
     //还原高亮，即便是高亮 也要先还原高亮
     for(let i=0; i<highlightElements.length; i++){
-        const ele = highlightElements[i],originText = ele.dataset['origintext'] || ele.outerHTML
+        const ele = highlightElements[i],originText = ele.dataset['origintext'] || ele.innerHTML
         //如果是其他步骤高亮的则不还原
         if(originText!=text){
             continue;
@@ -37,18 +62,9 @@ hightLightElement = function (element,text,hightlight){
         element.dataset.highlightbk="n"
         return
     }
-    
-    //高亮
-    const left = '<b data-highlight="y" data-origintext="'+text+'">',
-        right = '</b>',
-        replaceWhat = ">.*?"+text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+".*?<";
-        
 
-    // 存在错误的情况，元素属性中包含使用引号值中包含 <> 符号 时
     element.dataset.highlightbk="y"
-    element.outerHTML = element.outerHTML.replace(new RegExp(replaceWhat, 'g'),(matched)=>{
-        return matched.replace(text,left+text+right)
-    })
+    highlight(element,new RegExp(text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')))
     //TODO 增加背景突显动画
 }
 
