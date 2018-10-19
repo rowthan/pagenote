@@ -354,4 +354,4 @@ EasyShare.prototype.CONSTANT = {
     SYNCED:10 // 存储数据和内存对象已经同步
 }
 
-EasyShare.prototype.version = "0.1.0"
+EasyShare.prototype.version = "0.1.1"
