@@ -1,37 +1,5 @@
-
-.box {
-    display: none;
-    max-width: 250px;
-    min-width: 100px;
-    min-height: 20px;
-    padding: 2px 10px;
-    font-size: 14px;
-    line-height: 20px;
-    border-radius: 5px;
-    background: rgba(0,0,0,.52);
-    color:#fff;
-    box-shadow: 0px 0px 1px 2px #fff;
-    transition: all 0.2s;
-}
-
-.box.show{
-    display: block;
-}
-/* //这是一个测试 */
-.point{
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: rgba(0,0,0,.52);
-    box-shadow: 0px 0px 0px 1px #fff;
-    top: 7px;
-    left: -10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition:0.3s
-}
-.point.active,.point:hover{
-    transform: scale(2)
+.stepTag{
+    z-index: 9999;
 }
 .stepTag .menuContainer{
     z-index: 9999;
@@ -39,48 +7,203 @@
 .stapTag:hover .point{
     transform: scale(2)
 }
+.stepTag:hover{
+    z-index: 99999;
+}
 
+@keyframes point-notifi{
+    0% {
+        opacity: 0.3;
+        transform: scale(0.3);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
 
+@keyframes light-point {
+    0% {
+        box-shadow: 0px 0px 1px 2px #fff;
+        /*filter: hue-rotate(0deg);*/
+    }
 
-.edit,.delete{
-    position:absolute;
-    right: -20px;
-    height: 20px;
-    background:rgba(0,0,0,.52);
+    100% {
+        box-shadow: 0px 0px 2px 2px rgba(0,0,0,.52);
+        /*filter: hue-rotate(360deg);*/
+    }
+}
+
+.point{
+    position: absolute;
+    z-index: 1;
+    width: 13px;
+    height: 13px;
+    box-shadow: 0px 0px 0px 1px #fff;
+    top: 6px;
+    left: -7px;
+    border-radius: 50%;
+    color: #fff;
+    /*border: 2px solid white;*/
+    cursor: pointer;
+    animation: light-point 1.5s linear infinite;
+    animation-direction:alternate;
+    /*animation: point-notifi 1.5s 0s ease-in-out infinite;;*/
+    transition:0.3s;
+    background-color: var(--bg-color);
+    /*background-image: url('https://betacdn.lanhuapp.com/web/static/favicon.ico');*/
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.point.common:before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 6px;
+    width: 9px;
+    height: 1px;
+    border-left: solid 3px currentColor;
+    border-right: solid 3px currentColor;
+}
+
+.point.common:after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: -1px;
+    width: 1px;
+    height: 9px;
+    border-top: solid 3px currentColor;
+    border-bottom: solid 3px currentColor;
+}
+
+.point.active{
+    cursor: move;
+}
+.point.active,.point:hover{
+    transform: scale(2);
+    animation:none;
+}
+
+.point:hover + .box{
+    display: block;
+}
+
+.box {
+    display: none;
+    max-width: 270px;
+    min-width: 120px;
+    min-height: 20px;
+    padding: 2px 14px;
+    font-size: 14px;
+    line-height: 20px;
     border-radius: 5px;
+    background: radial-gradient(24px 24px at left 12px,transparent 50%,var(--bg-color) 50%);
+    color:#fff;
+    box-shadow: 0px 0px 1px 2px #fff;
+    transition: all 0.2s;
+    /*user-select: none;*/
+}
+
+.box.show{
+    display: block;
+}
+
+.box.show:hover,.box.show:focus{
+    z-index: 99999999;
+    border-radius: 0 0 5px 5px;
+}
+.box.show:hover .handlebar,.box.show:focus .handlebar{
+    opacity: 1;
+    transform: translateY(-22px);
+}
+
+
+
+.editcontent{
+    width: 100%;
+    border-radius: 6px;
+    user-select: none;
+}
+.editcontent:focus,.editcontent.writing{
+    outline: 1px solid #bbb;
+    user-select: all;
+}
+.editcontent:focus + .handlebar{
+    z-index: 1;
+    opacity: 1;
+    transform: translateY(-22px);
+}
+.editcontent img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.handlebar{
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    left: 0;
+    height: 20px;
+    width: 100%;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    background: var(--bg-color);
+    border-radius: 5px 5px 0 0;
+    will-change: transform;
+}
+
+.deleteicon{
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
     cursor: pointer;
 }
-.edit{
-    top:3px;
-}
-.delete{
-    bottom: 0;
-}
 
-.menu{
-    right:0px;
-    width: 20px;
-    height: 18px;
-    margin-bottom: 20px;
-    transform: scale(1);
-    background: #e6e6e6;
-    border-radius: 25%;
-    text-align:center;
-    cursor:pointer;
-    box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
-}
 .menuContainer{
     position:fixed;
     left:50%;
     top:50%;
     transform:translate(-50%,-50%);
     min-width: 200px;
-    
     font-size: 14px;
     padding: 10px;
     background: #f7f7f7;
-    box-shadow: 0 1px 2px 0 #676767;
-    border-radius: 5px;
+    box-shadow: 0px 0px 9px 1px #676767;
+}
+.menuContainer label{
+    display: inline-block;
+    width: 80px;
+}
+.close{
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    color: black;
+    margin-top: 2px;
+    margin-left: 3px;
+    width: 12px;
+    height: 12px;
+    border: solid 1px currentColor;
+    background-color: currentColor;
+    border-radius: 100%;
+}
+.close:before{
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 3px;
+    color: white;
+    background-color: currentColor;
+    left: 2px;
+    top: 4px;
 }
 
 .stepSign{
@@ -101,15 +224,8 @@
     transform: scale(2)
 }
 .stepSign.isActive{
-    background: #cdef5b;
-}
-
-.close{
-    position: absolute;
-    right: 0;
-    top: 0;
-    /* height: 20px; */
-    border-radius: 5px;
+    background-color: #cdef5b;
+    background-color: var(--color);
 }
 
 .recordBall{
@@ -124,14 +240,71 @@
     display: block;
 }
 
+.recordContain{
+    position: relative;
+}
+
+.recordButton{
+    display: block;
+    width: 30px !important;
+    height: 30px !important;
+    position: absolute;
+    opacity: 0;
+    border: none !important;
+    box-shadow: 0px 2px 7px 0px rgba(39,43,49,0.2) !important;
+    background-color: var(--color);
+    border-radius: 40px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    padding: 2px;
+    box-sizing: border-box;
+    /*background-image: url('https://betacdn.lanhuapp.com/web/static/favicon.ico') !important;*/
+}
+.recordButton:first-child{
+    left: 0 !important;
+    top: 0 !important;
+    opacity: 1 !important;
+    width: 30px !important;
+    height: 30px !important;
+    z-index: 1;
+}
+
+.recordContain:hover .recordButton:not(:first-child){
+    transform: translate(0,0) scale(0.59) !important;
+    opacity: 1;
+}
+/*.recordButton:hover{*/
+/*    transform: translate(0,0) !important;*/
+/*}*/
+
+.menuButton{
+    z-index: 999999;
+    padding: 4px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.5);
+    font-weight: 600;
+    color: #fff;
+    background-color: #189cfd;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: all 225ms cubic-bezier(.4,0,.2,1) 0ms;
+}
+.menuButton:hover{
+    background-color: #1976d2;
+}
 
 
 :global(b[data-highlight='y']){
-    color: green
+    cursor: pointer;
+    /*color: var(--bg-color)*/
 }
 
 :global([data-highlightbk='y']){
-    background: #f1f1f1;
+    /*background: #f1f1f1;*/
 }
 
 .esLight{

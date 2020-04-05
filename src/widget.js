@@ -1,38 +1,20 @@
 import {  h,app } from "hyperapp"
 import style from "./widget.css"
 import { getViewPosition } from "./document";
-
-// var css = {
-//   menu:`.menu{
-//       position:absolute;
-//       right:0px;
-//       width: 20px;
-//       height: 18px;
-//       transform: scale(1);
-//       background: #e6e6e6;
-//       border-radius: 25%;
-//       text-align:center;
-//       transition:.5s;
-//       cursor:pointer;
-//       box-shadow:0 2px 4px 0 rgba(0,0,0,.04)
-//   }`
-// }
-
-// var styles = document.createElement("style")
-// for(let c in css){
-//   styles.innerHTML += css[c].replace(/\s*/g,"");
-// }
-// document.head.appendChild(styles)
+import {throttle} from './utils';
+import {clipBoard} from './image-clipboard';
 
 //TODO 增加dev 视图展示所有state信息 方便手机端调试
-export default function widget(easyshare){
+export default function widget(pagenote,colors){
+  colors = colors || ['rgba(114,208,255,0.88)','#ffbea9','#c8a6ff','#6fe2d5','rgba(255,222,93,0.84)','rgba(251, 181, 214, 0.84)','rgba(0,0,0,0.5)'];
+
   const state = {
     //来自easyshare的状态
     status: "",
-    steps: easyshare.recordedSteps,
-    targetInfo: easyshare.target,
+    steps: pagenote.recordedSteps,
+    targetInfo: pagenote.target,
     runindex:null,
-    url:easyshare.url,
+    url:pagenote.url,
 
     //自定义state
     ballPos:{},
@@ -40,15 +22,15 @@ export default function widget(easyshare){
     showMenu:false
   }
 
-  const constant = easyshare.CONSTANT
-    
+  const constant = pagenote.CONSTANT
+
   const actions = {
     refershState: value => state =>({
-      status: easyshare.status,
-      steps: easyshare.recordedSteps,
-      targetInfo: easyshare.target,
-      runindex:easyshare.runindex,
-      url:easyshare.url
+      status: pagenote.status,
+      steps: pagenote.recordedSteps,
+      targetInfo: pagenote.target,
+      runindex:pagenote.runindex,
+      url:pagenote.url
     }),
     setBallPos: value=> state =>({
       ballPos: value
@@ -62,18 +44,19 @@ export default function widget(easyshare){
   }
 
   const toggleAllLight = ()=>{
-    easyshare.replay(0,false,easyshare.highlightAll==true,true,null,200);easyshare.highlightAll=!easyshare.highlightAll
+    pagenote.replay(0,false,pagenote.lastaction===pagenote.CONSTANT.DIS_LIGHT,true);
+    // pagenote.highlightAll=!pagenote.highlightAll
   }
 
   const record = (e,actions)=>{
     e.stopPropagation()
 
     let {top:startTop,left : startLeft} = getViewPosition(e.currentTarget)
-    let {top:targetTop,left: targetLeft} = getViewPosition(document.getElementById("easyshare-menu"))
-    
+    let {top:targetTop,left: targetLeft} = getViewPosition(document.getElementById("pagenote-menu"))
+
     const a = (targetTop/targetLeft-startTop/startLeft)/(targetLeft - startLeft);
     const b = targetTop/targetLeft - a*targetLeft;
-    
+
 
     actions.toggleShowBall(true)
     const move = setInterval(()=>{
@@ -83,73 +66,126 @@ export default function widget(easyshare){
         actions.setBallPos({left:startLeft,top:startTop})
       }
       else{
-        actions.toggleShowBall(false)
-        easyshare.record()
+        actions.toggleShowBall(false);
+        pagenote.record({
+          bg:e.target.dataset.color || colors[0],
+        });
         clearInterval(move)
     }
     },10)
   }
 
-  const RecordButton = ({status,onclick}) =>(
-    <button id="record" onclick={onclick}>
-      {status===constant.WAITING && "标记此处"}
-      {[constant.REPLAYING,constant.PLAYANDWAIT].indexOf(status)>-1 && "结束播放后可进行记录"}
-    </button>
-  )
 
   const Menu = ({state,actions})=>(
     <div
-      id="easyshare-menu"
+      id="pagenote-menu"
       style={{
+        zIndex:99999,
         position:"absolute",
         visibility:state.steps.length>0?"visible":"hidden",
-        right:0,
+        right:'0px',
         top:state.steps.length*15+20+"px",
       }}
     >
-      <div className={style.menu} onclick={actions.toggleMenu}>
-        <svg  viewBox="0 0 8 16" version="1.1" width="20" height="16" aria-hidden="true">
-          <path fill-rule="evenodd" d="M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z"></path>
+      <div style='cursor:pointer' onclick={actions.toggleMenu}>
+        <svg t="1584782208424" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+             p-id="6119" width="20" height="20">
+          <path
+              d="M844.8 883.2h-256c-19.2 0-38.4-19.2-38.4-38.4v-256c0-19.2 19.2-38.4 38.4-38.4h256c19.2 0 38.4 19.2 38.4 38.4v256c0 19.2-19.2 38.4-38.4 38.4z m0-403.2h-256c-19.2 0-38.4-19.2-38.4-38.4v-256c0-19.2 19.2-38.4 38.4-38.4h256c19.2 0 38.4 19.2 38.4 38.4v256c0 19.2-19.2 38.4-38.4 38.4zM435.2 883.2h-256c-19.2 0-38.4-19.2-38.4-38.4v-256c0-19.2 19.2-38.4 38.4-38.4h256c19.2 0 38.4 19.2 38.4 38.4v256c6.4 19.2-12.8 38.4-38.4 38.4z m0-403.2h-256c-19.2 0-38.4-19.2-38.4-38.4v-256c0-19.2 19.2-38.4 38.4-38.4h256c19.2 0 38.4 19.2 38.4 38.4v256c6.4 19.2-12.8 38.4-38.4 38.4z"
+              p-id="6120" fill="#8a8a8a"></path>
         </svg>
       </div>
       {
-        state.showMenu && 
-        <div className={style.menuContainer}>
-          <a href="javascript:;" className={style.close} onclick={actions.toggleMenu}>
-            <svg viewBox="0 0 1024 1024" width="20" height="20"><path d="M804.47 1015.467c-24.911 0-49.225-10.027-66.707-27.509L507.016 757.211 276.268 987.958c-17.481 17.482-41.795 27.509-66.707 27.509-24.941 0-49.271-10.027-66.752-27.509L31.057 876.206C13.577 858.725 3.55 834.395 3.55 809.455c0-24.913 10.026-49.225 27.507-66.708L261.805 512 31.057 281.252C13.577 263.77 3.55 239.457 3.55 214.545c0-24.94 10.026-49.27 27.507-66.752L142.81 36.041c17.48-17.481 41.812-27.508 66.752-27.508 24.911 0 49.225 10.027 66.707 27.508l230.747 230.747L737.764 36.041c17.481-17.482 41.795-27.508 66.706-27.508 24.941 0 49.271 10.027 66.752 27.508l111.753 111.752c17.48 17.481 27.507 41.811 27.507 66.752 0 24.912-10.026 49.225-27.507 66.707L752.228 512l230.748 230.748c17.48 17.482 27.507 41.795 27.507 66.708 0 24.94-10.026 49.27-27.507 66.751L871.223 987.958c-17.48 17.482-41.813 27.509-66.753 27.509zM507.016 713.796l252.455 252.455c11.768 11.767 28.17 18.516 45 18.516 16.86 0 33.278-6.75 45.046-18.516L961.27 854.499c11.767-11.767 18.516-28.185 18.516-45.045 0-16.83-6.749-33.233-18.516-45L708.814 512l252.454-252.455c11.767-11.767 18.516-28.168 18.516-44.999 0-16.86-6.749-33.279-18.516-45.046L849.516 57.748C837.75 45.981 821.33 39.233 804.47 39.233c-16.83 0-33.233 6.748-45 18.515L507.016 310.203 254.562 57.748c-11.768-11.767-28.169-18.515-45-18.515-16.86 0-33.278 6.748-45.046 18.515L52.765 169.5c-11.767 11.768-18.516 28.186-18.516 45.046 0 16.83 6.749 33.232 18.516 45L305.22 512 52.765 764.455c-11.767 11.767-18.516 28.168-18.516 45 0 16.859 6.749 33.278 18.516 45.045l111.752 111.752c11.768 11.767 28.186 18.516 45.046 18.516 16.83 0 33.232-6.75 45-18.516l252.453-252.456z"/></svg>
-          </a>
-          <div style="color:#b7b7b7">
-            复制地址栏URL或 <a href="javascript:;" onclick={(e)=>{
-              const url = document.getElementById("easyshare-url");
-              url.focus();
-              url.setSelectionRange(0, url.value.length);
-              document.execCommand('copy', true);
-              e.target.innerText = "已复制"
-              }}>获取链接</a>
-            <br/> 
-            分享给好友，即可让对方看见你的标记。
-          </div>
-        
-          <p>
-              <label><input type="checkbox" checked={easyshare.options.playSetting.auto}
-                onclick={(e)=>{easyshare.options.playSetting.auto = e.target.checked==true;
-                  easyshare.makelink()
-                  actions.refershState()
-                }}
-              />打开网页时候自动点亮标记
-              </label> 
+        state.showMenu &&
+        <div style='text-align:center' className={style.menuContainer}>
+          <a href="javascript:;" className={style.close} onclick={actions.toggleMenu}></a>
+          {/*TODO 可配置*/}
+          {/*<div style="">*/}
+          {/*  复制地址栏URL或 <a href="javascript:;" onclick={(e)=>{*/}
+          {/*    const url = document.getElementById("pagenote-url");*/}
+          {/*    url.focus();*/}
+          {/*    url.setSelectionRange(0, url.value.length);*/}
+          {/*    document.execCommand('copy', true);*/}
+          {/*    e.target.innerText = "已复制"*/}
+          {/*    }}>获取链接</a>*/}
+          {/*</div>*/}
+
+          <p style='text-align:left'>
+            <div>
+              初始化时：
+              <label>
+                <input type="radio" name='init-type' checked={pagenote.runningSetting.initType==='default'}
+                       onclick={(e)=>{pagenote.runningSetting.initType = 'default';
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />默认上次
+              </label>
+              <label>
+                <input type="radio" name='init-type' checked={pagenote.runningSetting.initType==='light'}
+                       onclick={(e)=>{pagenote.runningSetting.initType = 'light';
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />点亮所有
+              </label>
+              <label>
+                <input type="radio" name='init-type' checked={pagenote.runningSetting.initType==='off'}
+                       onclick={(e)=>{pagenote.runningSetting.initType = 'off';
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />不点亮
+              </label>
+            </div>
+            <div>
+              点亮速度：
+              <label>
+                <input type="radio" name='duration' checked={pagenote.runningSetting.dura == 50}
+                       onclick={(e) => {
+                         pagenote.runningSetting.dura = 50;
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />快
+              </label>
+              <label>
+                <input type="radio" name='duration' checked={pagenote.runningSetting.dura == 150}
+                       onclick={(e) => {
+                         pagenote.runningSetting.dura = 150;
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />适中
+              </label>
+              <label>
+                <input type="radio" name='duration' checked={pagenote.runningSetting.dura == 500}
+                       onclick={(e) => {
+                         pagenote.runningSetting.dura = 500;
+                         actions.refershState()
+                         pagenote.makelink()
+                       }}
+                />慢
+              </label>
+            </div>
           </p>
           {/* TODO 使用说明 使用手册 */}
-          <div>
-            <button onclick={()=>{const result = window.confirm("确认删除所有标记？");if(result){easyshare.remove(-1);actions.toggleMenu()}}}>删除所有标记</button>
-            <button onclick={toggleAllLight}>
-              {`${easyshare.highlightAll==true?"点亮":"隐藏"}所有标记`}
+          <p style='text-align:center'>
+            <button className={style.menuButton} onclick={()=>{const result = window.confirm("确认删除所有标记？");if(result){pagenote.remove(-1);actions.toggleMenu()}}}>删除所有标记</button>
+            <button className={style.menuButton}
+                    style='margin-left:4px'
+                    onclick={toggleAllLight}>
+              {`${pagenote.lastaction===pagenote.CONSTANT.DIS_LIGHT?"点亮":"隐藏"}所有标记`}
             </button>
+          </p>
+          <div>
+            <h4>赞助一下</h4>
+            <div>
+              <img width={200} height={100} src="https://logike.cn/images/zhifu.png" alt="支付"/>
+            </div>
           </div>
-         
-          
-          <input style={{opacity:0}} value={state.url} readonly id="easyshare-url"/>
-          </div>
+          <input style='opacity:0;height:0' value={state.url} readonly id="pagenote-url"/>
+        </div>
       }
     </div>
   )
@@ -158,79 +194,148 @@ export default function widget(easyshare){
     <span title="点击"
           className={`${style.stepSign} ${running?style.running:""} ${step.isActive?style.isActive:""}`}
           style={{
-            top:(index+1)*15+"px"
+            top:(index+1)*15+"px",
+            '--color':step.bg || colors[0],
             //TODO running 增加动画效果
           }}
-          onclick={()=>{easyshare.replay(index,true,!step.isActive)}}
+          onclick={()=>{pagenote.replay(index,true,!step.isActive)}}
     >
     </span>
-  )
+  );
 
-  const StepTag = ({step,index,actions})=>(
-    <div className={style.stepTag} style={{position:"absolute",top:step.y+"px",left:step.x+"px"}}>
-      <div title="点击"  class={`${style.point} ${step.isActive?style.active:""}`}
-        onclick={()=>{step.writing=false;easyshare.replay(index,false,!step.isActive);actions.refershState()}} >
-        <svg style={{position:"absolute",display:step.isActive?"":"none"}}  viewBox="0 0 1024 1024" version="1.1" width="10" height="10">
-          <path d="M192 448l640 0 0 128-640 0 0-128Z" p-id="4227" fill="#fff"></path>
-        </svg>
-      </div>
-      
-      <div className={`${style.box} ${step.isActive? style.show :""}` }>
-        <div contentEditable={step.writing?"plaintext-only":"false"}
-        // 节流处理 oninput
-          oninput={(e)=>{const value = e.target.innerText; step.modify = value;}}
-          innerText={step.tip}
-          style={{width:"100%",border:`${step.writing?1:0}px solid`}}>
-        </div>
-        <span className={style.edit} onclick={()=>{step.writing=true;easyshare.replay(index,false)}}>
-          <svg viewBox="0 0 1024 1024" width="20" height="20"><path d="M924.766 187.485c-32.297-32.412-62.339-68.774-99.757-95.411-34.261-7.093-50.787 29.928-74.311 47.237 39.777 46.201 86.117 87.013 128.923 130.718 19.407-23.095 65.369-46.724 45.145-82.543zm-21.267 174.541c-27.158 27.294-55.258 53.806-81.519 82.146-.648 109.327.273 218.642-.375 327.946-.545 40.3-35.851 76.004-76.13 77.445-165.797.65-331.717.65-497.513.127-44.75-1.191-80.6-44.103-77.048-88.058-.125-158.274-.125-316.403 0-474.533-3.406-43.84 32.55-85.968 76.797-87.535 109.85-1.451 219.739.125 329.462-.794 28.495-25.717 54.737-53.942 82.063-80.976-146.242 0-292.337-.773-438.557.397-68.274 1.18-129.445 60.898-130.614 129.403-.272 184.515-.793 368.895.25 553.399.272 66.414 56.7 124.012 122.091 130.322h574.541c61.944-10.884 115.115-64.972 115.907-129.403 1.839-146.576.399-293.297.649-439.883zm-43.83-71.783a15111.955 15111.955 0 0 0-129.946-129.142c-95.309 94.619-190.867 188.987-285.63 284.128 42.91 43.182 86.094 86.22 129.674 128.871 95.433-94.484 190.718-189.238 285.902-283.856zM373.604 643.78c58.392-15.877 89.499-25.874 147.911-41.616 15.607-4.973 25.989-7.98 33.992-11.167-41.345-39.369-88.852-87.891-130.072-127.523-17.32 60.106-34.534 120.201-51.832 180.305z" fill="#fff"/></svg>
-        </span>
-        <div style={{marginTop:"5px",display:step.writing?"block":"none"}}>
-            <a className={style.delete} onclick={()=>easyshare.remove(index)} title="删除">
-              <svg viewBox="0 0 1024 1024" width="20" height="20"><path d="M223.595 318.284l24.023 480.742c0 54.377 44.99 98.457 100.485 98.457h331.964c55.495 0 100.49-44.08 100.49-98.457l23.109-480.742h-580.07zm608.154-34.103c.1-20.274.159-21.623.159-22.981 0-52.871-31.299-81.888-73.295-81.888l-116.893.123c0-27.751-27.105-50.246-54.855-50.246H441.35c-27.745 0-55.727 22.495-55.727 50.246l-117.013-.123c-46.388 0-73.296 35.36-73.296 81.888 0 1.363.055 2.707.159 22.981h636.282-.006zM614.17 444.615c0-15.327 12.422-27.75 27.745-27.75 15.327 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.423 27.751-27.75 27.751-15.323 0-27.745-12.423-27.745-27.75V444.614zm-128.31 0c0-15.327 12.427-27.75 27.75-27.75 15.328 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.422 27.751-27.75 27.751-15.322 0-27.75-12.423-27.75-27.75V444.614zm-128.222 0c0-15.327 12.423-27.75 27.751-27.75 15.322 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.427 27.751-27.75 27.751-15.328 0-27.75-12.423-27.75-27.75V444.614zm0 0" fill="#fff"/></svg>
-            </a>
-
-            <span>
-            <span style={{fontSize:"12px",color:"#bbb"}}> Tip:放弃保存请点击左上角，关闭编辑窗口</span>
-            <a style={{float:"right",height:"20px",background:"#fff",borderRadius:"5px"}} href="javascript:;" 
-              title="保存" onclick={()=>{
-              const value = step.modify!=undefined?step.modify:step.tip ;
-              const originTip = step.tip;
-              step.tip = value; 
-              const result = easyshare.makelink();
-              const saveResult = result.result;
-              !saveResult && alert(result.msg)
-              step.writing = !saveResult
-              step.tip = saveResult?value:originTip
-              actions.refershState()
-              }}>
-                <svg viewBox="0 0 1024 1024" width="20" height="20"><path d="M725.333 128h-512C166.4 128 128 166.4 128 213.333v597.334C128 857.6 166.4 896 213.333 896h597.334C857.6 896 896 857.6 896 810.667v-512L725.333 128zM512 810.667c-72.533 0-128-55.467-128-128s55.467-128 128-128 128 55.466 128 128-55.467 128-128 128zM640 384H213.333V213.333H640V384z" fill="#949494"/></svg>
-              </a>
-            </span>
+  const StepTag = ({step,index,actions})=>{
+    const editStep = function(e) {
+      pagenote.replay(index,false);
+      setTimeout(()=>{e.target.focus();},100)
+    };
+    const pasteImage = (e)=>{
+      clipBoard(e,function (result) {
+        e.target.blur();
+        const image = document.createElement('img');
+        image.src = result;
+        step.tip = step.tip + image.outerHTML;
+        step.modify = undefined;
+        pagenote.makelink();
+        actions.refershState();
+        e.target.focus();
+      })
+    };
+    const color = step.bg || colors[0];
+    return (
+        <div className={`${style.stepTag}`}
+             data-pagenotei={index}
+             data-pagenotes={step.isActive?'active':''}
+             style={{position:"absolute",top:step.y+"px",left:step.x+"px",textAlign:'left','--bg-color':color}}>
+          <div title="点击激活/长按拖拽移动"
+               class={`${style.point}  draggable ${step.isActive?style.active:style.common}` }
+               data-index={index}
+               data-active={step.isActive?1:0}
+               data-moving='0'
+               onclick={(e)=>{if(e.target.dataset.moving==='1'){return};pagenote.replay(index,!step.isActive,!step.isActive);actions.refershState()}} >
+            {
+              step.warn &&
+                  <b style='position:absolute;top:-2px;left:5px;font-size:12px;font-weight:bold;color: #de1c1c;'>!</b>
+            }
           </div>
-      </div>
-    
-    </div>
-  )
+
+          <div className={`${style.box} ${step.isActive? style.show :""}` }>
+            <div className={`${style.handlebar}`} >
+              {step.warn || '点击下方可修改'}
+              <span className={style.deleteicon} onclick={() => {pagenote.remove(index)}} title="删除">
+                <svg viewBox="0 0 1024 1024" width="20" height="20">
+                  <path
+                      d="M223.595 318.284l24.023 480.742c0 54.377 44.99 98.457 100.485 98.457h331.964c55.495 0 100.49-44.08 100.49-98.457l23.109-480.742h-580.07zm608.154-34.103c.1-20.274.159-21.623.159-22.981 0-52.871-31.299-81.888-73.295-81.888l-116.893.123c0-27.751-27.105-50.246-54.855-50.246H441.35c-27.745 0-55.727 22.495-55.727 50.246l-117.013-.123c-46.388 0-73.296 35.36-73.296 81.888 0 1.363.055 2.707.159 22.981h636.282-.006zM614.17 444.615c0-15.327 12.422-27.75 27.745-27.75 15.327 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.423 27.751-27.75 27.751-15.323 0-27.745-12.423-27.745-27.75V444.614zm-128.31 0c0-15.327 12.427-27.75 27.75-27.75 15.328 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.422 27.751-27.75 27.751-15.322 0-27.75-12.423-27.75-27.75V444.614zm-128.222 0c0-15.327 12.423-27.75 27.751-27.75 15.322 0 27.75 12.423 27.75 27.75v317.883c0 15.328-12.427 27.751-27.75 27.751-15.328 0-27.75-12.423-27.75-27.75V444.614zm0 0"
+                      fill="#fff"/>
+                </svg>
+              </span>
+            </div>
+            {/*<div className={style.refer}>*/}
+            {/*  {step.text}*/}
+            {/*</div>*/}
+            <div className={`${style.editcontent}`}
+                 onfocus={editStep} contentEditable='true'
+                 onpaste={pasteImage}
+                 innerHTML={step.tip||'输入笔记'}
+                // 节流处理 oninput
+                 oninput={
+                   (e)=>{
+                     const value = e.target.innerHTML;
+                     step.modify = value;
+                   }
+                 }
+                 onblur={()=>{
+                   const value = step.modify!==undefined?step.modify:step.tip ;
+                   const originTip = step.tip;
+                   step.tip = value;
+                   const url = pagenote.makelink();
+                   !url && alert('error')
+                   // step.writing = !url;
+                   step.tip = url?value:originTip;
+                   actions.refershState()
+                 }}
+                >
+            </div>
+          </div>
+
+        </div>
+    )
+  }
 
 
+  const p = 38//360/(colors.length-1);
   const view = (state, actions) => (
     <div
-      oncreate={()=>{easyshare.addListener(actions.refershState); setTimeout(()=>{actions.refershState()},0)}}>
+      id='pagenote'
+      oncreate={()=>{pagenote.addListener(actions.refershState); setTimeout(()=>{actions.refershState()},0)}}>
       <div style={{
         position:"absolute",
+        zIndex:999999,
         left:state.targetInfo.x +"px",
         top:state.targetInfo.y+"px",
         transition:".5s",
-        userSelect:"none"
+        userSelect:"none",
+        textAlign:'left'
         }}>
         {
           (state.status === constant.WAITING || state.status === constant.PLAYANDWAIT)
           &&
-          <RecordButton status={state.status} onclick={(e)=>{record(e,actions)}}/>
+          <div className={style.recordContain}>
+            {
+              colors.map((color,index)=>{
+
+                  const hudu = (2*Math.PI / 360) * p * (index-colors.length+1);
+                  const offsetX = index===0?0:Number.parseFloat(20*Math.sin(hudu)).toFixed(3);
+                  const offsetY = index===0?0:Number.parseFloat(20*Math.cos(hudu)).toFixed(3);
+                  const translate = `translate(${offsetX}px,${offsetY}px)`;
+
+                  return <div className={style.recordButton}
+                              data-color={color}
+                              style={{
+                                '--color': color,
+                                transform:translate,
+                                top:(offsetY/-1)+'px',
+                                left:(offsetX/-1)+'px'}}
+                                onclick={(e) => {
+                                record(e, actions)
+                              }}>
+                    {
+                      index===0 &&
+                      <svg t="1584087258159" className="icon" viewBox="0 0 1024 1024" version="1.1"
+                           xmlns="http://www.w3.org/2000/svg" p-id="15434" width="26" height="26">
+                        <path
+                            d="M768 128h-32V96c0-19.2-12.8-32-32-32s-32 12.8-32 32v32H544V96c0-19.2-12.8-32-32-32s-32 12.8-32 32v32H352V96c0-19.2-12.8-32-32-32s-32 12.8-32 32v32h-32c-35.2 0-64 32-64 70.4v694.4c0 35.2 28.8 67.2 64 67.2h512c35.2 0 64-32 64-70.4V198.4c0-38.4-28.8-70.4-64-70.4z m-96 640H352c-19.2 0-32-12.8-32-32s12.8-32 32-32h320c19.2 0 32 12.8 32 32s-12.8 32-32 32z m0-192H352c-19.2 0-32-12.8-32-32s12.8-32 32-32h320c19.2 0 32 12.8 32 32s-12.8 32-32 32z m0-192H352c-19.2 0-32-12.8-32-32s12.8-32 32-32h320c19.2 0 32 12.8 32 32s-12.8 32-32 32z"
+                            p-id="15435" fill="#ffffff"></path>
+                      </svg>
+                    }
+                    {/*{status===constant.WAITING && "标记此处"}*/}
+                    {/*{[constant.REPLAYING,constant.PLAYANDWAIT].indexOf(status)>-1 && "结束播放后可进行记录"}*/}
+                  </div>
+              })
+            }
+          </div>
         }
       </div>
-      <div className={`${style.recordBall} ${state.showBall?style.recording:""}`} 
+      <div className={`${style.recordBall} ${state.showBall?style.recording:""}`}
           style={{top:state.ballPos.top+"px",left:state.ballPos.left+"px"
         }}>
       </div>
@@ -239,18 +344,20 @@ export default function widget(easyshare){
           <StepTag key={index} step={record} index={index} actions={actions}></StepTag>
         ))
       }
-      
-      <aside style={{position:"fixed",right:0,top:window.innerHeight/2-(state.steps.length+7)*15/2+"px"}}>
+
+      <aside style={{position:"fixed",right:'10px',
+        zIndex:99999,
+        top:window.innerHeight/2-(state.steps.length+7)*15/2+"px"}}>
           {
-            state.steps.length > 0 && 
-            <a href="javascript:;" className={`${style.esLight} ${easyshare.highlightAll?"":style.lightAll}`} onclick={toggleAllLight}>
+            state.steps.length > 0 &&
+            <a href="javascript:;" className={`${style.esLight} ${pagenote.highlightAll?"":style.lightAll}`} onclick={toggleAllLight}>
               <svg viewBox="0 0 1000 1000" version="1.1" width="25" height="25">
               <path d="M634.9 770.3l-4.4 28H393.6l-4.4-28h245.7zM512 931c-30.4 0-55.9-21.6-62-50.2h124c-6.1 28.6-31.6 50.2-62 50.2z m103.5-79.3h-207c-3.4 0-6.4-2.2-7.4-5.5l-2.9-18.9H626l-3 18.9c-1 3.3-4 5.5-7.5 5.5zM384.7 741.3l-8.1-51.9-0.1-0.6c-7.4-30.4-22.6-58.6-43.8-81.7-42.5-46.2-65.9-106.1-65.9-168.7 0-135.1 109.9-245.1 245-245.3h0.3c134 0 244 108.9 245.3 242.9 0.6 62.7-22.5 122.6-65 168.6-21.5 23.2-36.8 51.7-44.3 82.4l-0.1 0.6-8.4 53.6H384.7z" fill="#FFFFFF" p-id="10480"></path>
                 <g id={style.light}>
                   <path d="M357 741.1l-8-51.9-0.1-0.6c-7.4-30.4-22.4-58.6-43.5-81.7-42.2-46.2-65.4-106.1-65.4-168.7 0-135.1 109-245.1 243.1-245.3h0.3c133 0 242.1 108.9 243.3 242.9 0.6 62.7-22.3 122.6-64.5 168.6-21.3 23.2-36.5 51.7-43.9 82.4l-0.1 0.6-8.3 53.6H357z" p-id="10481"></path>
                 </g>
                 <path d="M605.8 770.8l-4.3 28H370.4l-4.3-28h239.7zM587 852.2H384.9c-3.3 0-6.3-2.2-7.2-5.5l-2.9-18.9h222.3l-2.9 18.9c-1 3.3-3.9 5.5-7.2 5.5z" fill="#E87A66" p-id="10482"></path>
-                
+
                 <path d="M484.9 931c-29 0-53.4-21.6-59.2-50.2H544c-5.8 28.6-30.1 50.2-59.1 50.2z" fill="#65D5EF" p-id="10483">
                 </path>
 
@@ -263,7 +370,7 @@ export default function widget(easyshare){
               </svg>
             </a>
           }
-          
+
           <div style={{position:"relative",right:"6px"}}>
             {
               state.steps.map((record,index)=>(
@@ -276,8 +383,63 @@ export default function widget(easyshare){
     </div>
   )
   const root = document.createElement("div");
-  root.id = easyshare.id;
-  root.dataset.easyshare = root.id;
+  root.id = pagenote.id;
+  root.dataset.pagenote = root.id;
   document.body.append(root)
   app(state, actions, view, root)
+
+
+  let dragStepIndex;
+  let timer;
+  // let moving = false;
+  let movingTarget;
+  document.addEventListener('mousedown',function (e) {
+    const target = e.target;
+    // 点击过200ms后再设置
+    setTimeout(()=>{
+      if(target.classList.contains('draggable') && target.dataset.active==1){
+        dragStepIndex = target.dataset.index;
+        movingTarget = target;
+      }
+    },200)
+  });
+
+  // 清除移动标识
+  document.addEventListener('mouseup',function (e) {
+    setTimeout(()=>{
+      document.body.style.userSelect='unset';
+      dragStepIndex = -1;
+    },200);
+  });
+
+
+  document.addEventListener('mousemove',throttle(function (e) {
+    if(dragStepIndex>=0){
+      document.body.style.userSelect='none';
+      const step = pagenote.recordedSteps[dragStepIndex];
+      step.x = e.pageX;
+      step.y = e.pageY;
+      pagenote.makelink();
+      actions.refershState();
+      movingTarget.dataset.moving = '1';
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        movingTarget.dataset.moving = '0';
+      }, 300);
+    }
+  },25));
+
+  // document.addEventListener("scroll", throttle(function (e) {
+  //   const tags = document.querySelectorAll('[data-pagenotei]');
+  //   [].forEach.call(tags,function (tag) {
+  //     if(tag.dataset['pagenotes']!=='active'){
+  //       const index = +tag.dataset['pagenotei'];
+  //       const position = tag.getBoundingClientRect();
+  //       const scrollShow = position.top>0 && position.left>0 && position.left<window.innerWidth;
+  //       if(scrollShow){
+  //         pagenote.replay(index,false,true);
+  //       }
+  //     }
+  //   })
+  // }));
 }

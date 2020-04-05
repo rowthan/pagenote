@@ -6,7 +6,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'easyshare.js',
+    filename: 'pagenote.js',
+    libraryTarget: 'umd'
   },
   //loader: resolve the files except javascript
   module: {
@@ -34,6 +35,12 @@ module.exports = {
           }
         },]
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|svg|png)$/,
+        use: [{
+          loader: 'file-loader', options: {esModule: false}
+        }]
+      },
     ]
   },
   optimization: {
@@ -48,7 +55,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "easyshare.css",
+      filename: "pagenote.css",
       chunkFilename: "[id].css"
     })
   ]

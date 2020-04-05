@@ -7,7 +7,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: "production",
-  devtool: 'source-map',
+  // devtool: 'source-map',
   plugins: [
     new UglifyJSPlugin({
       sourceMap: true
@@ -17,10 +17,8 @@ module.exports = merge(common, {
     }),
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, 'dist'),
+      ignore: ['*.html','*.map','*.json','*.md'],
       to :path.resolve(__dirname, 'extenstion/scripts/')
-    },{
-      from: path.resolve(__dirname, 'dist'),
-      to :path.resolve(__dirname, 'extenstion/css/')
     }])
    ],
 });
