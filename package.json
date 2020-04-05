@@ -1,6 +1,6 @@
 {
-  "name": "easy-share",
-  "version": "0.1.1",
+  "name": "pagenote",
+  "version": "0.2.4",
   "description": "make your website more easy to share",
   "main": "index.js",
   "scripts": {
@@ -22,16 +22,18 @@
     "babel-preset-env": "^1.7.0",
     "copy-webpack-plugin": "^4.5.3",
     "css-loader": "^1.0.0",
+    "file-loader": "^5.1.0",
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "style-loader": "^0.23.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "hyperapp": "^1.2.9",
+    "hyperapp": "^1.2.10",
     "whats-element": "^1.1.1"
   }
 }
