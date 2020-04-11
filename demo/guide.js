@@ -12,6 +12,8 @@ pagenote.init(isEn?dataEn:data);
 var isChrome = navigator.userAgent.indexOf('Chrome')>-1;
 var isFirefox = navigator.userAgent.indexOf('Firefox')>-1;
 
+document.querySelector('.chrome').style.display='inline-block';
+document.querySelector('.firefox').style.display='inline-block';
 
 if(isChrome){
     document.querySelector('.chrome').style.display='inline-block';
