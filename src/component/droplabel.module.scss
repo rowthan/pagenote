@@ -1,0 +1,123 @@
+:global{
+  .category-title{
+    cursor: pointer;
+    //background-image: url("../assets/tag.png");
+    //background-size: 16px;
+    //background-position: left;
+    //background-repeat: no-repeat;
+    //border-top: 1px dashed #d2d1d1;
+    //padding: 6px;
+    line-height: 1em;
+    svg{
+      vertical-align: text-bottom;
+    }
+    .category-name{
+      display: inline-block;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right:4px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      border-radius: 4px;
+      background: #e6e6e6;
+      padding: 0 12px;
+      color: #666;
+    }
+  }
+
+  .droplabel{
+    display: none;
+    position: absolute;
+    right: 0;
+    //top: 0;
+    border-color: #e1e4e8;
+    box-shadow: 0 8px 24px rgba(149,157,165,.2);
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    font-size: 12px;
+    color: #586069;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(27,31,35,.15);
+    border-radius: 6px;
+    &.show{
+      display: block;
+      z-index: 9;
+    }
+    .select-menu-header{
+      padding: 8px 10px;
+      line-height: 16px;
+      background: #fff;
+      border-bottom: 1px solid #e1e4e8;
+      .select-menu-title {
+        font-weight: 600;
+        color: #24292e;
+      }
+      .close-button{
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        cursor: pointer;
+      }
+    }
+    .select-menu-text-filter {
+      position: relative;
+      padding: 10px 10px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #dfe2e5;
+      input{
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        padding: 5px 12px;
+        border: 1px solid #dfe2e5;
+        border-radius: 6px;
+        box-sizing: border-box;
+        line-height: 1em;
+        font-size: 12px;
+      }
+      .new-button{
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: 14px;
+        border: none;
+        right: 20px;
+        color: #fff;
+        padding: 0 4px;
+        background: #E91E63;
+        border-radius: 2px;
+        border: 1px solid #FFEB3B;
+        z-index: 1;
+        cursor: pointer;
+      }
+    }
+    .select-menu-list {
+      position: relative;
+      max-height: 400px;
+      overflow: auto;
+      color:#586069;
+      .select-menu-item {
+        display: block;
+        padding: 8px 8px 8px 30px;
+        overflow: hidden;
+        color: inherit;
+        cursor: pointer;
+        border-bottom: 1px solid #eaecef;
+        &:hover{
+          background-color: #f4f4f4;
+        }
+        .select-menu-item-icon {
+          vertical-align: middle;
+          float: left;
+          margin-left: -20px;
+        }
+      }
+    }
+  }
+
+}

@@ -1,0 +1,225 @@
+pagenote-description,pagenote-lights,pagenote-light,pagenote-light-ref,pagenote-light-anotation,pagenote-snapshots,pagenote-infos,pagenote-dot,pagenote-line,pagenote-block,pagenote-progress,pagenote-progress-percent{
+  display: block;
+  box-sizing: border-box;
+}
+
+pagenote-action-group{
+  display: block;
+}
+
+pagenote-icon{
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50%;
+
+  &:hover{
+    background: #fff;
+    box-shadow: 0 1px 3px 1px rgba(60,64,67,.15), 0 1px 2px 0 rgba(60,64,67,.3);
+  }
+}
+
+
+pagenote-aside{
+  position: fixed;
+  right: -100px;
+  z-index: 99991;
+  top: 0;
+  width: 200px;
+  user-select: none;
+  background: #fff;
+  transition: width 0.2s ease-out;
+  border-radius: 4px;
+  border: 1px solid #f5f1f1;
+  line-height: 1.414em;
+  &[data-status="expand"]{
+    border: none;
+    width: 30px;
+    background: transparent;
+    pagenote-actions{
+      background: none;
+    }
+    pagenote-infos,pagenote-description{
+      display: none;
+    }
+    pagenote-action-group{
+      display: none;
+    }
+    pagenote-action[data-action=toggle]{
+      position: absolute;
+      top: 34px;
+    }
+    pagenote-lights{
+      left: 5px;
+      overflow: visible;
+    }
+  }
+}
+
+
+pagenote-actions{
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  padding: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: left;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 3px rgba(0,0,0,.3);
+  -webkit-transition: all .25s ease-out;
+  transition: all .25s ease-out;
+  background-color: #3a3a3a;
+  border-radius: 4px 4px 0 0;
+  //border-left: 10px outset #222;
+
+  pagenote-action {
+    display: inline-block;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    background-size: contain;
+    &[data-action=toggle]{
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+
+
+
+pagenote-description{
+  margin: 6px 0;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 1.414em;
+  max-height: 2.828em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+pagenote-lights{
+  max-height: 78vh;
+  overflow: auto;
+  padding-left: 6px;
+  left: -6px;
+  position: relative;
+  pagenote-line-container{
+    display: block;
+    font-size: 12px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    line-height: 20px;
+    text-align: left;
+    cursor: pointer;
+    border-left: 2px solid var(--color);
+    box-sizing: border-box;
+    background-color: #fff;
+    margin-bottom: 8px;
+    text-overflow: ellipsis;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+    &:hover{
+      background-color: rgb(251, 252, 255);
+      user-select: auto;
+      z-index: 2 !important;
+    }
+
+    &[data-active='1']{
+      z-index: 1;
+      width: calc(100% + 8px);
+      height: auto;
+      transform: translateX(-8px);
+      border-left: 8px solid var(--color);
+      background-color: rgb(251, 252, 255);
+      border-radius: 8px;
+      pagenote-light-anotation,pagenote-light-ref{
+        max-height: 12em;
+      }
+    }
+  }
+
+  pagenote-dot-container{
+    position: absolute;
+    &:hover{
+      z-index: 9999;
+      pagenote-light-ref-dot{
+        display: block;
+      }
+    }
+    &[data-active='1']{
+      pagenote-dot{
+        transform: scale(1.5);
+      }
+    }
+    pagenote-light-ref-dot{
+      display: none;
+      position: absolute;
+      width: 200px;
+      top: -10px;
+      right: -4px;
+      font-size: 12px;
+      background: #ffff;
+      box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 4px;
+      border-left: 4px solid var(--color);
+      z-index: 1;
+    }
+    pagenote-dot{
+      position: relative;
+      display: block;
+      width: 8px;
+      height: 8px;
+      background: var(--color);
+      border-radius: 50%;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      z-index: 2;
+    }
+  }
+}
+
+
+pagenote-infos{
+  border-top: 1px dashed #e2e2e2;
+  padding: 6px;
+}
+
+
+pagenote-snapshots{
+  margin: 6px 0;
+  pagenote-snapshot{
+    display: inline-block;
+    position: relative;
+    &:hover{
+      pagenote-icon{
+        display: block;
+      }
+    }
+
+    pagenote-icon{
+      position: absolute;
+      top: 28px;
+      left: 7px;
+      display: none;
+    }
+    img{
+      width: 30px;
+      height: 30px;
+      cursor: zoom-in;
+      border-radius: 4px;
+    }
+  }
+}
+
+pagenote-link{
+  position: relative;
+}
+
+
