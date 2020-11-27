@@ -1,0 +1,34 @@
+
+
+pagenote-ref-anotation{
+  position: relative;
+  padding: 0 6px;
+  display: block;
+  pagenote-light-ref{
+    font-weight: bold;
+    line-height: 1.4em;
+    max-height: 2.8em;
+    overflow: hidden;
+  }
+  pagenote-light-anotation{
+    margin-top: 4px;
+    color: #666;
+    line-height: 1.4em;
+    max-height: 2.8em;
+    overflow: hidden;
+  }
+
+  pagenote-light-actions{
+    position: absolute;
+    right: 0;
+    top:0;
+    display: none;
+  }
+
+  &:hover{
+    pagenote-light-actions{
+      display: block;
+    }
+  }
+}
+

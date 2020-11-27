@@ -1,9 +1,10 @@
 const path = require('path');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const profile = require('./package');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/pagenote.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'pagenote.js',
@@ -13,30 +14,40 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.svg$/,
+        use: ['preact-svg-loader'],
+      },
+      {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!(@webcomponents\/shadycss|lit-html|@polymer|@vaadin|@lit)\/).*/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env'],
-            plugins: [
-              ["transform-react-jsx", { "pragma":"h" }]
-            ]
+            presets: ['@babel/preset-env'],
+            "plugins": [
+              [
+                "@babel/plugin-transform-react-jsx",
+                {
+                "pragma": "h",
+                "pragmaFrag": "Fragment",
+            }]]
           },
         }
       },
       {
-        test: /\.css$/,
-        use: [ MiniCssExtractPlugin.loader, {
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader,{
           loader: 'css-loader',
           options: {
               modules: true,
               localIdentName: '[hash:base64:3]'
           }
-        },]
+        },{
+          loader: "sass-loader"
+        }]
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf|svg|png)$/,
+        test: /\.(woff|woff2|eot|ttf|otf|png)$/,
         use: [{
           loader: 'file-loader', options: {esModule: false}
         }]
@@ -58,5 +69,12 @@ module.exports = {
       filename: "pagenote.css",
       chunkFilename: "[id].css"
     })
-  ]
+  ],
+  "resolve": {
+    "alias": {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+      // Must be below test-utils
+    },
+  }
 };

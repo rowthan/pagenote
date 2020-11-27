@@ -1,0 +1,448 @@
+:global{
+    pagenote-camera .pagenote-camera-container {
+        z-index: 9999;
+        position: fixed;
+        top: 200px;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        box-shadow: 0px 30px 50px -20px rgba(0, 0, 0, 0.7);
+        -webkit-animation: 5s angle;
+        animation: 5s angle;
+    }
+    pagenote-camera .camera-top, pagenote-camera .camera-mid, pagenote-camera .camera-bottom {
+        width: 360px;
+    }
+    pagenote-camera .camera-top {
+        height: 60px;
+        background: -webkit-linear-gradient(left, #e2e2e2 0%, #f5f5f5 10%, #f5f5f5 90%, #e2e2e2 100%);
+        background: linear-gradient(to right, #e2e2e2 0%, #f5f5f5 10%, #f5f5f5 90%, #e2e2e2 100%);
+        border: 1px solid #DCDCDC;
+        border-top-left-radius: 5px;
+    }
+    pagenote-camera .camera-top:before {
+        display: block;
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: 0;
+        width: 210px;
+        height: 20px;
+        background: -webkit-linear-gradient(left, #f5f5f5 0%, #f5f5f5 174px, #e2e2e2 100%);
+        background: linear-gradient(to right, #f5f5f5 0%, #f5f5f5 174px, #e2e2e2 100%);
+        border: 1px solid #DCDCDC;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom: none;
+        box-shadow: inset 0 15px 15px -15px #FDFDFD;
+    }
+    pagenote-camera .camera-top .zoom {
+        position: absolute;
+        top: -15px;
+        left: 30px;
+        width: 42px;
+        height: 9px;
+        background: -webkit-linear-gradient(left, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        background: linear-gradient(to right, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        border: 1px solid #A3A3A3;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        box-shadow: inset 0 15px 15px -15px #FDFDFD;
+    }
+    pagenote-camera .camera-top .zoom:before {
+        display: block;
+        content: '';
+        position: relative;
+        top: -6px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        width: 20px;
+        height: 4px;
+        background: -webkit-linear-gradient(left, #b0b0b0 0%, #e2e2e2 50%, #b0b0b0 100%);
+        background: linear-gradient(to right, #b0b0b0 0%, #e2e2e2 50%, #b0b0b0 100%);
+        border: 1px solid #A3A3A3;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
+    pagenote-camera .camera-top .zoom:after {
+        display: block;
+        content: '';
+        position: relative;
+        top: 3px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        width: 46px;
+        height: 4px;
+        background: -webkit-linear-gradient(left, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        background: linear-gradient(to right, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        border: 1px solid #A3A3A3;
+        border-bottom: none;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
+    pagenote-camera .camera-top .mode-changer {
+        position: absolute;
+        top: -20px;
+        left: 82px;
+        width: 60px;
+        height: 16px;
+        background: -webkit-linear-gradient(left, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        background: linear-gradient(to right, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        border: 1px solid #A3A3A3;
+        border-radius: 3px;
+        box-shadow: inset 0 15px 15px -15px #FDFDFD;
+    }
+    pagenote-camera .camera-top .mode-changer:after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        width: 50px;
+        height: 2px;
+        background: -webkit-linear-gradient(left, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        background: linear-gradient(to right, #b0b0b0 0%, #e2e2e2 30%, #e2e2e2 50%, #e2e2e2 70%, #b0b0b0 100%);
+        border: 1px solid #A3A3A3;
+        border-bottom: none;
+    }
+    pagenote-camera .camera-top .sides {
+        width: 100%;
+    }
+    pagenote-camera .camera-top .sides:before, pagenote-camera .camera-top .sides:after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 24px;
+        width: 8px;
+        height: 30px;
+        background: -webkit-linear-gradient(top, #828181 0%, #696767 10%, #4f4d4d 50%, #403e3f 100%);
+        background: linear-gradient(to bottom, #828181 0%, #696767 10%, #4f4d4d 50%, #403e3f 100%);
+        border: 1px solid #3E3C3D;
+        border-radius: 2px;
+        box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.5);
+    }
+    pagenote-camera .camera-top .sides:before {
+        left: -4px;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    pagenote-camera .camera-top .sides:after {
+        right: -4px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+    pagenote-camera .camera-top .range-finder {
+        position: absolute;
+        top: 10px;
+        left: 105px;
+        width: 30px;
+        height: 20px;
+        background: #3E3C3D;
+        border-radius: 3px;
+        box-shadow: inset 0 0 5px 3px #333132;
+    }
+    pagenote-camera .camera-top .range-finder:before {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background: #797878;
+        border-radius: 100%;
+    }
+    pagenote-camera .camera-top .focus {
+        position: absolute;
+        top: -14px;
+        left: 156px;
+        width: 15px;
+        height: 15px;
+        background: #3F3D3E;
+        border-radius: 100%;
+        box-shadow: inset 0 0 4px 3px #2D2B2B, inset 0 4px 5px 0 #F5F5F5, inset 0 -3px 4px -2px #A3A2A2;
+    }
+    pagenote-camera .camera-top .red {
+        position: absolute;
+        top: 5px;
+        left: 165px;
+        width: 30px;
+        height: 30px;
+        background: #DC2839;
+        border-radius: 100%;
+    }
+    pagenote-camera .camera-top .view-finder {
+        position: absolute;
+        left: 210px;
+        width: 48px;
+        height: 30px;
+        background: -webkit-radial-gradient(center ellipse, #828181 0%, #403e3f 85%, #403e3f 100%);
+        background: radial-gradient(ellipse at center, #828181 0%, #403e3f 85%, #403e3f 100%);
+        border: 3px solid #312F2F;
+        border-radius: 4px;
+        box-shadow: inset 0 8px 8px -8px #FDFDFD;
+    }
+    pagenote-camera .camera-top .flash {
+        position: absolute;
+        top: -6px;
+        right: 20px;
+        width: 58px;
+        height: 46px;
+        background: -webkit-radial-gradient(center ellipse, #828181 0%, #403e3f 70%, #403e3f 100%);
+        background: radial-gradient(ellipse at center, #828181 0%, #403e3f 70%, #403e3f 100%);
+        border: 2px solid #312F2F;
+        border-radius: 3px;
+        box-shadow: inset 0 8px 8px -8px #FDFDFD;
+    }
+    pagenote-camera .camera-top .flash:before, pagenote-camera .camera-top .flash:after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+    pagenote-camera .camera-top .flash:before {
+        width: 90%;
+        height: 70%;
+        background: -webkit-radial-gradient(center ellipse, #696767 0%, #1e1e1e 50%, #1e1e1e 100%);
+        background: radial-gradient(ellipse at center, #696767 0%, #1e1e1e 50%, #1e1e1e 100%);
+    }
+    pagenote-camera .camera-top .flash:after {
+        width: 16px;
+        height: 14px;
+        background: #797979;
+        border-top-left-radius: 8px 2px;
+        border-top-right-radius: 8px 2px;
+        border-bottom-left-radius: 8px 2px;
+        border-bottom-right-radius: 8px 2px;
+    }
+    pagenote-camera .camera-top .flash .light, pagenote-camera .camera-top .flash .light.capturing {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: -webkit-radial-gradient(center ellipse, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+        background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+        border-radius: 100%;
+        z-index: 2;
+        -webkit-animation: 1s flash backwards;
+        animation: 1s flash backwards;
+    }
+    pagenote-camera .camera-mid {
+        position: relative;
+        height: 130px;
+        background: -webkit-linear-gradient(left, #e4e4e4 0%, #fafafa 10%, #fafafa 90%, #e4e4e4 100%);
+        background: linear-gradient(to right, #e4e4e4 0%, #fafafa 10%, #fafafa 90%, #e4e4e4 100%);
+        border: 1px solid #DCDCDC;
+        border-top: none;
+        border-bottom: none;
+        box-shadow: inset 0 15px 15px -15px #FDFDFD;
+    }
+    pagenote-camera .camera-mid .tip {
+        font-size: 12px;
+        padding: 24px;
+        line-height: 2em;
+        opacity: 0;
+        animation: fade-in 0.8s ease-in forwards;
+        animation-delay: 0.9s;
+    }
+    pagenote-camera .camera-mid .tip button{
+        font-size: 12px;
+        padding: 4px 12px;
+        margin-right: 4px;
+        border: 1px solid #999;
+        border-radius: 4px;
+    }
+    pagenote-camera .camera-mid .sensor, pagenote-camera .camera-mid .lens {
+        animation: scale-out 0.8s ease-out forwards;
+        animation-delay: 0.9s;
+    }
+    pagenote-camera .camera-mid .sensor {
+        position: absolute;
+        top: 40px;
+        left: 105px;
+        width: 30px;
+        height: 30px;
+        background: #545252;
+        border: 2px solid #545252;
+        border-radius: 100%;
+        box-shadow: inset 0 12px 12px -10px #FDFDFD, 0 2px 5px 1px rgba(0, 0, 0, 0.3);
+    }
+    pagenote-camera .camera-mid .sensor:before, pagenote-camera .camera-mid .sensor:after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+    pagenote-camera .camera-mid .sensor:before {
+        width: 20px;
+        height: 20px;
+        background: -webkit-linear-gradient(top, #E9E9E9 0%, #BDBDBD 100%);
+        background: linear-gradient(to bottom, #E9E9E9 0%, #BDBDBD 100%);
+        border-radius: 100%;
+    }
+    pagenote-camera .camera-mid .sensor:after {
+        width: 12px;
+        height: 12px;
+        background: #FAFAFA;
+        border-radius: 100%;
+        box-shadow: 0 2px 3px 0 #747474;
+    }
+    pagenote-camera .camera-mid .lens {
+        position: absolute;
+        top: -20px;
+        left: 130px;
+        width: 155px;
+        height: 155px;
+        background: -webkit-radial-gradient(center ellipse, #000000 0%, #000000 15%, #272525 30%, #403e3f 30%, #403e3f 31%, #403e3f 40%, #e9ebec 41%, #e9ebec 44%, #b0b1b2 48%, #e8e9ea 50%, #e8e9ea 60%, #f7f8f8 60%, #787979 65%, #ffffff 66%, #ffffff 100%);
+        background: radial-gradient(ellipse at center, #000000 0%, #000000 15%, #272525 30%, #403e3f 30%, #403e3f 31%, #403e3f 40%, #e9ebec 41%, #e9ebec 44%, #b0b1b2 48%, #e8e9ea 50%, #e8e9ea 60%, #f7f8f8 60%, #787979 65%, #ffffff 66%, #ffffff 100%);
+        border: 1px solid #B6B7B8;
+        border-radius: 100%;
+        box-sizing: border-box;
+        box-shadow: 0 7px 15px -2px rgba(0, 0, 0, 0.4), inset 0 -2px 15px -2px rgba(0, 0, 0, 0.2), inset 0 7px 15px -2px #FFF;
+    }
+    pagenote-camera .camera-mid .lens:before {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        width: 25px;
+        height: 25px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 100%;
+        box-shadow: inset 0 5px 3px -2px rgba(255, 255, 255, 0.5), inset 0 -5px 20px -8px rgba(255, 255, 255, 0.5);
+    }
+    pagenote-camera .camera-bottom {
+        height: 16px;
+        background: -webkit-linear-gradient(left, #e2e2e2 0%, #f5f5f5 10%, #f5f5f5 90%, #e2e2e2 100%);
+        background: linear-gradient(to right, #e2e2e2 0%, #f5f5f5 10%, #f5f5f5 90%, #e2e2e2 100%);
+        border: 1px solid #DCDCDC;
+        border-bottom: none;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        box-shadow: inset 0 15px 15px -15px #FDFDFD, inset 0 -12px 12px -10px #797979;
+    }
+    pagenote-camera .camera-picture {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: -1;
+        animation: picture-in 0.9s ease-in forwards;
+        animation-delay: 0.5s;
+    }
+    pagenote-camera .camera-picture img {
+        max-width: 100%;
+        max-height: 100%;
+        box-shadow: 0px 0px 2px 1px #484848;
+    }
+}
+
+@keyframes :global(fade-in) {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes :global(fade-out) {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        display: none;
+    }
+}
+
+@keyframes :global(scale-out) {
+    0%{
+        transform: scale(1);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes :global(picture-in) {
+    0%{
+        opacity: 0;
+        transform: translate(0, -100%);
+    }
+    100%{
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes :global(flash) {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    20% {
+        width: 200px;
+        height: 200px;
+    }
+    25% {
+        width: 0;
+        height: 0;
+    }
+    45% {
+        width: 200px;
+        height: 200px;
+    }
+    50% {
+        width: 0;
+        height: 0;
+    }
+    100% {
+        width: 0;
+        height: 0;
+    }
+}
+
+@keyframes :global(angle) {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+        box-shadow: 0px 30px 50px -20px rgba(0, 0, 0, 0.7);
+    }
+    25% {
+        -webkit-transform: translate(-50%, -50%) rotate(2deg);
+        transform: translate(-50%, -50%) rotate(2deg);
+        box-shadow: 10px 30px 50px -20px rgba(0, 0, 0, 0.7);
+    }
+    75% {
+        -webkit-transform: translate(-50%, -50%) rotate(-2deg);
+        transform: translate(-50%, -50%) rotate(-2deg);
+        box-shadow: -10px 30px 50px -20px rgba(0, 0, 0, 0.7);
+    }
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+        box-shadow: 0px 30px 50px -20px rgba(0, 0, 0, 0.7);
+    }
+}

@@ -1,4 +1,7 @@
-import {encryptData} from "./utils";
+import { throttle, convertColor} from "./utils";
+import md5 from "blueimp-md5";
+import html2canvas from "html2canvas";
+import Canvas2Image from "./canvas2image";
 
 const IS_TOUCH = 'ontouchstart' in window,
  getXY = IS_TOUCH
@@ -23,7 +26,15 @@ function wrapRangeInTextNode(node,start,end,color,id) {
     let highlightEl = document.createElement(hEl);
     highlightEl.dataset.highlight=id;
     highlightEl.style.backgroundColor=color;
+    const {textColor,rgb} = convertColor(color);
+    const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
+    const bgColor = `rgba(${rgb.toString()},1)`;
+    highlightEl.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
+
     highlightEl.textContent = startNode.textContent;
+    if(color==='rgba(1,1,1,0.5)'){
+        highlightEl.dataset.mask = '1';
+    }
     startNode.parentNode.replaceChild(highlightEl, startNode);
     return ret;
 }
@@ -39,7 +50,7 @@ const highlightElement = function (node,keyword,color){
     } else if (node.nodeType === 1 && node.childNodes&& // only element nodes that have children
         !/(script|style)/i.test(node.tagName) // ignore script
         && node.dataset.highlight!=="y"
-    ) { 
+    ) {
         for (let i = 0; i < node.childNodes.length; i++) {
             highlightElement(node.childNodes[i],keyword,color);
             i++
@@ -48,32 +59,35 @@ const highlightElement = function (node,keyword,color){
 },
 
 
-highlightKeyword = function (element,text,hightlight,color='',blackNodes=[],callback){
+highlightKeyword = function (wid,element,text,hightlight,color='',blackNodes=[],callback){
     if(!element || !text){
         callback({
             totalMatches:0
         });
         return;
     }
+    const id = md5(wid+text);
     // 如果是还原 则不进行之后操作
     if(!hightlight){
-        const highlightElements = element.querySelectorAll(`light[data-highlight='${encryptData(text)}']`);
+        const highlightElements = element.querySelectorAll(`light[data-highlight='${id}']`);
         //还原高亮，即便是高亮 也要先还原高亮
         for(let i=0; i<highlightElements.length; i++){
             const ele = highlightElements[i];
-            ele.outerHTML = ele.innerHTML;
+            ele.outerHTML = [].find.call(ele.childNodes,((node)=>{
+                return node.nodeType === 3 || node.nodeName==='#text'
+            })).textContent;
         }
         const leftHighlight = element.querySelectorAll('light[data-highlight]');
-        if(leftHighlight.length===0){
-            delete element.dataset.highlightbk
-        }
+        // if(leftHighlight.length===0){
+        //     delete element.dataset.highlightbk
+        // }
         return
     }
 
-    element.dataset.highlightbk="y";
+    // element.dataset.highlightbk="y";
     let totalMatches = 0,kwArr=[text];
     const dict = getTextNodes(element);
-    dict.id = encryptData(text);
+    dict.id = id;
     dict.color = color;
     let hasLighted = 0;
     const handler = kw => {
@@ -83,9 +97,10 @@ highlightKeyword = function (element,text,hightlight,color='',blackNodes=[],call
             const isBlack = blackNodes.some((black)=>{
                 return black.contains(node);
             });
-            hasLighted = node.parentNode.dataset.highlight?hasLighted+1:hasLighted;
+            const parent = node.parentNode || document.body;
+            hasLighted = parent.dataset.highlight?hasLighted+1:hasLighted;
             // 黑名单和已高亮过的不做高亮处理
-            const valid = !isBlack && !node.parentNode.dataset.highlight;
+            const valid = !isBlack && !parent.dataset.highlight;
             return valid;
         }, element => {
             matches++;
@@ -113,15 +128,17 @@ highlightKeyword = function (element,text,hightlight,color='',blackNodes=[],call
         }
         typeof callback === 'function' && callback({
             totalMatches: totalMatches || hasLighted,
+            id: dict.id,
         });
     }
 };
 
 
 const gotoPosition = function(element,targetX,targetY,callback){
-    if(element&&element.scrollIntoView){
+    const inBottomView = targetY>document.documentElement.clientHeight/2;
+    if(inBottomView && element&&element.scrollIntoView){
         element.scrollIntoView({block:"center",behavior:'smooth'});
-        typeof callback === "function" && setTimeout(()=>callback(),500);
+        typeof callback === "function" && setTimeout(()=>callback(),100);
         return;
     }
     const timer = setInterval(function () {
@@ -129,17 +146,22 @@ const gotoPosition = function(element,targetX,targetY,callback){
         const { x:beforeScrollLeft,y:beforeScrollTop} = getScroll();
         const distanceX = targetX - beforeScrollLeft
         , distanceY =  targetY - beforeScrollTop
-        
+
         //移动后
         setScroll(beforeScrollLeft+distanceX/6,beforeScrollTop+distanceY/6)
-        
+
         const {x:afterScrollLeft,y:afterScrollTop} = getScroll()
-        
+
         if(beforeScrollTop === afterScrollTop && beforeScrollLeft === afterScrollLeft){
             clearInterval(timer)
             typeof callback === "function" && callback()
         }
     },30)
+    function setScroll(x,y){
+        documentTarget.scrollLeft = x;
+        documentTarget.scrollTop = y;
+        window.scrollTo(x,y)
+    }
     return timer
 }
 
@@ -150,17 +172,13 @@ function getScroll(){
     return {x,y}
 }
 
-function setScroll(x,y){
-    documentTarget.scrollLeft = x;
-    documentTarget.scrollTop = y;
-    window.scrollTo(x,y)
-}
+
 
 //TODO 获取元素位于body相对位置信息 getViewPosition + getScroll
 
 function getViewPosition(elem) { // crossbrowser version
     var box = elem.getBoundingClientRect();
-    return { top: box.top, left: box.left };
+    return { top: box.top, left: box.left, };
 }
 
 function getTextNodes(element) {
@@ -255,8 +273,151 @@ function wrapRangeInMappedTextNode(dict, start, end, filterCb, eachCb) {
     });
 }
 
+function getWebIcon() {
+    const iconEle = document.querySelector('link[rel~=icon]');
+    return iconEle ? iconEle.href : window.location.origin+'/favicon.ico';
+}
+
+function convertImgToBase64(url,width,height, callback, outputFormat){
+    var canvas = document.createElement('CANVAS');
+    var ctx = canvas.getContext('2d');
+    var img = new Image;
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var width = img.width;
+        var height = img.height;
+        // 按比例压缩4倍
+        // var rate = (width<height ? width/height : height/width)/4;
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img,0,0,width,height,0,0,width,height);
+        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+        callback.call(this, dataURL);
+        canvas = null;
+    };
+    img.src = url;
+}
+
+
+function moveable(element,callback,childMove=true) {
+    if(!element) {
+        return
+    }
+    const isMobile = 'ontouchstart' in window;
+    element.style.cursor = 'move';
+    let canMove = false;
+    const downEvent = isMobile?'touchstart':'mousedown';
+    element.addEventListener(downEvent,function (e) {
+        if(childMove===false && e.target !== element){
+            return;
+        }
+        e.stopPropagation();
+        setTimeout(()=>{
+            canMove = true;
+        },300);
+    },{capture: true});
+    const upEvent = isMobile?'touchend':'mouseup';
+    document.addEventListener(upEvent,function () {
+        canMove = false;
+        setTimeout(()=>{
+            canMove = false;
+            document.body.style.userSelect='auto';
+        },300)
+    },{capture: true});
+    const moveEvent = isMobile?'touchmove':'mousemove';
+    document.addEventListener(moveEvent,throttle(function (e) {
+        if(canMove){
+            document.body.style.userSelect='none';
+            callback(isMobile?e.touches[0]:e)
+        }
+    },1000/60),{capture: true})
+}
+
+function writeTextToClipboard(text) {
+    try {
+        return  navigator.clipboard.writeText(text)
+    } catch (e) {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('Copy', false, null);
+        document.body.removeChild(textarea)
+    }
+}
+
+function captureElementImage(target) {
+    return new Promise((resolve,reject)=>{
+        html2canvas(target,{
+            useCORS: true,
+            ignoreElements: function (element) {
+                const isPagenote = element.tagName.toLowerCase().indexOf('pagenote')>-1;
+                const unVisiable = getComputedStyle(element).opacity<=0;
+                return isPagenote || unVisiable;
+            }
+        }).then((canvas)=>{
+            const result = Canvas2Image.convertToImage(canvas,target.offsetWidth,target.scrollHeight).src;
+            resolve(result);
+        }).catch((e)=>{
+            reject(e);
+        })
+    });
+}
+
+var showCamera = function (snapshot) {
+    const camera = document.createElement('pagenote-camera');
+    const tip = '个快照';
+    camera.innerHTML = `<div class='pagenote-camera-container'>
+                                  <div class='camera-top'>
+                                    <div class='zoom'></div>
+                                    <div class='mode-changer'></div>
+                                    <div class='sides'></div>
+                                    <div class='range-finder'></div>
+                                    <div class='focus'></div>
+                                    <div class='red'></div>
+                                    <div class='view-finder'></div>
+                                    <div class='flash'>
+                                      <div class='light'></div>
+                                    </div>
+                                  </div>
+                                  <div class='camera-mid'>
+                                    <div class='sensor'></div>
+                                    <div class='lens'></div> 
+                                    <div class="tip"><div>已拍照完成并保存，你可以在管理页进行查看、编辑。</div><button><a target="_blank" href="https://pagenote.cn/me">前往查看${tip}</a></button><button id="close-camera">关闭摄像机<span id="count-down">8s</span></button></div>
+                                  </div>
+                                  <div class='camera-bottom'></div>
+                                  <div class="camera-picture"><img src=${snapshot} alt=""></div>
+                                </div>`;
+    document.body.appendChild(camera);
+
+
+    let time = 8;
+    const timer = setInterval(()=>{
+        document.getElementById('count-down').innerText = time + 's';
+        time--;
+        if(time<=0){
+            destoryCa();
+        }
+    },1000);
+
+    function destoryCa() {
+        camera.parentNode.removeChild(camera);
+        clearInterval(timer);
+    };
+
+    document.getElementById('close-camera').onclick = destoryCa;
+};
+
 export {
     gotoPosition,
+    getScroll,
     highlightKeyword,
-    getViewPosition
+    getWebIcon,
+    getViewPosition,
+    moveable,
+    writeTextToClipboard,
+    captureElementImage,
+    convertImgToBase64,
+    showCamera
 }
