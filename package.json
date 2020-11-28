@@ -1,6 +1,6 @@
 {
   "name": "pagenote",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "make your website more easy to share",
   "main": "dist/pagenote.js",
   "scripts": {
@@ -52,6 +52,6 @@
     "preact": "^10.4.6",
     "react-contenteditable": "^3.3.5",
     "toastr": "^2.1.4",
-    "whats-element": "^2.1.2"
+    "whats-element": "^2.1.3"
   }
 }
