@@ -165,7 +165,6 @@ export default class LightNode extends Component{
                      color: light.bg,
                    }}
               >
-                {/*<DragIcon fill={light.bg} className={style.dragIcon}></DragIcon>*/}
                 <pagenote-icon data-tip={hasPin?'隐藏':'固定'} className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
                   <PinIcon onClick={()=>this.pinLight(!hasPin)} fill={hasPin?light.bg:'#eee'}  />
                 </pagenote-icon>
