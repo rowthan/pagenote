@@ -17,3 +17,4 @@ pagenote.init();
 
 ## TODO LIST
 * TypeScript 重构项目
+* 弃用 Preact 重新使用 React

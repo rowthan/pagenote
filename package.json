@@ -1,6 +1,6 @@
 {
   "name": "pagenote",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "make your website more easy to share",
   "main": "dist/pagenote.js",
   "scripts": {
@@ -17,6 +17,7 @@
   ],
   "author": "rowthan",
   "devDependencies": {
+    "@babel/runtime": "^7.10.2",
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-decorators": "^7.10.5",
@@ -44,7 +45,6 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2",
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",
     "html2canvas": "^1.0.0-rc.7",

@@ -18,9 +18,9 @@ module.exports = {
         use: ['preact-svg-loader'],
       },
       {
-        test: /\.js$/,
+        test: /\.js$/,
         exclude: /node_modules\/(?!(@webcomponents\/shadycss|lit-html|@polymer|@vaadin|@lit)\/).*/,
-        use: {
+        use: {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
@@ -35,8 +35,8 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader,{
+      test: /\.scss$/,
+      use: [MiniCssExtractPlugin.loader,{
           loader: 'css-loader',
           options: {
               modules: true,
