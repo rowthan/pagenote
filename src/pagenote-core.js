@@ -280,15 +280,16 @@ export default function PagenoteCore(id, options={},language){ // TODO 支持载
             // 监听单独提取为一个文件
             document.addEventListener('keyup',(e)=>{
                 if(this.status===constant.WAITING){
+                    const key = e.key.toLowerCase();
                     if(this.target.canHighlight===true){
-                        const colorIndex = this.options.shortCuts.toLowerCase().indexOf(e.key);
+                        const colorIndex = this.options.shortCuts.toLowerCase().indexOf(key);
                         const colors = this.options.colors;
                         if(colorIndex>-1 && colors[colorIndex]){
                             this.record({
                                 bg: colors[colorIndex]
                             },true);
-                        }else if(typeof shortCutActions[e.key] === 'function'){
-                           shortCutActions[e.key](e,this.target);
+                        }else if(typeof shortCutActions[key] === 'function'){
+                           shortCutActions[key](e,this.target);
                         }
                     }
                 }
