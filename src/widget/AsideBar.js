@@ -12,6 +12,7 @@ import LightIcon from '../component/LightIcon'
 import ExpandIcon from '../assets/expand.svg'
 import LightRefAnotation from "../component/LightRefAnotation";
 import ScrollProgress from "../component/ScrollProgress";
+import i18n from '../locale/i18n';
 
 let lastTop = -1;
 let pagenote = null;
@@ -160,7 +161,7 @@ class AsideBar extends Component{
     setCategories = (category,method='add')=>{
         if(method==='add'){
             if(this.pagenote.categories.size>=5){
-                this.pagenote.notification('最多设置5个');
+                this.pagenote.notification(i18n.t('most_cnt',[5]));
                 return;
             }
             this.pagenote.categories.add(category);
@@ -228,7 +229,7 @@ class AsideBar extends Component{
                     showBar &&
                     <pagenote-aside data-status={isExpand?'expand':'fold'} style={{right: right + 'px', top: top + 'px',position:'fixed'}}>
                         <pagenote-actions ref={this.setRef.bind(this)}>
-                            <pagenote-action onClick={this.toggleAllLight} data-tip='点亮/熄灭所有标记'>
+                            <pagenote-action onClick={this.toggleAllLight} data-tip={i18n.t('toggle_marks')}>
                                 <LightIcon run={run}  colors={Array.from(colorSet)} />
                             </pagenote-action>
                             <pagenote-action-group>
@@ -242,7 +243,7 @@ class AsideBar extends Component{
                                 }
                             </pagenote-action-group>
 
-                            <pagenote-action data-action='toggle' data-tip={isExpand?'展开':'收起'} onClick={this.toggleHideSideBar.bind(this)}>
+                            <pagenote-action data-action='toggle' data-tip={isExpand?i18n.t('expand'):i18n.t('fold')} onClick={this.toggleHideSideBar.bind(this)}>
                                 {isExpand ? <ExpandIcon />:  <Toggle />
                                 }
                             </pagenote-action>
@@ -299,7 +300,7 @@ class AsideBar extends Component{
                                     ))
                                 }
                             </pagenote-snapshots>
-                            <pagenote-link data-tip='前往pagenote.cn查看' onClick={this.openMe}><Link /></pagenote-link>
+                            <pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>
                         </pagenote-infos>
                     </pagenote-aside>
                 }

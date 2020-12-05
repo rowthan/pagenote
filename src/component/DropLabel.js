@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState,useEffect,useRef } from 'preact/hooks';
+import i18n from '../locale/i18n'
 import  style from './droplabel.module.scss';
 
 export default function DropLabels({categories=[{label:'default'}],onSelected,currentCategories,onSet}) {
@@ -44,7 +45,7 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
         <div>
             <div onClick={()=>setShow(true)} className='category-title'>
                 {currentCategories.size===0?
-                    <span className='category-name'>添加一个标签</span>:''}
+                    <span className='category-name'>{i18n.t('add_a_category')}</span>:''}
                 {
                     displayCategories.map((item)=>(
                         <span className='category-name' >{item}</span>
@@ -53,7 +54,7 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
             </div>
             <div className={`droplabel ${show?'show':'hide'}`} onBlur={()=>{setTimeout(()=>{onSelected()},400)}}>
                 <div className="select-menu-header">
-                    <span className="select-menu-title">为此页面添加一个标签</span>
+                    <span className="select-menu-title">{i18n.t('add_a_category')}</span>
                     <svg onClick={closeDrop} className="close-button" viewBox="0 0 16 16" version="1.1" width="16" height="16"
                          aria-hidden="true">
                         <path fillRule="evenodd"
@@ -62,10 +63,10 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
                 </div>
                 <div className="select-menu-filters">
                     <div className="select-menu-text-filter">
-                        <input ref={fileInputEl} onKeyDown={onkeydown} onChange={onChange} value={newCategory} type="text" placeholder="搜索/新建一个标签" autoComplete="off" autoFocus="" />
+                        <input ref={fileInputEl} onKeyDown={onkeydown} onChange={onChange} value={newCategory} type="text" placeholder={i18n.t('search_or_create_category')} autoComplete="off" autoFocus="" />
                         {
                             newCategory &&
-                            <button onClick={(e)=>{onSelectedLabel(newCategory,'add',true);e.stopPropagation();}} className='new-button'>新建并应用</button>
+                            <button onClick={(e)=>{onSelectedLabel(newCategory,'add',true);e.stopPropagation();}} className='new-button'>{i18n.t('create_and_apply')}</button>
                         }
                     </div>
                 </div>

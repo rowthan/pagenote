@@ -12,6 +12,7 @@ import CopyIcon from '../assets/copy.svg';
 import MoreIcon from '../assets/more.svg';
 import whatsPure from "whats-element/pure";
 const whats = new whatsPure();
+import i18n from '../locale/i18n';
 
 export default class LightNode extends Component{
   constructor(props){
@@ -112,7 +113,7 @@ export default class LightNode extends Component{
   copyHightlight=(copyAll)=>{
     const value =copyAll? (this.props.light.text + '\n' + this.props.light.tip):this.props.light.text;
     writeTextToClipboard(value);
-    this.props.pagenote.notification('已复制'+(copyAll?'关键词和笔记':'关键词'));
+    this.props.pagenote.notification(i18n.t('copied')+(copyAll?(i18n.t('keywords')+'&'+i18n.t('annotation')):i18n.t('keywords')));
   };
 
   onChangeColor=(color)=>{
@@ -165,24 +166,24 @@ export default class LightNode extends Component{
                      color: light.bg,
                    }}
               >
-                <pagenote-icon data-tip={hasPin?'隐藏':'固定'} className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
+                <pagenote-icon data-tip={hasPin?i18n.t('hide'):i18n.t('fixed')} className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
                   <PinIcon onClick={()=>this.pinLight(!hasPin)} fill={hasPin?light.bg:'#eee'}  />
                 </pagenote-icon>
-                <pagenote-icon className={style.actionIcon} data-tip='单击复制划词，双击复制划词和批注'
+                <pagenote-icon className={style.actionIcon} data-tip={i18n.t('copy_keyword_annotation')}
                       onClick={()=>this.copyHightlight(false)} onDblClick={()=>{this.copyHightlight(true)}}>
                   <CopyIcon  fill={light.bg}  width={18} height={18}  />
                 </pagenote-icon>
-                <pagenote-icon data-tip='批注' className={style.actionIcon} onClick={this.doEditor}>
+                <pagenote-icon data-tip={i18n.t('annotation')} className={style.actionIcon} onClick={this.doEditor}>
                   <CommentIcon  fill={light.bg}  width={18} height={18}  />
                 </pagenote-icon>
-                <pagenote-icon data-tip='变更颜色' className={style.actionIcon} >
+                <pagenote-icon data-tip={i18n.t('change_color')} className={style.actionIcon} >
                   <Colors colors={pagenote.options.colors} current={light.bg} selectColor={this.onChangeColor}></Colors>
                 </pagenote-icon>
 
-                <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`} data-tip='清空标记'>
+                <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`} data-tip={i18n.t('remove_marks')}>
                   <DeleteIcon  width={18} height={18} fill={light.bg}  onClick={this.deleteLight} />
                 </pagenote-icon>
-                <pagenote-icon className={`${style.moreIcon}`} data-tip='展开更多'>
+                <pagenote-icon className={`${style.moreIcon}`} data-tip={i18n.t('more')}>
                   <MoreIcon fill={showMore?light.bg:'#999'}  width={18} height={18} onClick={this.toggleShowMore} />
                 </pagenote-icon>
 

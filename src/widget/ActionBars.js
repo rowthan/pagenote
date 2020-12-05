@@ -1,6 +1,7 @@
 import { h, render,Component, } from 'preact';
 import {computePosition, convertColor, isMobile} from "../utils";
 import Highlight from '../assets/highlight.svg';
+import i18n from '../locale/i18n';
 import './action-bar.scss';
 
 export default function ActionBars ({pagenote}) {
@@ -64,7 +65,8 @@ export default function ActionBars ({pagenote}) {
                            transitionDelay: index*0.1+'s',
                          }}
                          onClick={recordNew}
-                    >{index!==0?shortCuts[index]: <span data-tip={`【快捷键】按下色盘对应字母试试。主色快捷键：${shortCuts[0]}`}><Highlight  data-pagenotecolor={color} style={{userSelect:'none'}} fill={color}/></span> }
+                    >{index!==0?shortCuts[index]:
+                      <span data-tip={`${i18n.t('press_the_key')} ${i18n.t('main_shortcut')}：${shortCuts[0]}`}><Highlight  data-pagenotecolor={color} style={{userSelect:'none'}} fill={color}/></span> }
                     </pagenote-color-button>
                   )
                 })
@@ -86,7 +88,7 @@ export default function ActionBars ({pagenote}) {
                       return (
                         <pagenote-action-button
                           key={action.name}
-                          data-tip={`${action.name}${action.shortcut?' 快捷键：'+action.shortcut:''}`}
+                          data-tip={`${action.name}${action.shortcut?i18n.t('shortcut')+action.shortcut:''}`}
                           data-eventid={action.eventid}
                           style={{
                             backgroundImage: `url(${image})`,

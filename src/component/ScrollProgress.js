@@ -3,6 +3,7 @@ import './scroll-progress.scss';
 import {useEffect, useState} from "preact/hooks";
 import {throttle} from "../utils";
 import {getScroll} from "../document";
+import i18n from "../locale/i18n";
 
 
 export default  function LightRefAnotation() {
@@ -31,7 +32,7 @@ export default  function LightRefAnotation() {
   }
 
   return(
-    <pagenote-progress data-position='bottom' data-tip={`你已经浏览到页面内的：${percent}%`}>
+    <pagenote-progress data-position='bottom' data-tip={i18n.t('has_read_percent',[percent])}>
       <pagenote-progress-percent
         style={{width: percent+'%'}} ></pagenote-progress-percent>
     </pagenote-progress>
