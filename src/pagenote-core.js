@@ -1,7 +1,7 @@
 import {gotoPosition, highlightKeyword, getWebIcon, captureElementImage, showCamera} from './document'
 import {decryptedData, encryptData, getParams, debounce} from "./utils";
 import whatsPure from 'whats-element/pure'
-
+import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step,Steps} from './pagenote-step';
 import './widget/camera.scss'
@@ -11,7 +11,7 @@ import './widget/camera.scss'
 const whats = new whatsPure();
 
 //增加开关 是否开启
-export default function PagenoteCore(id, options={},language){ // TODO 支持载入语言包
+export default function PagenoteCore(id, options={}){ // TODO 支持载入语言包
     this.id = id || "pagenote-container";
     this.options =  Object.assign({
         initType:'default',
@@ -398,7 +398,8 @@ export default function PagenoteCore(id, options={},language){ // TODO 支持载
         info = Object.assign(this.target,info);
         const maxNn = OPTIONS.maxMarkNumber;
         if(this.recordedSteps.length>=maxNn){
-            alert("标记失败！最大标记数量为 "+maxNn);
+
+            alert(i18n.t('mark_limited',[maxNn]));
             return false
         }
         // 如果当前状态不为等待记录 且不是强行记录时
@@ -424,7 +425,7 @@ export default function PagenoteCore(id, options={},language){ // TODO 支持载
         this._highlight(target,true,newStep,true,this);
         this.makelink((result)=>{
             if(!result){
-                alert('保存失败');
+                alert(i18n.t('save_failed'));
                 this.recordedSteps.splice(-1,1);
                 console.error('记录失败');
                 this.status = constant.RECORDFAIL;
@@ -624,7 +625,7 @@ export default function PagenoteCore(id, options={},language){ // TODO 支持载
             }).catch((e)=>{
                 console.error(e);
                 reject(e);
-                this.notification('拍照失败啦','error')
+                this.notification(i18n.t('capture_error'),'error')
             });
         })
     };
@@ -745,6 +746,8 @@ PagenoteCore.prototype.encryptData = function(data) {
     return encryptData(data)
 };
 
+PagenoteCore.prototype.i18n = i18n;
+
 PagenoteCore.prototype.CONSTANT = {
     ID:"pagenote",
     UN_INIT: -1,
@@ -781,4 +784,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
 };
 
-PagenoteCore.prototype.version = "4.0.3";
+PagenoteCore.prototype.version = "4.1.0";

@@ -1,6 +1,7 @@
 import { h, render,Component } from 'preact';
 import PageNote from "../src/pagenote";
 import './demo.scss'
+import en from '../src/locale/en.json';
 
 // new 对象
 const pagenote = new PageNote('dev',{
@@ -48,6 +49,9 @@ const pagenote = new PageNote('dev',{
     label:'候选项2'
   }]
 });
+
+pagenote.i18n.setLang('en',en);
+pagenote.i18n.setLangType('en');
 
 class Foo extends Component{
   constructor(props){

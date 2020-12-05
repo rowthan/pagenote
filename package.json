@@ -1,7 +1,7 @@
 {
   "name": "pagenote",
-  "version": "4.0.3",
-  "description": "make your website more easy to share",
+  "version": "4.1.0",
+  "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
