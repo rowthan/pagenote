@@ -1,0 +1,113 @@
+{
+  "add_a_category": {
+    "message": "добавить тег"
+  },
+  "search_or_create_category": {
+    "message": "найти или создать метку"
+  },
+  "create_and_apply": {
+    "message": "создать и применить"
+  },
+  "has_read_percent": {
+    "message": "вы уже прочитали всю страницу ${percent}%"
+  },
+  "shortcut": {
+    "message": "ярлык"
+  },
+  "main_shortcut": {
+    "message": "главный ярлык"
+  },
+  "press_the_key": {
+    "message": "нажмите на клавиатуре"
+  },
+  "most_cnt": {
+    "message": "максимум ${account} ограничен"
+  },
+  "toggle_marks": {
+    "message": "переключить все метки"
+  },
+  "fold": {
+    "message": "свернуть"
+  },
+  "expand": {
+    "message": "развернуть"
+  },
+  "goto_manage": {
+    "message": "перейти к платформе управления"
+  },
+  "copied": {
+    "message": "скопировано"
+  },
+  "keywords": {
+    "message": "ключевое слово"
+  },
+  "annotation": {
+    "message": "заметки"
+  },
+  "hide": {
+    "message": "скрыть"
+  },
+  "fixed": {
+    "message": "исправлено"
+  },
+  "copy_keyword_annotation": {
+    "message": "щёлкните, чтобы скопировать ключевые слова, и дважды щёлкните, чтобы скопировать ключевые слова и заметки"
+  },
+  "change_color": {
+    "message": "изменить цвет"
+  },
+  "remove_marks": {
+    "message": "удалить метки"
+  },
+  "more": {
+    "message": "узнать больше"
+  },
+  "mark_limited": {
+    "message": "ошибка: ${count} ограничено"
+  },
+  "save_failed": {
+    "message": "не удалось сохранить"
+  },
+  "capture_error": {
+    "message": "неудавшийся захват"
+  },
+  "not_available_in_current_page": {
+    "message": "недоступно на текущей странице"
+  },
+  "capture": {
+    "message": "захват"
+  },
+  "manage_pagenote": {
+    "message": "управлять PAGENOTE"
+  },
+  "switch": {
+    "message": "включить / выключить"
+  },
+  "support_donation": {
+    "message": "поддержка или пожертвование"
+  },
+  "rate": {
+    "message": "Оцените меня"
+  },
+  "before_start": {
+    "message": "Перед тем, как начать использовать PAGENOTE, вы должны прочитать соглашение"
+  },
+  "terms": {
+    "message": "правила"
+  },
+  "privacy": {
+    "message": "конфиденциальность"
+  },
+  "see_release": {
+    "message": "просмотреть всю информацию о версии"
+  },
+  "set_lang": {
+    "message": "переключить язык"
+  },
+  "backup": {
+    "message": "备份"
+  },
+  "import": {
+    "message": "导入"
+  }
+}

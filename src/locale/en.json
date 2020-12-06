@@ -21,7 +21,7 @@
     "message": "press the keyboard"
   },
   "most_cnt": {
-    "message": "max ${account} limited"
+    "message": "${count} limited"
   },
   "toggle_marks": {
     "message": "toggle all marks"
