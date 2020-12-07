@@ -1,9 +1,10 @@
-import {gotoPosition, highlightKeyword, getWebIcon, captureElementImage, showCamera} from './document'
-import {decryptedData, encryptData, getParams, debounce} from "./utils";
+import {gotoPosition, getWebIcon, captureElementImage, showCamera} from './document'
+import {decryptedData, encryptData, getParams, debounce,convertColor} from "./utils";
 import whatsPure from 'whats-element/pure'
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step,Steps} from './pagenote-step';
+import {highlightKeywordInElement,removeElementHighlight} from "./highlight";
 import './widget/camera.scss'
 // import './widget/pagnote-modal';
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
@@ -227,10 +228,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
         switch (this.runningSetting.initType) {
             case 'light':
-                this.replay(0,false,true,true,true);
+                this.replay(0,false,true,true);
                 break;
             case 'default':
-                this.replay(0,false,true,true,function (step) {
+                this.replay(0,false,true,function (step) {
                     return step.isActive;
                 });
                 break;
@@ -373,14 +374,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
     this.realive = function () {
         this.status = constant.RE_ALIVE;
-        this.replay(0,false,true,true,function (step) {
+        this.replay(0,false,true,function (step) {
             return step.isActive;
         });
     };
 
     this.toggleAllLight = function () {
         const lightAll = this.lastaction===this.CONSTANT.DIS_LIGHT;
-        this.replay(0,false,true,true,lightAll);
+        this.replay(0,false,true,lightAll);
         if(lightAll===false){
             this.runningSetting.autoLight = false;
         }
@@ -422,7 +423,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         window.getSelection().removeAllRanges();
         this.target = {};
 
-        this._highlight(target,true,newStep,true,this);
+        newStep.highlight(true)
         this.makelink((result)=>{
             if(!result){
                 alert(i18n.t('save_failed'));
@@ -434,26 +435,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.status = constant.RECORDED
         });
         return newStep
-    };
-
-    this._highlight = function (targetEl,isLight,runStep,isActiveLight,that,callback) {
-        highlightKeyword(runStep.id,targetEl,runStep.text,isLight,runStep.bg,that.blackNodes, (result)=> {
-            if(result.id){
-                const highlightElements = targetEl.querySelectorAll(`light[data-highlight='${result.id}']`);
-                runStep.relatedNode = highlightElements;
-                [].forEach.call(highlightElements,(item,index)=>{
-                    item.dataset.active = isActiveLight ? '1' : '0';
-                    item._light = runStep;
-                    if(runStep.tip && index===highlightElements.length-1){
-                        item.dataset['note'] = '1'
-                    }
-                    // render(<StepTag pagenote={that} isActive={isActiveLight} lightId={result.id} step={runStep} />,item);
-                });
-            }
-            runStep.isActive = isActiveLight;
-            runStep.warn = result.totalMatches ? '' : '未找到匹配内容';
-            typeof callback === 'function' && callback();
-        });
     };
 
     this.remove = function(stepIndex=-1,id){
@@ -474,7 +455,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     };
 
     // index 入参修改为array 支持断点点亮
-    this.replay = function(index=0,goto=true,lightCheck=true,autoNext=false,isActive=true){
+    this.replay = function(index=0,goto=true,autoNext=false,isActive=true){
         const timeout=this.runningSetting.dura;
         //TODO 根据当前窗口与记录时候窗口大小进行比较，如果差异较大 则进行提示 可能定位不准确的情况
         const runStep = this.recordedSteps[index];
@@ -484,10 +465,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.makelink();
             return
         }
-        const isLight = typeof lightCheck == "function" ? lightCheck(runStep) : lightCheck;
         const isActiveLight = typeof isActive == "function" ? isActive(runStep) : isActive;
-        const {x,y,id,text} = runStep;
-
 
         clearInterval(runningTimer)
         clearTimeout(nextTimer)
@@ -496,23 +474,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         this.runindex = index
         this.status = constant.REPLAYING
         this.lastaction = isActiveLight ? constant.LIGHT : constant.DIS_LIGHT;
-        runStep.isActive = isActiveLight;
 
-        let targetEl = id ? whats.getTarget(id) : NULL;
-        const that = this;
-        let findTimer = null;
-        (function findElement(retryTimes) {
-            targetEl = id ? whats.getTarget(id) : NULL;
-            clearTimeout(findTimer);
-            if((!targetEl && retryTimes>0) || !text){
-                findTimer = setTimeout(()=>{
-                    console.log(retryTimes,'重试');
-                    findElement(retryTimes-1);
-                },3000);
-                return;
-            }
-            that._highlight(targetEl,isLight,runStep,isActiveLight,that)
-        })(5);
+        runStep.highlight(isActiveLight);
 
         // 如果没有next了 则保存数据
         if(!autoNext){
@@ -520,10 +483,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
 
         if(goto){
-            runningTimer = gotoPosition(document.querySelector(`light[data-highlight='${runStep.lightId}']`)||targetEl,x-window.innerWidth/2,y-window.innerHeight/3,()=>{
+            runningTimer = runStep.gotoView(()=>{
                 this.runindex = NULL
                 if(autoNext){
-                    nextTimer = setTimeout(()=>this.replay(index+1,goto,lightCheck
+                    nextTimer = setTimeout(()=>this.replay(index+1,goto
                         ,autoNext,isActive),timeout)
                 }else{
                     this.status = constant.DONE
@@ -531,7 +494,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 }
             })
         }else if(autoNext){
-            nextTimer = setTimeout(()=>this.replay(index+1,goto,lightCheck
+            nextTimer = setTimeout(()=>this.replay(index+1,goto
                 ,autoNext,isActive),timeout)
         }
         else{
