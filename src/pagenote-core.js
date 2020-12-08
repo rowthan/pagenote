@@ -1,10 +1,9 @@
 import {gotoPosition, getWebIcon, captureElementImage, showCamera} from './document'
-import {decryptedData, encryptData, getParams, debounce,convertColor} from "./utils";
+import {decryptedData, encryptData, getParams, debounce} from "./utils";
 import whatsPure from 'whats-element/pure'
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step,Steps} from './pagenote-step';
-import {highlightKeywordInElement,removeElementHighlight} from "./highlight";
 import './widget/camera.scss'
 // import './widget/pagnote-modal';
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
@@ -25,7 +24,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         colors:['rgba(114,208,255)','#ffbea9','#c8a6ff','#6fe2d5','rgba(255,222,93)','rgba(251, 181, 214)','rgba(0,0,0,0.5)'],
         shortCuts: 'M', // 对应colors的快捷键
         barInfo:{
-            right:30,
+            right:0,
             top:200,
             status: BAR_STATUS.fold,
         },

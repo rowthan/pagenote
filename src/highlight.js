@@ -133,7 +133,7 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         const formatKw = formatKeyword(kw);
         const formatPre = formatKeyword(pre);
         const formatSuffix = formatKeyword(suffix);
-        const regex = new RegExp('('+formatPre+')'+'('+formatKw+')'+'('+formatSuffix+')','gmi');  // TODO 考虑pre next (${formatPre}) (${formatSuffix})
+        const regex = new RegExp('('+formatPre+')'+'\\s*('+formatKw+')\\s*'+'('+formatSuffix+')','gmi');  // TODO 考虑pre next (${formatPre}) (${formatSuffix})
         wrapMatchesAcrossElements(dict,regex, 1,warpTagFun, (term, node) => {
             const isBlack = blackNodes.some((black)=>{
                 return black.contains(node);
