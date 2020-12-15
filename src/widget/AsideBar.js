@@ -9,7 +9,7 @@ import Link from '../assets/link.svg'
 import DropLabel from '../component/DropLabel';
 import sideStyle from './aside-bar.scss';
 import LightIcon from '../component/LightIcon'
-import ExpandIcon from '../assets/expand.svg'
+import ExpandIcon from '../assets/expand.svg';
 import LightRefAnotation from "../component/LightRefAnotation";
 import ScrollProgress from "../component/ScrollProgress";
 import i18n from '../locale/i18n';
@@ -219,9 +219,6 @@ class AsideBar extends Component{
         steps.forEach((step)=>{
             colorSet.add(step.lightBg||step.bg);
         });
-
-        // ["#FF4B42","#C063D6","#17A4F6","#4FCA24","#FFCB02","#FF9E02"]
-
         return(
             status===this.pagenote.CONSTANT.DESTROY ? '' :
             <>
@@ -248,8 +245,6 @@ class AsideBar extends Component{
                                 }
                             </pagenote-action>
                         </pagenote-actions>
-
-                        <ScrollProgress />
 
                         <pagenote-description>
                             <pagenote-title>
@@ -302,6 +297,8 @@ class AsideBar extends Component{
                             </pagenote-snapshots>
                             <pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>
                         </pagenote-infos>
+                                
+                        <ScrollProgress />
                     </pagenote-aside>
                 }
             </>
