@@ -4,7 +4,8 @@ import {useEffect, useState} from "preact/hooks";
 import {throttle} from "../utils";
 import {getScroll} from "../document";
 import i18n from "../locale/i18n";
-
+import PreIcon from '../assets/pre.svg';
+import NextIcon from '../assets/next.svg';
 
 export default  function LightRefAnotation() {
 
@@ -17,7 +18,7 @@ export default  function LightRefAnotation() {
 
     const currentY = y;
     const totalY = document.documentElement.scrollHeight - window.innerHeight;
-    setPercent(Math.floor(currentY / totalY * 100));
+    setPercent(Math.min(Math.floor(currentY / totalY * 100),100));
   },20);
 
   useEffect(function () {
@@ -32,9 +33,13 @@ export default  function LightRefAnotation() {
   }
 
   return(
-    <pagenote-progress data-position='bottom' data-tip={i18n.t('has_read_percent',[percent])}>
+    // data-tip={i18n.t('has_read_percent',[percent])}
+    <pagenote-progress data-position='bottom' >
       <pagenote-progress-percent
-        style={{width: percent+'%'}} ></pagenote-progress-percent>
+        style={{top: `${percent}%`}} >
+          <PreIcon width='10px' height='10px'></PreIcon>
+          <NextIcon width='10px' height='10px'></NextIcon>
+      </pagenote-progress-percent>
     </pagenote-progress>
   )
 }
