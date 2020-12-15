@@ -1,4 +1,4 @@
-import {gotoPosition, getWebIcon, captureElementImage, showCamera} from './document'
+import {getWebIcon, captureElementImage, showCamera} from './document'
 import {decryptedData, encryptData, getParams, debounce} from "./utils";
 import whatsPure from 'whats-element/pure'
 import i18n from "./locale/i18n";
