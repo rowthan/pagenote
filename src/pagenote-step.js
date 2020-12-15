@@ -33,10 +33,21 @@ Step.prototype.delete = function (e) {
 };
 
 Step.prototype.toggle = function (isLight,goto=true) {
-  const light = isLight!==undefined?isLight:!this.isActive;
+  let light = isLight;
   const pagenote = this.pagenote;
   for(let i=0; i<pagenote.recordedSteps.length; i++){
     if(this.lightId===pagenote.recordedSteps[i].lightId){
+
+      if(light===undefined && this.relatedNode && this.relatedNode.length){
+        const elementInfo = whats.compute(this.relatedNode[0]);
+        if(elementInfo.visible===false && light===undefined){
+          light = true;
+        } else {
+          light = !this.isActive;
+        }
+      }else{
+        isLight!==undefined?isLight:!this.isActive
+      }
       pagenote.replay(i, goto, false, light);
       break;
     }
