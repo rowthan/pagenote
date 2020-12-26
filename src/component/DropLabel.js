@@ -74,7 +74,7 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
                     {
                         displayCategories.map((currentLabel)=>(
                             <label
-                                onClick={()=>onSelectedLabel(currentLabel,'delete',false)}
+                                onClick={()=>onSelectedLabel(currentLabel,'delete',true)}
                                 className="select-menu-item label-select-menu-item">
                                 <svg className="select-menu-item-icon"
                                      viewBox="0 0 16 16" version="1.1" width="16" height="16"
@@ -90,7 +90,7 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
                         {
                             categoryList.map((category)=>(
                               !currentCategories.has(category.label) &&
-                              <div onClick={()=>onSelectedLabel(category.label)}
+                              <div onClick={()=>onSelectedLabel(category.label,'add',true)}
                                    key={category.label}
                                    className='select-menu-item'>
                                   <label>

@@ -1,19 +1,18 @@
 pagenote-progress{
-  width: 14px;
-  height: 100%;
-  // background: #e4a8a8;
+  height: calc(100% - 60px - 55px - 40px);
   position: absolute;
-  left: -20px;
-  top: 0;
+  top: 60px;
   pagenote-progress-percent{
     border-radius: 6px;
     transition: width 0.1s ease-in-out;
     position: absolute;
     top: 0;
-    left: 0;
-    border: 1px solid #d6d4d4;
-    padding: 0 2px;
-    background: #fff;
+    left: -1px;
+    /* border: 1px solid #d6d4d4; */
+    /* padding: 0 2px; */
+    background: #2196F3;
+    width: 1px;
+    height: 30px;
     svg{
       cursor: pointer;
       fill: rgb(143, 143, 143);
@@ -22,4 +21,19 @@ pagenote-progress{
       border-radius: 4px;
     }
   }
+}
+
+
+pagenote-scroll-sign{
+  position: absolute;
+  left: 11px;
+  display: block;
+  width: 6px;
+  height: 6px;
+  border: 1px solid #fff;
+  background: #8c8b8b;
+  border-radius: 20px;
+  //transition: top 0.1s ease-in-out;
+  z-index: 2;
+  //transition: top 0.1s ease-in-out;
 }
