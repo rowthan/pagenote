@@ -28,6 +28,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             top:200,
             status: BAR_STATUS.fold,
         },
+        actionBarOffset:{
+          offsetX: 10,
+          offsetY: 20,
+        },
+        showIconAnimation: true,
         onShare: null, // function
         functionColors:[],
         sideBarActions:[],
@@ -130,8 +135,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 return;
             }
             const x = isMoble ? lastSelectionRect.x + lastSelectionRect.width/2
-                :Math.min(lastSelectionRect.x+lastSelectionRect.width/1.5+16,window.innerWidth-150);
-            const y = window.scrollY+lastSelectionRect.y+(isMoble?lastSelectionRect.height:lastSelectionRect.height)
+                :Math.min(lastSelectionRect.x+lastSelectionRect.width/1.5+this.options.actionBarOffset.offsetX,window.innerWidth-150);
+            const y = window.scrollY+lastSelectionRect.y+lastSelectionRect.height + this.options.actionBarOffset.offsetY;
 
             const whatsEl = whats.getUniqueId(parentElement);
             const cursorX = parseInt(x);
@@ -695,14 +700,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         status=value;
         if(status!==originStatus||status===constant.WAITING){
             CALLBACKFUN.forEach(fun=>{
-                fun(value)
+                fun(value,originStatus)
             })
         }
     })});
 
     this.triggerListener = function (){
         CALLBACKFUN.forEach(fun=>{
-            fun(this.status)
+            fun(this.status,this.status)
         })
     }
 }
