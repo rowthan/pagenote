@@ -7,7 +7,7 @@ import i18n from "../locale/i18n";
 import PreIcon from '../assets/pre.svg';
 import NextIcon from '../assets/next.svg';
 
-export default  function LightRefAnotation() {
+export default  function ScrollProgress({steps=[],useDot}) {
 
   const [percent,setPercent] = useState(0);
 
@@ -19,6 +19,11 @@ export default  function LightRefAnotation() {
     const currentY = y;
     const totalY = document.documentElement.scrollHeight - window.innerHeight;
     setPercent(Math.min(Math.floor(currentY / totalY * 100),100));
+
+    steps.forEach((step)=>{
+      step.checkInSign();
+    })
+
   },20);
 
   useEffect(function () {
@@ -32,14 +37,23 @@ export default  function LightRefAnotation() {
     document.removeEventListener('scroll',handleScroll);
   }
 
+
+  const positionPercent = Math.min(Math.max(percent,8),98);
   return(
     // data-tip={i18n.t('has_read_percent',[percent])}
-    <pagenote-progress data-position='bottom' >
-      <pagenote-progress-percent
-        style={{top: `${percent}%`}} >
-          <PreIcon width='10px' height='10px'></PreIcon>
-          <NextIcon width='10px' height='10px'></NextIcon>
-      </pagenote-progress-percent>
-    </pagenote-progress>
+    <Fragment>
+      {
+        useDot ?
+          <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:
+          <pagenote-progress data-position='bottom' >
+            <pagenote-progress-percent
+              style={{top: `${positionPercent}%`}} >
+              {/*<PreIcon width='10px' height='10px'></PreIcon>*/}
+              {/*<NextIcon width='10px' height='10px'></NextIcon>*/}
+            </pagenote-progress-percent>
+          </pagenote-progress>
+
+      }
+    </Fragment>
   )
 }

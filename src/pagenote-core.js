@@ -440,14 +440,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         //删除所有
         if(stepIndex===-1){
             while(this.recordedSteps.length>0){
-                this.replay(0,false,false)
                 this.recordedSteps.splice(0,1)
+                this.replay(0,false,false)
             }
             this.status = constant.PAUSE
             this.status = constant.REMOVEDALL;
         }else {
-            this.replay(stepIndex,false,false)
             this.recordedSteps.splice(stepIndex,1)
+            this.replay(stepIndex,false,false)
             this.status = constant.REMOVED;
         }
         this.makelink()
@@ -699,7 +699,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             })
         }
     })});
+
+    this.triggerListener = function (){
+        CALLBACKFUN.forEach(fun=>{
+            fun(this.status)
+        })
+    }
 }
+
 
 PagenoteCore.prototype.decodeData = function(data) {
     return decryptedData(data);

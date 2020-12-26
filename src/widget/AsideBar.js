@@ -209,7 +209,7 @@ class AsideBar extends Component{
         const isExpand = barStatus === BAR_STATUS.expand;
         const isFold = barStatus === BAR_STATUS.fold;
         const showBar = steps.length > 0 || snapshots.length > 0;
-        const top = isExpand?Math.min(30,barInfo.top):barInfo.top;
+        const top = isExpand?0:barInfo.top;
         barInfo.right = Math.min(document.documentElement.clientWidth-60,barInfo.right);
         let right = barInfo.right;
 
@@ -297,8 +297,8 @@ class AsideBar extends Component{
                             </pagenote-snapshots>
                             <pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>
                         </pagenote-infos>
-                                
-                        <ScrollProgress />
+
+                        <ScrollProgress useDot={isExpand} steps={steps} />
                     </pagenote-aside>
                 }
             </>

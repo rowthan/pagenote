@@ -4,7 +4,7 @@ import './LightRefAnotation.scss'
 
 export default  function LightRefAnotation({step}) {
   return(
-    <pagenote-ref-anotation>
+    <pagenote-ref-anotation data-insign={step.isInview?'1':''}>
       <pagenote-light-ref>
         {step.text||step.tip}
       </pagenote-light-ref>

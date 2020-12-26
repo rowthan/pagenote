@@ -135,6 +135,9 @@ highlightKeyword = function (wid,element,text,hightlight,color='',blackNodes=[],
 
 
 const gotoPosition = function(element,targetX,targetY,callback){
+    if(!element){
+        callback()
+    }
     const inBottomView = targetY>document.documentElement.clientHeight/2;
     // 优先使用算法，移动到视野的 1/3位置，然后计算确认，兜底使用scrolltoView
     if(inBottomView && element&&element.scrollIntoView){

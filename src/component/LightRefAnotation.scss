@@ -4,15 +4,18 @@ pagenote-ref-anotation{
   position: relative;
   padding: 0 6px;
   display: block;
+  color: #666;
   pagenote-light-ref{
-    font-weight: bold;
+    font-weight: 500;
+    //opacity: 0.8;
     line-height: 1.4em;
     max-height: 2.8em;
     overflow: hidden;
   }
   pagenote-light-anotation{
     margin-top: 4px;
-    color: #666;
+    opacity: 0.8;
+    //color: #666;
     line-height: 1.4em;
     max-height: 2.8em;
     overflow: hidden;
@@ -25,7 +28,12 @@ pagenote-ref-anotation{
     display: none;
   }
 
+  &[data-insign="1"]{
+    color: #111;
+  }
+
   &:hover{
+    color: #000;
     pagenote-light-actions{
       display: block;
     }

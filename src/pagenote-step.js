@@ -14,7 +14,8 @@ function Step(info,pagenote,version=2) {
   this.darkBg = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
   this.lightId = md5(info.id+info.text);
   this.isFocus = false; // 是否 hover focus
-  this.relatedNode = null; // 关联的dom元素
+  this.relatedNode = []; // 关联的dom元素
+  this.isInview = false; // 是否在视野内
   this.__proto__.pagenote = pagenote;
 }
 
@@ -111,8 +112,16 @@ Step.prototype.highlight = function (isActiveLight){
 }
 
 Step.prototype.gotoView = function (callback){
-  const targetEl = this.relatedNode?this.relatedNode[0]:whats.getTarget(runStep.id);
+  let targetEl = this.relatedNode?this.relatedNode[0]:null;
+  if(!targetEl){
+    try{
+      targetEl = whats.getTarget(this.id);
+    }catch (e){
+
+    }
+  }
   return gotoPosition(targetEl,this.x-window.innerWidth/2,this.y-window.innerHeight/3,()=>{
+    this.isInview = true;
     callback();
   })
 }
@@ -136,6 +145,17 @@ Step.prototype.save = function (callback) {
     typeof callback==='function'&&callback(...arg)
   });
 };
+
+Step.prototype.checkInSign = function (){
+  const result =  this.relatedNode.some((item)=>{
+   const position = item.getBoundingClientRect();
+   const inSign =  position.top > 0 && position.top < window.innerHeight;
+   return inSign;
+  });
+  this.pagenote.triggerListener();
+  this.isInview = result;
+  return result;
+}
 
 
 function Steps(option,pagenote) {
