@@ -25,6 +25,7 @@ export default function ActionBars ({pagenote}) {
       bg:color,
     });
   }
+  const showAnimation = pagenote.options.showIconAnimation;
 
   return (
     <div style={{
@@ -61,12 +62,13 @@ export default function ActionBars ({pagenote}) {
                            left: (offsetX / -1) + 'px',
                            color: convertColor(color).textColor,
                            textShadow: `1px 1px 0px ${convertColor(convertColor(color).textColor).textColor}`,
+                           animation:`${(showAnimation&&index!==0)?'colorShow 3s ease-out':''}`,
                            animationDelay: index*0.1+'s',
                            transitionDelay: index*0.1+'s',
                          }}
                          onClick={recordNew}
                     >{index!==0?shortCuts[index]:
-                      <span data-tip={`${i18n.t('press_the_key')} ${i18n.t('main_shortcut')}：${shortCuts[0]}`}><Highlight  data-pagenotecolor={color} style={{userSelect:'none'}} fill={color}/></span> }
+                      <span data-tip={`${i18n.t('press_the_key')}：${shortCuts[0]}`}><Highlight  data-pagenotecolor={color} style={{userSelect:'none'}} fill={color}/></span> }
                     </pagenote-color-button>
                   )
                 })

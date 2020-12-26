@@ -84,7 +84,7 @@ pagenote-plugin-group{
   }
 }
 
-@keyframes colorShow {
+@keyframes :global(colorShow) {
   0%{
     transform: translate(0,0) scale(0.41) !important;
     opacity: 0;
