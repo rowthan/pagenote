@@ -17,7 +17,7 @@ function PageNote(id,options={}){
     // action-bar
     let actionBar = null;
     pagenoteCore.addListener(debounce(function (status,before) {
-        if(status===before){
+        if(status===before && status!==pagenoteCore.CONSTANT.WAITING){
             return;
         }
         const showButton = (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT);

@@ -99,7 +99,7 @@ Step.prototype.highlight = function (isActiveLight){
       highlightElement()
     }else if(times<5){
       setTimeout(()=>{
-        findElement(times++)
+        findElement(++times)
       },3000)
     }
   })(0)
