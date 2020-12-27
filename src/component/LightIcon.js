@@ -4,7 +4,7 @@ export default function LightIcon({colors,run}) {
   return(
     <pagenote-toggle-all data-run={run?'1':''}>
       <svg t="1605017147684" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-           p-id="24496" width="20" height="20" fill='#fff'>
+           p-id="24496" width="16" height="16" fill='#fff'>
         <path
           d="M4.8 460.8C51.2 411.2 144 336 273.6 361.6 443.2 388.8 512 512 512 512s-172.8 8-270.4 156.8c-46.4 78.4-56 171.2-27.2 257.6-16-11.2-30.4-22.4-44.8-35.2C49.6 782.4-11.2 622.4 4.8 460.8z"
           fill={colors[0]||'#fff'} p-id="24497" data-spm-anchor-id="a313x.7781069.0.i46" className="selected"></path>

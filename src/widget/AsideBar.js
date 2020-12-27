@@ -36,7 +36,6 @@ class AsideBar extends Component{
         this.toggleAutoLight = this.toggleAutoLight.bind(this);
         this.replay = this.replay.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
-        this.openMe = this.openMe.bind(this);
         this.state={
             barInfo:pagenote.runningSetting.barInfo,
             steps: pagenote.recordedSteps,
@@ -110,9 +109,6 @@ class AsideBar extends Component{
         this.pagenote.makelink();
     }
 
-    openMe(){
-        window.open(`https://pagenote.cn/me`,'me')
-    }
 
     setRef(dom){
         const pagenote = this.pagenote;
@@ -295,7 +291,7 @@ class AsideBar extends Component{
                                     ))
                                 }
                             </pagenote-snapshots>
-                            <pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>
+                            {/*<pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>*/}
                         </pagenote-infos>
 
                         <ScrollProgress useDot={isExpand} steps={steps} />
