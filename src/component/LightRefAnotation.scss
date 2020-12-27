@@ -30,6 +30,15 @@ pagenote-ref-anotation{
 
   &[data-insign="1"]{
     color: #111;
+    &:before{
+      content: '';
+      width: 1px;
+      height: 100%;
+      background: var(--color);
+      display: block;
+      position: absolute;
+      left: -1px;
+    }
   }
 
   &:hover{

@@ -45,9 +45,9 @@ export default  function ScrollProgress({steps=[],useDot}) {
       {
         useDot ?
           <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:
-          <pagenote-progress data-position='bottom' >
+          <pagenote-progress data-position='bottom' data-tip={i18n.t('has_read_percent',[percent])}>
             <pagenote-progress-percent
-              style={{top: `${positionPercent}%`}} >
+              style={{width: `${percent}%`}} >
               {/*<PreIcon width='10px' height='10px'></PreIcon>*/}
               {/*<NextIcon width='10px' height='10px'></NextIcon>*/}
             </pagenote-progress-percent>
