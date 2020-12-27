@@ -28,16 +28,17 @@ pagenote-aside{
   user-select: none;
   background: #fff;
   transition: width 0.2s ease-out;
-  //border-radius: 4px;
+  border-radius: 4px;
   border: 1px solid #e3e3e3;
   line-height: 1.414em;
   &[data-status="expand"]{
     border: none;
-    width: 30px;
+    width: 18px;
     height: 100%;
     background: transparent;
     pagenote-actions{
       background: none;
+      padding: 0;
     }
     pagenote-infos,pagenote-description{
       display: none;
@@ -46,11 +47,13 @@ pagenote-aside{
       display: none;
     }
     pagenote-action[data-action=toggle]{
-      position: absolute;
+      //position: absolute;
       top: 34px;
+      right: auto;
+      margin: 0;
     }
     pagenote-lights{
-      left: 5px;
+      left: -1px;
       overflow: visible;
     }
   }
@@ -68,7 +71,8 @@ pagenote-actions{
   white-space: nowrap;
   text-align: left;
   text-overflow: ellipsis;
-  text-shadow: 1px 1px 3px rgba(0,0,0,.3);
+  border-bottom: 1px solid #f3f3f3;
+  //text-shadow: 1px 1px 3px rgba(0,0,0,.3);
   -webkit-transition: all .25s ease-out;
   transition: all .25s ease-out;
   //background-color: #3a3a3a;
@@ -78,8 +82,8 @@ pagenote-actions{
   pagenote-action {
     display: inline-block;
     cursor: pointer;
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     margin-right: 5px;
     background-size: contain;
     &[data-action=toggle]{
@@ -155,7 +159,7 @@ pagenote-lights{
     }
     &[data-active='1']{
       pagenote-dot{
-        transform: scale(1.2);
+        transform: scale(1.5);
         background: var(--color);
       }
     }
@@ -221,9 +225,9 @@ pagenote-snapshots{
     }
   }
 }
-
-pagenote-link{
-  position: relative;
-}
+//
+//pagenote-link{
+//  position: relative;
+//}
 
 
