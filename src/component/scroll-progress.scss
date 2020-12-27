@@ -1,7 +1,8 @@
 pagenote-progress{
-  height: calc(100% - 60px - 55px - 40px);
+  width: 100%;
   position: absolute;
-  top: 60px;
+  /* top: 0; */
+  height: 1px;
   pagenote-progress-percent{
     border-radius: 6px;
     transition: width 0.1s ease-in-out;
@@ -11,8 +12,8 @@ pagenote-progress{
     /* border: 1px solid #d6d4d4; */
     /* padding: 0 2px; */
     background: #2196F3;
-    width: 1px;
-    height: 30px;
+    width: 0;
+    height: 1px;
     svg{
       cursor: pointer;
       fill: rgb(143, 143, 143);

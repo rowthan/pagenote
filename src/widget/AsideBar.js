@@ -241,7 +241,7 @@ class AsideBar extends Component{
                                 }
                             </pagenote-action>
                         </pagenote-actions>
-
+                        <ScrollProgress useDot={isExpand} steps={steps} />
                         <pagenote-description>
                             <pagenote-title>
                                 {title}
@@ -294,7 +294,7 @@ class AsideBar extends Component{
                             {/*<pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>*/}
                         </pagenote-infos>
 
-                        <ScrollProgress useDot={isExpand} steps={steps} />
+
                     </pagenote-aside>
                 }
             </>
