@@ -207,7 +207,7 @@ class AsideBar extends Component{
         const showBar = steps.length > 0 || snapshots.length > 0;
         const top = isExpand?0:barInfo.top;
         barInfo.right = Math.min(document.documentElement.clientWidth-60,barInfo.right);
-        let right = barInfo.right;
+        let right = Math.max(barInfo.right,10);
 
         const actions = this.pagenote.options.sideBarActions;
 
