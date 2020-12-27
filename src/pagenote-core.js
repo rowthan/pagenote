@@ -123,10 +123,16 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             let before = range0.startContainer.textContent.substr(0,range0.startOffset);
             let after = range0.endContainer.textContent.substr(range0.endOffset,10);
             if(!before){
-                before = parentElement.previousSibling?parentElement.previousSibling.textContent:'';
+                const preElement = parentElement.previousSibling;
+                if(preElement && parentElement.contains(preElement)){
+                    before = preElement.textContent;
+                }
             }
             if(!after){
-                after = parentElement.nextSibling?parentElement.nextSibling.textContent:''
+                const nextElement = parentElement.nextSibling;
+                if(nextElement && parentElement.contains(nextElement)){
+                    after = nextElement.textContent;
+                }
             }
 
             const selectionRects=selection.getRangeAt(0).getClientRects();
