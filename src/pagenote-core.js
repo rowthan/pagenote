@@ -93,7 +93,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         // 选区父节点是否存在监测
         const range0 = selection.getRangeAt(0);
-        const parentElement = selection.anchorNode?range0.commonAncestorContainer.parentNode:null;
+        let parentElement = selection.anchorNode?range0.commonAncestorContainer:null;
+        if(parentElement && parentElement.nodeType===3){ // 如果父节点为文本节点，则需要再寻一级父节点
+            parentElement = parentElement.parentNode;
+        }
         const noParentElement = !parentElement || !parentElement.tagName;
         if(noParentElement){
             return;
