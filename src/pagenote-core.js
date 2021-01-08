@@ -56,6 +56,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         barInfo: runBarInfo,
     });
     this.target = {}
+    this.lastEvent = null;
     //用户用户复制的 分享的URL
     this.url = window.location.href
     //只提供读方法
@@ -256,17 +257,16 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             upListen.call(this);
             hasListened = true;
             function upListen() {
-                let levent = null;
                 const upEvent = isMoble?'touchstart':'mouseup';
                 document.addEventListener(upEvent,(e)=>{
                     // 先执行click再执行mouseup，防止mouseup 将选区清空
                     setTimeout(()=>{
-                        levent = e;
+                        this.lastEvent = e;
                         handleUp.call(this,e)
                     },1)
                 },{capture:true});
                 document.onselectionchange = debounce((e)=>{
-                    if(levent && levent.target && levent.target.id!=="record"){
+                    if(this.lastEvent && this.lastEvent.target && this.lastEvent.target.id!=="record"){
                         handleUp.call(this,e)
                     }
                 },400);
