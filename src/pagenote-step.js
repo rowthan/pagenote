@@ -96,17 +96,20 @@ Step.prototype.highlight = function (isActiveLight){
     targetEl = whats.getTarget(runStep.id);
     clearTimeout(timer);
     if(targetEl){
-      highlightElement()
-    }else if(times<5){
-      setTimeout(()=>{
+      highlightElement(targetEl)
+    }else if(times<3){
+      timer = setTimeout(()=>{
         findElement(++times)
       },3000)
+    }else{
+      highlightElement(document.body,true)
     }
   })(0)
 
-  function highlightElement(){
-    const result = highlightKeywordInElement(targetEl,runStep.text,runStep.pre,  runStep.suffix,null,warpFun,runStep.pagenote.blackNodes);
+  function highlightElement(target,missParent){
+    const result = highlightKeywordInElement(target,runStep.text,runStep.pre,  runStep.suffix,null,warpFun,runStep.pagenote.blackNodes);
     runStep.warn = result.match ? '' : '未找到匹配内容';
+    runStep.missParent = missParent;
     runStep.relatedNode = result.lightsElement;
   }
 }
