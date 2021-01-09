@@ -99,12 +99,13 @@ pagenote-actions{
 pagenote-description{
   margin: 6px 0;
   padding: 0 6px;
-  color: #999;
+  color: #8f959e;
   font-size: 12px;
   line-height: 1.414em;
   max-height: 2.828em;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-bottom: 1px solid #f3f3f3;
 }
 
 
@@ -125,8 +126,9 @@ pagenote-lights{
     cursor: pointer;
     //border-left: 2px solid var(--color);
     box-sizing: border-box;
-    background-color: #fff;
-    margin-bottom: 8px;
+    background-color: rgba(0,0,0, 0.02);
+    border-radius: 4px;
+    margin: 8px 0;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
     &:hover{
@@ -174,7 +176,7 @@ pagenote-lights{
       box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
       padding: 6px 12px 6px 6px;
       border-radius: 4px;
-      border-left: 4px solid var(--color);
+      //border-left: 4px solid var(--color);
       z-index: 1;
     }
     pagenote-dot{
