@@ -24,7 +24,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         colors:['rgba(114,208,255)','#ffbea9','#c8a6ff','#6fe2d5','rgba(255,222,93)','rgba(251, 181, 214)','rgba(0,0,0,0.5)'],
         shortCuts: 'M', // 对应colors的快捷键
         barInfo:{
-            right:0,
+            right:2,
             top:200,
             status: BAR_STATUS.fold,
         },
@@ -767,4 +767,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
 };
 
-PagenoteCore.prototype.version = "4.2.3";
+PagenoteCore.prototype.version = "4.2.4";
