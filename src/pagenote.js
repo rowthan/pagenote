@@ -7,11 +7,12 @@ import {debounce} from './utils';
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
+    const rootElement = document.body || document.documentElement || document.createElement('div');
 
     // side-bar
     const sidebar = document.createElement('pagenote-bar');
     sidebar.dataset.pagenote='sidebar';
-    document.body.appendChild(sidebar);
+    rootElement.appendChild(sidebar);
     render(<AsideBar pagenote={pagenoteCore} /> , sidebar);
 
     // action-bar
@@ -26,7 +27,7 @@ function PageNote(id,options={}){
                 actionBar = actionBar || document.createElement('pagenote-action');
                 actionBar.dataset.pagenote = 'action';
                 render(<ActionBars pagenote={pagenoteCore} />, actionBar);
-                document.body.appendChild(actionBar);
+                rootElement.appendChild(actionBar);
             },10);
         } else {
             actionBar && actionBar.remove();
@@ -38,7 +39,7 @@ function PageNote(id,options={}){
     stepBar.className='no-pagenote';
     stepBar.dataset.pagenote = 'tags';
     render(<LightActionBar pagenote={pagenoteCore}/>,stepBar);
-    document.body.appendChild(stepBar);
+    rootElement.appendChild(stepBar);
     return pagenoteCore;
 }
 export default PageNote;
