@@ -519,7 +519,7 @@
         &[data-active='1']{
             -webkit-text-fill-color: var(--color);
             background-size: 100% calc(1em*2);
-            animation: light 1s ease-in-out;
+            animation: light 0.5s ease-in-out;
             //border-radius: 2px;
             &[data-mask='1']{
                 filter: blur(2px);
@@ -719,12 +719,12 @@
     //30%{
     //    background-size: 100% 2px;
     //}
-    20%{
-        background-size: 100% calc(1em*2);
-    }
-    40%{
-        background-size: 100% 2px;
-    }
+    //20%{
+    //    background-size: 100% calc(1em*2);
+    //}
+    //40%{
+    //    background-size: 100% 2px;
+    //}
     100%{
         background-size: 100% calc(1em*2);
     }
