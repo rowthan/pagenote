@@ -25,7 +25,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         shortCuts: 'M', // 对应colors的快捷键
         barInfo:{
             right:2,
-            top:200,
+            top:100,
             status: BAR_STATUS.fold,
         },
         actionBarOffset:{
