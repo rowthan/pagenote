@@ -5,7 +5,6 @@ import { BAR_STATUS } from '../const';
 import {moveable} from "../document";
 import RemoveIcon from '../assets/remove.svg';
 import Toggle from '../assets/toggle.svg';
-import Link from '../assets/link.svg'
 import DropLabel from '../component/DropLabel';
 import sideStyle from './aside-bar.scss';
 import LightIcon from '../component/LightIcon'
