@@ -28,14 +28,11 @@ pagenote-progress{
 
 pagenote-scroll-sign{
   position: absolute;
-  left: 5px;
+  left: 0px;
   display: block;
-  width: 6px;
-  height: 6px;
+  width: 16px;
+  height: 1px;
   border: 1px solid #fff;
-  background: #8c8b8b;
-  border-radius: 20px;
-  //transition: top 0.1s ease-in-out;
-  z-index: 2;
-  //transition: top 0.1s ease-in-out;
+  background: #888888;
+  z-index: 3;
 }
