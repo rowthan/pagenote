@@ -11,6 +11,7 @@ import CommentIcon from '../assets/comment.svg';
 import CopyIcon from '../assets/copy.svg';
 import MoreIcon from '../assets/more.svg';
 import whatsPure from "whats-element/pure";
+import Tip from '../component/tip/Tip'
 const whats = new whatsPure();
 import i18n from '../locale/i18n';
 
@@ -166,28 +167,37 @@ export default class LightNode extends Component{
                      color: light.bg,
                    }}
               >
-                <pagenote-icon data-tip={hasPin?i18n.t('hide'):i18n.t('fixed')} className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
-                  <PinIcon onClick={()=>this.pinLight(!hasPin)} fill={hasPin?light.bg:'#eee'}  />
-                </pagenote-icon>
-                <pagenote-icon className={style.actionIcon} data-tip={i18n.t('copy_keyword_annotation')}
-                      onClick={()=>this.copyHightlight(false)} onDblClick={()=>{this.copyHightlight(true)}}>
-                  <CopyIcon  fill={light.bg}  width={18} height={18}  />
-                </pagenote-icon>
-                <pagenote-icon data-tip={i18n.t('annotation')} className={style.actionIcon} onClick={this.doEditor}>
-                  <CommentIcon  fill={light.bg}  width={18} height={18}  />
-                </pagenote-icon>
-                <pagenote-icon data-tip={i18n.t('change_color')} className={style.actionIcon} >
-                  <Colors colors={pagenote.options.colors} current={light.bg} selectColor={this.onChangeColor}></Colors>
-                </pagenote-icon>
-
-                <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`} data-tip={i18n.t('remove_marks')}>
-                  <DeleteIcon  width={18} height={18} fill={light.bg}  onClick={this.deleteLight} />
-                </pagenote-icon>
-                <pagenote-icon className={`${style.moreIcon}`} data-tip={i18n.t('more')}>
-                  <MoreIcon fill={showMore?light.bg:'#999'}  width={18} height={18} onClick={this.toggleShowMore} />
-                </pagenote-icon>
-
-
+                <Tip message={hasPin?i18n.t('hide'):i18n.t('fixed')}>
+                  <pagenote-icon className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
+                    <PinIcon onClick={()=>this.pinLight(!hasPin)} fill={hasPin?light.bg:'#eee'}  />
+                  </pagenote-icon>
+                </Tip>
+                <Tip message={i18n.t('copy_keyword_annotation')}>
+                  <pagenote-icon className={style.actionIcon}
+                                 onClick={()=>this.copyHightlight(false)} onDblClick={()=>{this.copyHightlight(true)}}>
+                    <CopyIcon  fill={light.bg}  width={18} height={18}  />
+                  </pagenote-icon>
+                </Tip>
+                <Tip message={i18n.t('annotation')}>
+                  <pagenote-icon className={style.actionIcon} onClick={this.doEditor}>
+                    <CommentIcon  fill={light.bg}  width={18} height={18}  />
+                  </pagenote-icon>
+                </Tip>
+                <Tip message={i18n.t('change_color')}>
+                  <pagenote-icon className={style.actionIcon} >
+                    <Colors colors={pagenote.options.colors} current={light.bg} selectColor={this.onChangeColor}></Colors>
+                  </pagenote-icon>
+                </Tip>
+                <Tip message={i18n.t('remove_marks')}>
+                  <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`}>
+                    <DeleteIcon  width={18} height={18} fill={light.bg}  onClick={this.deleteLight} />
+                  </pagenote-icon>
+                </Tip>
+                <Tip message={i18n.t('more')}>
+                  <pagenote-icon className={`${style.moreIcon}`}>
+                    <MoreIcon fill={showMore?light.bg:'#999'}  width={18} height={18} onClick={this.toggleShowMore} />
+                  </pagenote-icon>
+                </Tip>
                 {
                   showMore &&
                   <div className={style.moreInfo}>
