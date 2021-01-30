@@ -2,6 +2,7 @@ import { h, render,Component, } from 'preact';
 import {computePosition, convertColor, isMobile} from "../utils";
 import Highlight from '../assets/highlight.svg';
 import i18n from '../locale/i18n';
+import Tip from '../component/tip/Tip'
 import './action-bar.scss';
 
 export default function ActionBars ({pagenote}) {
@@ -88,15 +89,17 @@ export default function ActionBars ({pagenote}) {
                     actionGroup.map((action)=>{
                       const image = /^<svg/.test(action.icon) ?  `data:image/svg+xml;base64,${window.btoa(action.icon)}` : action.icon;
                       return (
-                        <pagenote-action-button
-                          key={action.name}
-                          data-tip={`${action.name}${action.shortcut?i18n.t('shortcut')+action.shortcut:''}`}
-                          data-eventid={action.eventid}
-                          style={{
-                            backgroundImage: `url(${image})`,
-                          }}
-                        >
-                      </pagenote-action-button>
+                        <Tip message={`${action.name}${action.shortcut?i18n.t('shortcut')+action.shortcut:''}`}>
+                          <pagenote-action-button
+                            key={action.name}
+                            data-eventid={action.eventid}
+                            style={{
+                              backgroundImage: `url(${image})`,
+                            }}
+                          >
+                          </pagenote-action-button>
+                        </Tip>
+
                       )
                     })
                   }

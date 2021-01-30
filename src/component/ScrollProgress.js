@@ -6,6 +6,9 @@ import {getScroll} from "../document";
 import i18n from "../locale/i18n";
 import PreIcon from '../assets/pre.svg';
 import NextIcon from '../assets/next.svg';
+import Delete from "../assets/delete.svg";
+import MoreAction from "../assets/more-action.svg";
+import ToolTip from "rc-tooltip";
 
 export default  function ScrollProgress({steps=[],useDot}) {
 
@@ -40,20 +43,24 @@ export default  function ScrollProgress({steps=[],useDot}) {
 
   const positionPercent = Math.min(Math.max(percent,8),98);
   return(
-    // data-tip={i18n.t('has_read_percent',[percent])}
-    <Fragment>
-      {
-        useDot ?
-          <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:
-          <pagenote-progress data-position='bottom' data-tip={i18n.t('has_read_percent',[percent])}>
-            <pagenote-progress-percent
-              style={{width: `${percent}%`}} >
-              {/*<PreIcon width='10px' height='10px'></PreIcon>*/}
-              {/*<NextIcon width='10px' height='10px'></NextIcon>*/}
-            </pagenote-progress-percent>
-          </pagenote-progress>
-
-      }
-    </Fragment>
+      <ToolTip
+        destroyTooltipOnHide={{ keepParent: false }}
+        align={{
+          offset: [10, 0],
+        }}
+        placement="rightTop" trigger={['hover']}
+        offsetX={10} overlay={<span>{i18n.t('has_read_percent',[percent])}</span>}>
+        {
+          useDot ?
+            <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:
+            <pagenote-progress data-position='bottom'>
+              <pagenote-progress-percent
+                style={{width: `${percent}%`}} >
+                {/*<PreIcon width='10px' height='10px'></PreIcon>*/}
+                {/*<NextIcon width='10px' height='10px'></NextIcon>*/}
+              </pagenote-progress-percent>
+            </pagenote-progress>
+        }
+      </ToolTip>
   )
 }

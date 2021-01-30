@@ -12,6 +12,7 @@ import ExpandIcon from '../assets/expand.svg';
 import LightRefAnotation from "../component/LightRefAnotation";
 import ScrollProgress from "../component/ScrollProgress";
 import i18n from '../locale/i18n';
+import Tip from "../component/tip/Tip";
 
 let lastTop = -1;
 let pagenote = null;
@@ -200,7 +201,6 @@ class AsideBar extends Component{
             status,barInfo,steps,autoLight,highlightAll,runindex,categories,note='',snapshots,capturing,title,run
         } = this.state;
         const barStatus = barInfo.status||'';
-        const easyMode = barStatus === 'hide';
         const isExpand = barStatus === BAR_STATUS.expand;
         const isFold = barStatus === BAR_STATUS.fold;
         const showBar = steps.length > 0 || snapshots.length > 0;
@@ -221,24 +221,29 @@ class AsideBar extends Component{
                     showBar &&
                     <pagenote-aside data-status={isExpand?'expand':'fold'} style={{right: right + 'px', top: top + 'px',position:'fixed'}}>
                         <pagenote-actions ref={this.setRef.bind(this)}>
-                            <pagenote-action onClick={this.toggleAllLight} data-tip={i18n.t('toggle_marks')}>
-                                <LightIcon run={run}  colors={Array.from(colorSet)} />
-                            </pagenote-action>
+                            <Tip message={i18n.t('toggle_marks')}>
+                                <pagenote-action onClick={this.toggleAllLight} >
+                                    <LightIcon run={run}  colors={Array.from(colorSet)} />
+                                </pagenote-action>
+                            </Tip>
+
                             <pagenote-action-group>
                                 {
                                     actions.map((action,index)=>
-                                      <pagenote-action key={action.name+index}
-                                                       data-tip={action.name}
-                                                       onClick={action.onclick}
-                                                       style={{ backgroundImage: `url(data:image/svg+xml;base64,${window.btoa(action.icon)})`, }}
-                                      />)
+                                      <Tip message={action.name}>
+                                          <pagenote-action key={action.name+index}
+                                                           onClick={action.onclick}
+                                                           style={{ backgroundImage: `url(data:image/svg+xml;base64,${window.btoa(action.icon)})`, }}
+                                          />
+                                      </Tip>
+                                      )
                                 }
                             </pagenote-action-group>
 
-                            <pagenote-action data-action='toggle' data-tip={isExpand?i18n.t('expand'):i18n.t('fold')} onClick={this.toggleHideSideBar.bind(this)}>
-                                {isExpand ? <ExpandIcon />:  <Toggle />
-                                }
+                            <pagenote-action data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>
+                                {isExpand ? <ExpandIcon />:  <Toggle />}
                             </pagenote-action>
+
                         </pagenote-actions>
                         <ScrollProgress useDot={isExpand} steps={steps} />
                         <pagenote-description>
@@ -290,10 +295,7 @@ class AsideBar extends Component{
                                     ))
                                 }
                             </pagenote-snapshots>
-                            {/*<pagenote-link data-tip={i18n.t('goto_manage')} onClick={this.openMe}><Link /></pagenote-link>*/}
                         </pagenote-infos>
-
-
                     </pagenote-aside>
                 }
             </>

@@ -1,7 +1,9 @@
-import {h, render, Component, Fragment} from 'preact';
+import {h} from 'preact';
 import Delete from "../assets/delete.svg";
 // import MoreAction from '../assets/more-action.svg'
+import Popover from './tip/Popover';
 import './LightRefAnotation.scss'
+import MoreAction from "../assets/more-action.svg";
 
 export default  function LightRefAnotation({step}) {
   const text = step.text||step.tip;
@@ -27,7 +29,10 @@ export default  function LightRefAnotation({step}) {
         }
       </pagenote-light-anotation>
       <pagenote-light-actions>
-        <Delete onClick={(e)=>step.delete(e)}/>
+        <Popover
+          overlay={<span><Delete onClick={(e)=>step.delete(e)}/></span>}>
+          <MoreAction onClick={(e)=>{e.stopPropagation()}}/>
+        </Popover>
       </pagenote-light-actions>
     </pagenote-ref-anotation>
   )

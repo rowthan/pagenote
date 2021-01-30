@@ -38,9 +38,11 @@ pagenote-ref-anotation{
     right: 0;
     top:0;
     background: #fff;
-    box-shadow: 0px 0px 1px 1px #f5f5f5;
     display: none;
-    &:hover{
+  }
+
+  &:hover{
+    pagenote-light-actions{
       display: block;
     }
   }
@@ -54,11 +56,11 @@ pagenote-ref-anotation{
     }
   }
 
-  &:hover{
-    //color: #000;
-    pagenote-light-actions{
-      display: block;
-    }
-  }
+  //&:hover{
+  //  //color: #000;
+  //  pagenote-light-actions{
+  //    display: block;
+  //  }
+  //}
 }
 
