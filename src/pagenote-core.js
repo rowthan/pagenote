@@ -767,4 +767,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
 };
 
-PagenoteCore.prototype.version = "4.2.5";
+PagenoteCore.prototype.version = "4.3.0";

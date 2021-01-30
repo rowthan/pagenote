@@ -6,7 +6,7 @@
     "message": "search or create a mark"
   },
   "create_and_apply": {
-    "message": "create and apply"
+    "message": "apply"
   },
   "has_read_percent": {
     "message": "you have already read the full page of ${percent}%"

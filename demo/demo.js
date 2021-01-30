@@ -33,7 +33,16 @@ const pagenote = new PageNote('dev',{
     onclick: function (e,target) {
       console.log(e,target)
     },
-  }]],
+  }],[
+    {
+      type:'link',
+      icon:'<svg t="1609077315684" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14615" width="16" height="16"><path d="M797.866667 298.666667h-51.2c-4.266667 0-8.533333 0-8.533334-4.266667l-196.266666-196.266667c-8.533333-8.533333-17.066667-12.8-25.6-12.8L213.333333 89.6c-72.533333 0-128 55.466667-128 128V797.866667C85.333333 874.666667 149.333333 938.666667 226.133333 938.666667h571.733334c76.8 0 140.8-64 140.8-140.8v-358.4C938.666667 362.666667 874.666667 298.666667 797.866667 298.666667zM170.666667 217.6c0-25.6 17.066667-42.666667 42.666666-42.666667l273.066667 4.266667c8.533333 0 12.8 4.266667 17.066667 8.533333L622.933333 298.666667H170.666667V217.6zM853.333333 810.666667c0 25.6-17.066667 42.666667-42.666666 42.666666H213.333333c-25.6 0-42.666667-17.066667-42.666666-42.666666v-384c0-21.333333 17.066667-38.4 38.4-42.666667H810.666667c21.333333 0 38.4 21.333333 38.4 42.666667v384z" fill="" p-id="14616"></path><path d="M298.666667 512m-42.666667 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="" p-id="14617"></path><path d="M298.666667 682.666667m-42.666667 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="" p-id="14618"></path><path d="M725.333333 469.333333h-298.666666c-25.6 0-42.666667 17.066667-42.666667 42.666667s17.066667 42.666667 42.666667 42.666667h298.666666c25.6 0 42.666667-17.066667 42.666667-42.666667s-21.333333-42.666667-42.666667-42.666667zM725.333333 640h-298.666666c-25.6 0-42.666667 17.066667-42.666667 42.666667s17.066667 42.666667 42.666667 42.666666h298.666666c25.6 0 42.666667-17.066667 42.666667-42.666666s-21.333333-42.666667-42.666667-42.666667z" fill="" p-id="14619"></path></svg>',
+      name:'素材抓取',
+      onclick: function (e,target) {
+        console.log(e,target)
+      },
+    }
+  ]],
   showIconAnimation: false,
   sideBarActions:[
     {
@@ -66,6 +75,7 @@ class Foo extends Component{
     super(props);
     // 初始化
     pagenote.init();
+    console.log(pagenote)
   }
 
   render(){
@@ -102,6 +112,8 @@ class Foo extends Component{
                 <p>
                   使用PAGENOTE非常简单，如果你还没有使用过，可以尝试按照右边的提示，了解操作方式。
                 </p>
+                <img src="https://avatars2.githubusercontent.com/u/897401?s=64&v=4" alt=""/>
+                试试图片标记
               </div>
               <div>
                 <video controls="controls" width={400} src="https://pagenote.cn/pagenote.mp4"></video>
@@ -140,6 +152,289 @@ class Foo extends Component{
               </div>
             </div>
           </div>
+        </div>
+        <div className="apiItem">
+          <a name="method-setIcon"></a>
+          <h4>setIcon</h4>
+
+          <div className="summary"><span style="display: none; ">void</span>
+            <span>chrome.browserAction.setIcon</span>(<span className="null"><span
+              style="display: none; ">, </span><span>object</span>
+                      <var><span>details</span></var></span>)
+          </div>
+
+          <div className="description">
+            <p className="todo" style="display: none; ">Undocumented.</p>
+            <p className="pd">设置browser
+              action的图标。图标可以是一个图片的路径或者是从一个canvas元素提取的像素信息.。无论是<strong>图标路径</strong>还是canvas的 <strong>imageData</strong>，这个属性必须被指定。
+            </p>
+
+            <h4>Parameters</h4>
+            <dl>
+              <div>
+                <div>
+                  <dt>
+                    <var>details</var>
+                    <em>
+
+                      <div style="display:inline">
+                        (
+                        <span className="optional" style="display: none; ">optional</span>
+                        <span className="enum" style="display: none; ">enumerated</span>
+                        <span id="typeTemplate">
+                      <span style="display: none; ">
+                        <a> Type</a>
+                      </span>
+                      <span>
+                        <span style="display: none; ">
+                          array of <span><span></span></span>
+                        </span>
+                        <span>object</span>
+                        <span style="display: none; "></span>
+                      </span>
+                    </span>
+                        )
+                      </div>
+
+                    </em>
+                  </dt>
+                  <dd className="todo">
+                    Undocumented.
+                  </dd>
+                  <dd style="display: none; ">
+                    Description of this parameter from the json schema.
+                  </dd>
+                  <dd style="display: none; ">
+                    This parameter was added in version
+                    <b><span></span></b>.
+                    You must omit this parameter in earlier versions,
+                    and you may omit it in any version. If you require this
+                    parameter, the manifest key
+                    <a href="manifest.html#minimum_chrome_version">minimum_chrome_version</a>
+                    can ensure that your extension won't be run in an earlier browser version.
+                  </dd>
+
+                  <dd>
+                    <dl>
+                      <div>
+                        <div>
+                          <dt>
+                            <var>imageData</var>
+                            <em>
+
+                              <div style="display:inline">
+                                (
+                                <span className="optional">optional</span>
+                                <span className="enum" style="display: none; ">enumerated</span>
+                                <span id="typeTemplate">
+                      <span style="display: none; ">
+                        <a> Type</a>
+                      </span>
+                      <span>
+                        <span style="display: none; ">
+                          array of <span><span></span></span>
+                        </span>
+                        <span>ImageData</span>
+                        <span style="display: none; "></span>
+                      </span>
+                    </span>
+                                )
+                              </div>
+
+                            </em>
+                          </dt>
+                          <dd className="todo" style="display: none; ">
+                            Undocumented.
+                          </dd>
+                          <dd>图片的像素信息。必须是一个ImageData 对象(例如：一个canvas元素)。</dd>
+                          <dd style="display: none; ">
+                            This parameter was added in version
+                            <b><span></span></b>.
+                            You must omit this parameter in earlier versions,
+                            and you may omit it in any version. If you require this
+                            parameter, the manifest key
+                            <a href="manifest.html#minimum_chrome_version">minimum_chrome_version</a>
+                            can ensure that your extension won't be run in an earlier browser version.
+                          </dd>
+
+                          <dd>
+                            <dl>
+                              <div style="display: none; ">
+                                <div></div>
+                              </div>
+                            </dl>
+                          </dd>
+
+                          <dd style="display: none; ">
+                            <div></div>
+                          </dd>
+
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <dt>
+                            <var>path</var>
+                            <em>
+
+                              <div style="display:inline">
+                                (
+                                <span className="optional">optional</span>
+                                <span className="enum" style="display: none; ">enumerated</span>
+                                <span id="typeTemplate">
+                      <span style="display: none; ">
+                        <a> Type</a>
+                      </span>
+                      <span>
+                        <span style="display: none; ">
+                          array of <span><span></span></span>
+                        </span>
+                        <span>string</span>
+                        <span style="display: none; "></span>
+                      </span>
+                    </span>
+                                )
+                              </div>
+
+                            </em>
+                          </dt>
+                          <dd className="todo" style="display: none; ">
+                            Undocumented.
+                          </dd>
+                          <dd>图片在扩展中的的相对路径。</dd>
+                          <dd style="display: none; ">
+                            This parameter was added in version
+                            <b><span></span></b>.
+                            You must omit this parameter in earlier versions,
+                            and you may omit it in any version. If you require this
+                            parameter, the manifest key
+                            <a href="manifest.html#minimum_chrome_version">minimum_chrome_version</a>
+                            can ensure that your extension won't be run in an earlier browser version.
+                          </dd>
+
+                          <dd style="display: none; ">
+                            <dl>
+                              <div>
+                                <div>
+                                </div>
+                              </div>
+                            </dl>
+                          </dd>
+
+                          <dd style="display: none; ">
+                            <div></div>
+                          </dd>
+
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <dt>
+                            <var>tabId</var>
+                            <em>
+
+
+                              <div style="display:inline">
+                                (
+                                <span className="optional">optional</span>
+                                <span className="enum" style="display: none; ">enumerated</span>
+                                <span id="typeTemplate">
+                      <span style="display: none; ">
+                        <a> Type</a>
+                      </span>
+                      <span>
+                        <span style="display: none; ">
+                          array of <span><span></span></span>
+                        </span>
+                        <span>integer</span>
+                        <span style="display: none; "></span>
+                      </span>
+                    </span>
+                                )
+                              </div>
+
+                            </em>
+                          </dt>
+                          <dd className="todo" style="display: none; ">
+                            Undocumented.
+                          </dd>
+                          <dd>可选参数，将设置限制在被选中的标签，当标签关闭时重置。</dd>
+                          <dd style="display: none; ">
+                            This parameter was added in version
+                            <b><span></span></b>.
+                            You must omit this parameter in earlier versions,
+                            and you may omit it in any version. If you require this
+                            parameter, the manifest key
+                            <a href="manifest.html#minimum_chrome_version">minimum_chrome_version</a>
+                            can ensure that your extension won't be run in an earlier browser version.
+                          </dd>
+
+                          <dd style="display: none; ">
+                            <dl>
+                              <div>
+                                <div>
+                                </div>
+                              </div>
+                            </dl>
+                          </dd>
+
+                          <dd style="display: none; ">
+                            <div></div>
+                          </dd>
+
+                        </div>
+                      </div>
+                    </dl>
+                  </dd>
+
+                  <dd style="display: none; ">
+                    <div></div>
+                  </dd>
+
+                </div>
+              </div>
+            </dl>
+
+            <h4 style="display: none; ">Returns</h4>
+            <dl>
+              <div style="display: none; ">
+                <div>
+                </div>
+              </div>
+            </dl>
+
+            <div style="display: none; ">
+              <div>
+                <h4>Callback function</h4>
+                <p className="pd">
+                  The callback <em>parameter</em> should specify a function
+                  that looks like this:
+                </p>
+                <p className="pd">
+                  If you specify the <em>callback</em> parameter, it should
+                  specify a function that looks like this:
+                </p>
+
+                <pre>function(<span>Type param1, Type param2</span>) <span className="subdued">
+
+                </span>;</pre>
+                <dl>
+                  <div>
+                    <div>
+                    </div>
+                  </div>
+                </dl>
+              </div>
+            </div>
+
+            <p style="display: none; ">
+              This function was added in version <b><span></span></b>.
+              If you require this function, the manifest key
+              <a href="manifest.html#minimum_chrome_version">minimum_chrome_version</a>
+              can ensure that your extension won't be run in an earlier browser version.
+            </p>
+          </div>
+
         </div>
       </div>
     )
