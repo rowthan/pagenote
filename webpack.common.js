@@ -47,6 +47,28 @@ module.exports = {
         }]
       },
       {
+        test: /\.less$/,
+        use: [MiniCssExtractPlugin.loader,{
+          loader: 'css-loader',
+          options: {
+            modules: false,
+            localIdentName: '[hash:base64:3]'
+          }
+        },{
+          loader: "less-loader"
+        }]
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader,{
+          loader: 'css-loader',
+          options: {
+            modules: false,
+            localIdentName: '[hash:base64:3]'
+          }
+        }]
+      },
+      {
         test: /\.(woff|woff2|eot|ttf|otf|png)$/,
         use: [{
           loader: 'file-loader', options: {esModule: false}
