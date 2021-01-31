@@ -19,6 +19,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         saveInURL: false,
         saveInLocal: true,
         maxMarkNumber:50,
+        enableMarkImg: false,
         blacklist:[],
         autoLight: false,
         colors:['rgba(114,208,255)','#ffbea9','#c8a6ff','#6fe2d5','rgba(255,222,93)','rgba(251, 181, 214)','rgba(0,0,0,0.5)'],
@@ -81,7 +82,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
           isMoble = "ontouchstart" in window,
           blackNodes = this.blackNodes;
 
-
+    const that = this;
     function handleUp(e){
         const selection = document.getSelection();
         const selectedText = selection.toString().trim(); // 跨标签高亮
@@ -121,9 +122,36 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
 
         // TODO 监测是否有图片、视频等其他资源
+        const markImages = [];
         const selectedElementContent = range0.cloneContents();
+        if(that.options.enableMarkImg){
+            const children = selectedElementContent.children;
+            for(let i=0; i< children.length; i++){
+                const item = children[i];
+                if(item.tagName==='IMG'){
+                    // 找到对应的图片节点
+                    const id = `img[src="${item.src}"]`;
+                    const elements = document.querySelectorAll(id);
+                    for(let j=0; j<elements.length; j++){
+                        const element = elements[j];
+                        if(selection.containsNode(element)){
+                            const imgId = whats.getUniqueId(element).wid;
+                            const imgUrl = element.src;
+                            markImages.push({
+                                id: imgId,
+                                url: imgUrl,
+                                alt: element.alt,
+                                pre: element.previousSibling,
+                                suffix: element.nextSibling,
+                            })
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-        if(selectedText){
+        if(selectedText || markImages.length){
             let before = range0.startContainer.textContent.substr(0,range0.startOffset);
             let after = range0.endContainer.textContent.substr(range0.endOffset,10);
             if(!before){
@@ -169,6 +197,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 clientY: e.clientY,
                 canHighlight: canHighlight,
                 selectionElements: selectedElementContent,
+                images: markImages,
             };
 
             this.status = (this.status === constant.REPLAYING || this.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
@@ -435,7 +464,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         });
         window.getSelection().removeAllRanges();
         this.target = {};
-
+        // 高亮文本以及图片
         newStep.highlight(true)
         this.makelink((result)=>{
             if(!result){
@@ -764,7 +793,7 @@ PagenoteCore.prototype.CONSTANT = {
     SHARE_SUCCESS: 's',
 
     STORE_KEYS_VERSION_1:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
-    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
+    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images"],
 };
 
 PagenoteCore.prototype.version = "4.3.0";

@@ -550,6 +550,11 @@
                 display: block;
             }
         }
+
+        &[data-type='img']{
+           border: 1px solid var(--bgcolor);
+        }
+
         pagenote-tag-edit{
             display: block;
             width: 100%;

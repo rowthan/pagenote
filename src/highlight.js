@@ -140,7 +140,7 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
             });
             const parent = node.nodeType===3 ? node.parentNode : node;
             let hasLighted = !!parent.dataset.highlight;
-            return !isBlack && !hasLighted;
+            return !isBlack && !hasLighted && node.tagName!=='LIGHT';
         }, element => {
             result.lightsElement.push(element);
         }, () => {
@@ -161,9 +161,14 @@ const removeElementHighlight = function (query){
         element = query;
     }
 
-    element.outerHTML = [].find.call(element.childNodes,((node)=>{
-        return node.nodeType === 3 || node.nodeName==='#text'
-    })).textContent;
+    if(element.dataset.type==='img'){
+        element.outerHTML = element.innerHTML;
+    }else {
+        const result = [].find.call(element.childNodes,((node)=>{
+            return node.nodeType === 3 || node.nodeName==='#text'
+        }));
+        element.outerHTML = result?result.textContent : element.textContent;
+    }
 }
 
 export {

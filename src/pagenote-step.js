@@ -66,16 +66,26 @@ Step.prototype.highlight = function (isActiveLight){
     return;
   }
 
+  const color = runStep.bg;
   // 高亮元素
-  const warpFun = function (text){
-    const color = runStep.bg;
+  const warpFun = function (text,children){
     const light = document.createElement('light');
     const {textColor,rgb} = convertColor(color);
     const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
     const bgColor = `rgba(${rgb.toString()},1)`;
     light.style.backgroundColor=runStep.bg;
     light.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
-    light.textContent = text;
+    if(text){
+      light.textContent = text;
+    }
+    if(children){
+      // 已高亮过不再高亮
+      if(children && children.parentNode.tagName==='LIGHT'){
+        return children;
+      }
+      light.dataset.type='img'
+      light.appendChild(children.cloneNode());
+    }
 
     light.dataset.highlight = runStep.lightId;
     if(runStep.tip){
@@ -96,7 +106,16 @@ Step.prototype.highlight = function (isActiveLight){
     targetEl = whats.getTarget(runStep.id);
     clearTimeout(timer);
     if(targetEl){
-      highlightElement(targetEl)
+      highlightElement(targetEl);
+      (runStep.images||[]).forEach((item)=>{
+        const imageElement = whats.getTarget(item.id);
+        if(imageElement){
+          const lightedImg = warpFun('',imageElement);
+          const parent = imageElement.parentNode;
+          parent.replaceChild(lightedImg,imageElement);
+          runStep.relatedNode.push(lightedImg);
+        }
+      })
     }else if(times<3){
       timer = setTimeout(()=>{
         findElement(++times)
@@ -107,10 +126,13 @@ Step.prototype.highlight = function (isActiveLight){
   })(0)
 
   function highlightElement(target,missParent){
+    if(!runStep.text){
+      return;
+    }
     const result = highlightKeywordInElement(target,runStep.text,runStep.pre,  runStep.suffix,null,warpFun,runStep.pagenote.blackNodes);
     runStep.warn = result.match ? '' : '未找到匹配内容';
     runStep.missParent = missParent;
-    runStep.relatedNode = result.lightsElement;
+    runStep.relatedNode.push(...result.lightsElement);
   }
 }
 
