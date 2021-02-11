@@ -54,8 +54,11 @@ export default class ActionBars extends Component{
 
     document.addEventListener('click',(e)=>{
       const target = e.target;
-      if(target._light){
-        target._light.toggle(undefined,false)
+      const parentTarget = e.target.parentNode;
+      const light = target._light || ( parentTarget ? parentTarget._light : null );
+
+      if(light){
+        light.toggle(undefined,false)
       }
     },{capture:true});
   }

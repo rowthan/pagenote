@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useState,useRef } from 'preact/hooks';
 import i18n from '../locale/i18n'
 import Popover from '../component/tip/Popover'
+import Tag from '../assets/tag2.svg'
 import  style from './droplabel.module.scss';
 
 export default function DropLabels({categories=[{label:'default'}],onSelected,currentCategories,onSet}) {
@@ -80,13 +81,14 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
                 </div>
             }>
                 <div className='category-title'>
-                    {currentCategories.size===0?
-                      <span className='category-name'>{i18n.t('add_a_category')}</span>:''}
-                    {
-                        displayCategories.map((item)=>(
-                          <span className='category-name' >{item}</span>
-                        ))
-                    }
+                    <Tag />
+                    <div className='categories'>
+                        {
+                            displayCategories.map((item)=>(
+                              <span className='category-name' >{item}</span>
+                            ))
+                        }
+                    </div>
                 </div>
             </Popover>
         </div>
