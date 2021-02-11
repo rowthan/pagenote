@@ -527,6 +527,10 @@
             &:hover{
                 opacity: 0.85;
             }
+
+            &[data-type='img']{
+                outline: 1px solid var(--bgcolor);
+            }
         }
         &[data-note='1']{
             //&:before{
@@ -551,9 +555,9 @@
             }
         }
 
-        &[data-type='img']{
-           border: 1px solid var(--bgcolor);
-        }
+        //&[data-type='img']{
+        //   outline: 1px solid var(--bgcolor);
+        //}
 
         pagenote-tag-edit{
             display: block;
