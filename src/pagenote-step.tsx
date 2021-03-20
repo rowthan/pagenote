@@ -170,7 +170,7 @@ Step.prototype.highlight = function (isActiveLight){
   }
 }
 
-Step.prototype.gotoView = function (callback){
+Step.prototype.gotoView = function (callback=function(){}){
   let targetEl = this.relatedNode?this.relatedNode[0]:null;
   if(!targetEl){
     try{
