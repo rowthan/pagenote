@@ -5,35 +5,88 @@ import whatsPure from 'whats-element/pure'
 import {gotoPosition} from "./document";
 const whats = new whatsPure();
 
-function Step(info,pagenote,version=2) {
-  pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key)=>{
-    this[key] = info[key];
-  });
-  const {rgb} = convertColor(info.bg);
-  this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
-  this.darkBg = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
-  this.lightId = md5(info.id+info.text);
-  this.isFocus = false; // 是否 hover focus
-  this.relatedNode = []; // 关联的dom元素
-  this.isInview = false; // 是否在视野内
-  this.__proto__.pagenote = pagenote;
+// ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images"]
+export interface StepProps {
+  x: number,
+  y: number,
+  id: string,
+  text?: string,
+  tip?: string,
+  bg: string,
+  isActive: boolean,
+  offsetX?: boolean,
+  offsetY?: boolean,
+  parentW?: number,
+  pre? : string,
+  suffix?: string,
+  images?: string[],
+  lightBg?: string,
+  daskBg?: string,
+  lightId?: string,
+  isFocus?: boolean,
+  [other: string]: any,
 }
 
-Step.prototype.delete = function (e) {
-  const pagenote = this.pagenote;
-  for(let i=0; i<pagenote.recordedSteps.length; i++){
-    if(this.lightId===pagenote.recordedSteps[i].lightId){
-      this.relatedNode.forEach((element)=>{
-        removeElementHighlight(element);
-      })
-      pagenote.remove(i);
-      break;
+class Step {
+    private lightBg: string;
+    private darkBg: string;
+    private lightId: any;
+    private relatedNode: any[];
+    private isInview: boolean;
+    private isFocus: boolean;
+    constructor(info: StepProps,pagenote:object) {
+        pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
+          this[key] = info[key];
+        });
+        const {rgb}:object = convertColor(info.bg);
+        this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
+        this.darkBg = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
+        this.lightId = md5(info.id+info.text);
+        this.isFocus = false; // 是否 hover focus
+        // noinspection JSConstantReassignment
+        this.relatedNode = []; // 关联的dom元素
+        this.isInview = false; // 是否在视野内
+        this.pagenote = pagenote
     }
-  }
-  e && e.stopPropagation();
-};
 
-Step.prototype.toggle = function (isLight,goto=true) {
+    protected pagenote;
+
+    public delete (e: { stopPropagation: () => any; }) {
+      const pagenote = this.pagenote;
+      for(let i=0; i<pagenote.recordedSteps.length; i++){
+        if(this.lightId===pagenote.recordedSteps[i].lightId){
+          this.relatedNode.forEach((element: any)=>{
+            removeElementHighlight(element);
+          })
+          pagenote.remove(i);
+          break;
+        }
+      }
+      e && e.stopPropagation();
+    }
+
+}
+
+// function Step(info: StepProps, pagenote: { CONSTANT: {STORE_KEYS_VERSION_2_VALIDATE:string[]} },version=2) {
+//   pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
+//     this[key] = info[key];
+//   });
+//   const {rgb}:object = convertColor(info.bg);
+//   this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
+//   this.darkBg = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
+//   this.lightId = md5(info.id+info.text);
+//   this.isFocus = false; // 是否 hover focus
+//   // noinspection JSConstantReassignment
+//   this.relatedNode = []; // 关联的dom元素
+//   this.isInview = false; // 是否在视野内
+//   this.__proto__.pagenote = pagenote;
+// }
+//
+// Step.prototype.delete = function (e: { stopPropagation: () => any; }) {
+//
+// };
+
+Step.prototype.toggle = function (isLight: Boolean,goto=true) {
   let light = isLight;
   const pagenote = this.pagenote;
   for(let i=0; i<pagenote.recordedSteps.length; i++){
@@ -146,18 +199,17 @@ Step.prototype.gotoView = function (callback){
     }
   }
   return gotoPosition(targetEl,this.x-window.innerWidth/2,this.y-window.innerHeight/3,()=>{
-    this.isInview = true;
     callback();
   })
 }
 
-Step.prototype.changeColor = function(color){
+Step.prototype.changeColor = function(color: string){
   this.bg = color;
-  const {textColor,rgb} = convertColor(color);
+  const {textColor: textColor, rgb: rgb} = convertColor(color);
   const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
   const bgColor = `rgba(${rgb.toString()},1)`;
 
-  this.relatedNode.forEach((item)=>{
+  this.relatedNode.forEach((item: HTMLElement)=>{
     item.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
   });
   this.darkBg = bottomColor;
@@ -165,14 +217,14 @@ Step.prototype.changeColor = function(color){
   this.save();
 };
 
-Step.prototype.save = function (callback) {
-  this.pagenote.makelink((...arg)=>{
+Step.prototype.save = function (callback: Function) {
+  this.pagenote.makelink((...arg: any)=>{
     typeof callback==='function'&&callback(...arg)
   });
 };
 
 Step.prototype.checkInSign = function (){
-  const result =  this.relatedNode.some((item)=>{
+  const result =  this.relatedNode.some((item: HTMLElement)=>{
    const position = item.getBoundingClientRect();
    const inSign =  position.top > 0 && position.top < window.innerHeight;
    return inSign;
@@ -183,7 +235,7 @@ Step.prototype.checkInSign = function (){
 }
 
 
-function Steps(option,pagenote) {
+function Steps(option: { max: number; }, pagenote: this) {
   this.option = option;
   this.__proto__.pagenote = pagenote;
 }
