@@ -17,6 +17,7 @@ module.exports = {
         test: /\.svg$/,
         use: ['preact-svg-loader'],
       },
+      { test: /\.tsx?$/, loader: "ts-loader" },
       {
         test: /\.js$/,
         exclude: /node_modules\/(?!(@webcomponents\/shadycss|lit-html|@polymer|@vaadin|@lit)\/).*/,
@@ -93,6 +94,7 @@ module.exports = {
     })
   ],
   "resolve": {
+    extensions: [".ts", ".tsx", ".js", ".json"],
     "alias": {
       "react": "preact/compat",
       "react-dom": "preact/compat",
