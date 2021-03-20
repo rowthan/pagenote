@@ -67,25 +67,6 @@ class Step {
 
 }
 
-// function Step(info: StepProps, pagenote: { CONSTANT: {STORE_KEYS_VERSION_2_VALIDATE:string[]} },version=2) {
-//   pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
-//     this[key] = info[key];
-//   });
-//   const {rgb}:object = convertColor(info.bg);
-//   this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
-//   this.darkBg = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
-//   this.lightId = md5(info.id+info.text);
-//   this.isFocus = false; // 是否 hover focus
-//   // noinspection JSConstantReassignment
-//   this.relatedNode = []; // 关联的dom元素
-//   this.isInview = false; // 是否在视野内
-//   this.__proto__.pagenote = pagenote;
-// }
-//
-// Step.prototype.delete = function (e: { stopPropagation: () => any; }) {
-//
-// };
-
 Step.prototype.toggle = function (isLight: Boolean,goto=true) {
   let light = isLight;
   const pagenote = this.pagenote;

@@ -238,21 +238,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             }
         }
         this.recordedSteps.splice(0,this.recordedSteps.length);
-        if(dataVersion===2){
-            simpleStep.forEach((step)=>{
-                const newStep = new Step(step,this);
-                this.recordedSteps.add(newStep);
-            });
-        }else{
-            simpleStep.forEach((step)=>{
-                const stepTemp = {};
-                this.CONSTANT.STORE_KEYS_VERSION_1.forEach((item,index)=>{
-                    stepTemp[item] = step[index];
-                });
-                const newStep = new Step(stepTemp,this);
-                this.recordedSteps.add(newStep);
-            });
-        }
+        simpleStep.forEach((step)=>{
+            const newStep = new Step(step,this);
+            console.log(newStep)
+            this.recordedSteps.add(newStep);
+        });
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 
@@ -320,7 +310,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 });
             });
 
-            // 监听单独提取为一个文件
+            // 监听单独提取为一个文件 hotkeys
             document.addEventListener('keyup',(e)=>{
                 if(this.status===constant.WAITING){
                     const key = e.key.toLowerCase();

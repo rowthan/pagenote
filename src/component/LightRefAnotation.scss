@@ -1,69 +1,101 @@
+$target-default-color: #e5e5e5;
 
+$ref-default-fontcolor: #535353;
+$ref-hover-color: #333;
+
+$anotation-fontcolor: #646a73;
+
+pagenote-aside:hover {
+  pagenote-light-highlight{
+    opacity: 1;
+  }
+  pagenote-ref-anotation{
+    //pagenote-light-target{
+    //  border-color: var(--fill-color);
+    //}
+    //&[data-active='1']{
+    //  pagenote-light-target{
+    //    background-color: var(--fill-color);
+    //  }
+    //}
+  }
+}
 
 pagenote-ref-anotation{
   position: relative;
   display: block;
-  color: #1f2329;
+  color: $ref-default-fontcolor;
+  &:hover{
+    color: $ref-hover-color;
+  }
+
   pagenote-light-ref{
     position: relative;
-    //opacity: 0.8;
-    padding: 0 6px;
     line-height: 1.4em;
     max-height: 2.8em;
-    //overflow: hidden;
-    &:before{
+    pagenote-light-target{
+      margin-right: 8px;
       content: '';
-      width: 1px;
-      height: 100%;
-      background: var(--fill-color);
-      display: block;
-      position: absolute;
-      left: -3px;
-      border: 1px solid #bbbfc4;
-      //border-left: 1px solid #bbbfc4;
-      //border-bottom: 1px solid #bbbfc4;
+      width: 10px;
+      height: 4px;
+      background: #fff;
+      display: inline-block;
+      border: 1px solid $target-default-color;
+      border-radius: 4px;
+      vertical-align: super;
+    }
+    pagenote-light-highlight{
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 170px;
+      transition: opacity 0.5s;
+      opacity: 0;
     }
     pagenote-tag{
       background: #00bdb8;
     }
   }
   pagenote-light-anotation{
+    height: 0;
     margin-top: 4px;
-    padding: 0 6px;
-    color: #646a73;
+    padding: 0 6px 0 24px;
+    color: $anotation-fontcolor;
     line-height: 1.4em;
     max-height: 2.8em;
     overflow: hidden;
+    transition: all 0.5s;
   }
 
-  pagenote-light-actions{
-    position: absolute;
-    right: 0;
-    top:0;
-    background: #fff;
-    display: none;
-  }
 
-  &:hover{
-    pagenote-light-actions{
-      display: block;
+  &[data-active='1']{
+    pagenote-light-target{
+      background-color: $target-default-color;
     }
   }
 
   &[data-insign="1"]{
+    &[data-active='1']{
+      pagenote-light-target{
+        background-color: var(--fill-color);
+      }
+    }
+    pagenote-light-anotation{
+      height: auto;
+    }
+    pagenote-light-target{
+      border-color: var(--fill-color);
+    }
     pagenote-light-ref{
       font-weight: 500;
       &:before{
         border-color: var(--color);
       }
     }
+    pagenote-light-highlight{
+      opacity: 1;
+    }
   }
-
-  //&:hover{
-  //  //color: #000;
-  //  pagenote-light-actions{
-  //    display: block;
-  //  }
-  //}
 }
 
