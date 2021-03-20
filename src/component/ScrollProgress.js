@@ -4,10 +4,6 @@ import {useEffect, useState} from "preact/hooks";
 import {throttle} from "../utils";
 import {getScroll} from "../document";
 import i18n from "../locale/i18n";
-import PreIcon from '../assets/pre.svg';
-import NextIcon from '../assets/next.svg';
-import Delete from "../assets/delete.svg";
-import MoreAction from "../assets/more-action.svg";
 import ToolTip from "rc-tooltip";
 
 export default  function ScrollProgress({steps=[],useDot}) {
@@ -30,6 +26,12 @@ export default  function ScrollProgress({steps=[],useDot}) {
   },20);
 
   useEffect(function () {
+    // TODO 使用observe监听
+    setTimeout(()=>{
+      steps.forEach((step)=>{
+        step.checkInSign();
+      })
+    },1000)
     document.addEventListener("scroll", handleScroll);
 
     return componentWillUnmount;
@@ -42,6 +44,9 @@ export default  function ScrollProgress({steps=[],useDot}) {
 
 
   const positionPercent = Math.min(Math.max(percent,8),98);
+
+  const showProgress = !useDot;
+
   return(
       <ToolTip
         destroyTooltipOnHide={{ keepParent: false }}
@@ -50,17 +55,20 @@ export default  function ScrollProgress({steps=[],useDot}) {
         }}
         placement="rightTop" trigger={['hover']}
         offsetX={10} overlay={<span>{i18n.t('has_read_percent',[percent])}</span>}>
-        {
-          useDot ?
-            <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:
-            <pagenote-progress data-position='bottom'>
-              <pagenote-progress-percent
-                style={{width: `${percent}%`}} >
-                {/*<PreIcon width='10px' height='10px'></PreIcon>*/}
-                {/*<NextIcon width='10px' height='10px'></NextIcon>*/}
-              </pagenote-progress-percent>
-            </pagenote-progress>
-        }
+        {/*{*/}
+        {/*  useDot ?*/}
+        {/*    <pagenote-scroll-sign style={{top: `${positionPercent}%`}}></pagenote-scroll-sign>:*/}
+        {/*    <pagenote-progress data-position='bottom'>*/}
+        {/*      <pagenote-progress-percent*/}
+        {/*        style={{width: `${percent}%`}} >*/}
+        {/*      </pagenote-progress-percent>*/}
+        {/*    </pagenote-progress>*/}
+        {/*}*/}
+        <pagenote-progress data-position='bottom'>
+          <pagenote-progress-percent
+              style={{width: `${percent}%`}} >
+          </pagenote-progress-percent>
+        </pagenote-progress>
       </ToolTip>
   )
 }

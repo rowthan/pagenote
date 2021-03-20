@@ -2,6 +2,9 @@ pagenote-description,pagenote-lights,pagenote-light,pagenote-light-ref,pagenote-
   display: block;
   box-sizing: border-box;
 }
+pagenote-span{
+  display: inline;
+}
 
 pagenote-action-group{
   display: block;
@@ -29,7 +32,6 @@ pagenote-aside{
   background: #fff;
   transition: width 0.2s ease-out;
   border-radius: 4px;
-  border: 1px solid #e3e3e3;
   line-height: 1.414em;
   &[data-status="expand"]{
     border: none;
@@ -57,8 +59,17 @@ pagenote-aside{
       overflow: visible;
     }
   }
+  &:hover{
+    pagenote-actions,pagenote-description,pagenote-infos{
+      opacity: 1;
+    }
+  }
 }
 
+pagenote-actions,pagenote-description,pagenote-infos{
+  opacity: 0;
+  transition: opacity 0.5s;
+}
 
 pagenote-actions{
   box-sizing: border-box;
@@ -93,21 +104,15 @@ pagenote-actions{
   }
 }
 
-
-
-
 pagenote-description{
-  margin: 6px 0;
-  padding: 0 6px;
+  padding: 6px 0;
   color: #8f959e;
   font-size: 12px;
   line-height: 1.414em;
   max-height: 2.828em;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 1px solid #f3f3f3;
 }
-
 
 pagenote-lights{
   max-height: 78vh;
@@ -126,29 +131,15 @@ pagenote-lights{
     cursor: pointer;
     //border-left: 2px solid var(--color);
     box-sizing: border-box;
-    background-color: rgba(0,0,0, 0.02);
+    //background-color: rgba(0,0,0, 0.02);
     border-radius: 4px;
-    margin: 8px 0;
+    margin-bottom: 10px;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
     &:hover{
-      background-color: rgb(251, 252, 255);
       user-select: auto;
       z-index: 2 !important;
     }
-
-    //&[data-active='1']{
-    //  z-index: 1;
-    //  width: calc(100% + 8px);
-    //  height: auto;
-    //  transform: translateX(-8px);
-    //  border-left: 8px solid var(--color);
-    //  background-color: rgb(251, 252, 255);
-    //  border-radius: 8px;
-    //  pagenote-light-anotation,pagenote-light-ref{
-    //    max-height: 12em;
-    //  }
-    //}
   }
 
   pagenote-dot-container{
@@ -157,12 +148,6 @@ pagenote-lights{
       z-index: 9999;
       pagenote-light-ref-dot{
         display: block;
-      }
-    }
-    &[data-active='1']{
-      pagenote-dot{
-        transform: scale(1.5);
-        background: var(--color);
       }
     }
     pagenote-light-ref-dot{
@@ -176,7 +161,6 @@ pagenote-lights{
       box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
       padding: 6px 12px 6px 6px;
       border-radius: 4px;
-      //border-left: 4px solid var(--color);
       z-index: 1;
     }
     pagenote-dot{
@@ -184,23 +168,32 @@ pagenote-lights{
       display: block;
       width: 8px;
       height: 8px;
-      //background: var(--color);
       border-radius: 50%;
       transition: all 0.3s ease-in-out;
       cursor: pointer;
       z-index: 2;
       background: #fff;
-      border: 1px solid var(--color);
+      border: 1px solid #999;
+    }
+
+    &[data-insign="1"]{
+      pagenote-dot{
+        border-color: var(--color);
+      }
+    }
+
+    &[data-active='1'][data-insign="1"]{
+      pagenote-dot{
+        background: var(--color);
+        border-color: transparent;
+      }
     }
   }
 }
 
-
 pagenote-infos{
-  //border-top: 1px dashed #e2e2e2;
   padding: 6px;
 }
-
 
 pagenote-snapshots{
   margin: 6px 0;
@@ -227,9 +220,6 @@ pagenote-snapshots{
     }
   }
 }
-//
-//pagenote-link{
-//  position: relative;
-//}
+
 
 

@@ -1,9 +1,9 @@
 pagenote-progress{
   width: 100%;
-  position: absolute;
-  /* top: 0; */
-  background: #f3f3f3;
   height: 1px;
+  background: aliceblue;
+  position: relative;
+  margin: 6px 0;
   pagenote-progress-percent{
     border-radius: 6px;
     transition: width 0.1s ease-in-out;

@@ -245,7 +245,7 @@ class AsideBar extends Component{
                             </pagenote-action>
 
                         </pagenote-actions>
-                        <ScrollProgress useDot={isExpand} steps={steps} />
+
                         <pagenote-description>
                             <pagenote-title>
                                 {title}
@@ -254,6 +254,8 @@ class AsideBar extends Component{
 
                             </pagenote-content>
                         </pagenote-description>
+
+                        <ScrollProgress useDot={isExpand} steps={steps} />
 
                         {/*标记*/}
                         <pagenote-lights>
@@ -311,22 +313,22 @@ function StepSign({step,running=false,index,barStatus,dot}) {
               dot ?
                 <pagenote-dot-container
                   data-active={step.isActive?'1':'0'}
+                  data-insign={step.isInview?'1':''}
                   data-running={running} style={{
                         top: computeTop(step.y, index) + "px",
                         '--color': step.bg,
                         position: 'absolute'
                     }}
-                 onClick={()=>step.toggle()}>
+                 >
                     <pagenote-light-ref-dot>
                         <LightRefAnotation step={step} />
                     </pagenote-light-ref-dot>
-                    <pagenote-dot />
+                    <pagenote-dot onClick={()=>step.toggle()} />
                 </pagenote-dot-container>
                 :
                 <pagenote-line-container
                   data-active={step.isActive?'1':'0'}
                   style={{ '--color': step.bg, }}
-                  onClick={()=>step.toggle()}
                 >
                     <LightRefAnotation step={step} />
                 </pagenote-line-container>
