@@ -38,6 +38,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         functionColors:[],
         sideBarActions:[],
         categories:[],
+        showBarTimeout: 0,
     },options);
     this.status = this.CONSTANT.UN_INIT;
     this.recordedSteps = new Steps({
@@ -279,19 +280,46 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             upListen.call(this);
             hasListened = true;
             function upListen() {
-                const upEvent = isMoble?'touchstart':'mouseup';
-                document.addEventListener(upEvent,(e)=>{
-                    // 先执行click再执行mouseup，防止mouseup 将选区清空
-                    setTimeout(()=>{
-                        this.lastEvent = e;
-                        handleUp.call(this,e)
-                    },1)
-                },{capture:true});
+                const that = this;
+
+                const upEvent = isMoble?'touchend':'mouseup';
+                const downEvent = isMoble?'touchstart' :'mousedown';
+
+                let showBarTimer = null;
+                let lastActionTime = 0;
+                const timeout = this.options.showBarTimeout;
+
+                function checkShow(e) {
+                    showBarTimer = setTimeout(()=>{
+                        const timeGap = new Date().getTime() - lastActionTime;
+                        that.lastEvent = e;
+                        if(timeGap>=timeout){
+                            handleUp.call(that,e)
+                        } else {
+                            that.status = that.CONSTANT.PAUSE
+                        }
+                    },10)
+                    return showBarTimer
+                }
+
+
                 document.onselectionchange = debounce((e)=>{
-                    if(this.lastEvent && this.lastEvent.target && this.lastEvent.target.id!=="record"){
-                        handleUp.call(this,e)
-                    }
-                },400);
+                    lastActionTime = new Date().getTime()
+                    clearTimeout(showBarTimer)
+                },10);
+
+                // document.addEventListener(downEvent,(e)=>{
+                //     downTime = new Date().getTime()
+                //
+                //     showBarTimer = setTimeout(()=>{
+                //         this.lastEvent = e;
+                //         handleUp.call(this,e)
+                //     },this.options.upTimeout)
+                // },{capture:true})
+
+                document.addEventListener(upEvent,(e)=>{
+                    showBarTimer = checkShow(e)
+                },{capture:true});
             }
 
             const shortCutActions = {};
