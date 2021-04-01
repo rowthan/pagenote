@@ -18,7 +18,7 @@ pagenote.init();
 
 ## TODO LIST
 * TypeScript 重构项目 分支： typescript
-* 弃用 Preact 重新使用 React
+* 弃用 Preact 重新使用 svelte
 
 ## 相关推荐
 * [typescript 手册](https://www.tslang.cn/docs/handbook)
