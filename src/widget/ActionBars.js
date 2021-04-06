@@ -18,7 +18,7 @@ export default function ActionBars ({pagenote}) {
     y: 0,
   } : computePosition(colors.length-1);
 
-  const canHighlight = pagenote.target.canHighlight;
+  const canHighlight = pagenote.target && pagenote.target.canHighlight;
 
   function recordNew(e) {
     const color = e.currentTarget.dataset.color || colors[0];
@@ -96,6 +96,9 @@ export default function ActionBars ({pagenote}) {
                             style={{
                               backgroundImage: `url(${image})`,
                             }}
+                            onClick={action.onclick}
+                            onMouseOver={action.onmouseover}
+                            onDblclick={action.ondbclick}
                           >
                           </pagenote-action-button>
                         </Tip>
