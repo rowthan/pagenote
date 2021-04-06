@@ -28,6 +28,7 @@ pagenote-aside{
   z-index: 99991;
   top: 0;
   width: 200px;
+  padding: 4px;
   user-select: none;
   background: #fff;
   transition: width 0.2s ease-out;
@@ -56,7 +57,6 @@ pagenote-aside{
     }
     pagenote-lights{
       left: -1px;
-      overflow: visible;
     }
   }
   &:hover{
@@ -116,11 +116,9 @@ pagenote-description{
 
 pagenote-lights{
   max-height: 78vh;
-  overflow: auto;
-  padding-left: 6px;
-  left: -6px;
-  position: relative;
+  overflow-y: auto;
   pagenote-line-container{
+    position: relative;
     display: block;
     font-size: 12px;
     left: 0;
@@ -130,7 +128,7 @@ pagenote-lights{
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    margin-bottom: 6px;
+    margin: 6px 0;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
     &:hover{
