@@ -1,5 +1,5 @@
 import { h, render,Component, } from 'preact';
-import {computePosition, convertColor, isMobile} from "../utils";
+import {computePosition, convertColor, isMobile,debounce} from "../utils";
 import Highlight from '../assets/highlight.svg';
 import i18n from '../locale/i18n';
 import Tip from '../component/tip/Tip'
