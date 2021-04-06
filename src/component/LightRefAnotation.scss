@@ -97,5 +97,13 @@ pagenote-ref-anotation{
       opacity: 1;
     }
   }
+
+  &[data-founded='0']{
+    pagenote-light-highlight{
+      pagenote-light-inner{
+        text-decoration: line-through;
+      }
+    }
+  }
 }
 
