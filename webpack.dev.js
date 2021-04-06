@@ -2,7 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('@types/html-webpack-plugin');
 
 module.exports = merge(common, {
   entry: './demo/index.js',

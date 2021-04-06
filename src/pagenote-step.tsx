@@ -1,6 +1,7 @@
+// @ts-nocheck // TODO enable
 import md5 from "blueimp-md5";
 import {highlightKeywordInElement, removeElementHighlight} from "./highlight";
-import {convertColor} from "./utils";
+import {convertColor} from "./utils/index";
 import whatsPure from 'whats-element/pure'
 import {gotoPosition} from "./document";
 const whats = new whatsPure();
@@ -35,8 +36,8 @@ class Step {
     private isInview: boolean;
     private isFocus: boolean;
     constructor(info: StepProps,pagenote:object) {
-        pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
-          this[key] = info[key];
+      pagenote.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
+        this[key] = info[key];
         });
         const {rgb}:object = convertColor(info.bg);
         this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
@@ -228,7 +229,7 @@ Steps.prototype.add = function (item) {
     console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);
   }
 };
-
+// @ts-ignore-end
 
 
 export {
