@@ -39,8 +39,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         functionColors:[],
         sideBarActions:[],
         categories:[],
-        showBarTimeout: 1000,
-        keyupTimeout: 2000,
+        showBarTimeout: 500,
+        keyupTimeout: 1000,
     },options);
     this.status = this.CONSTANT.UN_INIT;
     this.recordedSteps = [];
@@ -57,7 +57,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         autoLight: this.options.autoLight,
         barInfo: runBarInfo,
     });
-    this.target = {}
+    this.target = null
     this.lastEvent = null;
     //用户用户复制的 分享的URL
     this.url = window.location.href
@@ -154,49 +154,52 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         // 销毁 pagenote ，删除所有监听
         if(!hasListened){
-            upListen.call(this);
             hasListened = true;
 
-            function handleUp(e){
-                that.target = prepareTarget(e,blackNodes,that.options.enableMarkImg)
-                if(that.target){
-                    that.status = (that.status === constant.REPLAYING || that.status === constant.PLAYANDWAIT) ? constant.PLAYANDWAIT : constant.WAITING
-                }else{
-                    that.status = constant.PAUSE
-                }
-            }
+            upListen.call(this);
 
             function upListen() {
                 const that = this;
-
                 const upEvent = isMoble?'touchend':'mouseup';
                 const downEvent = isMoble?'touchstart' :'mousedown';
 
-                let showBarTimer = null;
                 let lastActionTime = 0;
-                const timeout = this.options.showBarTimeout;
+                const timeout = that.options.showBarTimeout;
 
+
+                let showBarTimer = null;
                 function checkShow(e) {
-                    showBarTimer = setTimeout(()=>{
-                        const timeGap = new Date().getTime() - lastActionTime;
-                        that.lastEvent = e;
-                        if(timeGap>=timeout){
-                            handleUp.call(that,e)
-                        } else {
-                            that.status = that.CONSTANT.PAUSE
+                    clearTimeout(showBarTimer)
+                    const timeGap = new Date().getTime() - lastActionTime;
+
+                    that.lastEvent = e;
+                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg)
+                    // 满足计算条件
+                    if(timeGap>=timeout && lastActionTime !==0){
+                        if(that.target){
+                            that.showActionBar();
+                        }else{
+                            that.hideActionBar()
                         }
-                    },10)
-                    return showBarTimer
+                    } else {
+                        that.hideActionBar()
+                        showBarTimer = setTimeout(()=>{
+                            checkShow(e)
+                        },60)
+                    }
                 }
 
-
-                document.onselectionchange = debounce((e)=>{
+                // 记录最后一刻的时间
+                const selectionChange = (e)=>{
                     lastActionTime = new Date().getTime()
-                    clearTimeout(showBarTimer)
-                },10);
+                    checkShow(e);
+                }
+
+                document.addEventListener('selectionchange',selectionChange);
 
                 document.addEventListener(upEvent,(e)=>{
-                    showBarTimer = checkShow(e)
+                    lastActionTime = new Date().getTime()
+                    clearTimeout(showBarTimer)
                 },{capture:true});
             }
 
@@ -227,9 +230,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
                 console.log(timeGap >= that.options.keyupTimeout)
                 if(timeGap >= that.options.keyupTimeout){
-                    console.log('highlight',that.target)
                     key = key.toLowerCase();
-                    if(that.target.canHighlight===true){
+                    if(that.target && that.target.canHighlight===true){
                         const colorIndex = that.options.shortCuts.toLowerCase().indexOf(key);
                         const colors = that.options.colors;
                         if(colorIndex>-1 && colors[colorIndex]){
@@ -281,6 +283,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.makelink();
         }
     };
+
+    this.showActionBar = function () {
+        this.status = this.CONSTANT.WAITING;
+    }
+
+    this.hideActionBar = function () {
+        this.status = this.CONSTANT.PAUSE
+    }
 
     this.destroy = function () {
         this.status = constant.DESTROY;
