@@ -253,47 +253,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 lastKeydownTime = 0
             },{capture:true});
 
-            document.addEventListener('dblclick',(e)=>{
-                let eventid = e.target.dataset.eventid;
-                if(eventid && dbClickActions[eventid]){
-                    dbClickActions[eventid](e,this.target);
-                }
-            });
-
-            document.addEventListener('click',(e)=>{
-                const tagName = (e.target.tagName || '').toLowerCase();
-                switch (tagName) {
-                    case 'pagenote-action-button':
-                        let eventid = e.target.dataset.eventid;
-                        if(eventid && typeof eventIDActions[eventid]==='function'){
-                            eventIDActions[eventid](e,this.target);
-                        }
-                        break;
-                    case 'pagenote-color-button':
-                        const color = e.target.dataset.color;
-                        this.record({
-                            bg:color,
-                        });
-                        break;
-                    default:
-                        const hiColor = e.target.dataset ? e.target.dataset.pagenotecolor : '';
-                        if(color){
-                            this.record({
-                                bg:hiColor,
-                            });
-                        }
-                }
-            },{capture: true});
-
-            document.documentElement.addEventListener('mouseover',(e)=>{
-                const tagName = (e.target.tagName || '').toLowerCase();
-                if(tagName==='pagenote-action-button'){
-                    let eventid = e.target.dataset.eventid;
-                    if(hoverIDActions[eventid]){
-                        hoverIDActions[eventid](e,this.target);
-                    }
-                }
-            },{capture:true});
 
             // url listen start
             window.addEventListener('hashchange', ()=> {
