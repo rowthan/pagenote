@@ -133,8 +133,20 @@ highlightKeyword = function (wid,element,text,hightlight,color='',blackNodes=[],
     }
 };
 
-
-const gotoPosition = function(element,targetX,targetY,callback){
+let lock = false
+const gotoPosition = function(element,targetX,targetY,onFinished){
+    if(lock){
+        // 互斥锁
+        setTimeout(()=>{
+            gotoPosition(element,targetX,targetY,onFinished)
+        },1000)
+        return;
+    }
+    lock = true;
+    const callback = function () {
+        lock = false;
+        typeof onFinished === "function" && onFinished()
+    }
     if(!element){
         callback()
     }
@@ -158,7 +170,7 @@ const gotoPosition = function(element,targetX,targetY,callback){
 
         if(beforeScrollTop === afterScrollTop && beforeScrollLeft === afterScrollLeft){
             clearInterval(timer)
-            typeof callback === "function" && callback()
+            callback();
         }
     },30)
     function setScroll(x,y){
@@ -166,7 +178,7 @@ const gotoPosition = function(element,targetX,targetY,callback){
         documentTarget.scrollTop = y;
         window.scrollTo(x,y)
     }
-    return timer
+    return
 }
 
 const documentTarget = document.documentElement || document.body
