@@ -12,7 +12,7 @@ export default {
   },
   t: function (key,values=[]){
     const langObject = i18nObject[language] || i18nObject[defaultLanguage] || {};
-    let message = langObject[key].message || key;
+    let message = langObject[key] ? langObject[key].message : key;
     message = message.replace(/\$\{.*?\}/,values[0]);
     return message;
   },

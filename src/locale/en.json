@@ -103,5 +103,14 @@
   },
   "set_lang": {
     "message": "switch language"
+  },
+  "backup": {
+    "message": "backup"
+  },
+  "import": {
+    "message": "import data"
+  },
+  "not_found": {
+    "message": "Not found this highlight"
   }
 }
