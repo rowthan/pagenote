@@ -223,13 +223,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             const that = this;
             function handleKey(key,e) {
                 const timeGap = new Date().getTime() - lastKeydownTime;
-
                 if(timeGap >= that.options.keyupTimeout){
                     lastKeydownTime = 0
-                }
-
-                console.log(timeGap >= that.options.keyupTimeout)
-                if(timeGap >= that.options.keyupTimeout){
                     key = key.toLowerCase();
                     if(that.target && that.target.canHighlight===true){
                         const colorIndex = that.options.shortCuts.toLowerCase().indexOf(key);
@@ -247,7 +242,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
             document.addEventListener('keydown',(e)=>{
                 lastKeydownTime = lastKeydownTime || new Date().getTime()
-                handleKey(e.key,e)
             },{capture:true})
 
             // 监听单独提取为一个文件 hotkeys
