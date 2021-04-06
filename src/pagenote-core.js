@@ -1,5 +1,5 @@
 import {getWebIcon, captureElementImage, showCamera} from './document'
-import {decryptedData, encryptData, getParams, debounce, prepareTarget} from "./utils";
+import {decryptedData, encryptData, getParams, debounce, prepareSelectionTarget} from "./utils";
 import whatsPure from 'whats-element/pure'
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
