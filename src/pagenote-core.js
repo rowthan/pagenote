@@ -23,8 +23,17 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         enableMarkImg: false,
         blacklist:[],
         autoLight: false,
-        colors:['rgba(114,208,255)','#ffbea9','#c8a6ff','#6fe2d5','rgba(255,222,93)','rgba(251, 181, 214)','rgba(0,0,0,0.5)'],
-        shortCuts: 'M', // 对应colors的快捷键
+        brushes:[{
+            bg:'rgba(114,208,255)',
+            shortcut:'',
+            label:'',
+            level:1,
+        },{
+            bg:'#ffbea9',
+            shortcut:'',
+            label:'',
+            level:1,
+        }],
         barInfo:{
             right:2,
             top:100,
@@ -203,19 +212,13 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 },{capture:true});
             }
 
-            const shortCutActions = {};
-            const eventIDActions = {};
-            const hoverIDActions = {};
-            const dbClickActions = {};
+            const extensionActions = {};
             this.options.functionColors.forEach((actionGroup,groupIndex)=>{
                 actionGroup.forEach((action,itemIndex)=>{
                     action.eventid = groupIndex + itemIndex + Math.random();
                     if(action.shortcut){
-                        shortCutActions[action.shortcut] = action.onclick;
+                        extensionActions[action.shortcut] = action.onclick;
                     }
-                    eventIDActions[action.eventid] = action.onclick;
-                    hoverIDActions[action.eventid] = action.onmouseover;
-                    dbClickActions[action.eventid] = action.ondbclick;
                 });
             });
 
@@ -229,16 +232,20 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 if(timeGap >= keyupTimeout && lastKeydownTime!==0){
                     lastKeydownTime = 0
                     key = key.toLowerCase();
+                    // 高亮快捷键处理
                     if(that.target && that.target.canHighlight===true){
-                        const colorIndex = that.options.shortCuts.toLowerCase().indexOf(key);
-                        const colors = that.options.colors;
-                        if(colorIndex>-1 && colors[colorIndex]){
+                        const highlightColor = that.options.brushes.find((colorItem)=>{
+                            colorItem.shortcut && colorItem.shortcut === key;
+                        });
+                        // highlight 快捷键
+                        if(highlightColor){
                             that.record({
-                                bg: colors[colorIndex]
+                                bg: highlightColor.bg,
+                                level: highlightColor.level, // TODO 支持 level 级别参数
                             },true);
-                        }else if(typeof shortCutActions[key] === 'function'){
-                            shortCutActions[key](e,that.target);
                         }
+                    } else if(typeof extensionActions[key] === 'function'){ // 扩展插件快捷键
+                        extensionActions[key](e,that.target);
                     }
                 }else {
                     keyCheckTimer = setTimeout(()=>{
