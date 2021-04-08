@@ -6,7 +6,6 @@ import en from '../src/locale/en.json';
 // new 对象
 const pagenote = new PageNote('dev',{
   saveInLocal: true,
-  shortCuts:'abcded',
   enableMarkImg:true,
   functionColors:[[
     {

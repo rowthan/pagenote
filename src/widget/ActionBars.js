@@ -9,21 +9,20 @@ export default function ActionBars ({pagenote}) {
   const recordButtonX = (isMobile ? 0 : pagenote.target.x)+'px';
   const recordButtonY = (isMobile? pagenote.target.y + 50 : pagenote.target.y) + "px";
   const functionColors = pagenote.options.functionColors;
-  const colors = pagenote.options.colors;
+  const brushes = pagenote.options.brushes;
   const showButton = (pagenote.status === pagenote.CONSTANT.WAITING ||
                     pagenote.status === pagenote.CONSTANT.PLAYANDWAIT);
-  const shortCuts = pagenote.options.shortCuts;
   const maskPosition = isMobile ? {
-    x: colors.length * - 40,
+    x: brushes.length * - 40,
     y: 0,
-  } : computePosition(colors.length-1);
+  } : computePosition(brushes.length-1);
 
   const canHighlight = pagenote.target && pagenote.target.canHighlight;
 
   function recordNew(e) {
-    const color = e.currentTarget.dataset.color || colors[0];
+    const bg = e.currentTarget.dataset.bg || brushes[0].bg;
     pagenote.record({
-      bg:color,
+      bg:bg,
     });
   }
   const showAnimation = pagenote.options.showIconAnimation;
@@ -46,7 +45,7 @@ export default function ActionBars ({pagenote}) {
             canHighlight &&
             <pagenote-colors-container>
               {
-                colors.map((color, index) => {
+                brushes.map((item, index) => {
                   const {x:offsetX,y:offsetY} = (isMobile || index===0) ? {
                     x: (index) * - 40,
                     y: 0,
@@ -54,22 +53,22 @@ export default function ActionBars ({pagenote}) {
 
                   return(
                     <pagenote-color-button
-                         data-color={color}
-                         data-pagenotecolor={color}
+                         data-bg={item.bg}
+                         data-pagenotecolor={item.bg}
                          style={{
-                           '--color': color,
+                           '--color': item.bg,
                            transform: `translate(${offsetX}px,${offsetY}px)`,
                            top: (offsetY / -1) + 'px',
                            left: (offsetX / -1) + 'px',
-                           color: convertColor(color).textColor,
-                           textShadow: `1px 1px 0px ${convertColor(convertColor(color).textColor).textColor}`,
+                           color: convertColor(item.bg).textColor,
+                           textShadow: `1px 1px 0px ${convertColor(convertColor(item.bg).textColor).textColor}`,
                            animation:`${(showAnimation&&index!==0)?'colorShow 3s ease-out':''}`,
                            // animationDelay: index*0.1+'s',
                            // transitionDelay: index*0.1+'s',
                          }}
                          onClick={recordNew}
-                    >{index!==0?shortCuts[index]:
-                      <span><Highlight  data-pagenotecolor={color} style={{userSelect:'none'}} fill={color}/></span> }
+                    >{index!==0?item.shortcut:
+                      <span><Highlight  data-pagenotecolor={item.bg} style={{userSelect:'none'}} fill={item.bg}/></span> }
                     </pagenote-color-button>
                   )
                 })
