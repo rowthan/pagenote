@@ -25,6 +25,7 @@ export interface StepProps {
   daskBg?: string,
   lightId?: string,
   isFocus?: boolean,
+  level: number, // 高亮层级
   [other: string]: any,
 }
 
