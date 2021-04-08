@@ -19,10 +19,10 @@ export default function ActionBars ({pagenote}) {
 
   const canHighlight = pagenote.target && pagenote.target.canHighlight;
 
-  function recordNew(e) {
-    const bg = e.currentTarget.dataset.bg || brushes[0].bg;
+  function recordNew(item) {
     pagenote.record({
-      bg:bg,
+      bg:item.bg,
+      level: item.level,
     });
   }
   const showAnimation = pagenote.options.showIconAnimation;
@@ -53,7 +53,6 @@ export default function ActionBars ({pagenote}) {
 
                   return(
                     <pagenote-color-button
-                         data-bg={item.bg}
                          data-pagenotecolor={item.bg}
                          style={{
                            '--color': item.bg,
@@ -66,7 +65,7 @@ export default function ActionBars ({pagenote}) {
                            // animationDelay: index*0.1+'s',
                            // transitionDelay: index*0.1+'s',
                          }}
-                         onClick={recordNew}
+                         onClick={()=>recordNew(item)}
                     >{index!==0?item.shortcut:
                       <span><Highlight  data-pagenotecolor={item.bg} style={{userSelect:'none'}} fill={item.bg}/></span> }
                     </pagenote-color-button>

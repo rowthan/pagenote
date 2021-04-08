@@ -25,12 +25,12 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         autoLight: false,
         brushes:[{
             bg:'rgba(114,208,255)',
-            shortcut:'',
+            shortcut:'p',
             label:'',
             level:1,
         },{
             bg:'#ffbea9',
-            shortcut:'',
+            shortcut:'n',
             label:'',
             level:1,
         }],
@@ -234,14 +234,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     key = key.toLowerCase();
                     // 高亮快捷键处理
                     if(that.target && that.target.canHighlight===true){
-                        const highlightColor = that.options.brushes.find((colorItem)=>{
-                            colorItem.shortcut && colorItem.shortcut === key;
+                        const brush = that.options.brushes.find((colorItem)=>{
+                            return colorItem.shortcut && colorItem.shortcut === key;
                         });
                         // highlight 快捷键
-                        if(highlightColor){
+                        if(brush){
                             that.record({
-                                bg: highlightColor.bg,
-                                level: highlightColor.level, // TODO 支持 level 级别参数
+                                bg: brush.bg,
+                                level: brush.level, // TODO 支持 level 级别参数
                             },true);
                         }
                     } else if(typeof extensionActions[key] === 'function'){ // 扩展插件快捷键
@@ -338,7 +338,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         info = Object.assign(this.target,info);
         const maxNn = OPTIONS.maxMarkNumber;
         if(this.recordedSteps.length>=maxNn){
-
             alert(i18n.t('mark_limited',[maxNn]));
             return false
         }
@@ -690,7 +689,7 @@ PagenoteCore.prototype.CONSTANT = {
     SHARE_SUCCESS: 's',
 
     STORE_KEYS_VERSION_1:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
-    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images"],
+    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
 PagenoteCore.prototype.version = "4.4.1-typescript";
