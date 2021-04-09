@@ -39,8 +39,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         functionColors:[],
         sideBarActions:[],
         categories:[],
-        showBarTimeout: 200,
-        keyupTimeout: 1000,
+        showBarTimeout: 20,
+        keyupTimeout: 500,
     },options);
     this.status = this.CONSTANT.UN_INIT;
     this.recordedSteps = [];
@@ -190,10 +190,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 }
 
                 // 记录最后一刻的时间
-                const selectionChange = (e)=>{
+                const selectionChange = debounce((e)=>{
                     lastActionTime = new Date().getTime()
                     checkShow(e);
-                }
+                },100)
 
                 document.addEventListener('selectionchange',selectionChange);
 
@@ -221,9 +221,12 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
             let lastKeydownTime = 0;
             const that = this;
+            const keyupTimeout = this.options.keyupTimeout;
+            let keyCheckTimer = null;
             function handleKey(key,e) {
+                clearTimeout(keyCheckTimer)
                 const timeGap = new Date().getTime() - lastKeydownTime;
-                if(timeGap >= that.options.keyupTimeout){
+                if(timeGap >= keyupTimeout && lastKeydownTime!==0){
                     lastKeydownTime = 0
                     key = key.toLowerCase();
                     if(that.target && that.target.canHighlight===true){
@@ -237,17 +240,25 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                             shortCutActions[key](e,that.target);
                         }
                     }
+                }else {
+                    keyCheckTimer = setTimeout(()=>{
+                        handleKey(key,e)
+                    },keyupTimeout/4)
                 }
             }
 
             document.addEventListener('keydown',(e)=>{
-                lastKeydownTime = lastKeydownTime || new Date().getTime()
+                if(lastKeydownTime===0){
+                    lastKeydownTime = new Date().getTime()
+                }
+                handleKey(e.key,e)
             },{capture:true})
 
             // 监听单独提取为一个文件 hotkeys
             document.addEventListener('keyup',(e)=>{
-                handleKey(e.key,e)
                 lastKeydownTime = 0
+                handleKey(e.key,e)
+                clearTimeout(keyCheckTimer)
             },{capture:true});
 
 
@@ -675,4 +686,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images"],
 };
 
-PagenoteCore.prototype.version = "4.4.0-typescript";
+PagenoteCore.prototype.version = "4.4.1-typescript";
