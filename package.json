@@ -1,6 +1,6 @@
 {
   "name": "pagenote",
-  "version": "4.4.0-typescript",
+  "version": "4.4.1-typescript",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
