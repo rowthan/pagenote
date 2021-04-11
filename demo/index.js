@@ -73,7 +73,8 @@ const pagenote = new PageNote('dev',{
     label:'候选项1'
   },{
     label:'候选项2'
-  }]
+  }],
+  showBarTimeout: 500
 });
 
 pagenote.i18n.setLang('en',en);

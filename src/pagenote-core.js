@@ -1,6 +1,7 @@
 import {getWebIcon, captureElementImage, showCamera} from './document'
-import {decryptedData, encryptData, getParams, debounce, prepareSelectionTarget} from "./utils";
+import {decryptedData, encryptData, getParams, prepareSelectionTarget} from "./utils";
 import whatsPure from 'whats-element/pure'
+import debounce from 'lodash/debounce';
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
@@ -177,6 +178,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
 
                 let showBarTimer = null;
+                let isPressingMouse = false;
                 function checkShow(e) {
                     clearTimeout(showBarTimer)
                     const timeGap = new Date().getTime() - lastActionTime;
@@ -192,23 +194,31 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         }
                     } else {
                         that.hideActionBar()
-                        showBarTimer = setTimeout(()=>{
-                            checkShow(e)
-                        },60)
+                        if(isPressingMouse){
+                            showBarTimer = setTimeout(()=>{
+                                checkShow(e)
+                            },60)
+                        }
                     }
                 }
 
                 // 记录最后一刻的时间
+                const debounceTime = 200;
                 const selectionChange = debounce((e)=>{
                     lastActionTime = new Date().getTime()
                     checkShow(e);
-                },100)
+                },debounceTime)
 
                 document.addEventListener('selectionchange',selectionChange);
+
+                document.addEventListener(downEvent,()=>{
+                    isPressingMouse = true;
+                })
 
                 document.addEventListener(upEvent,(e)=>{
                     lastActionTime = new Date().getTime()
                     clearTimeout(showBarTimer)
+                    isPressingMouse = false;
                 },{capture:true});
             }
 
