@@ -1,6 +1,7 @@
 pagenote-colors-container{
   display: block;
   position: relative;
+  pointer-events: none;
   &:hover pagenote-color-button:not(:first-child){
     transform: translate(0,0) scale(0.59)!important;
     opacity: 1;
@@ -22,9 +23,7 @@ pagenote-color-button{
   cursor: pointer;
   transition: all 0.3s ease-out;
   box-sizing: border-box;
-  user-select: none;
   text-align: center;
-  vertical-align: middle;
   line-height: 24px;
   font-size: 22px;
   text-shadow: 1px 1px 0px #000000;
