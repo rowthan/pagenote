@@ -1,11 +1,11 @@
-import {Step} from "../pagenote-step";
+import {Step} from "./pagenote-step";
 
-enum BAR_STATUS{
+declare enum BAR_STATUS{
     fold,
     expand,
 }
 
-class OptionsProps{
+export class OptionsProps{
     initType?: string;
     dura?: number;
     saveInURL?: boolean;
@@ -27,7 +27,7 @@ class OptionsProps{
     keyupTimeout?: number;
 }
 
-interface Pagenote {
+export interface Pagenote {
     options: OptionsProps;
 
     record(info:object): Step;
