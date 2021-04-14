@@ -243,17 +243,16 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     lastKeydownTime = 0
                     key = key.toLowerCase();
                     // 高亮快捷键处理
-                    if(that.target && that.target.canHighlight===true){
-                        const brush = that.options.brushes.find((colorItem)=>{
-                            return colorItem.shortcut && colorItem.shortcut === key;
-                        });
-                        // highlight 快捷键
-                        if(brush){
-                            that.record({
-                                bg: brush.bg,
-                                level: brush.level, // TODO 支持 level 级别参数
-                            },true);
-                        }
+                    const doHighlight = that.target && that.target.canHighlight===true;
+                    // 获取画笔
+                    const brush = that.options.brushes.find((colorItem)=>{
+                        return colorItem.shortcut && colorItem.shortcut === key;
+                    });
+                    if(doHighlight && brush){
+                        that.record({
+                            bg: brush.bg,
+                            level: brush.level, // TODO 支持 level 级别参数
+                        },true);
                     } else if(typeof extensionActions[key] === 'function'){ // 扩展插件快捷键
                         extensionActions[key](e,that.target);
                     }
@@ -702,4 +701,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.4.2-typescript";
+PagenoteCore.prototype.version = "4.4.3-typescript";
