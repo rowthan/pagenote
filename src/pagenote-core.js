@@ -209,7 +209,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     checkShow(e);
                 },debounceTime)
 
-                document.addEventListener('selectionchange',selectionChange);
+                document.addEventListener('selectionchange',selectionChange,{capture:true});
 
                 document.addEventListener(downEvent,()=>{
                     isPressingMouse = true;
