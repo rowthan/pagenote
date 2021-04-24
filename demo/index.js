@@ -74,7 +74,33 @@ const pagenote = new PageNote('dev',{
   },{
     label:'候选项2'
   }],
-  showBarTimeout: 500
+  brushes:[
+    {
+      bg:'rgb(225,192,63)',
+      shortcut:'p',
+      label:'一级画笔',
+      level:1,
+    },
+    {
+      bg:'rgb(246,227,154)',
+      shortcut:'p',
+      label:'一级画笔',
+      level:1,
+    },
+    {
+      bg:'rgb(48,217,212)',
+      shortcut:'p',
+      label:'一级画笔',
+      level:1,
+    },
+    {
+      bg:'rgba(114,208,255)',
+      shortcut:'a',
+      label:'二级画笔',
+      level:2,
+    }
+  ],
+  showBarTimeout: 400
 });
 
 pagenote.i18n.setLang('en',en);

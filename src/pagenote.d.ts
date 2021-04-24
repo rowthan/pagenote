@@ -14,8 +14,6 @@ export class OptionsProps{
     enableMarkImg?: boolean;
     blacklist: string[];
     autoLight?: boolean;
-    colors?: string[];
-    shortCuts: string[];
     barInfo?: {right:number,top:number,status:BAR_STATUS};
     actionBarOffset?: {offsetX:number,offsetY:number};
     showIconAnimation?: boolean;
