@@ -1,8 +1,8 @@
-import { h, render,Component, } from 'preact';
-import {computePosition, convertColor, isMobile,debounce} from "../utils";
-import Highlight from '../assets/highlight.svg';
-import i18n from '../locale/i18n';
-import Tip from '../component/tip/Tip'
+import { h } from 'preact';
+import {computePosition, convertColor, isMobile} from "@/utils";
+import Highlight from '@/assets/images/highlight.svg';
+import i18n from '@/locale/i18n';
+import Tip from '../tip/Tip'
 import './action-bar.scss';
 
 export default function ActionBars ({pagenote}) {

@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import { useState,useRef } from 'preact/hooks';
-import i18n from '../locale/i18n'
-import Popover from '../component/tip/Popover'
-import Tag from '../assets/tag2.svg'
+import i18n from '../../locale/i18n'
+import Popover from '../tip/Popover'
+import Tag from '../../assets/images/tag2.svg'
 import  style from './droplabel.module.scss';
 
 export default function DropLabels({categories=[{label:'default'}],onSelected,currentCategories,onSet}) {

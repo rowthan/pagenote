@@ -1,8 +1,8 @@
 import PagenoteCore from './pagenote-core'
 import { h, render } from 'preact';
-import AsideBar from "./widget/AsideBar";
-import ActionBars from "./widget/ActionBars";
-import LightActionBar from "./widget/LightActionBar";
+import AsideBar from "./component/aside/AsideBar";
+import ActionBars from "./component/action/ActionBars";
+import LightActionBar from "./component/light/LightActionBar";
 import {debounce} from './utils';
 
 function PageNote(id,options={}){
