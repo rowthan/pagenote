@@ -1,12 +1,11 @@
 // @ts-nocheck // TODO enable
 import md5 from "blueimp-md5";
-import {highlightKeywordInElement, removeElementHighlight} from "./highlight";
+import {highlightKeywordInElement, removeElementHighlight} from "./utils/highlight";
 import {convertColor} from "./utils/index";
 import whatsPure from 'whats-element/pure'
-import {gotoPosition} from "./document";
+import {gotoPosition} from "./utils/document";
 const whats = new whatsPure();
 
-// ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images"]
 export interface StepProps {
   x: number,
   y: number,
@@ -48,6 +47,7 @@ class Step {
         // noinspection JSConstantReassignment
         this.relatedNode = []; // 关联的dom元素
         this.isInview = false; // 是否在视野内
+        this.level = info.level === undefined ? 1 : info.level
         this.pagenote = pagenote
     }
 

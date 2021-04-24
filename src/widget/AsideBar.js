@@ -2,7 +2,7 @@ import {h, Component, Fragment} from 'preact';
 import BigPicture from "bigpicture";
 import style from "./widget.scss";
 import { BAR_STATUS } from '../const';
-import {moveable} from "../document";
+import {moveable} from "../utils/document";
 import RemoveIcon from '../assets/remove.svg';
 import Toggle from '../assets/toggle.svg';
 import DropLabel from '../component/DropLabel';
@@ -314,6 +314,7 @@ function StepSign({step,running=false,index,barStatus,dot}) {
                 <pagenote-dot-container
                   data-active={step.isActive?'1':'0'}
                   data-insign={step.isInview?'1':''}
+                  data-level={step.level}
                   data-running={running} style={{
                         top: computeTop(step.y, index) + "px",
                         '--color': step.bg,

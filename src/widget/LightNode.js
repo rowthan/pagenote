@@ -2,8 +2,8 @@ import { h, render,Component, Fragment} from 'preact';
 import { useState,useEffect,useRef } from 'preact/hooks';
 import ContentEditable from "react-contenteditable";
 import style from './light-node.scss';
-import {writeTextToClipboard} from '../document';
-import {moveable} from "../document";
+import {writeTextToClipboard} from '../utils/document';
+import {moveable} from "../utils/document";
 import DeleteIcon from '../assets/delete.svg';
 import PinIcon from '../assets/pin.svg'
 import ColorIcon from '../assets/color.svg';
@@ -185,7 +185,7 @@ export default class LightNode extends Component{
                 </Tip>
                 <Tip message={i18n.t('change_color')}>
                   <pagenote-icon className={style.actionIcon} >
-                    <Colors colors={pagenote.options.colors} current={light.bg} selectColor={this.onChangeColor}></Colors>
+                    <Colors colors={pagenote.options.brushes.map((brush)=>{return brush.bg})} current={light.bg} selectColor={this.onChangeColor}></Colors>
                   </pagenote-icon>
                 </Tip>
                 <Tip message={i18n.t('remove_marks')}>
@@ -213,6 +213,7 @@ export default class LightNode extends Component{
               disabled={false} // use true to disable edition
               onChange={this.modifyTip} // handle innerHTML change
               onBlur={this.saveTip}
+              onKeyUp={(e)=>{e.stopPropagation();}}
             />
           </pagenote-light-tag>:
            <pagenote-light-tag />

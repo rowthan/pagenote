@@ -31,13 +31,17 @@ pagenote-ref-anotation{
     pagenote-light-target{
       margin-right: 8px;
       content: '';
-      width: 10px;
+      width: 16px;
       height: 4px;
       background: #fff;
       display: inline-block;
       border: 1px solid $target-default-color;
       border-radius: 4px;
       vertical-align: super;
+      &[data-level="2"]{
+        width: 8px;
+        margin-right: 20px;
+      }
     }
     pagenote-light-highlight{
       display: inline-block;

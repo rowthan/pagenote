@@ -1,4 +1,5 @@
 import whatsPure from "whats-element/pure";
+const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
 
@@ -54,7 +55,7 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg) {
             if(item.tagName==='IMG'){
                 // 找到对应的图片节点
                 const id = `img[src="${item.src}"]`;
-                const elements = document.querySelectorAll(id);
+                const elements = parentElement.querySelectorAll(id);
                 for(let j=0; j<elements.length; j++){
                     const element = elements[j];
                     if(selection.containsNode(element)){
@@ -103,7 +104,7 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg) {
         :Math.min(lastSelectionRect.x+lastSelectionRect.width/1.5,window.innerWidth-150);
     const y = window.scrollY+lastSelectionRect.y+lastSelectionRect.height;
 
-    const whats = new whatsPure();
+
     const whatsEl = whats.getUniqueId(parentElement);
     const cursorX = parseInt(x);
     const cursorY = parseInt(y);
@@ -244,5 +245,6 @@ export {
     computePosition,
     prepareSelectionTarget,
     isMobile,
+    whats,
 }
 

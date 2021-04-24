@@ -1,7 +1,6 @@
 pagenote-colors-container{
   display: block;
   position: relative;
-  // pointer-events: none;
   &:hover pagenote-color-button:not(:first-child){
     transform: translate(0,0) scale(0.59)!important;
     opacity: 1;
