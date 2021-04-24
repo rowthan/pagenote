@@ -1,0 +1,24 @@
+pagenote-description,pagenote-lights,pagenote-light,pagenote-light-ref,
+pagenote-light-anotation,pagenote-snapshots,pagenote-infos,pagenote-dot,
+pagenote-line,pagenote-block,pagenote-progress,pagenote-progress-percent{
+  display: block;
+  box-sizing: border-box;
+}
+pagenote-span{
+  display: inline;
+}
+
+pagenote-action-group{
+  display: block;
+}
+
+pagenote-icon{
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50%;
+
+  &:hover{
+    background: #fff;
+    box-shadow: 0 1px 3px 1px rgba(60,64,67,.15), 0 1px 2px 0 rgba(60,64,67,.3);
+  }
+}
