@@ -81,7 +81,7 @@ export default function DropLabels({categories=[{label:'default'}],onSelected,cu
                 </div>
             }>
                 <div className='category-title'>
-                    <Tag />
+                    <div className='category-tag' >#</div>
                     <div className='categories'>
                         {
                             displayCategories.map((item)=>(

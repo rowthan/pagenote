@@ -221,7 +221,7 @@ class AsideBar extends Component{
                         <pagenote-actions ref={this.setRef.bind(this)}>
                             <Tip message={i18n.t('toggle_marks')}>
                                 <pagenote-action onClick={this.toggleAllLight} >
-                                    <LightIcon run={run}  colors={Array.from(colorSet)} />
+                                    <LightIcon run={run}  colors={steps.map((s)=>s.bg)} />
                                 </pagenote-action>
                             </Tip>
 
@@ -229,9 +229,10 @@ class AsideBar extends Component{
                                 {
                                     actions.map((action,index)=>
                                       <Tip message={action.name}>
-                                          <pagenote-action key={action.name+index}
-                                                           onClick={action.onclick}
-                                                           style={{ backgroundImage: `url(data:image/svg+xml;base64,${window.btoa(action.icon)})`, }}
+                                          <pagenote-action
+                                              key={action.name+index}
+                                               onClick={action.onclick}
+                                               style={{ backgroundImage: `url(data:image/svg+xml;base64,${window.btoa(action.icon)})`, }}
                                           />
                                       </Tip>
                                       )
@@ -243,6 +244,34 @@ class AsideBar extends Component{
                             </pagenote-action>
 
                         </pagenote-actions>
+
+                        <pagenote-infos>
+                            <pagenote-tags>
+                                <DropLabel
+                                    onSet={this.setCategories}
+                                    categories={this.pagenote.options.categories}
+                                    currentCategories={categories}
+                                />
+                            </pagenote-tags>
+                            <pagenote-snapshots>
+                                {
+                                    snapshots.map((img,index)=>(
+                                        <pagenote-snapshot>
+                                            <pagenote-icon>
+                                                <RemoveIcon onClick={()=>this.removeSnapshot(index)} className={sideStyle.removeIcon}/>
+                                            </pagenote-icon>
+                                            <img onClick={(e)=>{
+                                                this.bigPicture(e,img,snapshots.map((s)=>{
+                                                    return {
+                                                        src:s,
+                                                    }
+                                                }),index)
+                                            }} src={img} alt=""/>
+                                        </pagenote-snapshot>
+                                    ))
+                                }
+                            </pagenote-snapshots>
+                        </pagenote-infos>
 
                         {/*<pagenote-description>*/}
                         {/*    <pagenote-title>*/}
@@ -269,33 +298,6 @@ class AsideBar extends Component{
                                 ))
                             }
                         </pagenote-lights>
-
-                        {/*其他信息*/}
-                        <pagenote-infos>
-                            <DropLabel
-                              onSet={this.setCategories}
-                              categories={this.pagenote.options.categories}
-                              currentCategories={categories}
-                            />
-                            <pagenote-snapshots>
-                                {
-                                    snapshots.map((img,index)=>(
-                                      <pagenote-snapshot>
-                                          <pagenote-icon>
-                                              <RemoveIcon onClick={()=>this.removeSnapshot(index)} className={sideStyle.removeIcon}/>
-                                          </pagenote-icon>
-                                          <img onClick={(e)=>{
-                                              this.bigPicture(e,img,snapshots.map((s)=>{
-                                                  return {
-                                                      src:s,
-                                                  }
-                                              }),index)
-                                          }} src={img} alt=""/>
-                                      </pagenote-snapshot>
-                                    ))
-                                }
-                            </pagenote-snapshots>
-                        </pagenote-infos>
                     </pagenote-aside>
                 }
             </>
