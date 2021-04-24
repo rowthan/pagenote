@@ -39,7 +39,7 @@ pagenote-aside{
     }
   }
   &:hover{
-    pagenote-actions,pagenote-description,pagenote-infos{
+    pagenote-actions,pagenote-description,pagenote-infos,pagenote-light-highlight{
       opacity: 1;
     }
   }
@@ -61,13 +61,8 @@ pagenote-actions{
   white-space: nowrap;
   text-align: left;
   text-overflow: ellipsis;
-  //border-bottom: 1px solid #f3f3f3;
-  //text-shadow: 1px 1px 3px rgba(0,0,0,.3);
   -webkit-transition: all .25s ease-out;
   transition: all .25s ease-out;
-  //background-color: #3a3a3a;
-  //border-radius: 4px 4px 0 0;
-  //border-left: 10px outset #222;
 
   pagenote-action {
     display: inline-block;
@@ -99,10 +94,11 @@ pagenote-lights{
   pagenote-line-container{
     position: relative;
     display: block;
-    font-size: 12px;
     left: 0;
     top: 0;
     width: 100%;
+    padding-left: 24px;
+    font-size: 12px;
     line-height: 20px;
     text-align: left;
     cursor: pointer;
@@ -110,65 +106,77 @@ pagenote-lights{
     margin: 6px 0;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
-    &:hover{
-      user-select: auto;
-      z-index: 2 !important;
-    }
-  }
 
-  pagenote-dot-container{
-    position: absolute;
-    &:hover{
-      z-index: 9999;
-      pagenote-light-ref-dot{
-        display: block;
+    pagenote-light-inner-container{
+      opacity: 0;
+    }
+
+    pagenote-light-target{
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      top: 4px;
+      width: 16px;
+      height: 4px;
+      background: #fff;
+      display: inline-block;
+      border: 1px solid $target-default-color;
+      border-radius: 4px;
+      vertical-align: super;
+      &[data-level="2"]{
+        width: 8px;
+        margin-right: 20px;
       }
     }
-    pagenote-light-ref-dot{
-      display: none;
-      position: absolute;
-      width: 200px;
-      top: -10px;
-      right: -4px;
-      font-size: 12px;
-      background: #ffff;
-      box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
-      padding: 6px 12px 6px 6px;
-      border-radius: 4px;
-      z-index: 1;
-    }
-    pagenote-dot{
-      position: relative;
-      display: block;
-      width: 16px;
-      height: 6px;
-      border-radius: 4px;
-      transition: all 0.3s ease-in-out;
-      cursor: pointer;
-      z-index: 2;
-      background: #fff;
-      border: 1px solid $target-default-color;
+
+    &[data-dot="1"]{
+      pagenote-light-inner-container{
+        display: none;
+        position: absolute;
+        width: 200px;
+        top: -10px;
+        right: -4px;
+        font-size: 12px;
+        background: #ffff;
+        box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
+        padding: 6px 12px 6px 6px;
+        border-radius: 4px;
+        z-index: 1;
+        transition: box-shadow 0.4s ease-in-out;
+      }
     }
 
-    &[data-insign="1"]{
-      pagenote-dot{
+    // 激活态
+    &[data-active='1']{
+      pagenote-light-target{
+        background-color: $target-default-color;
+      }
+    }
+
+    // 视野内
+    &[data-insign='1']{
+      pagenote-light-target{
         border-color: var(--color);
       }
     }
 
+    // 激活 & 视野内
     &[data-active='1'][data-insign="1"]{
-      pagenote-light-ref-dot{
+      pagenote-light-inner-container{
         display: block;
+        opacity: 1;
       }
-      pagenote-dot{
-        background: var(--color);
-        border-color: transparent;
+      pagenote-light-target{
+        background-color: var(--color);
       }
     }
 
-    &[data-level="2"]{
-      pagenote-dot{
-        width: 10px;
+
+    &:hover{
+      z-index: 9999;
+      pagenote-light-inner-container{
+        display: block;
+        opacity: 1;
       }
     }
   }

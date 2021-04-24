@@ -1,20 +1,10 @@
 @import "../../assets/styles/variable";
 
-pagenote-aside:hover {
-  pagenote-light-highlight{
-    opacity: 1;
-  }
-  pagenote-ref-anotation{
-    //pagenote-light-target{
-    //  border-color: var(--fill-color);
-    //}
-    //&[data-active='1']{
-    //  pagenote-light-target{
-    //    background-color: var(--fill-color);
-    //  }
-    //}
-  }
-}
+//pagenote-aside:hover {
+//  pagenote-light-highlight{
+//    opacity: 1;
+//  }
+//}
 
 pagenote-ref-anotation{
   position: relative;
@@ -28,21 +18,7 @@ pagenote-ref-anotation{
     position: relative;
     line-height: 1.4em;
     max-height: 2.8em;
-    pagenote-light-target{
-      margin-right: 8px;
-      content: '';
-      width: 16px;
-      height: 4px;
-      background: #fff;
-      display: inline-block;
-      border: 1px solid $target-default-color;
-      border-radius: 4px;
-      vertical-align: super;
-      &[data-level="2"]{
-        width: 8px;
-        margin-right: 20px;
-      }
-    }
+
     pagenote-light-highlight{
       display: inline-block;
       overflow: hidden;
@@ -67,24 +43,9 @@ pagenote-ref-anotation{
     transition: all 0.5s;
   }
 
-
-  &[data-active='1']{
-    pagenote-light-target{
-      background-color: $target-default-color;
-    }
-  }
-
   &[data-insign="1"]{
-    &[data-active='1']{
-      pagenote-light-target{
-        background-color: var(--fill-color);
-      }
-    }
     pagenote-light-anotation{
       height: auto;
-    }
-    pagenote-light-target{
-      border-color: var(--fill-color);
     }
     pagenote-light-ref{
       font-weight: 500;
