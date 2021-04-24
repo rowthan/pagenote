@@ -1,11 +1,11 @@
 import {h} from 'preact';
-import Delete from "../assets/delete.svg";
-import Popover from './tip/Popover';
+import Delete from "../../assets/images/delete.svg";
+import Popover from '../tip/Popover';
 import './LightRefAnotation.scss'
-import ImageIcon from '../assets/image.svg'
-import i18n from '../locale/i18n'
-import Tip from '../component/tip/Tip'
-export default  function LightRefAnotation({step}) {
+import ImageIcon from '../../assets/images/image.svg'
+import i18n from '../../locale/i18n'
+import Tip from '../tip/Tip'
+export default  function LightRefAnotation({step,showTarget}) {
   const text = step.text||'';
   const notion = step.text!==step.tip?step.tip:'';
   const imgs = step.images || [];
@@ -30,7 +30,10 @@ export default  function LightRefAnotation({step}) {
               data-active={step.isActive?'1':''}
               style={{'--fill-color':step.bg}}>
               <pagenote-light-ref onClick={()=>step.gotoView()}>
-                  <pagenote-light-target onClick={()=>{step.toggle()}} />
+                  {
+                      showTarget &&
+                      <pagenote-light-target data-level={step.level} onClick={()=>{step.toggle()}} />
+                  }
                   <pagenote-light-highlight>
                       {
                           !hasRelated &&

@@ -1,10 +1,9 @@
 // @ts-nocheck // TODO enable
 import md5 from "blueimp-md5";
 import {highlightKeywordInElement, removeElementHighlight} from "./utils/highlight";
+import { whats } from './utils/index'
 import {convertColor} from "./utils/index";
-import whatsPure from 'whats-element/pure'
 import {gotoPosition} from "./utils/document";
-const whats = new whatsPure();
 
 export interface StepProps {
   x: number,

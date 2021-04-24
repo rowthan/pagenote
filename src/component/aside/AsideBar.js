@@ -1,18 +1,17 @@
 import {h, Component, Fragment} from 'preact';
 import BigPicture from "bigpicture";
-import style from "./widget.scss";
-import { BAR_STATUS } from '../const';
-import {moveable} from "../utils/document";
-import RemoveIcon from '../assets/remove.svg';
-import Toggle from '../assets/toggle.svg';
-import DropLabel from '../component/DropLabel';
-import sideStyle from './aside-bar.scss';
-import LightIcon from '../component/LightIcon'
-import ExpandIcon from '../assets/expand.svg';
-import LightRefAnotation from "../component/LightRefAnotation";
-import ScrollProgress from "../component/ScrollProgress";
-import i18n from '../locale/i18n';
-import Tip from "../component/tip/Tip";
+import i18n from '@/locale/i18n';
+import { BAR_STATUS } from '@/const';
+import {moveable} from "@/utils/document";
+import RemoveIcon from '@/assets/images/remove.svg';
+import Toggle from '@/assets/images/toggle.svg';
+import ExpandIcon from '@/assets/images/expand.svg';
+import LightRefAnotation from "./LightRefAnotation";
+import ScrollProgress from "./ScrollProgress";
+import DropLabel from './DropLabel';
+import sideStyle from './aside.scss';
+import LightIcon from './LightIcon'
+import Tip from "../tip/Tip";
 
 let lastTop = -1;
 let pagenote = null;
@@ -198,11 +197,10 @@ class AsideBar extends Component{
 
     render() {
         const {
-            status,barInfo,steps,autoLight,highlightAll,runindex,categories,note='',snapshots,capturing,title,run
+            status,barInfo,steps,runindex,categories,snapshots,run
         } = this.state;
         const barStatus = barInfo.status||'';
         const isExpand = barStatus === BAR_STATUS.expand;
-        const isFold = barStatus === BAR_STATUS.fold;
         const showBar = steps.length > 0 || snapshots.length > 0;
         const top = isExpand?0:barInfo.top;
         barInfo.right = Math.min(document.documentElement.clientWidth-60,barInfo.right);
@@ -246,14 +244,14 @@ class AsideBar extends Component{
 
                         </pagenote-actions>
 
-                        <pagenote-description>
-                            <pagenote-title>
-                                {title}
-                            </pagenote-title>
-                            <pagenote-content>
+                        {/*<pagenote-description>*/}
+                        {/*    <pagenote-title>*/}
+                        {/*        {title}*/}
+                        {/*    </pagenote-title>*/}
+                        {/*    <pagenote-content>*/}
 
-                            </pagenote-content>
-                        </pagenote-description>
+                        {/*    </pagenote-content>*/}
+                        {/*</pagenote-description>*/}
 
                         <ScrollProgress useDot={isExpand} steps={steps} />
 
@@ -322,7 +320,7 @@ function StepSign({step,running=false,index,barStatus,dot}) {
                     }}
                  >
                     <pagenote-light-ref-dot>
-                        <LightRefAnotation step={step} />
+                        <LightRefAnotation step={step} showTarget={false} />
                     </pagenote-light-ref-dot>
                     <pagenote-dot onClick={()=>step.toggle()} />
                 </pagenote-dot-container>
@@ -331,7 +329,7 @@ function StepSign({step,running=false,index,barStatus,dot}) {
                   data-active={step.isActive?'1':'0'}
                   style={{ '--color': step.bg, }}
                 >
-                    <LightRefAnotation step={step} />
+                    <LightRefAnotation step={step} showTarget={true} />
                 </pagenote-line-container>
           }
       </Fragment>

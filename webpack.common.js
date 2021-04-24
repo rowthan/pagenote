@@ -98,6 +98,7 @@ module.exports = {
     "alias": {
       "react": "preact/compat",
       "react-dom": "preact/compat",
+      '@': require('path').resolve(__dirname, 'src')
       // Must be below test-utils
     },
   }

@@ -2,18 +2,18 @@ import { h, render,Component, Fragment} from 'preact';
 import { useState,useEffect,useRef } from 'preact/hooks';
 import ContentEditable from "react-contenteditable";
 import style from './light-node.scss';
-import {writeTextToClipboard} from '../utils/document';
-import {moveable} from "../utils/document";
-import DeleteIcon from '../assets/delete.svg';
-import PinIcon from '../assets/pin.svg'
-import ColorIcon from '../assets/color.svg';
-import CommentIcon from '../assets/comment.svg';
-import CopyIcon from '../assets/copy.svg';
-import MoreIcon from '../assets/more.svg';
+import {writeTextToClipboard} from '../../utils/document';
+import {moveable} from "../../utils/document";
+import DeleteIcon from '../../assets/images/delete.svg';
+import PinIcon from '../../assets/images/pin.svg'
+import ColorIcon from '../../assets/images/color.svg';
+import CommentIcon from '../../assets/images/comment.svg';
+import CopyIcon from '../../assets/images/copy.svg';
+import MoreIcon from '../../assets/images/more.svg';
 import whatsPure from "whats-element/pure";
-import Tip from '../component/tip/Tip'
+import Tip from '../tip/Tip'
 const whats = new whatsPure();
-import i18n from '../locale/i18n';
+import i18n from '../../locale/i18n';
 
 export default class LightNode extends Component{
   constructor(props){
