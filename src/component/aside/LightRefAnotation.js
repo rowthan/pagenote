@@ -30,10 +30,6 @@ export default  function LightRefAnotation({step,showTarget}) {
               data-active={step.isActive?'1':''}
               style={{'--fill-color':step.bg}}>
               <pagenote-light-ref onClick={()=>step.gotoView()}>
-                  {
-                      showTarget &&
-                      <pagenote-light-target data-level={step.level} onClick={()=>{step.toggle()}} />
-                  }
                   <pagenote-light-highlight>
                       {
                           !hasRelated &&

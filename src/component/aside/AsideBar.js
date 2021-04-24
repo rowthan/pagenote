@@ -304,34 +304,26 @@ class AsideBar extends Component{
 }
 
 
-function StepSign({step,running=false,index,barStatus,dot}) {
+function StepSign({step,running=false,index,dot}) {
     return (
       <Fragment>
-          {
-              dot ?
-                <pagenote-dot-container
-                  data-active={step.isActive?'1':'0'}
-                  data-insign={step.isInview?'1':''}
-                  data-level={step.level}
-                  data-running={running} style={{
-                        top: computeTop(step.y, index) + "px",
-                        '--color': step.bg,
-                        position: 'absolute'
-                    }}
-                 >
-                    <pagenote-light-ref-dot>
-                        <LightRefAnotation step={step} showTarget={false} />
-                    </pagenote-light-ref-dot>
-                    <pagenote-dot onClick={()=>step.toggle()} />
-                </pagenote-dot-container>
-                :
-                <pagenote-line-container
-                  data-active={step.isActive?'1':'0'}
-                  style={{ '--color': step.bg, }}
-                >
-                    <LightRefAnotation step={step} showTarget={true} />
-                </pagenote-line-container>
-          }
+          <pagenote-line-container
+              data-active={step.isActive?'1':'0'}
+              data-insign={step.isInview?'1':''}
+              data-level={step.level}
+              data-dot={dot?'1':'0'}
+              data-running={running}
+              style={{
+                  top: dot? computeTop(step.y, index) + "px" : 'unset',
+                  '--color': step.bg,
+                  position: dot ? 'absolute' : 'relative'
+              }}
+          >
+              <pagenote-light-target data-level={step.level} onClick={()=>step.toggle()} />
+              <pagenote-light-inner-container>
+                  <LightRefAnotation step={step} />
+              </pagenote-light-inner-container>
+          </pagenote-line-container>
       </Fragment>
     )
 }
