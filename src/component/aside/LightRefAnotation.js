@@ -49,7 +49,7 @@ export default  function LightRefAnotation({step,showTarget}) {
                       </pagenote-light-inner>
                   </pagenote-light-highlight>
               </pagenote-light-ref>
-              <pagenote-light-anotation>
+              <pagenote-light-anotation data-content={notion?'1':'0'}>
                   {
                       step.isActive && notion &&
                       <pagenote-block dangerouslySetInnerHTML={{__html: notion}}>

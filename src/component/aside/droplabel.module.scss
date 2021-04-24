@@ -1,5 +1,6 @@
 :global{
   .category-title{
+    position: relative;
     cursor: pointer;
     //background-image: url("../assets/tag.png");
     //background-size: 16px;
@@ -11,8 +12,24 @@
     svg{
       vertical-align: top;
     }
+    .category-tag{
+      position: absolute;
+      left: 0;
+      /* padding: 0 3px; */
+      font-size: 14px;
+      background: #e5e5e5;
+      display: inline-block;
+      border-radius: 2px;
+      color: #fff;
+      width: 18px;
+      height: 18px;
+      text-align: center;
+    }
     .categories{
       padding-left: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .category-name{
       display: inline-block;
@@ -21,12 +38,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right:4px;
-      margin-bottom: 4px;
       font-size: 12px;
       border-radius: 4px;
-      background: #f3f3f3;
+      background: #e5e5e5;
       padding: 0 12px;
-      color: #666;
+      color: #fff;
       border: 1px solid #e6e6e6;
     }
   }

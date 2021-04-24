@@ -4,6 +4,11 @@ pagenote-line,pagenote-block,pagenote-progress,pagenote-progress-percent{
   display: block;
   box-sizing: border-box;
 }
+
+pagenote-inline-block{
+  display: inline-block;
+}
+
 pagenote-span{
   display: inline;
 }
