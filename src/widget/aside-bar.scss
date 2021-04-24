@@ -140,14 +140,14 @@ pagenote-lights{
     pagenote-dot{
       position: relative;
       display: block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 16px;
+      height: 6px;
+      border-radius: 4px;
       transition: all 0.3s ease-in-out;
       cursor: pointer;
       z-index: 2;
       background: #fff;
-      border: 1px solid #999;
+      border: 1px solid $target-default-color;
     }
 
     &[data-insign="1"]{
@@ -157,9 +157,18 @@ pagenote-lights{
     }
 
     &[data-active='1'][data-insign="1"]{
+      pagenote-light-ref-dot{
+        display: block;
+      }
       pagenote-dot{
         background: var(--color);
         border-color: transparent;
+      }
+    }
+
+    &[data-level="2"]{
+      pagenote-dot{
+        width: 10px;
       }
     }
   }

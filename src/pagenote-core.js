@@ -1,16 +1,13 @@
-import {getWebIcon, captureElementImage, showCamera} from './document'
-import {decryptedData, encryptData, getParams, prepareSelectionTarget} from "./utils";
-import whatsPure from 'whats-element/pure'
 import debounce from 'lodash/debounce';
+import {getWebIcon, captureElementImage, showCamera} from './utils/document'
+import {decryptedData, encryptData, getParams, prepareSelectionTarget,whats} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
 import './widget/camera.scss'
 import './assets/iconfont/icon.css'
-// import './widget/pagnote-modal';
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
-const whats = new whatsPure();
 
 //增加开关 是否开启
 export default function PagenoteCore(id, options={}){ // TODO 支持载入语言包
