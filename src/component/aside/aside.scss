@@ -7,7 +7,7 @@ pagenote-aside{
   z-index: 99991;
   top: 0;
   width: 200px;
-  padding: 4px;
+  padding: 4px 12px;
   user-select: none;
   background: #fff;
   transition: width 0.2s ease-out;
@@ -108,30 +108,31 @@ pagenote-lights{
     left: 0;
     top: 0;
     width: 100%;
-    padding-left: 24px;
     font-size: 12px;
     line-height: 20px;
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    margin: 6px 0;
+    padding: 6px 0;
+    padding-left: 24px;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
-
+    &:hover{
+      box-shadow: rgba(213,223,230,0.6) 0px 0px 19px 2px;
+    }
     pagenote-light-inner-container{
-      opacity: 0;
+      display: block;
+      //opacity: 0;
       //padding: 6px;
       //padding: 6px 12px 6px 6px;
-      //&:hover{
-      //  box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
-      //}
+
     }
 
     pagenote-light-target{
       position: absolute;
       z-index: 2;
       left: 0;
-      top: 4px;
+      top: 10px;
       width: 16px;
       height: 4px;
       background: #fff;
