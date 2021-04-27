@@ -48,7 +48,7 @@ export default  function ScrollProgress({steps=[],useDot}) {
   const showProgress = !useDot;
 
   return(
-      <div></div>
+      <></>
       // <ToolTip
       //   destroyTooltipOnHide={{ keepParent: false }}
       //   align={{

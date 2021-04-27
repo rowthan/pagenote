@@ -1,60 +1,43 @@
 @import "../../assets/styles/variable";
 
-//pagenote-aside:hover {
-//  pagenote-light-highlight{
-//    opacity: 1;
-//  }
-//}
-
 pagenote-ref-anotation{
   position: relative;
   display: block;
   color: $ref-default-fontcolor;
   &:hover{
     color: $ref-hover-color;
+    pagenote-light-ref{
+      transition-delay: 0.1s;
+      max-height: $inf-height;
+    }
   }
 
   pagenote-light-ref{
     position: relative;
     line-height: 1.4em;
-    max-height: 2.8em;
-
-    pagenote-light-highlight{
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      max-width: 170px;
-      transition: opacity 0.5s;
-      opacity: 0;
-    }
+    max-height: 1.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.8s ease-in-out;
     pagenote-tag{
       background: #00bdb8;
     }
   }
+
   pagenote-light-anotation{
-    height: 0;
     margin-top: 4px;
-    padding: 0 6px 0 24px;
     color: $anotation-fontcolor;
-    line-height: 1.4em;
-    max-height: 2.8em;
+    //line-height: 1.4em;
+    //max-height: 2.8em;
     overflow: hidden;
     transition: all 0.5s;
   }
 
   &[data-insign="1"]{
-    pagenote-light-anotation{
-      height: auto;
-    }
+    //opacity: 1;
     pagenote-light-ref{
       font-weight: 500;
-      &:before{
-        border-color: var(--color);
-      }
-    }
-    pagenote-light-highlight{
-      opacity: 1;
+      max-height: $inf-height;
     }
   }
 
