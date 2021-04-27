@@ -245,6 +245,32 @@ class AsideBar extends Component{
 
                         </pagenote-actions>
 
+                        {/*<pagenote-description>*/}
+                        {/*    <pagenote-title>*/}
+                        {/*        {title}*/}
+                        {/*    </pagenote-title>*/}
+                        {/*    <pagenote-content>*/}
+
+                        {/*    </pagenote-content>*/}
+                        {/*</pagenote-description>*/}
+
+                        <ScrollProgress useDot={isExpand} steps={steps} />
+
+                        {/*标记*/}
+                        <pagenote-lights>
+                            {
+                                steps.map((record, index) => (
+                                  <StepSign
+                                    key={record.lightId}
+                                    step={record}
+                                    index={index}
+                                    running={index === runindex}
+                                    dot={isExpand}
+                                  />
+                                ))
+                            }
+                        </pagenote-lights>
+
                         <pagenote-infos>
                             <pagenote-tags>
                                 <DropLabel
@@ -272,32 +298,6 @@ class AsideBar extends Component{
                                 }
                             </pagenote-snapshots>
                         </pagenote-infos>
-
-                        {/*<pagenote-description>*/}
-                        {/*    <pagenote-title>*/}
-                        {/*        {title}*/}
-                        {/*    </pagenote-title>*/}
-                        {/*    <pagenote-content>*/}
-
-                        {/*    </pagenote-content>*/}
-                        {/*</pagenote-description>*/}
-
-                        <ScrollProgress useDot={isExpand} steps={steps} />
-
-                        {/*标记*/}
-                        <pagenote-lights>
-                            {
-                                steps.map((record, index) => (
-                                  <StepSign
-                                    key={record.lightId}
-                                    step={record}
-                                    index={index}
-                                    running={index === runindex}
-                                    dot={isExpand}
-                                  />
-                                ))
-                            }
-                        </pagenote-lights>
                     </pagenote-aside>
                 }
             </>

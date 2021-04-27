@@ -6,18 +6,19 @@ pagenote-aside{
   right: 2px;
   z-index: 99991;
   top: 0;
-  width: 200px;
-  padding: 4px 12px;
+  width: 220px;
   user-select: none;
   background: #fff;
   transition: width 0.2s ease-out;
   border-radius: 4px;
   line-height: 1.414em;
+  box-shadow: 0px 0px 10px 0px #efefef;
   &[data-status="expand"]{
     border: none;
     width: 18px;
     height: 100%;
     background: transparent;
+    box-shadow:none;
     pagenote-actions{
       background: none;
       padding: 0;
@@ -29,13 +30,22 @@ pagenote-aside{
       display: none;
     }
     pagenote-action[data-action=toggle]{
-      //position: absolute;
       top: 34px;
       right: auto;
       margin: 0;
     }
     pagenote-lights{
-      left: -1px;
+      pagenote-line-container{
+        padding-left: 0;
+        padding-right: 0;
+        right: 0;
+        left: unset;
+        pagenote-light-target{
+          top:0;
+          left: 0;
+        }
+      }
+
     }
   }
   &:hover{
@@ -48,6 +58,7 @@ pagenote-aside{
 pagenote-actions,pagenote-description,pagenote-infos{
   opacity: 0;
   transition: opacity 0.5s;
+  padding: 6px 12px;
 }
 
 pagenote-tags{
@@ -58,10 +69,9 @@ pagenote-actions{
   box-sizing: border-box;
   position: relative;
   display: flex;
-  //padding: 4px;
   color: #fff;
   font-size: 13px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #efefef;
   padding-bottom: 6px;
   font-weight: 400;
   white-space: nowrap;
@@ -84,13 +94,12 @@ pagenote-actions{
     border-radius: 2px;
     &[data-action=toggle]{
       position: absolute;
-      right: 0;
+      right: 12px;
     }
   }
 }
 
 pagenote-description{
-  padding: 6px 0;
   color: #8f959e;
   font-size: 12px;
   line-height: 1.414em;
@@ -113,8 +122,7 @@ pagenote-lights{
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    padding: 6px 0;
-    padding-left: 24px;
+    padding: 6px 24px 6px 36px;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
     &:hover{
@@ -122,7 +130,7 @@ pagenote-lights{
     }
     pagenote-light-inner-container{
       display: block;
-      //opacity: 0;
+      opacity: 0;
       //padding: 6px;
       //padding: 6px 12px 6px 6px;
 
@@ -131,7 +139,7 @@ pagenote-lights{
     pagenote-light-target{
       position: absolute;
       z-index: 2;
-      left: 0;
+      left: 12px;
       top: 10px;
       width: 16px;
       height: 4px;
@@ -142,7 +150,6 @@ pagenote-lights{
       vertical-align: super;
       &[data-level="2"]{
         width: 8px;
-        margin-right: 20px;
       }
     }
 
@@ -197,10 +204,6 @@ pagenote-lights{
       }
     }
   }
-}
-
-pagenote-infos{
-  padding: 6px 0;
 }
 
 pagenote-snapshots{
