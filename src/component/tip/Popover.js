@@ -2,7 +2,7 @@ import {h,createRef} from 'preact';
 import ToolTip from "rc-tooltip";
 import './popover.less'
 
-export default function Popover({message,children,...props}) {
+export default function Popover({message,children,inner=false,...props}) {
   const ref = createRef();
   return(
     <ToolTip destroyTooltipOnHide={{ keepParent: false }}
@@ -16,7 +16,7 @@ export default function Popover({message,children,...props}) {
              // offsetX={10}
              overlay={<span>{message}</span>}
              getTooltipContainer={function (a) {
-                 return a.parentNode
+                 return inner? a.parentNode : document.body
              }}
              {...props}
       >
