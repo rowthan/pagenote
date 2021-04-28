@@ -8,27 +8,13 @@ pagenote-light-aside-ref{
   max-height: 1.4em;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: all 0.8s ease-in-out;
+  //transition: all 0.8s ease-in-out;
   &:hover{
     color: $ref-hover-color;
-    max-height: $inf-height;
-  }
-
-  pagenote-light-anotation{
-    margin-top: 4px;
-    color: $anotation-fontcolor;
-    //line-height: 1.4em;
-    //max-height: 2.8em;
-    overflow: hidden;
-    transition: all 0.5s;
   }
 
   &[data-insign="1"]{
     max-height: $inf-height;
-    pagenote-light-ref{
-      font-weight: 500;
-
-    }
   }
 
   &[data-founded='0']{
@@ -37,6 +23,14 @@ pagenote-light-aside-ref{
         text-decoration: line-through;
       }
     }
+  }
+
+  pagenote-light-highlight{
+    white-space: nowrap;
+  }
+
+  pagenote-light-anotation{
+    color: $anotation-fontcolor;
   }
 }
 

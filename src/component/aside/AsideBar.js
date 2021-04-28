@@ -49,6 +49,7 @@ class AsideBar extends Component{
             title: pagenote.plainData.title,
 
             run: false,
+            lastFocus: '',
         };
         pagenote.addListener(this.refreshStatus.bind(this));
     }
@@ -195,6 +196,12 @@ class AsideBar extends Component{
         })
     };
 
+    setLastFocus =(info)=>{
+        this.setState({
+            lastFocus: info,
+        })
+    }
+
     render() {
         const {
             status,barInfo,steps,runindex,categories,snapshots,run
@@ -212,6 +219,16 @@ class AsideBar extends Component{
         steps.forEach((step)=>{
             colorSet.add(step.lightBg||step.bg);
         });
+
+        const targets = document.querySelectorAll(`pagenote-light-aside-item[data-insign="1"][data-focus="1"]`);
+        const inViewTargets =  document.querySelectorAll(`pagenote-light-aside-item[data-insign="1"]`);
+
+        const target = targets[Math.floor(targets.length/2)] || inViewTargets[Math.floor(inViewTargets.length/2)];
+
+        const topMask = target ? target.offsetTop : 0;
+        const heightMask = target ? target.offsetHeight : 0;
+
+
         return(
             status===this.pagenote.CONSTANT.DESTROY ? '' :
             <>
@@ -245,19 +262,17 @@ class AsideBar extends Component{
 
                         </pagenote-actions>
 
-                        {/*<pagenote-description>*/}
-                        {/*    <pagenote-title>*/}
-                        {/*        {title}*/}
-                        {/*    </pagenote-title>*/}
-                        {/*    <pagenote-content>*/}
-
-                        {/*    </pagenote-content>*/}
-                        {/*</pagenote-description>*/}
-
                         <ScrollProgress useDot={isExpand} steps={steps} />
 
                         {/*标记*/}
                         <pagenote-lights>
+                            {
+                                isExpand ? '' : <pagenote-light-aside-mask style={{
+                                    height: heightMask,
+                                    top: topMask
+                                }} />
+                            }
+
                             {
                                 steps.map((record, index) => (
                                   <StepSign
@@ -266,6 +281,19 @@ class AsideBar extends Component{
                                     index={index}
                                     running={index === runindex}
                                     dot={isExpand}
+                                    lastFocusId={this.state.lastFocus}
+                                    onClick={(e)=>{
+                                      const target = e.currentTarget;
+                                      this.setLastFocus(record.lightId)
+                                      // setTimeout(()=>{
+                                      //     console.log(e.currentTarget,target)
+                                      //     this.setLastFocus({
+                                      //         lightId: record.lightId,
+                                      //         height: target.offsetHeight,
+                                      //         top: target.offsetTop,
+                                      //     })
+                                      // },1000)
+                                    }}
                                   />
                                 ))
                             }
@@ -306,7 +334,7 @@ class AsideBar extends Component{
 }
 
 
-function StepSign({step,running=false,index,dot}) {
+function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
     return (
         <pagenote-light-aside-item
             data-active={step.isActive?'1':'0'}
@@ -314,6 +342,8 @@ function StepSign({step,running=false,index,dot}) {
             data-level={step.level}
             data-dot={dot?'1':'0'}
             data-running={running}
+            onClick={onClick}
+            data-focus={lastFocusId===step.lightId?'1':'0'}
             style={{
                 top: dot? computeTop(step.y, index) + "px" : 'unset',
                 '--color': step.bg,
