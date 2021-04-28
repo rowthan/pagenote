@@ -49,7 +49,7 @@ pagenote-aside{
     }
   }
   &:hover{
-    pagenote-actions,pagenote-description,pagenote-infos,pagenote-light-highlight{
+    pagenote-actions,pagenote-description,pagenote-infos,pagenote-light-highlight,pagenote-light-aside-item-container{
       opacity: 1;
     }
   }
@@ -111,6 +111,19 @@ pagenote-description{
 pagenote-lights{
   max-height: 78vh;
   overflow-y: auto;
+  padding: 1px 0;
+  pagenote-light-aside-mask{
+    display: block;
+    width: 100%;
+    width: calc(100% + 10px);
+    height: 0;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    box-shadow: rgba(213,223, 230,.6) 0px 0px 19px 2px;
+    background: #fff;
+    transition: all 0.2s ease-in-out;
+  }
   pagenote-light-aside-item{
     position: relative;
     display: block;
@@ -125,9 +138,7 @@ pagenote-lights{
     padding: 6px 24px 6px 36px;
     text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
-    &:hover{
-      box-shadow: rgba(213,223,230,0.6) 0px 0px 19px 2px;
-    }
+
     pagenote-light-aside-item-container{
       display: block;
       opacity: 0;
@@ -149,6 +160,10 @@ pagenote-lights{
         width: 8px;
       }
     }
+
+    //&:hover, &[data-focus="1"]{
+    //  box-shadow: rgba(213,223,230,0.6) 0px 0px 19px 2px;
+    //}
 
     &[data-dot="1"]{
       pagenote-light-aside-item-container{

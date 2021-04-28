@@ -11,11 +11,12 @@ export default  function LightRefAnotation({step,showTarget}) {
   const hasRelated = step.relatedNode.length>0
   return(
       <pagenote-light-aside-ref
+          onClick={()=>step.gotoView()}
           data-founded={hasRelated?'1':'0'}
           data-insign={step.isInview?'1':''}
           data-active={step.isActive?'1':''}
           style={{'--fill-color':step.bg}}>
-          <pagenote-light-highlight onClick={()=>step.gotoView()}>
+          <pagenote-light-highlight>
               {
                   !hasRelated &&
                   <Tip message={i18n.t('not_found')}>
