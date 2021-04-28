@@ -1,27 +1,17 @@
 @import "../../assets/styles/variable";
 
-pagenote-ref-anotation{
+pagenote-light-aside-ref{
   position: relative;
   display: block;
   color: $ref-default-fontcolor;
+  line-height: 1.4em;
+  max-height: 1.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.8s ease-in-out;
   &:hover{
     color: $ref-hover-color;
-    pagenote-light-ref{
-      transition-delay: 0.1s;
-      max-height: $inf-height;
-    }
-  }
-
-  pagenote-light-ref{
-    position: relative;
-    line-height: 1.4em;
-    max-height: 1.4em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.8s ease-in-out;
-    pagenote-tag{
-      background: #00bdb8;
-    }
+    max-height: $inf-height;
   }
 
   pagenote-light-anotation{
@@ -34,10 +24,10 @@ pagenote-ref-anotation{
   }
 
   &[data-insign="1"]{
-    //opacity: 1;
+    max-height: $inf-height;
     pagenote-light-ref{
       font-weight: 500;
-      max-height: $inf-height;
+
     }
   }
 

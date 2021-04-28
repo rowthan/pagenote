@@ -35,12 +35,12 @@ pagenote-aside{
       margin: 0;
     }
     pagenote-lights{
-      pagenote-line-container{
+      pagenote-light-aside-item{
         padding-left: 0;
         padding-right: 0;
         right: 0;
         left: unset;
-        pagenote-light-target{
+        pagenote-light-aside-item-sign{
           top:0;
           left: 0;
         }
@@ -111,7 +111,7 @@ pagenote-description{
 pagenote-lights{
   max-height: 78vh;
   overflow-y: auto;
-  pagenote-line-container{
+  pagenote-light-aside-item{
     position: relative;
     display: block;
     left: 0;
@@ -128,15 +128,12 @@ pagenote-lights{
     &:hover{
       box-shadow: rgba(213,223,230,0.6) 0px 0px 19px 2px;
     }
-    pagenote-light-inner-container{
+    pagenote-light-aside-item-container{
       display: block;
       opacity: 0;
-      //padding: 6px;
-      //padding: 6px 12px 6px 6px;
-
     }
 
-    pagenote-light-target{
+    pagenote-light-aside-item-sign{
       position: absolute;
       z-index: 2;
       left: 12px;
@@ -154,7 +151,7 @@ pagenote-lights{
     }
 
     &[data-dot="1"]{
-      pagenote-light-inner-container{
+      pagenote-light-aside-item-container{
         display: none;
         position: absolute;
         width: 200px;
@@ -172,25 +169,27 @@ pagenote-lights{
 
     // 激活态
     &[data-active='1']{
-      pagenote-light-target{
+      pagenote-light-aside-item-sign{
         background-color: $target-default-color;
       }
     }
 
     // 视野内
     &[data-insign='1']{
-      pagenote-light-target{
+      pagenote-light-aside-item-container{
+        opacity: 1;
+      }
+      pagenote-light-aside-item-sign{
         border-color: var(--color);
       }
     }
 
     // 激活 & 视野内
     &[data-active='1'][data-insign="1"]{
-      pagenote-light-inner-container{
+      pagenote-light-aside-item-container{
         display: block;
-        opacity: 1;
       }
-      pagenote-light-target{
+      pagenote-light-aside-item-sign{
         background-color: var(--color);
       }
     }
@@ -198,7 +197,7 @@ pagenote-lights{
 
     &:hover{
       z-index: 9999;
-      pagenote-light-inner-container{
+      pagenote-light-aside-item-container{
         display: block;
         opacity: 1;
       }
