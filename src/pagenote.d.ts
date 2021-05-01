@@ -41,4 +41,7 @@ export interface Pagenote {
 
     decodeData(): string;
     encryptData(): string;
+
+    // 导出数据为其他格式
+    exportData(template: string, data: any): string;
 }

@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import mustache from 'mustache';
 import {getWebIcon, captureElementImage, showCamera} from './utils/document'
 import {decryptedData, encryptData, getParams, prepareSelectionTarget,whats} from "./utils";
 import i18n from "./locale/i18n";
@@ -536,6 +537,22 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             });
         })
     };
+
+    this.exportData = (template,data) =>{
+        const exportTemplate = template || `## [{{title}}]({{{url}}})
+{{#steps}}> {{text}}
+
+{{#tip}}{{{tip}}}
+
+{{/tip}}{{/steps}}
+open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
+        `
+        const result = mustache.render(exportTemplate,data || {
+            ...this.plainData,
+            encodeUrl: encodeURIComponent(this.plainData.url)
+        })
+        return result
+    }
 
     const store= debounce( (callback)=> {
         try{

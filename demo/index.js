@@ -4,7 +4,7 @@ import Demo from './Demo'
 import en from '../src/locale/en.json';
 
 // new 对象
-const pagenote = new PageNote('dev',{
+window.pagenote = new PageNote('dev',{
   saveInLocal: true,
   enableMarkImg:true,
   functionColors:[[
