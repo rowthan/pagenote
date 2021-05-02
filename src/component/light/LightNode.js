@@ -174,7 +174,8 @@ export default class LightNode extends Component{
                 </Tip>
                 <Tip message={i18n.t('copy_keyword_annotation')}>
                   <pagenote-icon className={style.actionIcon}
-                                 onClick={()=>this.copyHightlight(false)} onDblClick={()=>{this.copyHightlight(true)}}>
+                                 onClick={()=>this.copyHightlight(false)}
+                                 onDblClick={()=>{this.copyHightlight(true)}}>
                     <CopyIcon  fill={light.bg}  width={18} height={18}  />
                   </pagenote-icon>
                 </Tip>

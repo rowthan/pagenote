@@ -39,8 +39,8 @@ pagenote-aside{
         right: 0;
         left: unset;
         pagenote-light-aside-item-sign{
-          top: -16px;
-          left: -2px;
+          left: unset;
+          right: 6px;
         }
       }
 
@@ -127,38 +127,19 @@ pagenote-lights{
     display: block;
     left: 0;
     top: 0;
-    width: 100%;
     font-size: 12px;
     line-height: 20px;
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    margin: 6px 0;
+    margin: 4px 0;
     transition: all 0.3s ease-in-out;
 
     pagenote-light-aside-item-container{
       display: block;
       opacity: 0;
-      padding: 6px 0;
-      padding-left: 36px;
+      padding: 6px 6px 6px 36px;
       box-sizing: border-box;
-    }
-
-    pagenote-light-aside-item-sign{
-      position: absolute;
-      z-index: 999;
-      left: 12px;
-      top: 10px;
-      width: 16px;
-      height: 4px;
-      background: #fff;
-      display: inline-block;
-      border: 1px solid $target-default-color;
-      border-radius: 4px;
-      vertical-align: super;
-      &[data-level="2"]{
-        width: 8px;
-      }
     }
 
     pagenote-light-anotation{
@@ -177,29 +158,45 @@ pagenote-lights{
       border-radius: 0 0 4px 4px;
       transition: all 0.3s;
       pagenote-block{
-        padding: 12px;
+        padding: 4px 12px;
       }
     }
 
-    &[data-dot="1"]{
-      pagenote-light-aside-item-container{
-        display: none;
-        position: absolute;
-        width: 200px;
-        top: -28px;
-        right: 0;
-        font-size: 12px;
-        background: #ffff;
-        box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
-        padding: 6px 12px 6px 6px;
-        border-radius: 4px 4px 0 0;
-        transition: box-shadow 0.4s ease-in-out;
+    pagenote-light-aside-item-sign{
+      position: absolute;
+      z-index: 999;
+      left: 12px;
+      right: unset;
+      top: 10px;
+      width: 16px;
+      height: 4px;
+      background: #fff;
+      display: inline-block;
+      border: 1px solid $target-default-color;
+      border-radius: 4px;
+      vertical-align: super;
+      &[data-level="2"]{
+        width: 8px;
       }
-      pagenote-light-anotation{
-        position: absolute;
-        width: 200px;
-        right: 0;
-        top:1px;
+      &:hover + pagenote-light-actions-container{
+        opacity: 1;
+        display: block;
+      }
+    }
+
+    pagenote-light-actions-container{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: none;
+      opacity: 0;
+      padding: 4px 0 4px 36px;
+      background: #fff;
+      box-sizing: border-box;
+      &:hover{
+        display: block;
+        opacity: 1;
       }
     }
 
@@ -238,6 +235,31 @@ pagenote-lights{
         overflow: auto;
       }
     }
+
+    &[data-dot="1"]{
+      pagenote-light-aside-item-container{
+        display: none;
+        width: 200px;
+        font-size: 12px;
+        background: #ffff;
+        box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px !important;
+        padding: 6px 12px 6px 6px;
+        border-radius: 4px 4px 0 0;
+        transition: box-shadow 0.4s ease-in-out;
+      }
+      pagenote-light-actions-container{
+        top: -22px;
+        padding: 4px;
+      }
+      &:hover {
+        pagenote-light-actions-container{
+          display: block;
+          opacity: 1;
+        }
+      }
+    }
+
+
 
 
     &:hover{

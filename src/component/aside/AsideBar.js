@@ -12,6 +12,7 @@ import DropLabel from './DropLabel';
 import sideStyle from './aside.scss';
 import LightIcon from './LightIcon'
 import Tip from "../tip/Tip";
+import LightActionBar from "@/component/LightActionBar";
 
 let lastTop = -1;
 let pagenote = null;
@@ -347,7 +348,7 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
             style={{
                 top: dot? computeTop(step.y, index) + "px" : 'unset',
                 '--color': step.bg,
-                '--shadow-color': step.tip ? step.bg : '',
+                '--shadow-color': dot? '#d8d8d8' : (step.tip ? step.bg : ''),
                 position: dot ? 'absolute' : 'relative'
             }}
         >
@@ -362,11 +363,11 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
 
                     </pagenote-block>
                 }
-                <pagenote-light-actions>
-
-                </pagenote-light-actions>
             </pagenote-light-anotation>
             <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
+            <pagenote-light-actions-container>
+                <LightActionBar step={step} />
+            </pagenote-light-actions-container>
         </pagenote-light-aside-item>
     )
 }
