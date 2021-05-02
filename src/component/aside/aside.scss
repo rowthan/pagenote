@@ -137,6 +137,7 @@ pagenote-lights{
 
     pagenote-light-aside-item-container{
       display: block;
+      background: #fff;
       opacity: 0;
       padding: 6px 6px 6px 36px;
       box-sizing: border-box;
@@ -145,7 +146,7 @@ pagenote-lights{
     pagenote-light-anotation{
       //position: absolute;
       max-height: 0;
-      height: 0;
+      min-width: 200px;
       padding: 0;
       overflow: hidden;
       color: $anotation-fontcolor;
@@ -224,14 +225,12 @@ pagenote-lights{
         display: block;
         box-shadow: 0 0 2px 0px var(--shadow-color);
         border-radius: 4px 4px 0 0;
-        border-bottom: 1px solid #fbfbfb;
       }
       pagenote-light-aside-item-sign{
         background-color: var(--color);
       }
       pagenote-light-anotation{
         max-height: 200px;
-        height: unset;
         overflow: auto;
       }
     }
