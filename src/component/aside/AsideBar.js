@@ -283,6 +283,7 @@ class AsideBar extends Component{
                                     running={index === runindex}
                                     dot={isExpand}
                                     lastFocusId={this.state.lastFocus}
+                                    colors={this.pagenote.options.brushes.map((brush)=>{return brush.bg})}
                                     onClick={(e)=>{
                                       const target = e.currentTarget;
                                       this.setLastFocus(record.lightId)
@@ -335,7 +336,7 @@ class AsideBar extends Component{
 }
 
 
-function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
+function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
     return (
         <pagenote-light-aside-item
             data-active={step.isActive?'1':'0'}
@@ -366,7 +367,7 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
             </pagenote-light-anotation>
             <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
             <pagenote-light-actions-container>
-                <LightActionBar step={step} />
+                <LightActionBar step={step} colors={colors} />
             </pagenote-light-actions-container>
         </pagenote-light-aside-item>
     )
