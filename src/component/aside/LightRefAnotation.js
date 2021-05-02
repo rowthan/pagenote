@@ -12,6 +12,7 @@ export default  function LightRefAnotation({step,showTarget}) {
   return(
       <pagenote-light-aside-ref
           onClick={()=>step.gotoView()}
+          onDblClick={()=>step.toggle()}
           data-founded={hasRelated?'1':'0'}
           data-insign={step.isInview?'1':'0'}
           data-active={step.isActive?'1':'0'}
