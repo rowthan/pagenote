@@ -13,8 +13,8 @@ export default  function LightRefAnotation({step,showTarget}) {
       <pagenote-light-aside-ref
           onClick={()=>step.gotoView()}
           data-founded={hasRelated?'1':'0'}
-          data-insign={step.isInview?'1':''}
-          data-active={step.isActive?'1':''}
+          data-insign={step.isInview?'1':'0'}
+          data-active={step.isActive?'1':'0'}
           style={{'--fill-color':step.bg}}>
           <pagenote-light-highlight>
               {
@@ -34,14 +34,19 @@ export default  function LightRefAnotation({step,showTarget}) {
                   </Popover>:''}
               </pagenote-light-inner>
           </pagenote-light-highlight>
-          <pagenote-light-anotation data-content={notion?'1':'0'}>
-              {
-                  step.isActive && notion &&
-                  <pagenote-block dangerouslySetInnerHTML={{__html: notion}}>
 
-                  </pagenote-block>
-              }
-          </pagenote-light-anotation>
+          {/*<pagenote-light-info>*/}
+          {/*    <pagenote-drawer>*/}
+          {/*        {step.time}*/}
+          {/*    </pagenote-drawer>*/}
+          {/*</pagenote-light-info>*/}
+          {/*<pagenote-light-anotation data-content={notion?'1':'0'}>*/}
+          {/*    <pagenote-drawer>*/}
+          {/*        <pagenote-block dangerouslySetInnerHTML={{__html: notion}}>*/}
+
+          {/*        </pagenote-block>*/}
+          {/*    </pagenote-drawer>*/}
+          {/*</pagenote-light-anotation>*/}
       </pagenote-light-aside-ref>
   )
 }

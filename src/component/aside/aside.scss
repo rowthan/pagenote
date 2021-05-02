@@ -36,13 +36,11 @@ pagenote-aside{
     }
     pagenote-lights{
       pagenote-light-aside-item{
-        padding-left: 0;
-        padding-right: 0;
         right: 0;
         left: unset;
         pagenote-light-aside-item-sign{
-          top:0;
-          left: 0;
+          top: -16px;
+          left: -2px;
         }
       }
 
@@ -109,9 +107,9 @@ pagenote-description{
 }
 
 pagenote-lights{
-  max-height: 78vh;
+  max-height: 80vh;
   overflow-y: auto;
-  padding: 1px 0;
+  padding: 2px 0;
   pagenote-light-aside-mask{
     display: block;
     width: 100%;
@@ -135,18 +133,20 @@ pagenote-lights{
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    padding: 6px 24px 6px 36px;
-    text-overflow: ellipsis;
+    margin: 6px 0;
     transition: all 0.3s ease-in-out;
 
     pagenote-light-aside-item-container{
       display: block;
       opacity: 0;
+      padding: 6px 0;
+      padding-left: 36px;
+      box-sizing: border-box;
     }
 
     pagenote-light-aside-item-sign{
       position: absolute;
-      z-index: 2;
+      z-index: 999;
       left: 12px;
       top: 10px;
       width: 16px;
@@ -161,24 +161,45 @@ pagenote-lights{
       }
     }
 
-    //&:hover, &[data-focus="1"]{
-    //  box-shadow: rgba(213,223,230,0.6) 0px 0px 19px 2px;
-    //}
+    pagenote-light-anotation{
+      //position: absolute;
+      max-height: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      color: $anotation-fontcolor;
+      background: #fff;
+      display: block;
+      right: 0;
+      /* border: 1px solid #d5d5d5; */
+      //top: 100%;
+      box-shadow: 0 1px 3px 0px #ecebeb;
+      border-radius: 0 0 4px 4px;
+      transition: all 0.3s;
+      pagenote-block{
+        padding: 0 12px;
+      }
+    }
 
     &[data-dot="1"]{
       pagenote-light-aside-item-container{
         display: none;
         position: absolute;
         width: 200px;
-        top: -10px;
-        right: -4px;
+        top: -28px;
+        right: 0;
         font-size: 12px;
         background: #ffff;
         box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px;
         padding: 6px 12px 6px 6px;
-        border-radius: 4px;
-        z-index: 1;
+        border-radius: 4px 4px 0 0;
         transition: box-shadow 0.4s ease-in-out;
+      }
+      pagenote-light-anotation{
+        position: absolute;
+        width: 200px;
+        right: 0;
+        top:1px;
       }
     }
 
@@ -201,17 +222,27 @@ pagenote-lights{
 
     // 激活 & 视野内
     &[data-active='1'][data-insign="1"]{
+      margin: 12px 0;
       pagenote-light-aside-item-container{
         display: block;
+        box-shadow: 0 -1px 3px 0px #ecebeb;
+        border-radius: 4px 4px 0 0;
+        border-bottom: 1px solid #fbfbfb;
       }
       pagenote-light-aside-item-sign{
         background-color: var(--color);
+      }
+      pagenote-light-anotation{
+        max-height: 200px;
+        padding: 12px 0;
+        height: unset;
+        overflow: auto;
       }
     }
 
 
     &:hover{
-      z-index: 9999;
+      z-index: 99;
       pagenote-light-aside-item-container{
         display: block;
         opacity: 1;
