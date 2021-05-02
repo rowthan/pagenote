@@ -224,29 +224,23 @@ export default class LightNode extends Component{
   }
 }
 
-const Colors = function ({colors,current,selectColor}) {
-  const [show,setShow] = useState(false);
+export const Colors = function ({colors,current,selectColor}) {
   const setColor = function (color) {
     selectColor(color);
   };
   return(
     <div className={style.colors}>
-      {
-        show &&
-        <div className={style.colorOptions}>
-          {
-            colors.map((color)=>{
-              return <div onClick={() => {
-                setColor(color)
-              }}
-                          className={`${style.colorItem} ${color === current ? style.active : ''}`}
-                          style={{backgroundColor: color}}></div>
-            })
-          }
-        </div>
-      }
-      <div className={style.currentColor} onClick={()=>setShow(true)}>
-        <ColorIcon width={18} height={18} fill={current}/>
+      <div className={style.colorOptions}>
+        {
+          colors.map((color)=>{
+            return <div onClick={() => { setColor(color)}}
+                        className={`${style.colorItem} ${color === current ? style.active : ''}`}
+                        style={{backgroundColor: color}}/>
+          })
+        }
+      </div>
+      <div className={style.currentColor}>
+        <ColorIcon width={16} height={16} fill={current}/>
       </div>
     </div>
   )
