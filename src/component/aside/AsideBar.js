@@ -347,6 +347,7 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
             style={{
                 top: dot? computeTop(step.y, index) + "px" : 'unset',
                 '--color': step.bg,
+                '--shadow-color': step.tip ? step.bg : '',
                 position: dot ? 'absolute' : 'relative'
             }}
         >
@@ -355,9 +356,15 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
                 <LightRefAnotation step={step} />
             </pagenote-light-aside-item-container>
             <pagenote-light-anotation>
-                <pagenote-block dangerouslySetInnerHTML={{__html: step.tip}}>
+                {
+                    step.tip &&
+                    <pagenote-block dangerouslySetInnerHTML={{__html: step.tip}}>
 
-                </pagenote-block>
+                    </pagenote-block>
+                }
+                <pagenote-light-actions>
+
+                </pagenote-light-actions>
             </pagenote-light-anotation>
             <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
         </pagenote-light-aside-item>
