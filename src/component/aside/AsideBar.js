@@ -226,7 +226,7 @@ class AsideBar extends Component{
         const target = targets[Math.floor(targets.length/2)] || inViewTargets[Math.floor(inViewTargets.length/2)];
 
         const topMask = target ? target.offsetTop : 0;
-        const heightMask = target ? target.offsetHeight : 0;
+        const heightMask = target ? 28 : 0;
 
 
         return(
@@ -266,12 +266,12 @@ class AsideBar extends Component{
 
                         {/*标记*/}
                         <pagenote-lights>
-                            {
-                                isExpand ? '' : <pagenote-light-aside-mask style={{
-                                    height: heightMask,
-                                    top: topMask
-                                }} />
-                            }
+                            {/*{*/}
+                            {/*    isExpand ? '' : <pagenote-light-aside-mask style={{*/}
+                            {/*        height: heightMask,*/}
+                            {/*        top: topMask*/}
+                            {/*    }} />*/}
+                            {/*}*/}
 
                             {
                                 steps.map((record, index) => (
@@ -350,10 +350,16 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick}) {
                 position: dot ? 'absolute' : 'relative'
             }}
         >
-            <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
+
             <pagenote-light-aside-item-container>
                 <LightRefAnotation step={step} />
             </pagenote-light-aside-item-container>
+            <pagenote-light-anotation>
+                <pagenote-block dangerouslySetInnerHTML={{__html: step.tip}}>
+
+                </pagenote-block>
+            </pagenote-light-anotation>
+            <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
         </pagenote-light-aside-item>
     )
 }
