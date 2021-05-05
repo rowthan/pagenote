@@ -100,7 +100,7 @@ window.pagenote = new PageNote('dev',{
       level:2,
     }
   ],
-  showBarTimeout: 400
+  showBarTimeout: 100
 });
 
 pagenote.i18n.setLang('en',en);

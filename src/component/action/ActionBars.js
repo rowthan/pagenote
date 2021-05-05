@@ -12,19 +12,16 @@ export default function ActionBars ({pagenote}) {
   const brushes = pagenote.options.brushes;
   const showButton = (pagenote.status === pagenote.CONSTANT.WAITING ||
                     pagenote.status === pagenote.CONSTANT.PLAYANDWAIT);
-  const maskPosition = isMobile ? {
-    x: brushes.length * - 40,
-    y: 0,
-  } : computePosition(brushes.length-1);
 
   const canHighlight = pagenote.target && pagenote.target.canHighlight;
 
-  function recordNew(item) {
+  function recordNew(item,level) {
     pagenote.record({
       bg:item.bg,
-      level: item.level,
+      level: level || item.level,
     });
   }
+
   const showAnimation = pagenote.options.showIconAnimation;
 
   return (
@@ -67,7 +64,9 @@ export default function ActionBars ({pagenote}) {
                          }}
                          onClick={()=>recordNew(item)}
                     >{index!==0?item.shortcut:
-                      <span><Highlight  data-pagenotecolor={item.bg} style={{userSelect:'none'}} fill={item.bg}/></span> }
+                      <span>
+                          <Highlight  data-pagenotecolor={item.bg} style={{userSelect:'none'}} fill={item.bg}/>
+                      </span> }
                     </pagenote-color-button>
                   )
                 })
