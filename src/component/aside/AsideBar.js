@@ -337,6 +337,10 @@ class AsideBar extends Component{
 
 
 function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
+    const changeLevel = function (level) {
+        step.level = level;
+        step.save.call(step)
+    }
     return (
         <pagenote-light-aside-item
             data-active={step.isActive?'1':'0'}
@@ -367,6 +371,7 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
             </pagenote-light-anotation>
             <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
             <pagenote-light-actions-container>
+                <pagenote-light-aside-item-sign data-switch='1' data-level={step.level===1?2:1} onClick={()=>{changeLevel(step.level===1?2:1)}} />
                 <LightActionBar step={step} colors={colors} />
             </pagenote-light-actions-container>
         </pagenote-light-aside-item>

@@ -177,11 +177,23 @@ pagenote-lights{
       border-radius: 4px;
       vertical-align: super;
       &[data-level="2"]{
-        width: 8px;
+        width: 10px;
       }
-      &:hover + pagenote-light-actions-container{
+      &[data-switch='1']{
+        //opacity: 0;
+        z-index: 9;
+        top: 22px;
+        transition: all 0.3s;
+      }
+      &:hover{
         opacity: 1;
-        display: block;
+        &+ pagenote-light-actions-container{
+          opacity: 1;
+          display: block;
+          &{
+            opacity: 1;
+          }
+        }
       }
     }
 
