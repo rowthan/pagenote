@@ -172,7 +172,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 const downEvent = isMoble?'touchstart' :'mousedown';
 
                 let lastActionTime = 0;
-                const timeout = that.options.showBarTimeout;
+                const timeout = that.options.showBarTimeout || 0;
 
 
                 let showBarTimer = null;
@@ -232,7 +232,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
             let lastKeydownTime = 0;
             const that = this;
-            const keyupTimeout = this.options.keyupTimeout;
+            const keyupTimeout = this.options.keyupTimeout || 0;
             let keyCheckTimer = null;
             function handleKey(key,e) {
                 clearTimeout(keyCheckTimer)
@@ -715,4 +715,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.5.3-typescript";
+PagenoteCore.prototype.version = "4.5.4-typescript";
