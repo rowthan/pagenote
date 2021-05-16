@@ -218,7 +218,8 @@ function convertColor(color='') {
     const Y = (0.3*r + 0.59*g + 0.11*b)*Math.min(rate,1);
     return {
         rgb: rgb,
-        textColor: Y >= 180 ? '#000000' : '#ffffff'
+        textColor: Y >= 180 ? '#000000' : '#ffffff',
+        y: Y,
     };
 }
 
