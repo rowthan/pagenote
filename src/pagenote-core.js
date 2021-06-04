@@ -5,6 +5,7 @@ import {decryptedData, encryptData, getParams, prepareSelectionTarget,whats} fro
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
+import debug from "./utils/debug";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
@@ -22,17 +23,19 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         enableMarkImg: false,
         blacklist:[],
         autoLight: false,
-        brushes:[{
-            bg:'rgba(114,208,255)',
-            shortcut:'p',
-            label:'',
-            level:1,
-        },{
-            bg:'#ffbea9',
-            shortcut:'n',
-            label:'',
-            level:1,
-        }],
+        brushes:[
+            {
+                bg:'rgba(114,208,255)',
+                shortcut:'p',
+                label:'',
+                level:1,
+            },{
+                bg:'#ffbea9',
+                shortcut:'n',
+                label:'',
+                level:1,
+            }
+        ],
         barInfo:{
             right:2,
             top:100,
@@ -49,6 +52,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         categories:[],
         showBarTimeout: 20,
         keyupTimeout: 500,
+        debug: false,
     },options);
     this.status = this.CONSTANT.UN_INIT;
     this.recordedSteps = [];
@@ -91,7 +95,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
           isMoble = "ontouchstart" in window,
           blackNodes = this.blackNodes;
 
-    const that = this;
 
     let hasListened = false;
     // TODO 初始化动效
@@ -183,8 +186,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
                     that.lastEvent = e;
                     that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg)
+                    debug(timeGap,timeout,lastActionTime)
                     // 满足计算条件
                     if(timeGap>=timeout && lastActionTime !==0){
+                        debug('target',that.target)
                         if(that.target){
                             that.showActionBar();
                         }else{
@@ -192,8 +197,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         }
                     } else {
                         that.hideActionBar()
+                        debug('isPressingMouse',isPressingMouse)
                         if(isPressingMouse){
                             showBarTimer = setTimeout(()=>{
+                                debug('timer check')
                                 checkShow(e)
                             },60)
                         }
@@ -203,6 +210,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 // 记录最后一刻的时间
                 const debounceTime = 200;
                 const selectionChange = debounce((e)=>{
+                    debug('selectionchange')
                     lastActionTime = new Date().getTime()
                     checkShow(e);
                 },debounceTime)
@@ -211,12 +219,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
                 document.addEventListener(downEvent,()=>{
                     isPressingMouse = true;
-                })
+                    debug(downEvent)
+                },{capture:true})
 
                 document.addEventListener(upEvent,(e)=>{
                     lastActionTime = new Date().getTime()
                     clearTimeout(showBarTimer)
                     isPressingMouse = false;
+                    debug(upEvent)
                 },{capture:true});
             }
 
@@ -715,4 +725,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.5.4-typescript";
+PagenoteCore.prototype.version = "4.5.6-typescript";
