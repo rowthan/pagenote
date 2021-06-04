@@ -25,7 +25,7 @@ export default function ActionBars ({pagenote}) {
   const showAnimation = pagenote.options.showIconAnimation;
 
   return (
-    <div style={{
+    <pagenote-block style={{
       position: "absolute",
       zIndex: 2147483648,
       left: recordButtonX,
@@ -37,7 +37,7 @@ export default function ActionBars ({pagenote}) {
       {
         showButton
         &&
-        <div>
+        <>
           {
             canHighlight &&
             <pagenote-colors-container>
@@ -107,8 +107,8 @@ export default function ActionBars ({pagenote}) {
               )
             })
           }
-        </div>
+        </>
       }
-    </div>
+    </pagenote-block>
   )
 }
