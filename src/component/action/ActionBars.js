@@ -37,7 +37,7 @@ export default function ActionBars ({pagenote}) {
       {
         showButton
         &&
-        <>
+        <pagenote-block>
           {
             canHighlight &&
             <pagenote-colors-container>
@@ -107,7 +107,7 @@ export default function ActionBars ({pagenote}) {
               )
             })
           }
-        </>
+        </pagenote-block>
       }
     </pagenote-block>
   )
