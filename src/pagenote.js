@@ -7,7 +7,7 @@ import {debounce} from './utils';
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
-    const rootElement = document.body || document.documentElement || document.createElement('div');
+    const rootElement = document.documentElement || document.body || document.createElement('div');
 
     // side-bar
     const sidebar = document.createElement('pagenote-bar');
