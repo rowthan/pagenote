@@ -680,7 +680,7 @@ open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
             return;
         }
         status=value;
-        if(status!==originStatus||status===constant.WAITING){
+        if(status!==originStatus){
             CALLBACKFUN.forEach(fun=>{
                 fun(value,originStatus)
             })
