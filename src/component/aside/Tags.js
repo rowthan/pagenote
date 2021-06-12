@@ -15,8 +15,10 @@ const App = ({allTags=[],initTagSets,onchange}) => {
         const meta = document.querySelector('meta[name="keywords"]');
         if(meta){
             const keywords = meta.content || '';
-            keywords.replaceAll(',',' ').replaceAll('，',' ');
-            const keys = keywords.split(/\s/);
+            keywords.replaceAll(',',' ').replaceAll('，',' ').replaceAll('、',' ');
+            const keys = keywords.split(/\s/).filter((key)=>{
+                return !!key;
+            });
             setRecommend(keys)
         }
     },[])
