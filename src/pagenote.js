@@ -23,12 +23,10 @@ function PageNote(id,options={}){
         }
         const showButton = (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT);
         if(showButton) {
-            setTimeout(()=>{
-                actionBar = actionBar || document.createElement('pagenote-action');
-                actionBar.dataset.pagenote = 'action';
-                render(<ActionBars pagenote={pagenoteCore} />, actionBar);
-                rootElement.appendChild(actionBar);
-            },10);
+            actionBar = actionBar || document.createElement('pagenote-action');
+            actionBar.dataset.pagenote = 'action';
+            render(<ActionBars pagenote={pagenoteCore} />, actionBar);
+            rootElement.appendChild(actionBar);
         } else {
             actionBar && actionBar.remove();
         }
