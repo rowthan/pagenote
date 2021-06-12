@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import mustache from 'mustache';
 import {getWebIcon, captureElementImage, showCamera} from './utils/document'
-import {decryptedData, encryptData, getParams, prepareSelectionTarget,whats} from "./utils";
+import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle, whats} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
@@ -174,59 +174,78 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 const upEvent = isMoble?'touchend':'mouseup';
                 const downEvent = isMoble?'touchstart' :'mousedown';
 
-                let lastActionTime = 0;
                 const timeout = that.options.showBarTimeout || 0;
-
-
+                let lastActionTime = 0;
                 let showBarTimer = null;
                 let isPressingMouse = false;
-                function checkShow(e) {
-                    clearTimeout(showBarTimer)
-                    const timeGap = new Date().getTime() - lastActionTime;
 
-                    that.lastEvent = e;
-                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg)
-                    debug(timeGap,timeout,lastActionTime)
-                    // 满足计算条件
-                    if(timeGap>=timeout && lastActionTime !==0){
-                        debug('target',that.target)
-                        if(that.target){
-                            that.showActionBar();
-                        }else{
-                            that.hideActionBar()
-                        }
-                    } else {
-                        that.hideActionBar()
-                        debug('isPressingMouse',isPressingMouse)
-                        if(isPressingMouse){
-                            showBarTimer = setTimeout(()=>{
-                                debug('timer check')
-                                checkShow(e)
-                            },60)
-                        }
-                    }
+
+                // 轮询检测
+                let loopCheckStartTime = 0;
+                function loopCheck(){
+                    loopCheckStartTime = new Date().getTime();
+                    clearInterval(showBarTimer)
+                    showBarTimer = setInterval(function () {
+                        debug(downEvent,'loop check')
+                        checkShow(new Date().getTime(),function (result) {
+                            if(result){
+                                clearInterval(showBarTimer)
+                            } else {
+                                const loopDuration = new Date().getTime() - loopCheckStartTime;
+                                // 最多轮询10s，防止死循环
+                                if(loopDuration > 5 * 1000){
+                                    clearInterval(showBarTimer)
+                                }
+                            }
+                        })
+                    },100)
+                    return showBarTimer;
                 }
 
-                // 记录最后一刻的时间
-                const debounceTime = 200;
-                const selectionChange = debounce((e)=>{
-                    debug('selectionchange')
-                    lastActionTime = new Date().getTime()
-                    checkShow(e);
+                // 检测是否出bar
+                function checkShow(currentTime,callback) {
+                    const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
+                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg)
+                    debug(timeGap,timeout,lastActionTime,isPressingMouse)
+                    // 满足计算条件
+                    const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
+                    if(computeResult){
+                        debug('target',that.target)
+                        that.showActionBar();
+                    }else{
+                        that.hideActionBar()
+                    }
+                    callback && callback(computeResult,that.target);
+                }
+
+
+                const debounceTime = 20;
+                const selectionChange = throttle((e)=>{
+                    lastActionTime = new Date().getTime();
+                    that.lastEvent = e;
+
+                    checkShow(null,function (result,target) {
+                        if(!result && target){
+                            loopCheck()
+                        }
+                    })
                 },debounceTime)
 
                 document.addEventListener('selectionchange',selectionChange,{capture:true});
 
-                document.addEventListener(downEvent,()=>{
+                document.addEventListener(downEvent,(e)=>{
+                    that.lastEvent = e;
                     isPressingMouse = true;
+                    lastActionTime = new Date().getTime();
                     debug(downEvent)
                 },{capture:true})
 
                 document.addEventListener(upEvent,(e)=>{
-                    lastActionTime = new Date().getTime()
-                    clearTimeout(showBarTimer)
-                    isPressingMouse = false;
+                    that.lastEvent = e;
                     debug(upEvent)
+                    checkShow();
+                    isPressingMouse = false;
+                    clearInterval(showBarTimer)
                 },{capture:true});
             }
 
@@ -357,10 +376,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         if(this.recordedSteps.length>=maxNn){
             alert(i18n.t('mark_limited',[maxNn]));
             return false
-        }
-        // 如果当前状态不为等待记录 且不是强行记录时
-        if(!forceRecord && this.status!==constant.WAITING){
-            return false;
         }
         this.status = constant.RECORDING;
 
@@ -725,4 +740,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.6.2-typescript";
+PagenoteCore.prototype.version = "4.6.3-typescript";
