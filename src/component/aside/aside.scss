@@ -12,7 +12,7 @@ pagenote-aside{
   transition: width 0.2s ease-out;
   border-radius: 4px;
   line-height: 1.414em;
-  box-shadow: 0px 0px 10px 0px #efefef;
+  box-shadow: 0px 0px 5px 0px #efefef;
   &[data-status="expand"]{
     border: none;
     width: 18px;
@@ -59,9 +59,6 @@ pagenote-actions,pagenote-description,pagenote-infos{
   padding: 6px 12px;
 }
 
-pagenote-tags{
-  margin: 12px 0;
-}
 
 pagenote-actions{
   box-sizing: border-box;
@@ -252,7 +249,6 @@ pagenote-lights{
         width: 200px;
         font-size: 12px;
         background: #ffff;
-        box-shadow: rgba(168, 182, 191, 0.6) 0px 10px 20px 0px !important;
         padding: 6px 12px 6px 6px;
         border-radius: 4px 4px 0 0;
         transition: box-shadow 0.4s ease-in-out;

@@ -8,11 +8,11 @@ import Toggle from '@/assets/images/toggle.svg';
 import ExpandIcon from '@/assets/images/expand.svg';
 import LightRefAnotation from "./LightRefAnotation";
 import ScrollProgress from "./ScrollProgress";
-import DropLabel from './DropLabel';
 import sideStyle from './aside.scss';
 import LightIcon from './LightIcon'
 import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
+import Tags from "./Tags";
 
 let lastTop = -1;
 let pagenote = null;
@@ -155,16 +155,8 @@ class AsideBar extends Component{
     }
 
 
-    setCategories = (category,method='add')=>{
-        if(method==='add'){
-            if(this.pagenote.categories.size>=5){
-                this.pagenote.notification(i18n.t('most_cnt',[5]));
-                return;
-            }
-            this.pagenote.categories.add(category);
-        } else if(method==='delete') {
-            this.pagenote.categories.delete(category);
-        }
+    setCategories = (categories)=>{
+        this.pagenote.categories = categories
         this.pagenote.makelink();
     };
 
@@ -302,13 +294,9 @@ class AsideBar extends Component{
                         </pagenote-lights>
 
                         <pagenote-infos>
-                            <pagenote-tags>
-                                <DropLabel
-                                    onSet={this.setCategories}
-                                    categories={this.pagenote.options.categories}
-                                    currentCategories={categories}
-                                />
-                            </pagenote-tags>
+                            <Tags allTags={this.pagenote.options.categories}
+                                  initTagSets={categories}
+                                  onchange={(values)=>{this.setCategories(values)}} />
                             <pagenote-snapshots>
                                 {
                                     snapshots.map((img,index)=>(
