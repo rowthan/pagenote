@@ -173,12 +173,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 const that = this;
                 const upEvent = isMoble?'touchend':'mouseup';
                 const downEvent = isMoble?'touchstart' :'mousedown';
+                const mouseMove = 'mousemove';
 
                 const timeout = that.options.showBarTimeout || 0;
                 let lastActionTime = 0;
                 let showBarTimer = null;
                 let isPressingMouse = false;
-
+                let lastPosition = {};
+                let startPosition = {};
 
                 // 轮询检测
                 let loopCheckStartTime = 0;
@@ -193,7 +195,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                             } else {
                                 const loopDuration = new Date().getTime() - loopCheckStartTime;
                                 // 最多轮询10s，防止死循环
-                                if(loopDuration > 5 * 1000){
+                                if(loopDuration > 3 * 1000){
                                     clearInterval(showBarTimer)
                                 }
                             }
@@ -202,10 +204,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     return showBarTimer;
                 }
 
-                // 检测是否出bar
+                // 检测是否出bar,判断时长 是否按压、是否有选区
                 function checkShow(currentTime,callback) {
                     const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
-                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg)
+                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg, [startPosition,lastPosition])
                     debug(timeGap,timeout,lastActionTime,isPressingMouse)
                     // 满足计算条件
                     const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
@@ -215,37 +217,51 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     }else{
                         that.hideActionBar()
                     }
-                    callback && callback(computeResult,that.target);
+                    callback && callback(computeResult);
                 }
 
 
                 const debounceTime = 20;
                 const selectionChange = throttle((e)=>{
                     lastActionTime = new Date().getTime();
-                    that.lastEvent = e;
+                    if(document.getSelection().rangeCount===0){
+                        this.hideActionBar();
+                        return
+                    }
+                    if(timeout>0){
+                        checkShow(null,function (result,target) {
+                            if(!result){
+                                loopCheck()
+                            }
+                        })
+                    }
 
-                    checkShow(null,function (result,target) {
-                        if(!result && target){
-                            loopCheck()
-                        }
-                    })
                 },debounceTime)
+                const onMouseMove = debounce(function(e) {
+                    if(!isPressingMouse){
+                        return
+                    }
+                    lastPosition = e;
+                },60)
 
                 document.addEventListener('selectionchange',selectionChange,{capture:true});
 
                 document.addEventListener(downEvent,(e)=>{
                     that.lastEvent = e;
                     isPressingMouse = true;
+                    startPosition = e;
                     lastActionTime = new Date().getTime();
-                    debug(downEvent)
+                    document.addEventListener(mouseMove,onMouseMove);
                 },{capture:true})
 
                 document.addEventListener(upEvent,(e)=>{
                     that.lastEvent = e;
-                    debug(upEvent)
+                    lastPosition = e;
                     checkShow();
+                    lastActionTime = new Date().getTime();
                     isPressingMouse = false;
                     clearInterval(showBarTimer)
+                    document.removeEventListener(mouseMove,onMouseMove);
                 },{capture:true});
             }
 

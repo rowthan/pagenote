@@ -3,7 +3,7 @@ const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
 
-const prepareSelectionTarget = function (blackNodes, enableMarkImg) {
+const prepareSelectionTarget = function (blackNodes, enableMarkImg,positions) {
     const selection = document.getSelection();
     if(selection.rangeCount===0){
         return;
@@ -96,13 +96,35 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg) {
     }
 
     const selectionRects=selection.getRangeAt(0).getClientRects();
-    const lastSelectionRect=selectionRects[selectionRects.length-1];
-    if(!lastSelectionRect){
+    let relativeRect=selectionRects[selectionRects.length-1];
+    if(!relativeRect){
         return;
     }
-    const x = isMobile ? lastSelectionRect.x + lastSelectionRect.width/2
-        :Math.min(lastSelectionRect.x+lastSelectionRect.width/1.5,window.innerWidth-150);
-    const y = window.scrollY+lastSelectionRect.y+lastSelectionRect.height;
+
+
+    const startPosition = positions[0];
+    const endPosition = positions[1];
+    let offsetRelative = 1;
+
+    // 判断是正逆方向
+    const eOffsetX = endPosition.x - startPosition.x;
+    const eOffsetY = endPosition.y - startPosition.y;
+    if(eOffsetX * eOffsetY >= 0){
+        offsetRelative = eOffsetX >= 0 ? 1 : -1;
+    } else {
+        const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+        offsetRelative = relativeDirection>=0 ? 1 : -1;
+    }
+
+    if(offsetRelative===-1){
+        relativeRect = selectionRects[0]
+    }
+
+    const scrollY =  window.scrollY+relativeRect.y;
+    const offsetX = offsetRelative === 1 ? relativeRect.width + 6 : -32;
+    const offsetY = offsetRelative === 1 ? relativeRect.height + 4 : -32;
+    let x = Math.max(Math.min(relativeRect.x + offsetX,window.innerWidth-150),20);
+    let y = scrollY + offsetY;
 
 
     const whatsEl = whats.getUniqueId(parentElement);
@@ -119,8 +141,6 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg) {
         id: whatsEl.wid,
         isActive: false,
         bg: '',
-        offsetX: 0.5, // right 小于1时 为比例
-        offsetY: 0.99, // bottom
         parentW: parseInt(parentElement.clientWidth),
         // clientX: e.clientX,
         // clientY: e.clientY,
