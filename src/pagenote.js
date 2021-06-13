@@ -21,7 +21,7 @@ function PageNote(id,options={}){
         if(status===before && status!==pagenoteCore.CONSTANT.WAITING){
             return;
         }
-        const showButton = (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT);
+        const showButton = (pagenoteCore.target && (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT));
         if(showButton) {
             actionBar = actionBar || document.createElement('pagenote-action');
             actionBar.dataset.pagenote = 'action';
