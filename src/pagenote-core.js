@@ -1,5 +1,4 @@
 import debounce from 'lodash/debounce';
-import mustache from 'mustache';
 import {getWebIcon, captureElementImage, showCamera} from './utils/document'
 import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle, whats} from "./utils";
 import i18n from "./locale/i18n";
@@ -579,22 +578,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         })
     };
 
-    this.exportData = (template,data) =>{
-        const exportTemplate = template || `## [{{title}}]({{{url}}})
-{{#steps}}> {{text}}
-
-{{#tip}}{{{tip}}}
-
-{{/tip}}{{/steps}}
-open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
-        `
-        const result = mustache.render(exportTemplate,data || {
-            ...this.plainData,
-            encodeUrl: encodeURIComponent(this.plainData.url)
-        })
-        return result
-    }
-
     const store= debounce( (callback)=> {
         try{
             const simpleSteps = [];
@@ -696,7 +679,7 @@ open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
             return;
         }
         status=value;
-        if(status!==originStatus){
+        if(status!==originStatus||status===constant.WAITING){
             CALLBACKFUN.forEach(fun=>{
                 fun(value,originStatus)
             })
@@ -756,4 +739,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.6.3-typescript";
+PagenoteCore.prototype.version = "4.7.0-typescript";
