@@ -133,6 +133,8 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg,positions) {
     const target = {
         x:cursorX,
         y:cursorY,
+        offsetX: 0.5,
+        offsetY: 0.9,
         pre:before,
         suffix:after,
         text:selectedText,
