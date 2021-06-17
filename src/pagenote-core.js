@@ -4,7 +4,7 @@ import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle,
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
-import debug from "./utils/debug";
+// import debug from "./utils/debug";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
@@ -187,7 +187,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     loopCheckStartTime = new Date().getTime();
                     clearInterval(showBarTimer)
                     showBarTimer = setInterval(function () {
-                        debug(downEvent,'loop check')
                         checkShow(new Date().getTime(),function (result) {
                             if(result){
                                 clearInterval(showBarTimer)
@@ -207,11 +206,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 function checkShow(currentTime,callback) {
                     const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
                     that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg, [startPosition,lastPosition])
-                    debug(timeGap,timeout,lastActionTime,isPressingMouse)
                     // 满足计算条件
                     const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
                     if(computeResult){
-                        debug('target',that.target)
                         that.showActionBar();
                     }else{
                         that.hideActionBar()
