@@ -28,6 +28,7 @@ module.exports = merge(common, {
         ${htmlWebpackPlugin.tags.headTags}
         <title>pagenote demo</title>
         <meta name="description" content="这是pagenote 运行 demo" />
+        <meta name="keywords" content="keywords, 标记" />
       </head>
       <body>
         <div id="guide"></div>

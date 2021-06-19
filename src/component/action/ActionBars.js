@@ -6,8 +6,8 @@ import Tip from '../tip/Tip'
 import './action-bar.scss';
 
 export default function ActionBars ({pagenote}) {
-  const recordButtonX = (isMobile ? 0 : pagenote.target.x)+'px';
-  const recordButtonY = (isMobile? pagenote.target.y + 50 : pagenote.target.y) + "px";
+  const recordButtonX = pagenote.target.x+'px';
+  const recordButtonY = pagenote.target.y + "px";
   const functionColors = pagenote.options.functionColors;
   const brushes = pagenote.options.brushes;
   const showButton = (pagenote.status === pagenote.CONSTANT.WAITING ||
