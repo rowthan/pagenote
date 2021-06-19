@@ -76,8 +76,8 @@ export default class LightNode extends Component{
     const offsetX = light.offsetX<1?light.offsetX * relativeNode.offsetWidth:light.offsetX;
     const offsetY = light.offsetY<1?light.offsetY * relativeNode.offsetHeight: light.offsetY;
     let origin = {
-      left: relatedNodePosition.left + offsetX,
-      top: relatedNodePosition.top + offsetY,
+      left: relatedNodePosition.left + (offsetX || 0),
+      top: relatedNodePosition.top + (offsetY || 0),
     };
     light._position = {
       left: Math.max(origin.left,20),
@@ -168,8 +168,8 @@ export default class LightNode extends Component{
                    }}
               >
                 <Tip message={hasPin?i18n.t('hide'):i18n.t('fixed')}>
-                  <pagenote-icon className={`${style.pinIcon} ${hasPin?style.pin:''}`}>
-                    <PinIcon onClick={()=>this.pinLight(!hasPin)} fill={hasPin?light.bg:'#eee'}  />
+                  <pagenote-icon className={`${style.pinIcon} ${hasPin?style.pin:''}`} onClick={()=>this.pinLight(!hasPin)}>
+                    <PinIcon fill={hasPin?light.bg:'#eee'}  />
                   </pagenote-icon>
                 </Tip>
                 <Tip message={i18n.t('copy_keyword_annotation')}>
@@ -190,13 +190,13 @@ export default class LightNode extends Component{
                   </pagenote-icon>
                 </Tip>
                 <Tip message={i18n.t('remove_marks')}>
-                  <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`}>
-                    <DeleteIcon  width={18} height={18} fill={light.bg}  onClick={this.deleteLight} />
+                  <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`} onClick={this.deleteLight}>
+                    <DeleteIcon  width={18} height={18} fill={light.bg} />
                   </pagenote-icon>
                 </Tip>
                 <Tip message={i18n.t('more')}>
-                  <pagenote-icon className={`${style.moreIcon}`}>
-                    <MoreIcon fill={showMore?light.bg:'#999'}  width={18} height={18} onClick={this.toggleShowMore} />
+                  <pagenote-icon className={`${style.moreIcon}`} onClick={this.toggleShowMore}>
+                    <MoreIcon fill={showMore?light.bg:'#999'}  width={18} height={18}  />
                   </pagenote-icon>
                 </Tip>
                 {

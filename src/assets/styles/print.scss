@@ -1,0 +1,8 @@
+@media print {
+  pagenote-aside{
+    display: none;
+  }
+  light[data-highlight]{
+    print-color-adjust: exact;
+  }
+}
