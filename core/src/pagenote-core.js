@@ -4,9 +4,11 @@ import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle,
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
+import { dataToString } from "./utils/data";
 // import debug from "./utils/debug";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
+import PageNote from "./pagenote";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 
@@ -697,6 +699,10 @@ PagenoteCore.prototype.decodeData = function(data) {
 PagenoteCore.prototype.encryptData = function(data) {
     return encryptData(data)
 };
+
+PagenoteCore.prototype.exportData = function (template) {
+    return dataToString(this.plainData,template)
+}
 
 PagenoteCore.prototype.i18n = i18n;
 

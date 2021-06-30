@@ -4,6 +4,8 @@ import AsideBar from "./component/aside/AsideBar";
 import ActionBars from "./component/action/ActionBars";
 import LightActionBar from "./component/light/LightActionBar";
 import {debounce} from './utils';
+import { dataToString } from "./utils/data";
+
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
@@ -40,5 +42,8 @@ function PageNote(id,options={}){
     rootElement.appendChild(stepBar);
     return pagenoteCore;
 }
+
+
+
 export default PageNote;
 window.PageNote = PageNote;
