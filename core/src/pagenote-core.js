@@ -700,8 +700,8 @@ PagenoteCore.prototype.encryptData = function(data) {
     return encryptData(data)
 };
 
-PagenoteCore.prototype.exportData = function (template) {
-    return dataToString(this.plainData,template)
+PagenoteCore.prototype.exportData = function (template,data) {
+    return dataToString(data||this.plainData,template)
 }
 
 PagenoteCore.prototype.i18n = i18n;
