@@ -5,7 +5,7 @@
   "main": "dist/pagenote.js",
   "scripts": {
     "build-pagenote": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0"
+    "dev": "webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0"
   },
   "keywords": [
     "highlight",

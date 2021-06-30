@@ -30,7 +30,7 @@ module.exports = merge(common, {
         <meta name="description" content="这是pagenote 运行 demo" />
         <meta name="keywords" content="keywords, 标记" />
       </head>
-      <body>
+      <body data-blockpagenote='1'>
         <div id="guide"></div>
         ${htmlWebpackPlugin.tags.bodyTags}
       </body>
