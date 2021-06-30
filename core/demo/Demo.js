@@ -63,6 +63,29 @@ export default function Demo() {
                             </p>
                         </div>
                     </div>
+                    <div className="block">
+                        <div className='card'>
+                            <h3>
+                                整理
+                            </h3>
+                            <div>
+                                <div>
+                                    在本地就整理的创建的笔记
+                                </div>
+                            </div>
+                        </div>
+                        <div className="part">
+                            <h3>
+                                免登录、离线可用
+                            </h3>
+                            <p>
+                                你不必注册账号就能管理你的数据，因为数据就在你本机。
+                            </p>
+                            <p>
+                                服务器端不存储你的数据
+                            </p>
+                        </div>
+                    </div>
                 </section>
 
                 <section>

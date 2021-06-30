@@ -236,6 +236,7 @@ class AsideBar extends Component{
                             </Tip>
 
                             <pagenote-action-group>
+                                {actions.length}
                                 {
                                     actions.map((action,index)=>
                                       <Tip message={action.name}>
