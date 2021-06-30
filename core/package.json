@@ -1,10 +1,10 @@
 {
   "name": "pagenote",
-  "version": "4.7.0-typescript",
+  "version": "4.8.0-typescript",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
-    "build-pagenote": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "dev": "webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0"
   },
   "keywords": [
