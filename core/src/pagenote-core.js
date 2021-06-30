@@ -54,6 +54,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         showBarTimeout: 20,
         keyupTimeout: 500,
         debug: false,
+        autoTag: true, // 自动添加标签
     },options);
     this.status = this.CONSTANT.UN_INIT;
     this.recordedSteps = [];
@@ -742,4 +743,4 @@ PagenoteCore.prototype.CONSTANT = {
     STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
 };
 
-PagenoteCore.prototype.version = "4.7.0-typescript";
+PagenoteCore.prototype.version = "4.8.0-typescript";
