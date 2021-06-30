@@ -117,9 +117,7 @@ class Foo extends Component{
 
   render(){
     return(
-        <div>
-          <Demo />
-        </div>
+      <Demo />
     )
   }
 };
