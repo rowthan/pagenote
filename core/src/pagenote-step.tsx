@@ -6,24 +6,24 @@ import {convertColor} from "./utils/index";
 import {gotoPosition} from "./utils/document";
 
 export interface StepProps {
-  x: number,
-  y: number,
-  id: string,
-  text?: string,
-  tip?: string,
-  bg: string,
-  isActive: boolean,
-  offsetX?: boolean,
-  offsetY?: boolean,
-  parentW?: number,
-  pre? : string,
-  suffix?: string,
-  images?: string[],
-  lightBg?: string,
-  daskBg?: string,
-  lightId?: string,
-  isFocus?: boolean,
+  x: number, // 标记在文档中基于 body 的 x轴 位置
+  y: number, // 标记在文档中基于 body 的 y轴 位置
+  id: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
+  text?: string, // 标记的文本内容
+  pre? : string, // 标记的文本内容 上文信息
+  suffix?: string, // 标记的文本内容 下文信息
+  tip?: string, // 标记的笔记（用户输入）
+  bg: string, // 标记背景色
+  isActive: boolean, // 是否为激活状态
+  offsetX?: boolean, // 批注与高亮元素的相对偏移量
+  offsetY?: boolean, // 批注与高亮元素的相对偏移量
+  parentW?: number, // 高亮元素父节点宽度
+  lightId?: string, // 每一条标记的唯一 hash id
   level: number, // 高亮层级
+  images?: string[], // 图片高亮，待支持
+  lightBg?: string, // 将废弃
+  daskBg?: string, // 将废弃
+  isFocus?: boolean, // 将废弃
   [other: string]: any,
 }
 
