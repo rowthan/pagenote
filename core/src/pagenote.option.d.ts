@@ -18,6 +18,8 @@ interface Brush {
 export class OptionsProps{
     // 监听数据变化
     addListener?: Function;
+    // 植入标签渲染方法
+    renderNote? : Function;
     // true: 将数据存储至localstorage中，刷新页面后笔记仍然存在。false: 不存储数据于用户本地，刷新后数据丢失。
     saveInLocal?: boolean; // true；
     // 最大标记数

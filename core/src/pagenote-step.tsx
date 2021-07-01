@@ -69,21 +69,11 @@ class Step {
 }
 
 Step.prototype.toggle = function (isLight: Boolean,goto=true) {
-  let light = isLight;
+  let light = typeof isLight=='boolean' ? isLight :!this.isActive;
+  console.log(light,isLight,this.isActive)
   const pagenote = this.pagenote;
   for(let i=0; i<pagenote.recordedSteps.length; i++){
     if(this.lightId===pagenote.recordedSteps[i].lightId){
-
-      if(light===undefined && this.relatedNode && this.relatedNode.length){
-        const elementInfo = whats.compute(this.relatedNode[0]);
-        if(elementInfo.visible===false && light===undefined){
-          light = true;
-        } else {
-          light = !this.isActive;
-        }
-      }else{
-        isLight!==undefined?isLight:!this.isActive
-      }
       pagenote.replay(i, goto, false, light);
       break;
     }
@@ -131,6 +121,21 @@ Step.prototype.highlight = function (isActiveLight){
     }
     light.dataset.active = isActiveLight ? '1' : '0';
     light.dataset.note = !!runStep.tip?'1':''
+
+    light.onclick = runStep.toggle.bind(runStep,undefined,false);
+
+    let show = true;
+    let hide = true;
+    light.onmouseenter = ()=> {
+      hide = false;
+      runStep.pagenote.toggleLightBar(true,runStep,light);
+    }
+    light.onmouseleave = function () {
+      show = false;
+      setTimeout(()=>{
+        runStep.pagenote.toggleLightBar(false,runStep,light);
+      },1000)
+    }
 
     light._light = runStep;
     return light;

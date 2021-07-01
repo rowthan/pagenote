@@ -2,10 +2,9 @@ import PagenoteCore from './pagenote-core'
 import { h, render } from 'preact';
 import AsideBar from "./component/aside/AsideBar";
 import ActionBars from "./component/action/ActionBars";
-import LightActionBar from "./component/light/LightActionBar";
 import {debounce} from './utils';
-import { dataToString } from "./utils/data";
-
+import LightActionBar from "./component/LightActionBar";
+import { getScroll } from "./utils/document";
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
@@ -34,12 +33,29 @@ function PageNote(id,options={}){
         }
     },16));
 
-    // lights
-    const stepBar = document.createElement('pagenote-tags');
-    stepBar.className='no-pagenote';
-    stepBar.dataset.pagenote = 'tags';
-    render(<LightActionBar pagenote={pagenoteCore}/>,stepBar);
-    rootElement.appendChild(stepBar);
+    // // lights
+    // const stepBar = document.createElement('pagenote-tags');
+    // stepBar.className='no-pagenote';
+    // stepBar.dataset.pagenote = 'tags';
+    // render(<Lights pagenote={pagenoteCore}/>,stepBar);
+    // rootElement.appendChild(stepBar);
+
+    function Menu({light,element}) {
+        console.log(light,element.getBoundingClientRect())
+        const scroll = getScroll();
+        const triggerPosition = element.getBoundingClientRect();
+        return <div
+                    style={`position:absolute; z-index:1;padding: 4px; background: #f9f9f9; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
+                            top:${triggerPosition.top-40+scroll.y}px;left:${triggerPosition.left+scroll.x+triggerPosition.width/2}px;
+                    `}>
+            <LightActionBar step={light} colors={pagenoteCore.options.brushes.map((brush)=>{return brush.bg})}/>
+        </div>
+    }
+
+    pagenoteCore.toggleLightBar = function (show,light,element) {
+        render(show?<Menu light={light} element={element}></Menu>:null,
+            document.documentElement)
+    }
     return pagenoteCore;
 }
 

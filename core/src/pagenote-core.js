@@ -5,10 +5,8 @@ import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step} from './pagenote-step';
 import { dataToString } from "./utils/data";
-// import debug from "./utils/debug";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
-import PageNote from "./pagenote";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 
@@ -680,6 +678,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         status=value;
         if(status!==originStatus||status===constant.WAITING){
+            console.log(CALLBACKFUN)
             CALLBACKFUN.forEach(fun=>{
                 fun(value,originStatus)
             })
