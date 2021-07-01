@@ -27,15 +27,29 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg,positions) {
     if(noParentElement){
         return;
     }
-    // 黑名单节点监测
-    let isBlackNode = parentElement.tagName.toLowerCase().indexOf('pagenote')>-1;
-    for(let i of blackNodes){
-        if(i.contains(parentElement)||i.contains(selection.anchorNode)||i.contains(selection.focusNode)){
-            isBlackNode = false;
-            break;
+
+    function checkInPagenoteElement(element) {
+        if(element && element.tagName){
+            const isPagenote = element.tagName.toLowerCase().indexOf('pagenote')>-1;
+            if(isPagenote){
+                return true
+            } else if(element.parentNode){
+                return checkInPagenoteElement(element.parentNode);
+            }
+        } else {
+            return false;
         }
     }
-    if(isBlackNode){
+
+    // 黑名单节点监测
+    // let isBlackNode = parentElement.tagName.toLowerCase().indexOf('pagenote')>-1;
+    // for(let i of blackNodes){
+    //     if(i.contains(parentElement)||i.contains(selection.anchorNode)||i.contains(selection.focusNode)){
+    //         isBlackNode = false;
+    //         break;
+    //     }
+    // }
+    if(checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode) ){
         return;
     }
 
