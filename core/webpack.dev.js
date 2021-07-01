@@ -31,7 +31,7 @@ module.exports = merge(common, {
         <meta name="keywords" content="keywords, 标记" />
       </head>
       <body data-blockpagenote='1'>
-        <div id="guide"></div>
+        <div id="guide" data-blockpagenote="1"></div>
         ${htmlWebpackPlugin.tags.bodyTags}
       </body>
     </html>

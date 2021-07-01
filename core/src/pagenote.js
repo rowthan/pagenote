@@ -41,11 +41,12 @@ function PageNote(id,options={}){
     // rootElement.appendChild(stepBar);
 
     function Menu({light,element}) {
-        console.log(light,element.getBoundingClientRect())
+        // console.log(light,element.getBoundingClientRect())
         const scroll = getScroll();
         const triggerPosition = element.getBoundingClientRect();
         return <div
-                    style={`position:absolute; z-index:1;padding: 4px; background: #f9f9f9; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
+                    onClick={(e)=>{e.stopPropagation()}}
+                    style={`position:absolute; z-index:1;padding: 4px; background: #fff; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
                             top:${triggerPosition.top-40+scroll.y}px;left:${triggerPosition.left+scroll.x+triggerPosition.width/2}px;
                     `}>
             <LightActionBar step={light} colors={pagenoteCore.options.brushes.map((brush)=>{return brush.bg})}/>
@@ -56,6 +57,12 @@ function PageNote(id,options={}){
         render(show?<Menu light={light} element={element}></Menu>:null,
             document.documentElement)
     }
+
+    document.addEventListener('click',function (e) {
+        console.log('click',e.target);
+        pagenoteCore.toggleLightBar(false)
+    })
+
     return pagenoteCore;
 }
 

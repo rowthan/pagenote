@@ -678,7 +678,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         status=value;
         if(status!==originStatus||status===constant.WAITING){
-            console.log(CALLBACKFUN)
             CALLBACKFUN.forEach(fun=>{
                 fun(value,originStatus)
             })
