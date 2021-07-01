@@ -122,19 +122,23 @@ Step.prototype.highlight = function (isActiveLight){
     light.dataset.active = isActiveLight ? '1' : '0';
     light.dataset.note = !!runStep.tip?'1':''
 
-    light.onclick = runStep.toggle.bind(runStep,undefined,false);
+    light.onclick = function (e) {
+      runStep.toggle.call(runStep,undefined,false);
+      e.stopPropagation();
+    };
 
-    let show = true;
-    let hide = true;
+    let entered = false;
     light.onmouseenter = ()=> {
-      hide = false;
-      runStep.pagenote.toggleLightBar(true,runStep,light);
+      entered = true;
+      setTimeout(()=>{
+        entered && runStep.pagenote.toggleLightBar(true,runStep,runStep.relatedNode[0] || light);
+      },200)
     }
     light.onmouseleave = function () {
-      show = false;
-      setTimeout(()=>{
-        runStep.pagenote.toggleLightBar(false,runStep,light);
-      },1000)
+      entered = false;
+      // setTimeout(()=>{
+      //   runStep.pagenote.toggleLightBar(false,runStep,light);
+      // },1000)
     }
 
     light._light = runStep;
