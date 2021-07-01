@@ -69,8 +69,7 @@ export default class ActionBars extends Component{
       <Fragment>
         {
           lights.map((item)=>(
-            item.relatedNode.length?
-            <LightNode key={item.lightId} pagenote={this.props.pagenote} light={item} />:null
+            <LightNode key={item.lightId} pagenote={this.props.pagenote} light={item} />
           ))
         }
       </Fragment>

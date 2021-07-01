@@ -1,5 +1,4 @@
 import { h, render,Component, Fragment} from 'preact';
-import { useState,useEffect,useRef } from 'preact/hooks';
 import ContentEditable from "react-contenteditable";
 import style from './light-node.scss';
 import {writeTextToClipboard} from '../../utils/document';
@@ -148,7 +147,7 @@ export default class LightNode extends Component{
     // 是否已pin
     const hasPin = (light.isActive&&light.tip) || isPin;
     // 限制 light-tag
-    const isShow = showIcons || showNoteEditor || hasPin;
+    const isShow = true;//showIcons || showNoteEditor || hasPin;
     return(
       <Fragment>
         {
