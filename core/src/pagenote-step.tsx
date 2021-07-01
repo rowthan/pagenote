@@ -3,7 +3,9 @@ import md5 from "blueimp-md5";
 import {highlightKeywordInElement, removeElementHighlight} from "./utils/highlight";
 import { whats } from './utils/index'
 import {convertColor} from "./utils/index";
-import {gotoPosition} from "./utils/document";
+import {gotoPosition, moveable} from "./utils/document";
+import Draggable from 'draggable';
+import {createElement} from "preact";
 
 export interface StepProps {
   x: number, // 标记在文档中基于 body 的 x轴 位置
@@ -125,6 +127,7 @@ Step.prototype.highlight = function (isActiveLight){
     light.onclick = function (e) {
       runStep.toggle.call(runStep,undefined,false);
       e.stopPropagation();
+      runStep.renderAnnotation.call(runStep,true);
     };
 
     let entered = false;
@@ -132,7 +135,7 @@ Step.prototype.highlight = function (isActiveLight){
       entered = true;
       setTimeout(()=>{
         entered && runStep.pagenote.toggleLightBar(true,runStep,runStep.relatedNode[0] || light);
-      },200)
+      },100)
     }
     light.onmouseleave = function () {
       entered = false;
@@ -180,6 +183,67 @@ Step.prototype.highlight = function (isActiveLight){
   }
 }
 
+function render(light) {
+  const element = document.createElement('div');
+
+  function setEditable(flag){
+    element.contentEditable = flag? 'true' : ''
+  }
+
+  element.innerHTML =  `
+    <div style="padding: 5px; font-size: 12px; color: #666;">${light.text}</div>
+  `
+  element.onclick = function () {
+    setEditable(true);
+    element.focus()
+  };
+  element.onblur = function () {
+    setEditable(false)
+  }
+  return element
+}
+
+Step.prototype.renderAnnotation = function (show) {
+  const step = this;
+  if(show===true){
+    if(this._annotationEle){
+      return
+    }
+  } else if(show===false){
+    if(this._annotationEle){
+      this._annotationEle.parentNode.removeChild(this._annotationEle);
+      return;
+    }
+  }
+
+  const element = document.createElement('pagenote-annotation');
+  element.style = `--color:${step.bg}`
+  const customInner = document.createElement('pagenote-annotation-inner')
+
+  const actionArray = document.createElement('pagenote-annotation-menus')
+  actionArray.innerHTML = '<pagenote-icon aria-controls="light"></pagenote-icon>'
+  customInner.appendChild(actionArray);
+  customInner.appendChild(render(this));
+
+  element.appendChild(customInner);
+  var options = {
+    grid: 10,
+    setPosition: true,
+    setCursor: false,
+    handle: actionArray,
+    onDragEnd: function(result,x,y){
+      step.x = x;
+      step.y = y;
+      step.save();
+    }
+  };
+  new Draggable (element, options).set(this.x,this.y);
+  // TODO 将容器存储在 pagenoteCore 中，避免append错
+  const container = document.querySelector('pagenote-annotations');
+  container.appendChild(element);
+  this._annotationEle = element;
+}
+
 Step.prototype.gotoView = function (callback=function(){}){
   let targetEl = this.relatedNode?this.relatedNode[0]:null;
   if(!targetEl){
@@ -210,6 +274,7 @@ Step.prototype.changeColor = function(color: string){
 
 Step.prototype.save = function (callback: Function) {
   this.pagenote.makelink((...arg: any)=>{
+    this.onChange()
     typeof callback==='function'&&callback(...arg)
   });
 };
@@ -223,6 +288,9 @@ Step.prototype.checkInSign = function (){
   this.pagenote.triggerListener();
   this.isInview = result;
   return result;
+}
+
+Step.prototype.onChange = function () {
 }
 
 

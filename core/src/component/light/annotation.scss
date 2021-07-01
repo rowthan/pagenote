@@ -1,0 +1,38 @@
+pagenote-annotation{
+  display: block;
+  min-width: 200px;
+  max-width: 400px;
+  height: auto;
+  font-size: 14px;
+  color: #333;
+  &:hover{
+    z-index: 1;
+  }
+  pagenote-annotation-inner{
+    padding: 4px;
+    display: block;
+    border-radius: 6px;
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.95);
+
+    pagenote-annotation-menus{
+      display: block;
+      width: 100%;
+      cursor: move;
+      margin-bottom: 4px;
+      &:hover{
+        background: #f7f6f6;
+      }
+    }
+    pagenote-icon{
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 6px;
+      background-color: var(--color);
+      &:hover{
+        background-color: var(--color);
+      }
+    }
+  }
+}

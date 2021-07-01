@@ -5,6 +5,7 @@ import ActionBars from "./component/action/ActionBars";
 import {debounce} from './utils';
 import LightActionBar from "./component/LightActionBar";
 import { getScroll } from "./utils/document";
+import './component/light/annotation.scss'
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
@@ -33,12 +34,36 @@ function PageNote(id,options={}){
         }
     },16));
 
-    // // lights
-    // const stepBar = document.createElement('pagenote-tags');
-    // stepBar.className='no-pagenote';
-    // stepBar.dataset.pagenote = 'tags';
-    // render(<Lights pagenote={pagenoteCore}/>,stepBar);
-    // rootElement.appendChild(stepBar);
+    // lights
+    const stepBar = document.createElement('pagenote-annotations');
+    // function renderAnnotation(light){
+    //     return <div>
+    //         {light.text}
+    //     </div>
+    // }
+    //
+    // function Annotations() {
+    //     const [lights, setLights] = useState([]);
+    //     useEffect(()=>{
+    //         pagenoteCore.addListener(function () {
+    //             console.log('change',pagenoteCore.recordedSteps)
+    //         })
+    //         setLights(pagenoteCore.recordedSteps)
+    //     },[])
+    //
+    //     return(
+    //         <pagenote-annotations>
+    //             {lights.map((light)=>(
+    //                 <pagenote-annotation>
+    //                     {renderAnnotation(light)}
+    //                 </pagenote-annotation>
+    //             ))}
+    //         </pagenote-annotations>
+    //     )
+    // }
+    //
+    // render(<Annotations lights={pagenoteCore.recordedSteps}/>,stepBar);
+    rootElement.appendChild(stepBar);
 
     function Menu({light,element}) {
         // console.log(light,element.getBoundingClientRect())
@@ -59,7 +84,6 @@ function PageNote(id,options={}){
     }
 
     document.addEventListener('click',function (e) {
-        console.log('click',e.target);
         pagenoteCore.toggleLightBar(false)
     })
 

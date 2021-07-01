@@ -52,6 +52,7 @@
   "dependencies": {
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",
+    "draggable": "^4.2.0",
     "html2canvas": "^1.0.0-rc.7",
     "lit-element": "^2.3.1",
     "lodash": "^4.17.21",
