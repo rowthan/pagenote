@@ -1,5 +1,6 @@
 pagenote-annotation{
   display: block;
+  width: auto !important;
   min-width: 200px;
   max-width: 400px;
   height: auto;
@@ -14,6 +15,14 @@ pagenote-annotation{
     border-radius: 6px;
     box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
     background: rgba(255, 255, 255, 0.95);
+    &[data-visiable='0']{
+      transition: 0.5s ease-in-out;
+      opacity: 0;
+    }
+    &[data-visiable='1']{
+      transition: 0.5s ease-in-out;
+      opacity: 1;
+    }
 
     pagenote-annotation-menus{
       display: block;

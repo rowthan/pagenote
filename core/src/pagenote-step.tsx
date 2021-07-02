@@ -2,11 +2,10 @@
 import md5 from "blueimp-md5";
 import {highlightKeywordInElement} from "./utils/highlight";
 import { whats } from './utils/index'
-import {convertColor} from "./utils/index";
 import {gotoPosition} from "./utils/document";
 import Draggable from 'draggable';
 import toggleLightMenu from "./light-menu";
-import {wrapperLightAttr} from "./utils/light";
+import {wrapperLightAttr,wrapperAnnotationAttr} from "./utils/light";
 
 export interface StepProps {
   x: number, // 标记在文档中基于 body 的 x轴 位置
@@ -34,7 +33,8 @@ export interface StepProps {
 
 enum LightStatus{
   UN_LIGHT=0,
-  LIGHT=1,
+  HALF=1,
+  LIGHT=2,
 }
 
 enum AnnotationStatus {
@@ -89,13 +89,16 @@ Step.prototype.initKeywordTags = function (){
       }
 
       step.addListener('light',function (data) {
-        wrapperLightAttr(lightElement,data.bg,data.lightStatus === LightStatus.LIGHT)
+        wrapperLightAttr(lightElement,data.bg,data.lightStatus)
       })
 
       lightElement.onclick = function (e) {
         const {data} = step;
+        const nextLightStatus = data.lightStatus + 1;
+
         step.changeData({
-          lightStatus: data.lightStatus === LightStatus.LIGHT ? LightStatus.UN_LIGHT : LightStatus.LIGHT
+          lightStatus: nextLightStatus>2?0:nextLightStatus,
+          annotationStatus: nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
         });
         e.stopPropagation();
       };
@@ -152,18 +155,15 @@ Step.prototype.initAnnotation = function () {
     return;
   }
 
-  const {bg,x,y} = step.data;
-  const element = document.createElement('pagenote-annotation');
-
-  const customInner = document.createElement('pagenote-annotation-inner')
-  customInner.style = `--color:${bg}`;
-
-  const actionArray = document.createElement('pagenote-annotation-menus')
+  const {bg,x,y,annotationStatus} = step.data;
+  const element = document.createElement('pagenote-annotation');// 根容器
+  const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
+  const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
   actionArray.innerHTML = '<pagenote-icon aria-controls="light"></pagenote-icon>'
   customInner.appendChild(actionArray);
   customInner.appendChild(renderMethod(step.data,step));
-
   element.appendChild(customInner);
+
   const options = {
     grid: 10,
     setPosition: true,
@@ -176,14 +176,15 @@ Step.prototype.initAnnotation = function () {
     }
   };
   new Draggable (element, options).set(x,y);
-  // TODO 将容器存储在 pagenoteCore 中，避免append错
   const container = document.querySelector('pagenote-annotations');
   container.appendChild(element);
   this._annotationEle = element;
 
-  this.addListener('annotation',function (data) {
-    customInner.style = `--color:${data.bg}`;
+  wrapperAnnotationAttr(customInner,bg,annotationStatus===AnnotationStatus.SHOW)
+  this.addListener('annotation',function (data,change) {
+    wrapperAnnotationAttr(customInner,data.bg,data.annotationStatus===AnnotationStatus.SHOW);
   })
+  element.toggleShow = wrapperAnnotationAttr;
 }
 
 Step.prototype.gotoView = function (callback=function(){}){
@@ -248,13 +249,13 @@ Step.prototype.changeData = function (object) {
     }
   }
   if(changed){
-    this._triggerChangeData();
+    this._triggerChangeData(object);
   }
 }
 
-Step.prototype._triggerChangeData = function () {
+Step.prototype._triggerChangeData = function (object) {
   for(let i in this.listeners){
-    this.listeners[i](this.data);
+    this.listeners[i](this.data,object);
   }
 
   this.__saveAll();
