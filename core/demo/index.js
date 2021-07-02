@@ -102,6 +102,35 @@ window.pagenote = new PageNote('dev',{
   ],
   showBarTimeout: 0,
   debug: false,
+  renderAnnotation: function (data,light) {
+    const element = document.createElement('div');
+
+  //   light.addListener('annotation',function (data) {
+  //     element.innerHTML =  `
+  //   <div style="padding: 5px; font-size: 12px; color: #666;">${data.tip}</div>
+  // `
+  //   })
+
+    function setEditable(flag){
+      element.contentEditable = flag? 'plaintext-only' : 'plaintext-only'
+    }
+
+    const {tip} = data;
+    element.innerHTML =  `
+    <div style="padding: 5px; font-size: 12px; color: #666;">${tip}</div>
+  `
+    element.onclick = function () {
+      setEditable(true);
+      element.focus()
+    };
+    element.onblur = function () {
+      setEditable(false);
+      light.changeData({
+        tip: element.innerText,
+      })
+    }
+    return element
+  }
 });
 
 pagenote.i18n.setLang('en',en);

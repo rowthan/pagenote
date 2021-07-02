@@ -110,7 +110,7 @@ function formatKeyword(keyword){
 }
 
 // 高亮一个元素内的关键词，return {match:2,light:1,lights:[elements]}
-const highlightKeywordInElement = function (element,keywords,pre='',next='',deep=20,warpTagFun,blackNodes){
+const highlightKeywordInElement = function (element,keywords,pre='',next='',deep=20,warpTagFun,blackNodes=[]){
     // 返回结果
     const result = {
         match: 0,

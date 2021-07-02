@@ -3,7 +3,7 @@ import {getWebIcon, captureElementImage, showCamera} from './utils/document'
 import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle, whats} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
-import {Step} from './pagenote-step';
+import {Step, Steps} from './pagenote-step';
 import { dataToString } from "./utils/data";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
@@ -53,9 +53,12 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         keyupTimeout: 500,
         debug: false,
         autoTag: true, // 自动添加标签
+        renderAnnotation: function () {
+
+        }
     },options);
     this.status = this.CONSTANT.UN_INIT;
-    this.recordedSteps = [];
+    this.recordedSteps = new Steps({max:999},this);
     this.snapshots = [];
     this.categories = new Set();
     this.note='';
@@ -76,7 +79,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     //只提供读方法
     this.data = "" //PagenoteCore 使用的原始数据字符串
     this.plainData = {} // 与 data 配套，明文的存储数据
-    this.blackNodes = []
     this.lastaction = this.CONSTANT.DIS_LIGHT
     let status,
         nextTimer,
@@ -92,8 +94,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
           // 网站配置的setting设置
           location = window.location,
           emptyString = "",
-          isMoble = "ontouchstart" in window,
-          blackNodes = this.blackNodes;
+          isMoble = "ontouchstart" in window;
 
 
     let hasListened = false;
@@ -122,27 +123,18 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 this.snapshots = Array.isArray(dataObject.snapshots) ? dataObject.snapshots : [];
                 this.categories = new Set(dataObject.categories||[dataObject.category]);
                 this.note = dataObject.note;
-                dataVersion = dataObject.version || 1;
             }catch (e) {
                 console.error('解析step异常',e,initData);
             }
         }
         this.recordedSteps.splice(0,this.recordedSteps.length);
         simpleStep.forEach((step)=>{
-            const newStep = new Step(step,this);
-            this.recordedSteps.push(newStep);
+            const newStep = new Step(step);
+            this.recordedSteps.add(newStep);
         });
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 
-        // 黑名单初始化
-        setTimeout(()=>{
-            [...OPTIONS.blacklist,'.no-pagenote','*[data-pagenote]','*[contenteditable="true"]'].forEach((queryId)=>{
-                [].forEach.call(document.querySelectorAll(queryId),(blockElement)=>{
-                    blackNodes.push(blockElement)
-                });
-            })
-        },0); // timeout 方式元素还未渲染出来
 
         [].forEach.call(document.querySelectorAll('light[data-highlight]'),function (element) {
             element.outerHTML = element.innerHTML;
@@ -206,7 +198,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 // 检测是否出bar,判断时长 是否按压、是否有选区
                 function checkShow(currentTime,callback) {
                     const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
-                    that.target = prepareSelectionTarget(blackNodes,that.options.enableMarkImg, [startPosition,lastPosition])
+                    that.target = prepareSelectionTarget(that.options.enableMarkImg, [startPosition,lastPosition])
                     // 满足计算条件
                     const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
                     if(computeResult){
@@ -373,7 +365,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         if(lightAll===false){
             this.runningSetting.autoLight = false;
         }
-        // this.makelink(callback);
     };
 
     this.addListener = function(fun){
@@ -392,21 +383,21 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         this.status = constant.RECORDING;
 
-        const newStep = new Step(info,this);
+        const newStep = new Step(info);
         // TODO target 存储在 info 中 避免再次寻找
         const target = whats.getTarget(info.id);
         // captureElementImage(target).then((imageSrc)=>{
         //     newStep.thumbnail = imageSrc;
         //     newStep.save();
         // });
-        this.recordedSteps.push(newStep);
+        this.recordedSteps.add(newStep);
         this.recordedSteps = this.recordedSteps.sort((a,b)=>{
             return a.y -b.y
         });
         window.getSelection().removeAllRanges();
         this.target = {};
         // 高亮文本以及图片
-        newStep.highlight(true)
+        // newStep.highlight(true)
         this.makelink((result)=>{
             if(!result){
                 alert(i18n.t('save_failed'));
@@ -458,7 +449,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         this.status = constant.REPLAYING
         this.lastaction = isActiveLight ? constant.LIGHT : constant.DIS_LIGHT;
 
-        runStep.highlight(isActiveLight);
+        // runStep.highlight(isActiveLight);
 
         // 如果没有next了 则保存数据
         if(!autoNext){
@@ -580,13 +571,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         try{
             const simpleSteps = [];
             this.recordedSteps.forEach((step)=>{
-                const tempStep = {};
-                Object.keys(step).forEach((key)=>{
-                    if(this.CONSTANT.STORE_KEYS_VERSION_2_VALIDATE.includes(key)){
-                        tempStep[key] = step[key];
-                    }
-                });
-                simpleSteps.push(tempStep);
+                simpleSteps.push(step.data);
             });
 
             const differentSetting = {};
@@ -689,6 +674,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             fun(this.status,this.status)
         })
     }
+
+    Step.prototype.__renderAnnotation = options.renderAnnotation;
+    Step.prototype.__saveAll = this.makelink;
 }
 
 
@@ -737,8 +725,7 @@ PagenoteCore.prototype.CONSTANT = {
     SHARE_ERROR: 'e',
     SHARE_SUCCESS: 's',
 
-    STORE_KEYS_VERSION_1:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix"],
-    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level"],
+    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"],
 };
 
 PagenoteCore.prototype.version = "4.8.0-typescript";
