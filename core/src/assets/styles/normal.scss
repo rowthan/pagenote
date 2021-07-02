@@ -48,21 +48,22 @@ light[data-highlight]{
 
   &:hover{
     z-index: 1;
+    opacity: 0.85;
   }
   &[data-active='1']{
-    -webkit-text-fill-color: var(--color);
-    background-size: 100% calc(1em*2);
-    animation: light 0.5s ease-in-out;
+    background-size: 100% calc(0.6em);
     &[data-mask='1']{
+      transition: background-size 0.06s ease-out;
       filter: blur(2px);
     }
-    &:hover{
-      opacity: 0.85;
-    }
 
-    &[data-type='img']{
-      outline: 1px solid var(--bgcolor);
-    }
+    //&[data-type='img']{
+    //  outline: 1px solid var(--bgcolor);
+    //}
+  }
+  &[data-active='2']{
+    -webkit-text-fill-color: var(--color);
+    background-size: 100% calc(1em*2);
   }
 
 
