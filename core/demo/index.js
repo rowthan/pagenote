@@ -112,7 +112,7 @@ window.pagenote = new PageNote('dev',{
   //   })
 
     function setEditable(flag){
-      element.contentEditable = flag? 'plaintext-only' : 'plaintext-only'
+      element.contentEditable = flag? 'true' : 'false'
     }
 
     const {tip} = data;

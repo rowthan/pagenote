@@ -677,6 +677,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
     Step.prototype.__renderAnnotation = options.renderAnnotation;
     Step.prototype.__saveAll = this.makelink;
+
 }
 
 

@@ -5,6 +5,8 @@ import { whats } from './utils/index'
 import {convertColor} from "./utils/index";
 import {gotoPosition} from "./utils/document";
 import Draggable from 'draggable';
+import toggleLightMenu from "./light-menu";
+import {wrapperLightAttr} from "./utils/light";
 
 export interface StepProps {
   x: number, // 标记在文档中基于 body 的 x轴 位置
@@ -31,13 +33,13 @@ export interface StepProps {
 }
 
 enum LightStatus{
-  UN_LIGHT,
-  LIGHT,
+  UN_LIGHT=0,
+  LIGHT=1,
 }
 
 enum AnnotationStatus {
-  HIDE,
-  SHOW,
+  HIDE=0,
+  SHOW=1,
 }
 
 const STORE_KEYS_VERSION_2_VALIDATE = ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"]
@@ -45,13 +47,13 @@ const Step = function (info: StepProps) {
   this.data = {
     lightStatus: LightStatus.LIGHT,
     annotationStatus: AnnotationStatus.SHOW,
+    lightId : md5(info.id+info.text),
   }
   STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
     this.data[key] = info[key];
   });
 
   this.runtime = {
-    lightId : md5(info.id+info.text),
     warn: '',
     isInview: false,
     isFocus: false,
@@ -66,16 +68,14 @@ const Step = function (info: StepProps) {
 
 Step.prototype.initKeywordTags = function (){
   const step = this;
-  const {bg,id,text,pre,suffix,lightId} = step.data;
+  const {bg,id,text,pre,suffix,lightId,lightStatus} = step.data;
   function highlightElement(target) {
     // 查找文字、高亮元素
     const result = highlightKeywordInElement(target,text,pre,suffix,null,function warpFun(text,children){
       const lightElement = document.createElement('light');
-      const {textColor,rgb} = convertColor(bg);
-      const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
-      const bgColor = `rgba(${rgb.toString()},1)`;
-      lightElement.style.backgroundColor= bg;
-      lightElement.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
+      lightElement.dataset.highlight = lightId;
+
+      wrapperLightAttr(lightElement,bg,lightStatus===LightStatus.LIGHT)
       if(text){
         lightElement.textContent = text;
       }
@@ -88,18 +88,15 @@ Step.prototype.initKeywordTags = function (){
         lightElement.appendChild(children.cloneNode());
       }
 
-      lightElement.dataset.highlight = lightId;
-      // if(step.tip){
-      //   lightElement.dataset.note = '1'
-      // }
-      // if(color==='rgba(1,1,1,0.5)'){
-      //   lightElement.dataset.mask = '1';
-      // }
-      // lightElement.dataset.active = isActiveLight ? '1' : '0';
-      // lightElement.dataset.note = !!step.tip?'1':''
+      step.addListener('light',function (data) {
+        wrapperLightAttr(lightElement,data.bg,data.lightStatus === LightStatus.LIGHT)
+      })
 
       lightElement.onclick = function (e) {
-        step.toggle(undefined,false);
+        const {data} = step;
+        step.changeData({
+          lightStatus: data.lightStatus === LightStatus.LIGHT ? LightStatus.UN_LIGHT : LightStatus.LIGHT
+        });
         e.stopPropagation();
       };
 
@@ -107,8 +104,7 @@ Step.prototype.initKeywordTags = function (){
       lightElement.onmouseenter = ()=> {
         entered = true;
         setTimeout(()=>{
-          // TODO
-          // entered && step.pagenote.toggleLightBar(true,step,step.relatedNode[0] || lightElement);
+          entered && toggleLightMenu(true,step,step.runtime.relatedNode[0] || lightElement);
         },100)
       }
       lightElement.onmouseleave = function () {
@@ -158,8 +154,9 @@ Step.prototype.initAnnotation = function () {
 
   const {bg,x,y} = step.data;
   const element = document.createElement('pagenote-annotation');
-  element.style['--color'] = bg;
+
   const customInner = document.createElement('pagenote-annotation-inner')
+  customInner.style = `--color:${bg}`;
 
   const actionArray = document.createElement('pagenote-annotation-menus')
   actionArray.innerHTML = '<pagenote-icon aria-controls="light"></pagenote-icon>'
@@ -185,7 +182,7 @@ Step.prototype.initAnnotation = function () {
   this._annotationEle = element;
 
   this.addListener('annotation',function (data) {
-    element.style = `--color:${data.bg}`;
+    customInner.style = `--color:${data.bg}`;
   })
 }
 
@@ -203,19 +200,19 @@ Step.prototype.gotoView = function (callback=function(){}){
   })
 }
 
-Step.prototype.changeColor = function(color: string){
-  this.bg = color;
-  const {textColor: textColor, rgb: rgb} = convertColor(color);
-  const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
-  const bgColor = `rgba(${rgb.toString()},1)`;
-
-  this.relatedNode.forEach((item: HTMLElement)=>{
-    item.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
-  });
-  this.darkBg = bottomColor;
-  this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
-  this.save();
-};
+// Step.prototype.changeColor = function(color: string){
+//   this.bg = color;
+//   const {textColor: textColor, rgb: rgb} = convertColor(color);
+//   const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
+//   const bgColor = `rgba(${rgb.toString()},1)`;
+//
+//   this.relatedNode.forEach((item: HTMLElement)=>{
+//     item.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
+//   });
+//   this.darkBg = bottomColor;
+//   this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
+//   this.save();
+// };
 
 Step.prototype.save = function (callback: Function) {
   this.pagenote.makelink((...arg: any)=>{
@@ -245,7 +242,7 @@ Step.prototype.addListener = function (key,fun) {
 Step.prototype.changeData = function (object) {
   let changed = false;
   for(let i in object){
-    if(this.data[i]!==undefined && this.data[i]!==object[i]){
+    if(this.data[i]!==object[i]){
       this.data[i] = object[i];
       changed = true;
     }
@@ -256,11 +253,11 @@ Step.prototype.changeData = function (object) {
 }
 
 Step.prototype._triggerChangeData = function () {
-  this.__saveAll( ()=> {
-    for(let i in this.listeners){
-      this.listeners[i](this.data);
-    }
-  });
+  for(let i in this.listeners){
+    this.listeners[i](this.data);
+  }
+
+  this.__saveAll();
 }
 
 
