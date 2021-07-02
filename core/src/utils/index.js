@@ -3,7 +3,7 @@ const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
 
-const prepareSelectionTarget = function (blackNodes, enableMarkImg,positions) {
+const prepareSelectionTarget = function (enableMarkImg,positions) {
     const selection = document.getSelection();
     if(selection.rangeCount===0){
         return;
@@ -41,14 +41,6 @@ const prepareSelectionTarget = function (blackNodes, enableMarkImg,positions) {
         }
     }
 
-    // 黑名单节点监测
-    // let isBlackNode = parentElement.tagName.toLowerCase().indexOf('pagenote')>-1;
-    // for(let i of blackNodes){
-    //     if(i.contains(parentElement)||i.contains(selection.anchorNode)||i.contains(selection.focusNode)){
-    //         isBlackNode = false;
-    //         break;
-    //     }
-    // }
     if(checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode) ){
         return;
     }

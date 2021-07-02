@@ -5,18 +5,19 @@ import ImageIcon from '../../assets/images/image.svg'
 import i18n from '../../locale/i18n'
 import Tip from '../tip/Tip'
 export default  function LightRefAnotation({step,showTarget}) {
-  const text = step.text||'';
-  const notion = step.text!==step.tip?step.tip:'';
-  const imgs = step.images || [];
-  const hasRelated = step.relatedNode.length>0
+  const {data,runtime} = step;
+  const text = data.text||'';
+  const notion = data.text!==data.tip?data.tip:'';
+  const imgs = data.images || [];
+  const hasRelated = runtime.relatedNode.length>0
   return(
       <pagenote-light-aside-ref
           onClick={()=>step.gotoView()}
           onDblClick={()=>step.toggle()}
           data-founded={hasRelated?'1':'0'}
-          data-insign={step.isInview?'1':'0'}
-          data-active={step.isActive?'1':'0'}
-          style={{'--fill-color':step.bg}}>
+          data-insign={data.isInview?'1':'0'}
+          data-active={data.isActive?'1':'0'}
+          style={{'--fill-color':data.bg}}>
           <pagenote-light-highlight>
               {
                   !hasRelated &&
@@ -35,19 +36,6 @@ export default  function LightRefAnotation({step,showTarget}) {
                   </Popover>:''}
               </pagenote-light-inner>
           </pagenote-light-highlight>
-
-          {/*<pagenote-light-info>*/}
-          {/*    <pagenote-drawer>*/}
-          {/*        {step.time}*/}
-          {/*    </pagenote-drawer>*/}
-          {/*</pagenote-light-info>*/}
-          {/*<pagenote-light-anotation data-content={notion?'1':'0'}>*/}
-          {/*    <pagenote-drawer>*/}
-          {/*        <pagenote-block dangerouslySetInnerHTML={{__html: notion}}>*/}
-
-          {/*        </pagenote-block>*/}
-          {/*    </pagenote-drawer>*/}
-          {/*</pagenote-light-anotation>*/}
       </pagenote-light-aside-ref>
   )
 }
