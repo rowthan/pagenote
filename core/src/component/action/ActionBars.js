@@ -37,7 +37,7 @@ export default function ActionBars ({pagenote}) {
       {
         showButton
         &&
-        <pagenote-block>
+        <pagenote-block onClick={(e)=>{e.stopPropagation()}}>
           {
             canHighlight &&
             <pagenote-colors-container>

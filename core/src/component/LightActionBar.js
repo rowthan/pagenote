@@ -29,6 +29,14 @@ export default function LightActionBar({step,colors}) {
                     <CopyIcon fill={data.bg}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>
+            <Tip message={i18n.t('comment')}>
+                <pagenote-icon onClick={()=>{
+                    step.gotoView();
+                    step.changeData({annotationStatus:2});
+                }}>
+                    <NoteIcon fill={data.bg} width={20} height={20}/>
+                </pagenote-icon>
+            </Tip>
             <Tip message={i18n.t('remove_marks')}>
                 <pagenote-icon>
                     <DeleteIcon  width={20} height={20} fill={data.bg}  onClick={()=>{step.delete()}} />
@@ -38,11 +46,6 @@ export default function LightActionBar({step,colors}) {
                 <Colors colors={colors} current={data.bg} selectColor={(color)=>{step.changeData({
                     bg: color,
                 })}}></Colors>
-            </Tip>
-            <Tip message={i18n.t('comment')}>
-                <pagenote-icon>
-                    <NoteIcon fill={data.bg} width={20} height={20}/>
-                </pagenote-icon>
             </Tip>
         </pagenote-light-actions>
     )

@@ -40,6 +40,7 @@ enum LightStatus{
 enum AnnotationStatus {
   HIDE=0,
   SHOW=1,
+  EDIT=2,
 }
 
 interface StepOptions{
@@ -48,7 +49,7 @@ interface StepOptions{
 }
 
 const STORE_KEYS_VERSION_2_VALIDATE = ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"]
-const Step = function (info: StepProps,options: StepOptions) {
+const Step = function (info: StepProps,options: StepOptions,callback) {
   this.options = options;
   this.data = {
     lightStatus: LightStatus.LIGHT,
@@ -69,6 +70,8 @@ const Step = function (info: StepProps,options: StepOptions) {
   this.listeners = {};
   this.initKeywordTags();
   this.initAnnotation();
+
+  typeof callback === 'function' && callback(this)
 }
 
 const options = {
@@ -115,7 +118,6 @@ Step.prototype.initKeywordTags = function (){
       lightElement.onclick = function (e) {
         const {data} = step;
         const nextLightStatus = data.lightStatus + 1;
-
         step.changeData({
           lightStatus: nextLightStatus>2?0:nextLightStatus,
           annotationStatus: nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
@@ -173,13 +175,14 @@ Step.prototype.initAnnotation = function () {
     return;
   }
 
-  const {bg,x,y,annotationStatus} = step.data;
+  const {bg,x,y,text} = step.data;
   const element = document.createElement('pagenote-annotation');// 根容器
   const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
   const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
-  actionArray.innerHTML = '<pagenote-icon aria-controls="light"></pagenote-icon>'
+  actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
   customInner.appendChild(actionArray);
-  customInner.appendChild(renderMethod(step.data,step));
+  const customAnnotation = renderMethod(step.data,step);
+  customInner.appendChild(customAnnotation);
   element.appendChild(customInner);
 
   const options = {
@@ -200,11 +203,17 @@ Step.prototype.initAnnotation = function () {
   element.remove = function () {
     element.parentNode.removeChild(element);
   }
+
   this._annotationEle = element;
 
-  wrapperAnnotationAttr(customInner,bg,annotationStatus===AnnotationStatus.SHOW)
+  function checkShowAnnotation() {
+    return //step.data.annotationStatus === AnnotationStatus.EDIT ||
+        (step.data.annotationStatus===AnnotationStatus.SHOW && !!step.data.tip);
+  }
+  
+  wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
   this.addListener('annotation',function (data,change) {
-    wrapperAnnotationAttr(customInner,data.bg,data.annotationStatus===AnnotationStatus.SHOW);
+    wrapperAnnotationAttr(customInner,data.bg,checkShowAnnotation());
   })
   element.toggleShow = wrapperAnnotationAttr;
 }
