@@ -155,6 +155,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         canHighlight: canHighlight,
         selectionElements: selectedElementContent,
         images: markImages,
+        annotationStatus: 1,
+        lightStatus: 2
     };
 
     return target

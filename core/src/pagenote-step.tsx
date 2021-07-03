@@ -1,6 +1,6 @@
 // @ts-nocheck // TODO enable
 import md5 from "blueimp-md5";
-import {highlightKeywordInElement} from "./utils/highlight";
+import {highlightKeywordInElement,removeElementHighlight} from "./utils/highlight";
 import { whats } from './utils/index'
 import {gotoPosition} from "./utils/document";
 import Draggable from 'draggable';
@@ -42,8 +42,14 @@ enum AnnotationStatus {
   SHOW=1,
 }
 
+interface StepOptions{
+  onChange: Function,
+  onRemove: Function,
+}
+
 const STORE_KEYS_VERSION_2_VALIDATE = ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"]
-const Step = function (info: StepProps) {
+const Step = function (info: StepProps,options: StepOptions) {
+  this.options = options;
   this.data = {
     lightStatus: LightStatus.LIGHT,
     annotationStatus: AnnotationStatus.SHOW,
@@ -55,7 +61,7 @@ const Step = function (info: StepProps) {
 
   this.runtime = {
     warn: '',
-    isInview: false,
+    isVisible: false,
     isFocus: false,
     relatedNode: [],
   }
@@ -65,6 +71,18 @@ const Step = function (info: StepProps) {
   this.initAnnotation();
 }
 
+const options = {
+
+}
+const io = new IntersectionObserver(function (entries) {
+  entries.forEach((item)=>{
+    if(item.target && item.target._light){
+      item.target._light.changeData({
+        isVisible: item.intersectionRatio>0
+      },true)
+    }
+  })
+}, options)
 
 Step.prototype.initKeywordTags = function (){
   const step = this;
@@ -75,7 +93,7 @@ Step.prototype.initKeywordTags = function (){
       const lightElement = document.createElement('light');
       lightElement.dataset.highlight = lightId;
 
-      wrapperLightAttr(lightElement,bg,lightStatus===LightStatus.LIGHT)
+      wrapperLightAttr(lightElement,bg,lightStatus)
       if(text){
         lightElement.textContent = text;
       }
@@ -89,7 +107,9 @@ Step.prototype.initKeywordTags = function (){
       }
 
       step.addListener('light',function (data) {
-        wrapperLightAttr(lightElement,data.bg,data.lightStatus)
+        step.runtime.relatedNode.forEach((item)=>{
+          wrapperLightAttr(item,data.bg,data.lightStatus)
+        })
       })
 
       lightElement.onclick = function (e) {
@@ -114,6 +134,13 @@ Step.prototype.initKeywordTags = function (){
         entered = false;
       }
 
+      io.observe(lightElement)
+
+      lightElement.remove = function () {
+        io.unobserve(lightElement);
+        removeElementHighlight(lightElement)
+      }
+
       lightElement._light = step;
       return lightElement;
     });
@@ -129,28 +156,19 @@ Step.prototype.initKeywordTags = function (){
     clearTimeout(timer);
     if(targetEl){
       highlightElement(targetEl)
-    }else if(times<3){
+    }else if(times<5){
       timer = setTimeout(()=>{
         findElement(++times)
-      },3000)
+      },1000*times)
     }else{
       highlightElement(document.body,true)
     }
   })(0)
 }
 
-// @ 不推荐使用
-Step.prototype.toggle = function (isLight: LightStatus,goto=true) {
-  if(goto){
-    this.gotoView()
-  }
-  this.anotationStatus = isLight;
-};
-
-
 Step.prototype.initAnnotation = function () {
   const step = this;
-  const renderMethod = step.__renderAnnotation;
+  const renderMethod = step.options.renderAnnotation;
   if(typeof renderMethod!=="function"){
     return;
   }
@@ -178,6 +196,10 @@ Step.prototype.initAnnotation = function () {
   new Draggable (element, options).set(x,y);
   const container = document.querySelector('pagenote-annotations');
   container.appendChild(element);
+
+  element.remove = function () {
+    element.parentNode.removeChild(element);
+  }
   this._annotationEle = element;
 
   wrapperAnnotationAttr(customInner,bg,annotationStatus===AnnotationStatus.SHOW)
@@ -187,50 +209,27 @@ Step.prototype.initAnnotation = function () {
   element.toggleShow = wrapperAnnotationAttr;
 }
 
+Step.prototype.delete = function () {
+  this.runtime.relatedNode.forEach((element)=>{
+    element.remove();
+  });
+  this._annotationEle.remove();
+  this.options.onRemove(this.data);
+  toggleLightMenu(false);
+}
+
 Step.prototype.gotoView = function (callback=function(){}){
-  let targetEl = this.relatedNode?this.relatedNode[0]:null;
+  let targetEl = this.runtime.relatedNode?this.runtime.relatedNode[0]:null;
   if(!targetEl){
     try{
-      targetEl = whats.getTarget(this.id);
+      targetEl = whats.getTarget(this.data.id);
     }catch (e){
 
     }
   }
-  return gotoPosition(targetEl,this.x-window.innerWidth/2,this.y-window.innerHeight/3,()=>{
+  return gotoPosition(targetEl,this.data.x-window.innerWidth/2,this.data.y-window.innerHeight/3,()=>{
     callback();
   })
-}
-
-// Step.prototype.changeColor = function(color: string){
-//   this.bg = color;
-//   const {textColor: textColor, rgb: rgb} = convertColor(color);
-//   const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
-//   const bgColor = `rgba(${rgb.toString()},1)`;
-//
-//   this.relatedNode.forEach((item: HTMLElement)=>{
-//     item.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
-//   });
-//   this.darkBg = bottomColor;
-//   this.lightBg = `rgb(${(rgb[0]+10)},${(rgb[1]+10)},${(rgb[2]+10)})`;
-//   this.save();
-// };
-
-Step.prototype.save = function (callback: Function) {
-  this.pagenote.makelink((...arg: any)=>{
-    typeof callback==='function'&&callback(...arg)
-  });
-};
-
-Step.prototype.checkInSign = function (){
-  const result =  this.runtime.relatedNode.some((item: HTMLElement)=>{
-   const position = item.getBoundingClientRect();
-   const inSign =  position.top > 0 && position.top < window.innerHeight;
-   return inSign;
-  });
-  this.changeData({
-    isInview: result
-  })
-  return result;
 }
 
 Step.prototype.addListener = function (key,fun) {
@@ -240,11 +239,12 @@ Step.prototype.addListener = function (key,fun) {
 }
 
 // 修改 data 数据 TODO 使用 proxy
-Step.prototype.changeData = function (object) {
+Step.prototype.changeData = function (object,isRuntime) {
   let changed = false;
+  const targetObject = isRuntime ? this.runtime : this.data;
   for(let i in object){
-    if(this.data[i]!==object[i]){
-      this.data[i] = object[i];
+    if(targetObject[i]!==object[i]){
+      targetObject[i] = object[i];
       changed = true;
     }
   }
@@ -257,18 +257,16 @@ Step.prototype._triggerChangeData = function (object) {
   for(let i in this.listeners){
     this.listeners[i](this.data,object);
   }
-
-  this.__saveAll();
+  this.options.onChange(this.data);
 }
 
 
-function Steps(option: { max: number; }, pagenote) {
+function Steps(option: { max: number; }) {
   this.option = option;
-  this.__proto__.pagenote = pagenote;
 }
 Steps.prototype = Array.prototype;
 Steps.prototype.add = function (item) {
-  if(item.save){
+  if(item.changeData){
     this.push(item);
   }else{
     console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);

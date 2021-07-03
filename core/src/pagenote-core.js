@@ -98,6 +98,29 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
 
     let hasListened = false;
+
+    //success no return; failed return errorMsg 持久化存储
+    this.makelink = (callback) => {
+        this.status = constant.START_SYNC;
+        store(typeof callback === 'function' ? callback : function () {
+        });
+    };
+
+    const StepOptions = {
+        onChange:  ()=> {
+            this.makelink()
+        },
+        onRemove: (data)=> {
+            for(let i=0; i<this.recordedSteps.length; i++){
+                if(data.lightId===this.recordedSteps[i].data.lightId){
+                    this.recordedSteps.splice(i,1);
+                    break;
+                }
+            }
+            this.makelink()
+        },
+        renderAnnotation: OPTIONS.renderAnnotation,
+    }
     // TODO 初始化动效
     this.init = function(initData,sync=false){ // 为一段加密过的数据信息
         initData = initData||getParams().paramObj[constant.ID];
@@ -106,7 +129,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         let simpleStep = [];
         let setting = {};
-        let dataVersion = 1;
         if(initData){
             try {
                 let dataObject = {};
@@ -129,7 +151,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         this.recordedSteps.splice(0,this.recordedSteps.length);
         simpleStep.forEach((step)=>{
-            const newStep = new Step(step);
+            const newStep = new Step(step,StepOptions);
             this.recordedSteps.add(newStep);
         });
         // 修改当前设置项
@@ -359,13 +381,13 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         });
     };
 
-    this.toggleAllLight = function () {
-        const lightAll = this.lastaction===this.CONSTANT.DIS_LIGHT;
-        this.replay(0,false,true,lightAll);
-        if(lightAll===false){
-            this.runningSetting.autoLight = false;
-        }
-    };
+    // this.toggleAllLight = function () {
+    //     const lightAll = this.lastaction===this.CONSTANT.DIS_LIGHT;
+    //     this.replay(0,false,true,lightAll);
+    //     if(lightAll===false){
+    //         this.runningSetting.autoLight = false;
+    //     }
+    // };
 
     this.addListener = function(fun){
         if(typeof fun == "function"){
@@ -383,7 +405,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         this.status = constant.RECORDING;
 
-        const newStep = new Step(info);
+        const newStep = new Step(info,StepOptions);
         // TODO target 存储在 info 中 避免再次寻找
         const target = whats.getTarget(info.id);
         // captureElementImage(target).then((imageSrc)=>{
@@ -476,13 +498,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.status = constant.DONE
         }
         this.makelink();
-    };
-
-    //success no return; failed return errorMsg 持久化存储
-    this.makelink = (callback) => {
-        this.status = constant.START_SYNC;
-        store(typeof callback === 'function' ? callback : function () {
-        });
     };
 
     this.openModal = (activeTab='md')=>{
@@ -674,10 +689,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             fun(this.status,this.status)
         })
     }
-
-    Step.prototype.__renderAnnotation = options.renderAnnotation;
-    Step.prototype.__saveAll = this.makelink;
-
 }
 
 
