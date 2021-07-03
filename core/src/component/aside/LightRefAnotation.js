@@ -13,9 +13,8 @@ export default  function LightRefAnotation({step,showTarget}) {
   return(
       <pagenote-light-aside-ref
           onClick={()=>step.gotoView()}
-          onDblClick={()=>step.toggle()}
           data-founded={hasRelated?'1':'0'}
-          data-insign={data.isInview?'1':'0'}
+          data-insign={data.isVisible?'1':'0'}
           data-active={data.isActive?'1':'0'}
           style={{'--fill-color':data.bg}}>
           <pagenote-light-highlight>

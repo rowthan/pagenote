@@ -7,7 +7,7 @@ import RemoveIcon from '@/assets/images/remove.svg';
 import Toggle from '@/assets/images/toggle.svg';
 import ExpandIcon from '@/assets/images/expand.svg';
 import LightRefAnotation from "./LightRefAnotation";
-import ScrollProgress from "./ScrollProgress";
+// import ScrollProgress from "./ScrollProgress";
 import sideStyle from './aside.scss';
 import LightIcon from './LightIcon'
 import Tip from "../tip/Tip";
@@ -51,6 +51,8 @@ class AsideBar extends Component{
 
             run: false,
             lastFocus: '',
+
+            allStepStatus: 0,
         };
         pagenote.addListener(this.refreshStatus.bind(this));
     }
@@ -71,12 +73,21 @@ class AsideBar extends Component{
 
             run: [pagenote.CONSTANT.REPLAYING,pagenote.CONSTANT.START_SYNC].includes(pagenote.status)
         })
-
     }
 
     toggleAllLight(){
         const pagenote = this.pagenote;
-        pagenote.toggleAllLight();
+        const nextStatus = this.state.allStepStatus + 1;
+        const finalStatus = nextStatus > 2 ? 0 : nextStatus;
+        pagenote.recordedSteps.forEach((light)=>{
+            light.changeData({
+                lightStatus: finalStatus,
+                annotationStatus: finalStatus === 2 ? 1: 0,
+            })
+        });
+        this.setState({
+            allStepStatus: finalStatus
+        })
     };
 
     toggleAutoLight(){
@@ -200,7 +211,7 @@ class AsideBar extends Component{
             status,barInfo,steps,runindex,categories,snapshots,run
         } = this.state;
         const barStatus = barInfo.status||'';
-        const isExpand = barStatus === BAR_STATUS.expand;
+        const isExpand = false;//barStatus === BAR_STATUS.expand;
         const showBar = steps.length > 0 || snapshots.length > 0;
         const top = isExpand?0:barInfo.top;
         barInfo.right = Math.min(document.documentElement.clientWidth-200,barInfo.right);
@@ -250,13 +261,13 @@ class AsideBar extends Component{
                                 }
                             </pagenote-action-group>
 
-                            <pagenote-action data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>
-                                {isExpand ? <ExpandIcon />:  <Toggle />}
-                            </pagenote-action>
+                            {/*<pagenote-action data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>*/}
+                            {/*    {isExpand ? <ExpandIcon />:  <Toggle />}*/}
+                            {/*</pagenote-action>*/}
 
                         </pagenote-actions>
 
-                        <ScrollProgress useDot={isExpand} steps={steps} />
+                        {/*<ScrollProgress useDot={isExpand} steps={steps} />*/}
 
                         {/*标记*/}
                         <pagenote-lights>
@@ -330,19 +341,31 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
         step.level = level;
         step.save.call(step)
     }
+
+    function toggleLight() {
+        const nextStatus = step.data.lightStatus + 1;
+        step.changeData({
+            lightStatus: nextStatus > 2 ? 0 : nextStatus,
+            annotationStatus: nextStatus === 2 ? 1 :0,
+        })
+    }
+
+    const isActive = step.data.lightStatus > 0;
+    const isVisible = step.runtime.isVisible;
+    const {tip,bg} = step.data;
     return (
         <pagenote-light-aside-item
-            data-active={step.isActive?'1':'0'}
-            data-insign={step.isInview?'1':''}
-            data-level={step.level}
+            data-active={isActive?'1':'0'}
+            data-insign={isVisible?'1':''}
+            data-level={1}
             data-dot={dot?'1':'0'}
             data-running={running}
             onClick={onClick}
             data-focus={lastFocusId===step.lightId?'1':'0'}
             style={{
                 top: dot? computeTop(step.y, index) + "px" : 'unset',
-                '--color': step.bg,
-                '--shadow-color': dot? '#d8d8d8' : (step.tip ? step.bg : ''),
+                '--color': bg,
+                '--shadow-color': dot? '#d8d8d8' : (tip ? bg : ''),
                 position: dot ? 'absolute' : 'relative'
             }}
         >
@@ -358,9 +381,9 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
                     </pagenote-block>
                 }
             </pagenote-light-anotation>
-            <pagenote-light-aside-item-sign data-level={step.level} onClick={()=>step.toggle()} />
+            <pagenote-light-aside-item-sign data-level={1} onClick={toggleLight} />
             <pagenote-light-actions-container>
-                <pagenote-light-aside-item-sign data-switch='1' data-level={step.level===1?2:1} onClick={()=>{changeLevel(step.level===1?2:1)}} />
+                {/*<pagenote-light-aside-item-sign data-switch='1' data-level={step.level===1?2:1} onClick={()=>{changeLevel(step.level===1?2:1)}} />*/}
                 <LightActionBar step={step} colors={colors} />
             </pagenote-light-actions-container>
         </pagenote-light-aside-item>
