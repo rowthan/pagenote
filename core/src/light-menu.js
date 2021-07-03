@@ -14,10 +14,10 @@ const toggleLightMenu = (function () {
             const scroll = getScroll();
             const triggerPosition = element.getBoundingClientRect();
             const top = Math.max(triggerPosition.top-40+scroll.y,40)
+            // padding: 4px; background: #fff; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
             return <div
                 onClick={(e)=>{e.stopPropagation()}}
-                style={`position:absolute; z-index:1;padding: 4px; background: #fff; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
-                            top:${top}px;left:${triggerPosition.left+scroll.x+triggerPosition.width/2}px;
+                style={`position:absolute; z-index:1;top:${top}px;left:${triggerPosition.left+scroll.x+triggerPosition.width/2}px;
                     `}>
                 <LightActionBar step={light} colors={colors}/>
             </div>
