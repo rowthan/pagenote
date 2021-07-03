@@ -7,6 +7,7 @@ import {Step, Steps} from './pagenote-step';
 import { dataToString } from "./utils/data";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
+import toggleLightMenu from "./light-menu";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 
@@ -405,7 +406,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         this.status = constant.RECORDING;
 
-        const newStep = new Step(info,StepOptions);
+        const newStep = new Step(info,StepOptions,function (step) {
+            toggleLightMenu(true,step)
+        });
+
+
         // TODO target 存储在 info 中 避免再次寻找
         const target = whats.getTarget(info.id);
         // captureElementImage(target).then((imageSrc)=>{
@@ -418,8 +423,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         });
         window.getSelection().removeAllRanges();
         this.target = {};
-        // 高亮文本以及图片
-        // newStep.highlight(true)
         this.makelink((result)=>{
             if(!result){
                 alert(i18n.t('save_failed'));

@@ -24,6 +24,8 @@ const toggleLightMenu = (function () {
         }
 
         toggleLightBar = function (show,light,element) {
+            element = element || (light ? light.runtime.relatedNode[0] : null);
+            show = show && !!element;
             render(show?<Menu light={light} element={element}></Menu>:null,
                 document.documentElement)
         }

@@ -115,9 +115,9 @@ window.pagenote = new PageNote('dev',{
       element.contentEditable = flag? 'true' : 'false'
     }
 
-    const {tip} = data;
+    const {tip,lightId} = data;
     element.innerHTML =  `
-    <div style="padding: 5px; font-size: 12px; color: #666;">${tip}</div>
+    <div id="${lightId}" style="padding: 5px; font-size: 12px; min-height: 2em; color: #666;">${tip}</div>
   `
     element.onclick = function () {
       setEditable(true);
