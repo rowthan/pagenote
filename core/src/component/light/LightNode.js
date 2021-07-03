@@ -183,11 +183,9 @@ export default class LightNode extends Component{
                     <CommentIcon  fill={light.bg}  width={18} height={18}  />
                   </pagenote-icon>
                 </Tip>
-                <Tip message={i18n.t('change_color')}>
-                  <pagenote-icon className={style.actionIcon} >
-                    <Colors colors={pagenote.options.brushes.map((brush)=>{return brush.bg})} current={light.bg} selectColor={this.onChangeColor}></Colors>
-                  </pagenote-icon>
-                </Tip>
+                {/*<Tip message={i18n.t('change_color')}>*/}
+                {/*  <Colors colors={pagenote.options.brushes.map((brush)=>{return brush.bg})} current={light.bg} selectColor={this.onChangeColor}></Colors>*/}
+                {/*</Tip>*/}
                 <Tip message={i18n.t('remove_marks')}>
                   <pagenote-icon className={`${style.actionIcon} ${style.deleteIcon}`} onClick={this.deleteLight}>
                     <DeleteIcon  width={18} height={18} fill={light.bg} />
@@ -232,15 +230,15 @@ export const Colors = function ({colors,current,selectColor}) {
       <div className={style.colorOptions}>
         {
           colors.map((color)=>{
-            return <div onClick={() => { setColor(color)}}
+            return <pagenote-icon onClick={() => { setColor(color)}}
                         className={`${style.colorItem} ${color === current ? style.active : ''}`}
                         style={{backgroundColor: color}}/>
           })
         }
       </div>
-      <div className={style.currentColor}>
-        <ColorIcon width={16} height={16} fill={current}/>
-      </div>
+      <pagenote-icon className={style.currentColor}>
+        <ColorIcon width={20} height={20} fill={current}/>
+      </pagenote-icon>
     </div>
   )
 };
