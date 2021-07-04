@@ -1,0 +1,26 @@
+pagenote-block[data-role='modal']{
+  z-index: 99999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+pagenote-block[data-role='mask']{
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #cccbc9b3;
+  height: 100%;
+  width: 100%;
+}
+pagenote-block[data-role='content']{
+  position: absolute;
+  top:50px;
+  min-width: 200px;
+  z-index: 1;
+  background: #fff;
+  padding: 24px;
+  font-size: 14px;
+  border-radius: 8px;
+}

@@ -111,24 +111,20 @@ window.pagenote = new PageNote('dev',{
   // `
   //   })
 
-    function setEditable(flag){
-      element.contentEditable = flag? 'true' : 'false'
-    }
 
     const {tip,lightId} = data;
     element.innerHTML =  `
     <div id="${lightId}" style="padding: 5px; font-size: 12px; min-height: 2em; color: #666;">${tip}</div>
   `
-    element.onclick = function () {
-      setEditable(true);
-      element.focus()
+    element.ondblclick = function () {
+      light.openEditor();
     };
-    element.onblur = function () {
-      setEditable(false);
-      light.changeData({
-        tip: element.innerText,
-      })
-    }
+    // element.onblur = function () {
+    //   setEditable(false);
+    //   light.changeData({
+    //     tip: element.innerText,
+    //   })
+    // }
     return element
   }
 });
