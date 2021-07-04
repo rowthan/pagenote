@@ -29,9 +29,16 @@ pagenote-icon{
   margin: 2px;
   padding: 2px;
   background: #fff;
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
   &:hover{
     opacity: 1;
     box-shadow: 0 1px 3px 1px rgba(60,64,67,.15), 0 1px 2px 0 rgba(60,64,67,.3);
+  }
+  svg{
+    width: 20px;
+    height: 20px;
   }
 }
 

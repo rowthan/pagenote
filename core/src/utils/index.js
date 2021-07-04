@@ -141,8 +141,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         y:cursorY,
         offsetX: 0.5,
         offsetY: 0.9,
-        pre:before,
-        suffix:after,
+        pre:(''||before).trim(),
+        suffix:(''||after).trim(),
         text:selectedText,
         tip:'', // 提供支持纯文本的取值方式
         time: new Date().getTime(),

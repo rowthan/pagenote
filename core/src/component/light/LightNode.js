@@ -236,7 +236,7 @@ export const Colors = function ({colors,current,selectColor}) {
           })
         }
       </div>
-      <pagenote-icon className={style.currentColor}>
+      <pagenote-icon>
         <ColorIcon width={20} height={20} fill={current}/>
       </pagenote-icon>
     </div>

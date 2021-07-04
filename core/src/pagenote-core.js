@@ -158,11 +158,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 
-
-        [].forEach.call(document.querySelectorAll('light[data-highlight]'),function (element) {
-            element.outerHTML = element.innerHTML;
-        });
-
         switch (this.runningSetting.initType) {
             case 'light':
                 this.replay(0,false,true,true);
