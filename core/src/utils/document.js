@@ -202,6 +202,8 @@ function getViewPosition(elem) { // crossbrowser version
     return {
         top: box.top,
         left: box.left,
+        width: box.width,
+        height: box.height,
         bodyTop: box.top + scroll.y,
         bodyLeft: box.left + scroll.x,
     };

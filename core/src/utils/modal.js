@@ -23,11 +23,17 @@ function createModal(element,position,) {
 }
 
 createModal.prototype.show = function (element,position) {
-   const height = document.documentElement.scrollHeight;
-   const width = document.documentElement.scrollWidth;
-   this.root.style.width = width + 'px';
-   this.root.style.height = height+ 'px';
+   const that = this;
+   that._onresize = function () {
+      const height = document.documentElement.scrollHeight;
+      const width = document.documentElement.scrollWidth;
+      that.root.style.width = width + 'px';
+      that.root.style.height = height+ 'px';
+   }
 
+   window.addEventListener('resize',that._onresize);
+
+   that._onresize();
    if(position){
       this.content.style.left = position.left;
       this.content.style.top = position.top;
@@ -42,6 +48,7 @@ createModal.prototype.show = function (element,position) {
 
 createModal.prototype.destroy = function () {
    this.root.parentNode.removeChild(this.root);
+   window.removeEventListener('resize',this._onresize)
 }
 
 export default createModal;
