@@ -234,7 +234,7 @@ Step.prototype.initAnnotation = function () {
   function checkShowAnnotation() {
     return step.data.lightStatus===LightStatus.LIGHT && !!step.data.tip;
   }
-  
+
   wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
   this.addListener('annotation',function (data,change) {
     renderContent();
@@ -258,7 +258,7 @@ Step.prototype.openEditor = function () {
   }
   editorModal.show(null,{
     left: pos.bodyLeft+'px',
-    top: pos.bodyTop+'px',
+    top: pos.bodyTop+pos.height+4+'px',
   });
   AnnotationEditor({
     tip,
