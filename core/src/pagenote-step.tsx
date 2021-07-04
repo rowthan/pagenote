@@ -97,6 +97,7 @@ Step.prototype.initKeywordTags = function (){
   function highlightElement(target) {
     // 查找文字、高亮元素
     const result = highlightKeywordInElement(target,text,pre,suffix,null,function warpFun(text,children){
+      console.log(text,children)
       const lightElement = document.createElement('light');
       lightElement.dataset.highlight = lightId;
 
@@ -160,7 +161,7 @@ Step.prototype.initKeywordTags = function (){
       lightElement._light = step;
       return lightElement;
     });
-    step.warn = result.match ? '' : '未找到匹配内容';
+    step.runtime.warn = result.match ? '' : '未找到匹配内容';
     if(result){
       step.runtime.relatedNode.push(...result.lightsElement);
     }
