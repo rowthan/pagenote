@@ -189,12 +189,22 @@ function getScroll(){
 }
 
 
-
-//TODO 获取元素位于body相对位置信息 getViewPosition + getScroll
+function emptyChildren(element) {
+    while(element.hasChildNodes()) //当div下还存在子节点时 循环继续
+    {
+        element.removeChild(element.firstChild);
+    }
+}
 
 function getViewPosition(elem) { // crossbrowser version
     var box = elem.getBoundingClientRect();
-    return { top: box.top, left: box.left, };
+    const scroll = getScroll();
+    return {
+        top: box.top,
+        left: box.left,
+        bodyTop: box.top + scroll.y,
+        bodyLeft: box.left + scroll.x,
+    };
 }
 
 function getTextNodes(element) {
@@ -426,6 +436,7 @@ var showCamera = function (snapshot) {
 };
 
 export {
+    emptyChildren,
     gotoPosition,
     getScroll,
     highlightKeyword,

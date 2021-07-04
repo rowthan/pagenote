@@ -31,8 +31,7 @@ export default function LightActionBar({step,colors}) {
             </Tip>
             <Tip message={i18n.t('comment')}>
                 <pagenote-icon onClick={()=>{
-                    step.gotoView();
-                    step.changeData({annotationStatus:2});
+                    step.openEditor();
                 }}>
                     <NoteIcon fill={data.bg} width={20} height={20}/>
                 </pagenote-icon>

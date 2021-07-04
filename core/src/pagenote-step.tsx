@@ -2,10 +2,14 @@
 import md5 from "blueimp-md5";
 import {highlightKeywordInElement,removeElementHighlight} from "./utils/highlight";
 import { whats } from './utils/index'
-import {gotoPosition} from "./utils/document";
+import {emptyChildren, getScroll, getViewPosition, gotoPosition} from "./utils/document";
 import Draggable from 'draggable';
 import toggleLightMenu from "./light-menu";
 import {wrapperLightAttr,wrapperAnnotationAttr} from "./utils/light";
+import modal from "./utils/modal";
+import AnnotationEditor from "./annotationEditor";
+
+const editorModal = new modal();
 
 export interface StepProps {
   x: number, // 标记在文档中基于 body 的 x轴 位置
@@ -40,7 +44,6 @@ enum LightStatus{
 enum AnnotationStatus {
   HIDE=0,
   SHOW=1,
-  EDIT=2,
 }
 
 interface StepOptions{
@@ -90,13 +93,13 @@ const io = new IntersectionObserver(function (entries) {
 Step.prototype.initKeywordTags = function (){
   const step = this;
   const {bg,id,text,pre,suffix,lightId,lightStatus} = step.data;
+
   function highlightElement(target) {
     // 查找文字、高亮元素
     const result = highlightKeywordInElement(target,text,pre,suffix,null,function warpFun(text,children){
       const lightElement = document.createElement('light');
       lightElement.dataset.highlight = lightId;
 
-      wrapperLightAttr(lightElement,bg,lightStatus)
       if(text){
         lightElement.textContent = text;
       }
@@ -109,9 +112,20 @@ Step.prototype.initKeywordTags = function (){
         lightElement.appendChild(children.cloneNode());
       }
 
+      const appendElement = document.createElement('pagenote-icon');
+      appendElement.onclick=function (e) {
+        step.openEditor();
+        step.changeData({
+          lightStatus: LightStatus.LIGHT
+        })
+        e.stopPropagation();
+      }
+      appendElement.innerHTML  = '<svg t="1625328349729" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10721" width="16" height="16"><path d="M800 289.356H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z m0 190.737H224a31.97 31.97 0 1 0 0 63.94h576a31.97 31.97 0 1 0 0-63.94z m0 190.737H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z" p-id="10722"></path><path d="M948.041 156.144A150.75 150.75 0 0 0 809.165 63.94h-0.279l-73.444 1.326a31.988 31.988 0 0 0 1.113 63.965l72.866-1.26a86.124 86.124 0 0 1 61.1 25.45c16.412 16.41 25.367 38.233 25.367 61.44v594.278c0 23.207-8.955 44.957-25.366 61.368a86.06 86.06 0 0 1-61.357 25.378h-594.33c-23.206 0-45.061-8.97-61.473-25.378a86.19 86.19 0 0 1-25.482-61.368V214.861a86.944 86.944 0 0 1 86.94-86.883h73.174a31.97 31.97 0 1 0 0-63.94h-73.159A150.827 150.827 0 0 0 63.94 214.86v594.278a150.599 150.599 0 0 0 150.895 150.686h594.33a150.328 150.328 0 0 0 150.66-150.686V214.861a149.837 149.837 0 0 0-11.784-58.717z" p-id="10723"></path><path d="M415.998 127.88h192a31.97 31.97 0 0 0 0-63.94h-192a31.97 31.97 0 0 0 0 63.94z" p-id="10724"></path></svg>'
+      wrapperLightAttr(lightElement, step.data,appendElement)
+
       step.addListener('light',function (data) {
         step.runtime.relatedNode.forEach((item)=>{
-          wrapperLightAttr(item,data.bg,data.lightStatus)
+          wrapperLightAttr(item,data,appendElement)
         })
       })
 
@@ -181,8 +195,18 @@ Step.prototype.initAnnotation = function () {
   const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
   actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
   customInner.appendChild(actionArray);
-  const customAnnotation = renderMethod(step.data,step);
-  customInner.appendChild(customAnnotation);
+
+  const customContent = document.createElement('pagenote-block');
+  customContent.dataset.role = 'custom-content';
+  customInner.appendChild(customContent);
+
+  function renderContent() {
+    emptyChildren(customContent);
+    const customAnnotation = renderMethod(step.data,step);
+    customContent.appendChild(customAnnotation);
+  }
+
+  renderContent();
   element.appendChild(customInner);
 
   const options = {
@@ -207,15 +231,49 @@ Step.prototype.initAnnotation = function () {
   this._annotationEle = element;
 
   function checkShowAnnotation() {
-    return //step.data.annotationStatus === AnnotationStatus.EDIT ||
-        (step.data.annotationStatus===AnnotationStatus.SHOW && !!step.data.tip);
+    return step.data.lightStatus===LightStatus.LIGHT && !!step.data.tip;
   }
   
   wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
   this.addListener('annotation',function (data,change) {
+    renderContent();
     wrapperAnnotationAttr(customInner,data.bg,checkShowAnnotation());
   })
   element.toggleShow = wrapperAnnotationAttr;
+}
+
+Step.prototype.openEditor = function () {
+  const that = this;
+  this.changeData({annotationStatus:2});
+  const {tip,x,y} = this.data;
+
+  let pos = {};
+  if(that.runtime.relatedNode[0]){
+    pos = getViewPosition(that.runtime.relatedNode[0]);
+  } else {
+    pos = {
+      bodyLeft: getScroll().y + 200,
+    }
+  }
+  editorModal.show(null,{
+    left: pos.bodyLeft+'px',
+    top: pos.bodyTop+'px',
+  });
+  AnnotationEditor({
+    tip,
+    onchange: function (e) {
+      that.changeData({
+        tip: e.target.value.trim(),
+        annotationStatus: !!e.target.value ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
+      })
+    },
+    root:editorModal.content,
+  });
+
+  const el = document.querySelector('pagenote-block[contenteditable="true"]');
+  if(el){
+    el.focus();
+  }
 }
 
 Step.prototype.delete = function () {
