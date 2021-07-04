@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
-  entry: './demo/index.js',
+  entry: './dev/index.js',
   mode:"development",
   devtool: 'inline-source-map',
   output: {
