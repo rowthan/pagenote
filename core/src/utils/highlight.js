@@ -160,6 +160,9 @@ const removeElementHighlight = function (query){
     }else if(query instanceof HTMLElement){
         element = query;
     }
+    if(!element){
+        return
+    }
 
     if(element.dataset.type==='img'){
         element.outerHTML = element.innerHTML;
