@@ -158,21 +158,21 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 
-        switch (this.runningSetting.initType) {
-            case 'light':
-                this.replay(0,false,true,true);
-                break;
-            case 'default':
-                this.replay(0,false,true,function (step) {
-                    return step.isActive;
-                });
-                break;
-            case 'off':
-                // this.recordedSteps.forEach((tempStep)=>{
-                //     tempStep.isActive = false;
-                // });
-                break;
-        }
+        // switch (this.runningSetting.initType) {
+        //     case 'light':
+        //         this.replay(0,false,true,true);
+        //         break;
+        //     case 'default':
+        //         this.replay(0,false,true,function (step) {
+        //             return step.isActive;
+        //         });
+        //         break;
+        //     case 'off':
+        //         // this.recordedSteps.forEach((tempStep)=>{
+        //         //     tempStep.isActive = false;
+        //         // });
+        //         break;
+        // }
         // 销毁 pagenote ，删除所有监听
         if(!hasListened){
             hasListened = true;
@@ -350,9 +350,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
         this.status = constant.READY;
 
-        if(sync){
-            this.makelink();
-        }
+        // if(sync){
+        //     this.makelink();
+        // }
     };
 
     this.showActionBar = function () {
