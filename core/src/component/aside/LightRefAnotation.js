@@ -12,8 +12,16 @@ export default  function LightRefAnotation({step,showTarget}) {
   const hasRelated = runtime.relatedNode.length>0
   return(
       <pagenote-light-aside-ref
-          onClick={()=>step.gotoView()}
-          // onDblClick={}
+          onClick={()=>{
+            step.openEditor(false);
+            step.gotoView();
+            step.changeData({
+                lightStatus: 2
+            });
+          }}
+          onDblClick={()=>{
+              step.openEditor();
+          }}
           data-founded={hasRelated?'1':'0'}
           data-insign={data.isVisible?'1':'0'}
           data-active={data.isActive?'1':'0'}

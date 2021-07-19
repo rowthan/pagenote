@@ -44,11 +44,11 @@ pagenote-icon{
     display: block;
   }
   &[data-size="small"]{
-    width: 18;
-    height: 18;
+    width: 16;
+    height: 16;
     svg{
-      width: 14px;
-      height: 14px;
+      width: 12;
+      height: 12;
     }
   }
 }
@@ -66,7 +66,7 @@ light[data-highlight]{
   background-position: bottom;
   transition: background-size 0.5s ease-out;
   box-sizing: border-box;
-
+  border-radius: 2px;
   &:hover{
     z-index: 1;
     //opacity: 0.85;
@@ -85,6 +85,7 @@ light[data-highlight]{
   &[data-active='2']{
     -webkit-text-fill-color: var(--color);
     background-size: 100% calc(1em*2);
+    border-bottom: none;
   }
 
 
@@ -108,7 +109,7 @@ light[data-highlight]{
 
   pagenote-icon{
     position: absolute;
-    top:60%;
+    top:80%;
     fill: var(--bgcolor);
   }
 }

@@ -47,7 +47,9 @@ createModal.prototype.show = function (element,position) {
 }
 
 createModal.prototype.destroy = function () {
-   this.root.parentNode.removeChild(this.root);
+   if(this.root && this.root.parentNode){
+      this.root.parentNode.removeChild(this.root);
+   }
    window.removeEventListener('resize',this._onresize)
 }
 
