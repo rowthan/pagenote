@@ -364,7 +364,7 @@ function moveable(element,callback,childMove=true) {
 
 function writeTextToClipboard(text) {
     try {
-        return  navigator.clipboard.writeText(text)
+        return navigator.clipboard.writeText(text)
     } catch (e) {
         const textarea = document.createElement('textarea');
         textarea.textContent = text;

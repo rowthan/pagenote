@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import {getWebIcon, captureElementImage, showCamera} from './utils/document'
+import {getWebIcon, captureElementImage, showCamera, writeTextToClipboard} from './utils/document'
 import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle, whats} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
@@ -188,6 +188,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 const timeout = that.options.showBarTimeout || 0;
                 let lastActionTime = 0;
                 let showBarTimer = null;
+                let copyTimer = null;
                 let isPressingMouse = false;
                 let lastPosition = {};
                 let startPosition = {};
@@ -243,6 +244,16 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         })
                     }
 
+                    clearTimeout(copyTimer);
+                    copyTimer = setTimeout(()=>{
+                        const text = document.getSelection().toString();
+                        if(text.trim()){
+                            // TODO 优化剪切板方法，写入复制区会导致丢失当前选区
+                            // writeTextToClipboard(text);
+                            // this.notification('已复制选区至剪切板');
+                        }
+                        console.log('选区',text);
+                    },2000)
                 },debounceTime)
                 const onMouseMove = debounce(function(e) {
                     if(!isPressingMouse){

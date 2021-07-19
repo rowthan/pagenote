@@ -139,7 +139,7 @@ Step.prototype.initKeywordTags = function (){
         entered = true;
         setTimeout(()=>{
           entered && toggleLightMenu(true,step);
-        },1000)
+        },500)
       }
       lightElement.onmouseleave = function () {
         entered = false;
