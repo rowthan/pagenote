@@ -425,7 +425,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         // });
         this.recordedSteps.add(newStep);
         this.recordedSteps = this.recordedSteps.sort((a,b)=>{
-            return a.y -b.y
+            return a.data.y - b.data.y
         });
         window.getSelection().removeAllRanges();
         this.target = {};
