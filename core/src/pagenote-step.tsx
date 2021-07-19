@@ -68,6 +68,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
     isVisible: false,
     isFocus: false,
     relatedNode: [],
+    relatedAnnotationNode: null,
   }
 
   this.listeners = {};
@@ -96,10 +97,12 @@ Step.prototype.initKeywordTags = function (){
 
   function highlightElement(target) {
     // 查找文字、高亮元素
-    const result = highlightKeywordInElement(target,text,pre,suffix,null,function warpFun(text,children){
-      console.log(text,children)
+    let index = 0;
+    const result = highlightKeywordInElement(target,text,pre,suffix,null,function(text,children){
       const lightElement = document.createElement('light');
       lightElement.dataset.highlight = lightId;
+      lightElement.dataset.lightindex = index;
+      index++
 
       if(text){
         lightElement.textContent = text;
@@ -114,15 +117,18 @@ Step.prototype.initKeywordTags = function (){
       }
 
       const appendElement = document.createElement('pagenote-icon');
+      appendElement.dataset.size = 'small'
       appendElement.onclick=function (e) {
-        step.openEditor();
+        step.openEditor(true,{
+          
+        });
         step.changeData({
           lightStatus: LightStatus.LIGHT
         })
         e.stopPropagation();
       }
-      appendElement.innerHTML  = '<svg t="1625328349729" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10721" width="16" height="16"><path d="M800 289.356H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z m0 190.737H224a31.97 31.97 0 1 0 0 63.94h576a31.97 31.97 0 1 0 0-63.94z m0 190.737H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z" p-id="10722"></path><path d="M948.041 156.144A150.75 150.75 0 0 0 809.165 63.94h-0.279l-73.444 1.326a31.988 31.988 0 0 0 1.113 63.965l72.866-1.26a86.124 86.124 0 0 1 61.1 25.45c16.412 16.41 25.367 38.233 25.367 61.44v594.278c0 23.207-8.955 44.957-25.366 61.368a86.06 86.06 0 0 1-61.357 25.378h-594.33c-23.206 0-45.061-8.97-61.473-25.378a86.19 86.19 0 0 1-25.482-61.368V214.861a86.944 86.944 0 0 1 86.94-86.883h73.174a31.97 31.97 0 1 0 0-63.94h-73.159A150.827 150.827 0 0 0 63.94 214.86v594.278a150.599 150.599 0 0 0 150.895 150.686h594.33a150.328 150.328 0 0 0 150.66-150.686V214.861a149.837 149.837 0 0 0-11.784-58.717z" p-id="10723"></path><path d="M415.998 127.88h192a31.97 31.97 0 0 0 0-63.94h-192a31.97 31.97 0 0 0 0 63.94z" p-id="10724"></path></svg>'
-      wrapperLightAttr(lightElement, step.data,appendElement)
+      appendElement.innerHTML  = '<svg t="1625328349729" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10721" width="12" height="12"><path d="M800 289.356H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z m0 190.737H224a31.97 31.97 0 1 0 0 63.94h576a31.97 31.97 0 1 0 0-63.94z m0 190.737H224a31.97 31.97 0 0 0 0 63.94h576a31.97 31.97 0 0 0 0-63.94z" p-id="10722"></path><path d="M948.041 156.144A150.75 150.75 0 0 0 809.165 63.94h-0.279l-73.444 1.326a31.988 31.988 0 0 0 1.113 63.965l72.866-1.26a86.124 86.124 0 0 1 61.1 25.45c16.412 16.41 25.367 38.233 25.367 61.44v594.278c0 23.207-8.955 44.957-25.366 61.368a86.06 86.06 0 0 1-61.357 25.378h-594.33c-23.206 0-45.061-8.97-61.473-25.378a86.19 86.19 0 0 1-25.482-61.368V214.861a86.944 86.944 0 0 1 86.94-86.883h73.174a31.97 31.97 0 1 0 0-63.94h-73.159A150.827 150.827 0 0 0 63.94 214.86v594.278a150.599 150.599 0 0 0 150.895 150.686h594.33a150.328 150.328 0 0 0 150.66-150.686V214.861a149.837 149.837 0 0 0-11.784-58.717z" p-id="10723"></path><path d="M415.998 127.88h192a31.97 31.97 0 0 0 0-63.94h-192a31.97 31.97 0 0 0 0 63.94z" p-id="10724"></path></svg>'
+      wrapperLightAttr(lightElement,step.data,appendElement)
 
       step.addListener('light',function (data) {
         step.runtime.relatedNode.forEach((item)=>{
@@ -133,6 +139,7 @@ Step.prototype.initKeywordTags = function (){
       lightElement.onclick = function (e) {
         const {data} = step;
         const nextLightStatus = data.lightStatus + 1;
+        toggleLightMenu(true,step)
         step.changeData({
           lightStatus: nextLightStatus>2?0:nextLightStatus,
           annotationStatus: nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
@@ -140,12 +147,17 @@ Step.prototype.initKeywordTags = function (){
         e.stopPropagation();
       };
 
+      lightElement.ondblclick = function(e){
+        e.stopPropagation();
+        step.openEditor();
+      }
+
       let entered = false;
       lightElement.onmouseenter = ()=> {
         entered = true;
         setTimeout(()=>{
-          entered && toggleLightMenu(true,step,step.runtime.relatedNode[0] || lightElement);
-        },100)
+          entered && toggleLightMenu(true,step);
+        },1000)
       }
       lightElement.onmouseleave = function () {
         entered = false;
@@ -229,7 +241,7 @@ Step.prototype.initAnnotation = function () {
     element.parentNode.removeChild(element);
   }
 
-  this._annotationEle = element;
+  this.runtime.relatedAnnotationNode = element;
 
   function checkShowAnnotation() {
     return step.data.lightStatus===LightStatus.LIGHT && !!step.data.tip;
@@ -249,13 +261,14 @@ Step.prototype.openEditor = function () {
   const {tip,x,y} = this.data;
 
   let pos = {};
-  if(that.runtime.relatedNode[0]){
-    pos = getViewPosition(that.runtime.relatedNode[0]);
+  if(that.runtime.relatedAnnotationNode){
+    pos = getViewPosition(that.runtime.relatedAnnotationNode);
   } else {
     pos = {
       bodyLeft: getScroll().y + 200,
     }
   }
+  
   editorModal.show(null,{
     left: pos.bodyLeft+'px',
     top: pos.bodyTop+pos.height+4+'px',
@@ -275,13 +288,18 @@ Step.prototype.openEditor = function () {
   if(el){
     el.focus();
   }
+
+  toggleLightMenu(true,that,{
+    left: pos.bodyLeft,
+    top: pos.bodyTop - 30,
+  });
 }
 
 Step.prototype.delete = function () {
   this.runtime.relatedNode.forEach((element)=>{
     element.remove();
   });
-  this._annotationEle.remove();
+  this.runtime.relatedAnnotationNode.remove();
   this.options.onRemove(this.data);
   toggleLightMenu(false);
 }

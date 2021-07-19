@@ -5,32 +5,39 @@ import LightActionBar from "./component/LightActionBar";
 
 const toggleLightMenu = (function () {
     let toggleLightBar;
-    return function (show,light,element,colors){
+    return function (show,light,position,colors){
         if(toggleLightBar){
-            return toggleLightBar(show,light,element);
+            return toggleLightBar(show,light,position);
         }
 
-        function Menu({light,element}) {
-            const scroll = getScroll();
-            const triggerPosition = element.getBoundingClientRect();
-            const top = Math.max(triggerPosition.top-40+scroll.y,40)
+        function Menu({light,pos}) {
+            let top,left;
+            if(!pos){
+                const scroll = getScroll();
+                const relativeNode = light.runtime.relatedNode[0] || light.runtime.relatedAnnotationNode;
+                const triggerPosition = relativeNode.getBoundingClientRect();
+                top = Math.max(triggerPosition.top-40+scroll.y,40)
+                left = triggerPosition.left+scroll.x+triggerPosition.width/2 - 56;
+            } else {
+                top = pos.top;
+                left = pos.left;
+            }
+            
             // padding: 4px; background: #fff; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
-            return <div
+            return <pagenote-block
                 onClick={(e)=>{e.stopPropagation()}}
-                style={`position:absolute; z-index:1;top:${top}px;left:${triggerPosition.left+scroll.x+triggerPosition.width/2}px;
+                style={`position:absolute; z-index:999999;top:${top}px;left:${left}px;
                     `}>
                 <LightActionBar step={light} colors={colors}/>
-            </div>
+            </pagenote-block>
         }
 
-        toggleLightBar = function (show,light,element) {
-            element = element || (light ? light.runtime.relatedNode[0] : null);
-            show = show && !!element;
-            render(show?<Menu light={light} element={element}></Menu>:null,
+        toggleLightBar = function (show,light,position) {
+            render(show?<Menu light={light} pos={position}></Menu>:null,
                 document.documentElement)
         }
 
-        toggleLightBar(show,light,element)
+        toggleLightBar(show,light,position)
 
         document.addEventListener('click',function (e) {
             toggleLightBar(false)

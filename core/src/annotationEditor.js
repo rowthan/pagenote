@@ -8,6 +8,7 @@ export default function AnnotationEditor({tip,onchange,root}) {
         disabled={false} // use true to disable edition
         onChange={onchange} // handle innerHTML change
         onKeyUp={(e)=>{e.stopPropagation();}}
+        onClick={(e)=>{e.stopPropagation();}}
         tagName='pagenote-block'
     />,root)
 }
