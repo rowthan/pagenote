@@ -4,14 +4,14 @@ import AsideBar from "./component/aside/AsideBar";
 import ActionBars from "./component/action/ActionBars";
 import {debounce} from './utils';
 import './component/light/annotation.scss'
-import lightMenu from './light-menu'
+import toggleLightMenu from './light-menu'
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
     const rootElement = document.documentElement || document.body || document.createElement('div');
 
     const colors = options.brushes.map((brush)=>{return brush.bg})
-    lightMenu(false,null,null,colors);
+    toggleLightMenu(false,null,null,colors);
 
     // side-bar
     const sidebar = document.createElement('pagenote-bar');

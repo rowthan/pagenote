@@ -7,7 +7,7 @@ import NoteIcon from '@/assets/images/note.svg';
 import {writeTextToClipboard} from "@/utils/document";
 import {useState} from "preact/hooks";
 import {Colors} from "@/component/light/LightNode";
-import style from "@/component/light/light-node.scss";
+import "@/component/light/light-node.scss";
 
 export default function LightActionBar({step,colors}) {
     const {data} = step;

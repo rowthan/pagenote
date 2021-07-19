@@ -1,6 +1,6 @@
 import {convertColor} from "./index";
 
-export function wrapperLightAttr(lightElement,{bg,lightStatus, tip},appendEl) {
+export function wrapperLightAttr(lightElement,{bg,lightStatus,tip},appendEl) {
     const {textColor,rgb} = convertColor(bg);
     const bottomColor = `rgb(${(rgb[0]-30)},${(rgb[1]-30)},${(rgb[2]-30)})`;
     const bgColor = `rgba(${rgb.toString()},1)`;
