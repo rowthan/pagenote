@@ -2,7 +2,7 @@
 import md5 from "blueimp-md5";
 import {highlightKeywordInElement,removeElementHighlight} from "./utils/highlight";
 import { whats } from './utils/index'
-import {emptyChildren, getScroll, getViewPosition, gotoPosition} from "./utils/document";
+import {emptyChildren, getScroll, getViewPosition, gotoPosition,keepLastIndex} from "./utils/document";
 import Draggable from 'draggable';
 import toggleLightMenu from "./light-menu";
 import {wrapperLightAttr,wrapperAnnotationAttr} from "./utils/light";
@@ -269,7 +269,12 @@ Step.prototype.initAnnotation = function () {
   element.toggleShow = wrapperAnnotationAttr;
 }
 
-Step.prototype.openEditor = function () {
+Step.prototype.openEditor = function (show=true) {
+  if(show===false){
+    editorModal.destroy();
+    return;
+  }
+
   const that = this;
   this.changeData({annotationStatus:2});
   const {tip,x,y} = this.data;
@@ -301,6 +306,7 @@ Step.prototype.openEditor = function () {
   const el = document.querySelector('pagenote-block[contenteditable="true"]');
   if(el){
     el.focus();
+    keepLastIndex(el);
   }
 
   toggleLightMenu(true,that,{
