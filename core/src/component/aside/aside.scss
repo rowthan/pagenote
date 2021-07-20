@@ -138,7 +138,7 @@ pagenote-lights{
     pagenote-light-aside-item-container{
       display: block;
       background: #fff;
-      padding: 6px 6px 6px 30px;
+      padding: 6px 6px 6px 36px;
       box-sizing: border-box;
     }
 
@@ -183,7 +183,7 @@ pagenote-lights{
       position: absolute;
       top: 10px;
       right: unset;
-      left: 6px;
+      left: 12px;
     }
 
 
@@ -282,7 +282,20 @@ pagenote-light-aside-item-sign{
   }
   // 视野内
   &[data-insign='1']{
-    transform: translateX(-6px);
+    // transform: translateX(-6px);
+    // width: 20px;
+    // height: 8px;
+    &::before{
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 4px;
+      height: 4px;
+      border-radius: 4px;
+      background-color: #fff;
+      box-shadow: 0px 0px 0px 1px #636363;
+    }
   }
 
   &:hover{
