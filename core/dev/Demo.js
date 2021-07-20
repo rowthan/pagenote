@@ -130,7 +130,7 @@ export default function Demo() {
                     </div>
                 </section>
 
-                <section>
+                {/* <section>
                     <h2>
                         与其他同类产品优点是什么？
                     </h2>
@@ -149,7 +149,7 @@ export default function Demo() {
                             </h3>
                         </div>
                     </div>
-                </section>
+                </section> */}
 
                 <section>
                     <h2>
