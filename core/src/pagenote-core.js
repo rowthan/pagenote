@@ -403,7 +403,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     };
 
     // success: true,faild:false 增加参数 排序方式，按时间、按网页位置（默认)
-    this.record = function(info={},forceRecord){
+    this.record = function(info={},showComment){
         info = Object.assign(this.target,info);
         const maxNn = OPTIONS.maxMarkNumber;
         if(this.recordedSteps.length>=maxNn){
@@ -439,6 +439,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             }
             this.status = constant.RECORDED
         });
+
+        if(showComment){
+            newStep.openEditor();
+        }
         return newStep
     };
 

@@ -59,9 +59,9 @@ light[data-highlight]{
   font-family: inherit !important;
   background-image: linear-gradient(to top, rgba(255,222,93,1) 2px, rgba(255,222,93,0.84) 2px);
   background-image: linear-gradient(to top, var(--bgcolor) 2px, var(--bgcolor) 2px);
-  background-size: 100% 0px;
-  border-bottom: 2px solid  rgba(255,222,93,1);
-  border-bottom: 2px solid var(--bgbottomcolor);
+  background-size: 100% 2px;
+  // border-bottom: 2px solid  rgba(255,222,93,1);
+  // border-bottom: 2px solid var(--bgbottomcolor);
   background-repeat: no-repeat;
   background-position: bottom;
   transition: background-size 0.5s ease-out;
@@ -85,7 +85,7 @@ light[data-highlight]{
   &[data-active='2']{
     -webkit-text-fill-color: var(--color);
     background-size: 100% calc(1em*2);
-    border-bottom: none;
+    // border-bottom: none;
   }
 
 

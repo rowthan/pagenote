@@ -23,7 +23,6 @@ const toggleLightMenu = (function () {
                 left = pos.left;
             }
             
-            // padding: 4px; background: #fff; border-radius: 4px; box-shadow: 1px 2px 6px 0px #cecece;
             return <pagenote-block
                 onClick={(e)=>{e.stopPropagation()}}
                 style={`position:absolute; z-index:999999;top:${top}px;left:${left}px;

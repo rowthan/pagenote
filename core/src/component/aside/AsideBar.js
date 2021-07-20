@@ -1,15 +1,10 @@
 import {h, Component, Fragment} from 'preact';
 import BigPicture from "bigpicture";
-import i18n from '@/locale/i18n';
 import { BAR_STATUS } from '@/const';
 import {moveable} from "@/utils/document";
 import RemoveIcon from '@/assets/images/remove.svg';
-import Toggle from '@/assets/images/toggle.svg';
-import ExpandIcon from '@/assets/images/expand.svg';
 import LightRefAnotation from "./LightRefAnotation";
-// import ScrollProgress from "./ScrollProgress";
 import sideStyle from './aside.scss';
-import LightIcon from './LightIcon'
 import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
 import Tags from "./Tags";
@@ -206,17 +201,11 @@ class AsideBar extends Component{
         })
     }
 
-    setAllLightStatus = function(status){
-        this.pagenote.recordedSteps.forEach((light)=>{
-            light.changeData({
-                lightStatus: status
-            })
-        })
-    }
+
 
     render() {
         const {
-            status,barInfo,steps,runindex,categories,snapshots,run
+            status,barInfo,steps,runindex,categories,snapshots,allStepStatus
         } = this.state;
         const barStatus = barInfo.status||'';
         const isExpand = false;//barStatus === BAR_STATUS.expand;
@@ -229,6 +218,13 @@ class AsideBar extends Component{
         steps.forEach((step)=>{
             colorSet.add(step.lightBg||step.bg);
         });
+
+        let message = '浅高亮'
+        if(allStepStatus===1){
+            message = '深高亮'
+        } else if(allStepStatus === 2){
+            message = '深高亮&显示批注';
+        }
 
         return(
             status===this.pagenote.CONSTANT.DESTROY ? '' :
@@ -243,11 +239,11 @@ class AsideBar extends Component{
                                 </pagenote-action>
                             </Tip> */}
                             <pagenote-all-actions>
-                                <Tip message="浅高亮">
-                                    <pagenote-light-aside-item-sign data-level={1} onClick={()=>{this.setAllLightStatus(0)}} />
+                                <Tip message={message}>
+                                    <pagenote-light-aside-item-sign data-level={1} data-active={allStepStatus}   onClick={()=>{this.toggleAllLight()}} />
                                 </Tip>
                                 
-                                <Tip message="全高亮">
+                                {/* <Tip message="全高亮">
                                     <pagenote-light-aside-item-sign 
                                         onClick={()=>{this.setAllLightStatus(1)}}
                                         data-level={1}  
@@ -260,7 +256,7 @@ class AsideBar extends Component{
                                         data-level={1}  
                                         data-active={2} 
                                         data-insign={0} />
-                                </Tip>
+                                </Tip> */}
                             
                                 
                             </pagenote-all-actions>
@@ -290,13 +286,6 @@ class AsideBar extends Component{
 
                         {/*标记*/}
                         <pagenote-lights>
-                            {/*{*/}
-                            {/*    isExpand ? '' : <pagenote-light-aside-mask style={{*/}
-                            {/*        height: heightMask,*/}
-                            {/*        top: topMask*/}
-                            {/*    }} />*/}
-                            {/*}*/}
-
                             {
                                 steps.map((record, index) => (
                                   <StepSign
@@ -307,17 +296,8 @@ class AsideBar extends Component{
                                     dot={isExpand}
                                     lastFocusId={this.state.lastFocus}
                                     colors={this.pagenote.options.brushes.map((brush)=>{return brush.bg})}
-                                    onClick={(e)=>{
-                                      const target = e.currentTarget;
+                                    onClick={(e)=>{;
                                       this.setLastFocus(record.lightId)
-                                      // setTimeout(()=>{
-                                      //     console.log(e.currentTarget,target)
-                                      //     this.setLastFocus({
-                                      //         lightId: record.lightId,
-                                      //         height: target.offsetHeight,
-                                      //         top: target.offsetTop,
-                                      //     })
-                                      // },1000)
                                     }}
                                   />
                                 ))
