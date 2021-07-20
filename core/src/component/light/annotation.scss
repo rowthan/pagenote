@@ -35,6 +35,9 @@ pagenote-annotation{
       }
     }
     pagenote-block[data-role="custom-content"]{
+      img{
+        max-width: 100%;
+      }
 
     }
     pagenote-icon{

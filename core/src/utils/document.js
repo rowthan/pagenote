@@ -438,9 +438,6 @@ var showCamera = function (snapshot) {
 };
 
 function keepLastIndex(obj) {
-    console.log(obj)
-    console.log(window.getSelection)
-    console.log(document.selection)
     if (window.getSelection) { //ie11 10 9 ff safari
         obj.focus(); //解决ff不获取焦点无法定位问题
         var range = window.getSelection(); //创建range
