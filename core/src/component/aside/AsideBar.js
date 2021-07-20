@@ -206,6 +206,14 @@ class AsideBar extends Component{
         })
     }
 
+    setAllLightStatus = function(status){
+        this.pagenote.recordedSteps.forEach((light)=>{
+            light.changeData({
+                lightStatus: status
+            })
+        })
+    }
+
     render() {
         const {
             status,barInfo,steps,runindex,categories,snapshots,run
@@ -217,21 +225,10 @@ class AsideBar extends Component{
         barInfo.right = Math.min(document.documentElement.clientWidth-200,barInfo.right);
         let right = Math.max(barInfo.right,0);
 
-        const actions = this.pagenote.options.sideBarActions;
-
         let colorSet = new Set();
         steps.forEach((step)=>{
             colorSet.add(step.lightBg||step.bg);
         });
-
-        const targets = document.querySelectorAll(`pagenote-light-aside-item[data-insign="1"][data-focus="1"]`);
-        const inViewTargets =  document.querySelectorAll(`pagenote-light-aside-item[data-insign="1"]`);
-
-        const target = targets[Math.floor(targets.length/2)] || inViewTargets[Math.floor(inViewTargets.length/2)];
-
-        const topMask = target ? target.offsetTop : 0;
-        const heightMask = target ? 28 : 0;
-
 
         return(
             status===this.pagenote.CONSTANT.DESTROY ? '' :
@@ -240,13 +237,35 @@ class AsideBar extends Component{
                     showBar &&
                     <pagenote-aside data-status={isExpand?'expand':'fold'} style={{right: right + 'px', top: top + 'px',position:'fixed'}}>
                         <pagenote-actions ref={this.setRef.bind(this)}>
-                            <Tip message={i18n.t('toggle_marks')}>
+                            {/* <Tip message={i18n.t('toggle_marks')}>
                                 <pagenote-action onClick={this.toggleAllLight} >
                                     <LightIcon run={run}  colors={steps.map((s)=>s.bg)} />
                                 </pagenote-action>
-                            </Tip>
+                            </Tip> */}
+                            <pagenote-all-actions>
+                                <Tip message="浅高亮">
+                                    <pagenote-light-aside-item-sign data-level={1} onClick={()=>{this.setAllLightStatus(0)}} />
+                                </Tip>
+                                
+                                <Tip message="全高亮">
+                                    <pagenote-light-aside-item-sign 
+                                        onClick={()=>{this.setAllLightStatus(1)}}
+                                        data-level={1}  
+                                        data-active={1} 
+                                        data-insign={0} />
+                                </Tip>
+                                <Tip message="全高亮&显示批注">
+                                    <pagenote-light-aside-item-sign 
+                                        onClick={()=>{this.setAllLightStatus(2)}}
+                                        data-level={1}  
+                                        data-active={2} 
+                                        data-insign={0} />
+                                </Tip>
+                            
+                                
+                            </pagenote-all-actions>
 
-                            <pagenote-action-group>
+                            {/* <pagenote-action-group>
                                 {actions.length}
                                 {
                                     actions.map((action,index)=>
@@ -259,7 +278,7 @@ class AsideBar extends Component{
                                       </Tip>
                                       )
                                 }
-                            </pagenote-action-group>
+                            </pagenote-action-group> */}
 
                             {/*<pagenote-action data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>*/}
                             {/*    {isExpand ? <ExpandIcon />:  <Toggle />}*/}
@@ -350,13 +369,12 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
         })
     }
 
-    const isActive = step.data.lightStatus > 0;
-    const isVisible = step.runtime.isVisible;
+    const isVisible = step.runtime.isVisible ? '1':'';
     const {tip,bg} = step.data;
     return (
         <pagenote-light-aside-item
             data-active={step.data.lightStatus}
-            data-insign={isVisible?'1':''}
+            data-insign={isVisible}
             data-level={1}
             data-dot={dot?'1':'0'}
             data-running={running}
@@ -381,7 +399,11 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
                     </pagenote-block>
                 }
             </pagenote-light-anotation>
-            <pagenote-light-aside-item-sign data-level={1} onClick={toggleLight} />
+            <pagenote-light-aside-item-sign 
+                data-active={step.data.lightStatus} 
+                data-insign={isVisible} 
+                data-level={1} 
+                onClick={toggleLight} />
             <pagenote-light-actions-container>
                 {/*<pagenote-light-aside-item-sign data-switch='1' data-level={step.level===1?2:1} onClick={()=>{changeLevel(step.level===1?2:1)}} />*/}
                 <LightActionBar step={step} colors={colors} />
