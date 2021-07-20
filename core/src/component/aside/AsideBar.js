@@ -355,7 +355,7 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
     const {tip,bg} = step.data;
     return (
         <pagenote-light-aside-item
-            data-active={isActive?'1':'0'}
+            data-active={step.data.lightStatus}
             data-insign={isVisible?'1':''}
             data-level={1}
             data-dot={dot?'1':'0'}
