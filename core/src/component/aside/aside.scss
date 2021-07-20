@@ -217,6 +217,8 @@ pagenote-lights{
       }
     }
 
+    
+
     // 视野内
     &[data-insign='1']{
       //pagenote-light-aside-item-container{
@@ -224,6 +226,14 @@ pagenote-lights{
       //}
       pagenote-light-aside-item-sign{
         border-color: var(--color);
+      }
+    }
+
+    //  TODO 删除
+    &[data-active='2']{
+      pagenote-light-aside-item-sign{
+        background-color: var(--color);
+        border: 1px solid #000;
       }
     }
 
