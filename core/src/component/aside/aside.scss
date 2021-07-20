@@ -108,7 +108,7 @@ pagenote-description{
 
 pagenote-lights{
   max-height: 90vh;
-  // overflow-y: auto;
+  overflow-y: auto;
   padding: 1px;
   pagenote-light-aside-mask{
     display: block;
@@ -266,14 +266,7 @@ pagenote-light-aside-item-sign{
   &[data-active='1'],&[data-active='2']{
     background-color: var(--color,$target-default-color);
   }
-
-  &[data-active='1']{
-    // background-color: $target-default-color;
-    // border-color: var(--color);
-  }
   &[data-active='2']{
-    // background-color: $target-default-color;
-    // border-color: $target-outline-color;
     &::after{
       content: "";
       position: absolute;
@@ -289,11 +282,7 @@ pagenote-light-aside-item-sign{
   }
   // 视野内
   &[data-insign='1']{
-    // // border-color: #000;
-    // &[data-active='1'],&[data-active='2']{
-    //   background-color: var(--color,$target-default-color);
-    // }
-    transform: translateX(-14px);
+    transform: translateX(-6px);
   }
 
   &:hover{
