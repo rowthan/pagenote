@@ -74,3 +74,6 @@ extenstion/dist/scripts
 dist/pagenote.js.LICENSE.txt
 
 .DS_Store
+.idea/modules.xml
+.idea/pagenote.iml
+.idea/vcs.xml
