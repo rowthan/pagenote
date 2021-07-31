@@ -43,6 +43,6 @@ function PageNote(id,options={}){
     return pagenoteCore;
 }
 
-
-export default PageNote;
 window.PageNote = PageNote;
+export default PageNote;
+

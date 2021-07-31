@@ -2,322 +2,222 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>pagenote demo</title>
+    <title>pagenote 试验场</title>
   <link rel="stylesheet" href="../dist/pagenote.css">
-    <style>
-        body {
-  font-size: 14px;
-  color: #333;
-}
-.demo {
-  max-width: 700px;
-  margin: 0 auto;
-}
-section {
-  margin-bottom: 60px;
-}
-h2 {
-  font-weight: bold;
-  font-size: 24px;
-  line-height: 39px;
-  margin-bottom: 0.5em;
-}
-h3 {
-  margin: 0;
-  font-size: 16px;
-  line-height: 19px;
-  color: #383838;
-}
-p {
-  color: #717171;
-}
-.block {
-  margin-bottom: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.card {
-  width: 320px;
-  margin-right: 24px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  padding: 24px;
-  background: #FFFFFF;
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.16);
-  border-radius: 8px;
-}
-.card h3 {
-  margin-bottom: 16px;
-  color: #383838;
-}
-.card ul {
-  padding-left: 24px;
-  margin: 0;
-  margin-block: 0;
-}
-.part h3 {
-  margin-bottom: 5px;
-}
-.part p {
-  margin: 5px 0;
-}
-
-    </style>
+  <link rel="stylesheet" href="./index.css">
 </head>
 <body data-blockpagenote='1'>
   <div class="demo">
-    <article>
-      <section>
-        <h2>
-          <span className="en">How About PAGENOTE</span>
-          <span> 你能用 PAGENOTE 做什么？ </span>
-        </h2>
-        <div className="block">
-          <div className='card'>
-            <h3>
-              高亮
-            </h3>
-            <div>
-              <div>
-                多种颜色高亮网页
-              </div>
-              <div>
+  <article>
+    <section>
+      <h2>
+        PAGENOTE SDK 尝鲜功能
+      </h2>
+      <div class="block">
+        <div class="part">
+          <h3>
+            这个页面是什么？
+          </h3>
+          <p>
+            你现在访问的是 PAGENOTE SDK 功能预览页面，你不必安装插件也可以试用主要功能。
+          </p>
+        </div>
+      </div>
+    </section>
 
-              </div>
-            </div>
-          </div>
-          <div className="part">
-            <h3>
-              怎么使用
-            </h3>
-            <p>
-              在这里勾选任意一段文本，然后按钮就会自动出来。点击后就高亮成功了。
-            </p>
-            <p>
-              高亮成功后，还可以记录笔记，下次访问网页，笔记也都还在
-            </p>
-          </div>
-        </div>
-        <div className="block">
-          <div className='card'>
-            <h3>
-              批注
-            </h3>
-            <div>
-              <div>
-                高亮内容
-              </div>
-              <div>
-                批注笔记
-              </div>
-            </div>
-          </div>
-          <div className="part">
-            <h3>
-              怎么使用
-            </h3>
-            <p>
-              在这里勾选任意一段文本，然后按钮就会自动出来。点击后就高亮成功了。
-            </p>
-            <p>
-              高亮成功后，还可以记录笔记，下次访问网页，笔记也都还在
-            </p>
-          </div>
-        </div>
-        <div className="block">
-          <div className='card'>
-            <h3>
-              整理
-            </h3>
-            <div>
-              <div>
-                在本地就整理的创建的笔记
-              </div>
-            </div>
-          </div>
-          <div className="part">
-            <h3>
-              免登录、离线可用
-            </h3>
-            <p>
-              你不必注册账号就能管理你的数据，因为数据就在你本机。
-            </p>
-            <p>
-              服务器端不存储你的数据
-            </p>
-          </div>
-        </div>
-      </section>
+    <section>
+      <h3>SDK 新功能列表</h3>
+      <ul>
+        <li>
+          <span>4.8.0-typescript。我们对 UI、交互都做了一次大的改造和升级。</span>
+          <ul>
+            <li>
+              将批注和功能按钮区进行了拆分。
+            </li>
+            <li>
+              有笔记的高亮末尾会增加一个图标，以提示此处高亮有笔记。
+            </li>
+            <li>
+              单击高亮区域能切换状态：浅高亮、深高亮；双击可以快速进入编辑状态。
+            </li>
+            <li>
+              批注的拖拽会更丝滑
+            </li>
+            <li>
+              通过快捷键来高亮，可以直接进入编辑笔记模式。（选中一段文本后，长按 P 试试）
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
 
-      <section>
-        <h2>
-          特有的操作小技巧
-        </h2>
-        <p>
-          这是 PAGENOTE 特有的特性，在其他同类产品，你可能找不到。
-        </p>
-        <div className="block">
-          <div className="card">
-            <h3>
-              延迟功能
-            </h3>
+    <section>
+      <h3>接下来的新功能规划是什么？</h3>
+      <ol>
+        <li>
+          侧边栏会被去掉。PAGENOTE 会更少的侵入原本网页。减少不必要的元素，影响原网页。
+        </li>
+        <li>
+          会将「长按唤起」升级为「召唤模式」，长按鼠标来激活划词功能，否则不激活。就像数码宝贝变身有没有？
+        </li>
+        <li>
+          开放对 图像、视频、音频的标记功能。并针对选区的不同内容，展示不同的功能按钮。
+        </li>
+        <li>
+          画笔也要分级，除了支持自定义颜色，增加 1、2级区分。
+        </li>
+        <li>
+          暂时就透露这些功能啦，想法还有超级多，一个一个实现吧。
+        </li>
+      </ol>
+    </section>
+
+    <hr/>
+
+    <section>
+      <h2>
+        <span> 你能用 PAGENOTE 做什么？ </span>
+      </h2>
+      <div class="block">
+        <div class='card'>
+          <h3>
+            高亮
+          </h3>
+          <div>
             <div>
-              按住鼠标不放一段时间后，按钮才会出现。
+              多种颜色高亮网页
             </div>
-          </div>
-          <div className="part">
-            <p>
-              当你在网页上选中一段内容后，你安装的划词插件会立即出现按钮 -- 或许，这已经打扰到你。
-              <br/>
-              而 PAGENOTE 允许你灵活控制按钮是否出现：按住鼠标不松一定时间后，PAGENOTE 才会开始工作。
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>
-          PAGENOTE +
-        </h2>
-        <div className="block">
-          <div className="card">
-            <h3>
-              扩展划词
-            </h3>
             <div>
-              除了高亮、笔记等核心功能。更多的扩展功能，支持个性化定制，划词之后，还可以做什么？搜索、翻译、发送，这些，在 PAGENOTE+ 中都可以实现。
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- <section>
-        <h2>
-          与其他同类产品优点是什么？
-        </h2>
-        <div className="block">
-          <div className="part">
-            <h3>
-              免费，开源
-            </h3>
-            <div>
-              基本的高亮标注等核心功能，都是免费的。不会刻意限制你使用它。
-            </div>
-          </div>
-          <div className="part">
-            <h3>
-
-            </h3>
-          </div>
-        </div>
-      </section> -->
-
-      <section>
-        <h2>
-          PAGENOTE 起源？
-        </h2>
-        <div className="block">
-          <div className="part">
-            <h3>
-              网页里留笔记
-            </h3>
-            <div>
-              的初衷是为了能在网页里留一些笔记，能把账号、表单项的填写数据留在网页里，不必单独使用一个记事本，随用随取，不打扰最有效。
-              还可以把关注的内容高亮，下次打开时提醒自己
             </div>
           </div>
         </div>
-      </section>
-    </article>
-    <p id="one">
-      内容内容内容
-    </p>
-    <p>
-      内容内容内容
-    </p>
-    <p class="two">
-      内容内容内容
-    </p>
-    <p>
-      内容内容内容
-    </p>
-    <p>当你在网页上选中一段内容后，你安装的划词插件会立即出现按钮 -- 或许，这已经打扰到你。</p>
-    <p>
-      而 PAGENOTE 允许你灵活控制按钮是否出现：按住鼠标不松一定时间后，PAGENOTE 才会开始工作。
-    </p>
-    <p>
-      你不必注册账号就能管理你的数据，因为数据就在你本机。
-    </p>
-  </div>
+        <div class="part">
+          <h3>
+            怎么使用
+          </h3>
+          <p>
+            在这里勾选任意一段文本，然后按钮就会自动出来。点击后就高亮成功了。
+          </p>
+          <p>
+            高亮成功后，还可以记录笔记，下次访问网页，笔记也都还在
+          </p>
+        </div>
+      </div>
+      <div class="block">
+        <div class='card'>
+          <h3>
+            批注
+          </h3>
+          <div>
+            <div>
+              高亮内容
+            </div>
+            <div>
+              批注笔记
+            </div>
+          </div>
+        </div>
+        <div class="part">
+          <h3>
+            怎么使用
+          </h3>
+          <p>
+            在这里勾选任意一段文本，然后按钮就会自动出来。点击后就高亮成功了。
+          </p>
+          <p>
+            高亮成功后，还可以记录笔记，下次访问网页，笔记也都还在
+          </p>
+        </div>
+      </div>
+      <div class="block">
+        <div class='card'>
+          <h3>
+            整理
+          </h3>
+          <div>
+            <div>
+              在本地就整理的创建的笔记
+            </div>
+          </div>
+        </div>
+        <div class="part">
+          <h3>
+            免登录、离线可用
+          </h3>
+          <p>
+            你不必注册账号就能管理你的数据，因为数据就在你本机。
+          </p>
+          <p>
+            服务器端不存储你的数据
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>
+        特有的操作小技巧
+      </h2>
+      <p>
+        这是 PAGENOTE 特有的特性，在其他同类产品，你可能找不到。
+      </p>
+      <div class="block">
+        <div class="card">
+          <h3>
+            延迟功能
+          </h3>
+          <div>
+            按住鼠标不放一段时间后，按钮才会出现。
+          </div>
+        </div>
+        <div class="part">
+          <p>
+            当你在网页上选中一段内容后，你安装的划词插件会立即出现按钮 -- 或许，这已经打扰到你。
+            <br/>
+            而 PAGENOTE 允许你灵活控制按钮是否出现：按住鼠标不松一定时间后，PAGENOTE 才会开始工作。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>
+        PAGENOTE +
+      </h2>
+      <div class="block">
+        <div class="card">
+          <h3>
+            扩展划词
+          </h3>
+          <div>
+            除了高亮、笔记等核心功能。更多的扩展功能，支持个性化定制，划词之后，还可以做什么？搜索、翻译、发送，这些，在 PAGENOTE+ 中都可以实现。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>
+        关于我
+      </h2>
+      <div class="block">
+        <div class="part">
+          喜欢软件开发的我，需要联系我的话，关注公众号吧：
+          <div>
+            <img width="100" height='100' src="https://pagenote.cn/img/wechat.jpg" alt="pagenote"/>
+          </div>
+          <p>
+            如果觉得 PAGENOTE 还不错，微信扫一扫，小小打赏一下吧
+            <br/>
+            <img width="100" height='100' src="https://pagenote.cn/img/pay/wechat-pay.png" alt=""/>
+          </p>
+        </div>
+      </div>
+    </section>
+  </article>
+</div>
   <script src="../dist/pagenote.js"></script>
-  <script>
-    <!-- new 一个新pagenote对象   -->
-    var pagenote = new PageNote('demo',{
-      saveInLocal: false, // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
-      functionColors:[ // 支持扩展的功能按钮区，
-        [
-          {
-            icon:'<svg t="1604927420311" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3896" width="256" height="256"><path d="M641.5 649.2H381.4c-13.9-30.1-30.5-60.2-47-89.7-36.4-65.1-73.9-132.4-73.9-189 0-138.3 112.5-250.8 250.8-250.8s250.8 112.5 250.8 250.8c0 56.2-37.6 123.9-74 189.4-16.2 29.3-32.8 59.4-46.6 89.3z" fill="#EDF5F9" p-id="3897"></path><path d="M511.3 63.9c-169.3 0-306.6 137.2-306.6 306.6 0 112.4 102.8 231.4 140.2 336 55.8 156 49.6 249.3 166.3 249.3 118.4 0 110.5-92.9 166.3-248.6C715.2 602.3 817.9 482 817.9 370.5c0-169.3-137.2-306.6-306.6-306.6z m72.3 757.4l-138.2 17.3c-4.9-14.3-10.2-31-16.6-52.8l-0.3-0.9L601 763.4c-2.4 8.2-5.1 16.9-7.3 24.6-3.7 12.6-7 23.4-10.1 33.3z m-163.2-63.2c-5.1-16.8-10.8-34.5-17.2-53.2h216.4c-3.4 10-6.8 20-9.8 29.5l-189.4 23.7zM511.3 900c-28.2 0-41.2-3.2-55.7-34.8l118.1-14.8c-17 46.1-29.5 49.6-62.4 49.6z m130.2-250.8H381.4c-13.9-30.1-30.5-60.2-47-89.7-36.4-65.1-73.9-132.4-73.9-189 0-138.3 112.5-250.8 250.8-250.8s250.8 112.5 250.8 250.8c0 56.2-37.6 123.9-74 189.4-16.2 29.3-32.8 59.4-46.6 89.3z" fill="#144A8A" p-id="3898"></path><path d="M495.3 203.3c-92.2 0-167.2 75-167.2 167.2 0 7.7 6.2 13.9 13.9 13.9s13.9-6.2 13.9-13.9c0-76.8 62.5-139.4 139.4-139.4 7.7 0 13.9-6.2 13.9-13.9s-6.2-13.9-13.9-13.9zM583.6 821.3l-138.2 17.3c-4.9-14.3-10.2-31-16.6-52.8l-0.3-0.9L601 763.4c-2.4 8.2-5.1 16.9-7.3 24.6-3.7 12.6-7 23.4-10.1 33.3zM420.4 758.1c-5.1-16.8-10.8-34.5-17.2-53.2h216.4c-3.4 10-6.8 20-9.8 29.5l-189.4 23.7zM511.3 900c-28.2 0-41.2-3.2-55.7-34.8l118.1-14.8c-17 46.1-29.5 49.6-62.4 49.6z" fill="#9FC8E2" p-id="3899"></path></svg>',
-            name:'自定义扩展1',
-            shortcut: 'h',
-            onclick: function (e,target) {
-              alert('点击了')
-            },
-            onmouseover: function (e) {
-              console.log('鼠标经过了',e)
-            }
-          }
-        ]
-      ],
-      categories:[{ // 默认的候选标签
-        label:'候选项1'
-      },{
-        label:'候选项2'
-      }],
-      brushes:[ // 画笔
-        {
-          bg:'rgb(225,192,63)', // rgb 颜色值
-          shortcut:'p', // 快捷键，可选
-          label:'一级画笔', // 说明
-          level:1, // 暂不支持
-        },
-        {
-          bg:'rgb(246,227,154)',
-          shortcut:'p',
-          label:'一级画笔',
-          level:1,
-        }
-      ],
-      showBarTimeout: 0, // 延迟功能时间 单位毫秒
-      renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
-        const element = document.createElement('div');
-        const {tip,lightId} = data;
-        element.innerHTML =  `
-          <div id="${lightId}" style="padding: 5px; font-size: 12px; min-height: 2em; color: #666;">${tip}</div>
-        `
-        element.ondblclick = function () {
-          light.openEditor();
-        };
-        return element
-      }
-    });
-
-    const userData = localStorage.getItem('user_data');
-
-    const initData = userData ? JSON.parse(userData) : null;
-    // 这里可以从服务器端拉取数据，用于 init
-    pagenote.init(initData); // 初始化开始工作
-
-    pagenote.addListener(function (status) {
-      if(status===pagenote.CONSTANT.SYNCED){
-        // 数据变化回调，将数据发送到服务器端，在这里处理
-        console.log('数据发生的变化',pagenote.plainData)
-        const dataString = JSON.stringify(pagenote.plainData);
-        // 这里可以改为将数据存储到服务器端
-        localStorage.setItem('user_data',dataString);
-      }
-    })
-  </script>
+  <script src="./init.js"></script>
 </body>
 </html>
