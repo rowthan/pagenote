@@ -1,0 +1,15 @@
+pagenote-block[contenteditable='true']{
+  // border: 1px solid #dedbdb;
+  padding: 26px 10px 10px 10px;
+  max-width: 350px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  color: #666;
+  font-size: 12px;
+  outline:none;
+  background: #fff;
+  border-radius: 4px;
+  img{
+    max-width: 100%;
+  }
+}

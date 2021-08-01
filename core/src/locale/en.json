@@ -1,0 +1,116 @@
+{
+  "add_a_category": {
+    "message": "add a tag"
+  },
+  "search_or_create_category": {
+    "message": "search or create a mark"
+  },
+  "create_and_apply": {
+    "message": "apply"
+  },
+  "has_read_percent": {
+    "message": "you have already read the full page of ${percent}%"
+  },
+  "shortcut": {
+    "message": "shortcut"
+  },
+  "main_shortcut": {
+    "message": "main shortcut"
+  },
+  "press_the_key": {
+    "message": "press the key to highlight"
+  },
+  "most_cnt": {
+    "message": "${count} limited"
+  },
+  "toggle_marks": {
+    "message": "toggle all marks"
+  },
+  "fold": {
+    "message": "fold"
+  },
+  "expand": {
+    "message": "expand"
+  },
+  "goto_manage": {
+    "message": "goto the manage platform"
+  },
+  "copied": {
+    "message": "copied"
+  },
+  "keywords": {
+    "message": "keyword"
+  },
+  "annotation": {
+    "message": "annotation"
+  },
+  "hide": {
+    "message": "hide"
+  },
+  "fixed": {
+    "message": "fixed"
+  },
+  "copy_keyword_annotation": {
+    "message": "click for coying keywords and double click for coping keywords and annotation"
+  },
+  "change_color": {
+    "message": "change color"
+  },
+  "remove_marks": {
+    "message": "remove marks"
+  },
+  "more": {
+    "message": "see more"
+  },
+  "mark_limited": {
+    "message": "error: ${count} limited"
+  },
+  "save_failed": {
+    "message": "failed save"
+  },
+  "capture_error": {
+    "message": "failed capture"
+  },
+  "not_available_in_current_page": {
+    "message": "not available in current page"
+  },
+  "capture": {
+    "message": "capture"
+  },
+  "manage_pagenote": {
+    "message": "manage PAGENOTE"
+  },
+  "switch": {
+    "message": "enable/disable"
+  },
+  "support_donation": {
+    "message": "support or donation"
+  },
+  "rate": {
+    "message": "rate me"
+  },
+  "before_start": {
+    "message": "Before start use PAGENOTE,you should read an agree"
+  },
+  "terms": {
+    "message": "terms"
+  },
+  "privacy": {
+    "message": "privacy"
+  },
+  "see_release": {
+    "message": "see all release info"
+  },
+  "set_lang": {
+    "message": "switch language"
+  },
+  "backup": {
+    "message": "backup"
+  },
+  "import": {
+    "message": "import data"
+  },
+  "not_found": {
+    "message": "Not found this highlight"
+  }
+}

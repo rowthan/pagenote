@@ -1,0 +1,14 @@
+pagenote-toggle-all{
+  display: inline-block;
+  &[data-run='1']{
+    animation: run-lights 1s linear infinite forwards;
+  }
+}
+@keyframes run-lights {
+  0%{
+    transform: rotate(0);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
