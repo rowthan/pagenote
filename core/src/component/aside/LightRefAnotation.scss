@@ -1,0 +1,113 @@
+@import "../../assets/styles/variable";
+
+pagenote-light-aside-ref{
+  position: relative;
+  display: block;
+  color: $ref-default-fontcolor;
+  line-height: 1.4em;
+  max-height: 1.4em;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  //transition: all 0.8s ease-in-out;
+  &:hover{
+    color: $ref-hover-color;
+  }
+
+  &[data-insign="1"]{
+    max-height: $inf-height;
+  }
+
+  &[data-founded='0']{
+    pagenote-light-highlight{
+      pagenote-light-inner{
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  &[data-active="1"][data-insign="1"]{
+    :global{
+      pagenote-light-info{
+        animation: unfold_top 0.6s forwards ease-in-out;
+      }
+      pagenote-light-anotation{
+        animation: unfold_bottom 0.6s forwards ease-in-out;
+      }
+    }
+  }
+  &[data-active="0"],&[data-insign="0"]{
+    :global{
+      pagenote-light-info{
+        animation:fold_top 0.6s forwards ease-in-out;
+      }
+      pagenote-light-anotation{
+        animation: fold_bottom 0.6s forwards ease-in-out;
+      }
+    }
+  }
+
+
+  pagenote-light-highlight{
+    white-space: nowrap;
+  }
+
+  pagenote-light-info,pagenote-light-anotation{
+    display: block;
+    position: relative;
+    overflow: hidden;
+    max-height: 80px;
+    background-color: #fff;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+    pagenote-drawer{
+      display: block;
+      padding: 12px 4px;
+    }
+  }
+
+  pagenote-light-anotation{
+    color: $anotation-fontcolor;
+  }
+
+}
+
+@keyframes :global(fold_bottom) {
+  100% {
+    transform-origin: bottom;
+    transform: perspective(100px) rotateX(10deg);
+    max-height: 0;
+  }
+}
+
+@keyframes :global(unfold_bottom) {
+  0% {
+    transform-origin: bottom;
+    max-height: 0;
+    transform: perspective(100px) rotateX(10deg);
+  }
+  100% {
+    transform: perspective(100px) rotateX(0deg);
+    max-height: 80px;
+  }
+}
+
+@keyframes :global(fold_top) {
+  100% {
+    transform-origin: top;
+    transform: perspective(100px) rotateX(-10deg);
+    max-height: 0;
+  }
+}
+
+@keyframes :global(unfold_top) {
+  0% {
+    transform-origin: top;
+    max-height: 0;
+    transform: perspective(100px) rotateX(-10deg);
+  }
+  100% {
+    transform: perspective(100px) rotateX(0deg);
+    max-height: 80px;
+  }
+}
+
