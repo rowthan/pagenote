@@ -17,8 +17,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     this.options =  Object.assign({
         initType:'default',
         dura:100,
-        saveInURL: false,
-        saveInLocal: true,
+        saveInLocalId: '',
         maxMarkNumber:50,
         enableMarkImg: false,
         blacklist:[],
@@ -93,8 +92,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
           constant = this.CONSTANT,
           OPTIONS = this.options,
           // 网站配置的setting设置
-          location = window.location,
-          emptyString = "",
+          // location = window.location,
+          // emptyString = "",
           isMoble = "ontouchstart" in window;
 
 
@@ -123,10 +122,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         renderAnnotation: OPTIONS.renderAnnotation,
     }
     // TODO 初始化动效
-    this.init = function(initData,sync=false){ // 为一段加密过的数据信息
-        initData = initData||getParams().paramObj[constant.ID];
-        if(!initData && this.options.saveInLocal){
-            initData = localStorage.getItem(this.id)
+    this.init = function(initData){ // 为一段加密过的数据信息
+        if(!initData && this.options.saveInLocalId){
+            initData = localStorage.getItem(this.options.saveInLocalId)
         }
         let simpleStep = [];
         let setting = {};
@@ -644,38 +642,38 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             }
 
             // TODO 不再将数据存储在URL中，通过shareKey存储
-            const {paramObj,paramKeys} = getParams();
-            if(!paramKeys.includes(constant.ID)){
-                paramKeys.push(constant.ID)
-            }
-            paramObj[constant.ID]=simpleSteps.length?encryptData(storeInfo):'';
-            this.data = paramObj[constant.ID];
+            // const {paramObj,paramKeys} = getParams();
+            // if(!paramKeys.includes(constant.ID)){
+            //     paramKeys.push(constant.ID)
+            // }
+            // paramObj[constant.ID]=simpleSteps.length?encryptData(storeInfo):'';
+            // this.data = paramObj[constant.ID];
             this.plainData = storeInfo;
             // json parse 避免存储一些异常数据 如 function
             const storeData = simpleSteps.length?JSON.parse(JSON.stringify(storeInfo)):{};
-            if(this.options.saveInLocal){
-                localStorage.setItem(this.id,this.data);
+            const localId = this.options.saveInLocalId;
+            if(localId){
+                localStorage.setItem(localId,JSON.stringify(storeData));
             }
 
-            let searchString = '';
+            // let searchString = '';
             // 复原search参数
-            paramKeys.forEach((key,index)=>{
+            // paramKeys.forEach((key,index)=>{
+            //     const appendShareSearch = !(key===constant.ID && simpleSteps.length===0);
+            //     if(appendShareSearch) {
+            //         const appendInfo = paramObj[key]===undefined?'':('='+(paramObj[key]||''));
+            //         searchString = searchString + key +  appendInfo + '&'
+            //     }
+            // });
+            // searchString = searchString?'?'+searchString:'';
 
-                const appendShareSearch = !(key===constant.ID && simpleSteps.length===0);
-                if(appendShareSearch) {
-                    const appendInfo = paramObj[key]===undefined?'':('='+(paramObj[key]||''));
-                    searchString = searchString + key +  appendInfo + '&'
-                }
-            });
-            searchString = searchString?'?'+searchString:'';
+            // this.url  = location.protocol+"//"+location.host+location.pathname+searchString+location.hash;
 
-            this.url  = location.protocol+"//"+location.host+location.pathname+searchString+location.hash;
-
-            if(this.options.saveInURL){
-                history.pushState(emptyString, constant.ID, this.url);
-            }
+            // if(this.options.saveInURL){
+            //     history.pushState(emptyString, constant.ID, this.url);
+            // }
             this.status = constant.SYNCED
-            callback(storeData,this.url);
+            callback(storeData);
         }catch(e){
             this.status = constant.SYNCED_ERROR
             console.error(e)
