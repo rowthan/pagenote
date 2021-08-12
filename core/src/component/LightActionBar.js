@@ -5,7 +5,7 @@ import CopyIcon from "@/assets/images/copy.svg";
 import DeleteIcon from "@/assets/images/delete.svg";
 import NoteIcon from '@/assets/images/note.svg';
 import {writeTextToClipboard} from "@/utils/document";
-import {useState,useEffect} from "preact/hooks";
+import {useState, useEffect, useCallback} from "preact/hooks";
 import {Colors} from "@/component/light/LightNode";
 import "@/component/light/light-node.scss";
 
@@ -23,11 +23,12 @@ export default function LightActionBar({step,colors}) {
         },3000)
     };
 
-    useEffect(()=>{
-        step.addListener('colors',function(item){
-            setCurrentColor(item.bg)
-        })
-    },[step])
+    function onchangeColor(color) {
+        setCurrentColor(color);
+        step.changeData({
+            bg: color,
+        });
+    }
 
     return(
         <pagenote-light-actions>
@@ -50,9 +51,7 @@ export default function LightActionBar({step,colors}) {
                 </pagenote-icon>
             </Tip>
             <Tip message={i18n.t('change_color')}>
-                <Colors colors={colors} current={currentColor} selectColor={(color)=>{step.changeData({
-                    bg: color,
-                })}}></Colors>
+                <Colors colors={colors} current={currentColor} selectColor={onchangeColor}></Colors>
             </Tip>
         </pagenote-light-actions>
     )

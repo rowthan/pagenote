@@ -1,15 +1,35 @@
+pagenote-block[aria-controls="annotation-editor"]{
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
 pagenote-block[contenteditable='true']{
   // border: 1px solid #dedbdb;
-  padding: 26px 10px 10px 10px;
+  padding: 10px;
   max-width: 350px;
   box-sizing: border-box;
-  border-radius: 2px;
   color: #666;
   font-size: 12px;
   outline:none;
-  background: #fff;
-  border-radius: 4px;
+  caret-color: var(--color);
   img{
     max-width: 100%;
   }
+}
+
+pagenote-block[aria-controls="light-ref"]{
+  font-size: 12px;
+  color: #999;
+  border-top: 4px solid var(--color);
+  padding: 8px 0 4px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #ececec;
+}
+
+pagenote-block[aria-controls='aside-info']{
+  font-size: 12px;
+  color: #999;
 }

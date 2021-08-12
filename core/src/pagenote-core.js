@@ -120,6 +120,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.makelink()
         },
         renderAnnotation: OPTIONS.renderAnnotation,
+        colors: OPTIONS.brushes.map((brush)=>{
+            return brush.bg;
+        })
     }
     // TODO 初始化动效
     this.init = function(initData){ // 为一段加密过的数据信息

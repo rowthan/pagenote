@@ -1,3 +1,12 @@
+@keyframes annotation-out {
+  0%{
+    pointer-events: unset;
+  }
+  100%{
+    pointer-events: none;
+  }
+}
+
 pagenote-annotation{
   display: block;
   width: auto !important;
@@ -10,31 +19,36 @@ pagenote-annotation{
     z-index: 1;
   }
   pagenote-annotation-inner{
-    padding: 4px;
     display: block;
-    border-radius: 6px;
-    box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
     background: rgba(255, 255, 255, 0.95);
+    border-top: 4px solid var(--color);
     &[data-visiable='0']{
       transition: 0.5s ease-in-out;
       opacity: 0;
+      transition-delay: 1s;
       pointer-events: none;
     }
-    &[data-visiable='1']{
+    &[data-visiable='1'],&:focus,&:hover{
       transition: 0.5s ease-in-out;
       opacity: 1;
+      pointer-events: unset;
     }
 
     pagenote-annotation-menus{
-      display: block;
+      display: flex;
+      justify-content: space-between;
       width: 100%;
+      box-sizing: border-box;
       cursor: move;
-      margin-bottom: 4px;
+      padding: 2px;
       &:hover{
         background: #f7f6f6;
       }
     }
     pagenote-block[data-role="custom-content"]{
+      padding: 10px;
       img{
         max-width: 100%;
       }
@@ -42,23 +56,17 @@ pagenote-annotation{
     }
     pagenote-icon{
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: 20px;
+      height: 20px;
       border-radius: 6px;
-      background-color: var(--color);
+      box-shadow: none;
+      svg{
+        width: 16px;
+        height: 16px;
+      }
       &:hover{
-        background-color: var(--color);
+        //background-color: var(--color);
       }
     }
-  }
-
-  pagenote-block[aria-controls="light-ref"]{
-    font-size: 12px;
-    color: #999;
-    border-left: 4px solid var(--color);
-    padding-left: 1em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }

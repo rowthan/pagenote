@@ -43,10 +43,17 @@ window.pagenote = new window.PageNote('demo',{
     showBarTimeout: 0, // 延迟功能时间 单位毫秒
     renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
         const element = document.createElement('div');
-        const {tip,lightId} = data;
-        element.innerHTML =  `
-          <div id="${lightId}" style="padding: 5px; font-size: 12px; min-height: 2em; color: #666;">${tip}</div>
+        const {tip,lightId,time} = data;
+        const content = document.createElement('div');
+        content.innerHTML =  `
+          <div id="${lightId}" style="font-size: 12px; color: #666;">${tip}</div>
         `
+        element.appendChild(content);
+        const aside = document.createElement('aside');
+        aside.innerHTML = `<pagenote-block aria-controls="aside-info">${new Date(time).toLocaleDateString()}</pagenote-block>`
+
+        element.appendChild(aside);
+
         element.ondblclick = function () {
             light.openEditor();
         };
