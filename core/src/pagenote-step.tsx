@@ -8,6 +8,7 @@ import toggleLightMenu from "./light-menu";
 import {wrapperLightAttr,wrapperAnnotationAttr} from "./utils/light";
 import modal from "./utils/modal";
 import AnnotationEditor from "./annotationEditor";
+import renderAnnotationMenu from "./documents/annotationMenus";
 
 const editorModal = new modal();
 
@@ -31,7 +32,7 @@ export interface StepProps {
   annotationStatus? : AnnotationStatus,
   lightBg?: string, // 将废弃
   daskBg?: string, // 将废弃
-  isFocus?: boolean, // 将废弃
+  isFocusTag?: boolean,
   [other: string]: any,
 }
 
@@ -66,7 +67,8 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   this.runtime = {
     warn: '',
     isVisible: false,
-    isFocus: false,
+    isFocusTag: false,
+    isFocusAnnotation: false,
     relatedNode: [],
     relatedAnnotationNode: null,
   }
@@ -134,15 +136,20 @@ Step.prototype.initKeywordTags = function (){
         step.openEditor();
       }
 
-      let entered = false;
       lightElement.onmouseenter = ()=> {
-        entered = true;
+        step.changeData({
+          isFocusTag: true
+        },true)
         setTimeout(()=>{
-          entered && toggleLightMenu(true,step);
+          step.runtime.isFocusTag && toggleLightMenu(true,step);
         },500)
       }
-      lightElement.onmouseleave = function () {
-        entered = false;
+      lightElement.onmouseleave =  ()=> {
+        setTimeout(()=>{
+          step.changeData({
+            isFocusTag: false
+          },true)
+        },1000)
       }
 
       io.observe(lightElement)
@@ -224,7 +231,11 @@ Step.prototype.initAnnotation = function () {
   const element = document.createElement('pagenote-annotation');// 根容器
   const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
   const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
-  actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
+  // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
+  renderAnnotationMenu(actionArray,{
+    light:step,
+    colors: step.options.colors,
+  })
   customInner.appendChild(actionArray);
 
   const customContent = document.createElement('pagenote-block');
@@ -240,8 +251,20 @@ Step.prototype.initAnnotation = function () {
   renderContent();
   element.appendChild(customInner);
 
+  // TODO 统一优化
+  element.onmouseenter = ()=> {
+    step.changeData({
+      isFocusAnnotation: true
+    },true)
+  }
+  element.onmouseleave =  ()=> {
+    step.changeData({
+      isFocusAnnotation: false
+    },true)
+  }
+
   const options = {
-    grid: 10,
+    grid: 4,
     setPosition: true,
     setCursor: false,
     handle: actionArray,
@@ -262,11 +285,11 @@ Step.prototype.initAnnotation = function () {
   this.runtime.relatedAnnotationNode = element;
 
   function checkShowAnnotation() {
-    return step.data.lightStatus===LightStatus.LIGHT && !!step.data.tip;
+    return step.data.lightStatus===LightStatus.LIGHT || step.runtime.isFocusTag || step.runtime.isFocusAnnotation;
   }
 
   wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
-  this.addListener('annotation',function (data,change) {
+  this.addListener(['annotation','isFocusTag'],function (data,change) {
     renderContent();
     wrapperAnnotationAttr(customInner,data.bg,checkShowAnnotation());
   })
@@ -281,7 +304,7 @@ Step.prototype.openEditor = function (show=true) {
 
   const that = this;
   this.changeData({annotationStatus:2});
-  const {tip,x,y} = this.data;
+  const {tip,x,y,text,bg} = this.data;
 
   let pos = {};
   if(that.runtime.relatedAnnotationNode){
@@ -298,6 +321,8 @@ Step.prototype.openEditor = function (show=true) {
   });
   AnnotationEditor({
     tip,
+    color:bg,
+    text,
     onchange: function (e) {
       that.changeData({
         tip: e.target.value.trim(),
@@ -345,7 +370,13 @@ Step.prototype.gotoView = function (callback=function(){}){
 
 Step.prototype.addListener = function (key,fun) {
   if(key && typeof fun === 'function'){
-    this.listeners[key] = fun;
+    if(Array.isArray(key)){
+      key.forEach((item)=>{
+        this.listeners[item] = fun;
+      })
+    }else{
+      this.listeners[key] = fun;
+    }
   }
 }
 

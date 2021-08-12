@@ -6,6 +6,7 @@ import LightActionBar from "./component/LightActionBar";
 const toggleLightMenu = (function () {
     let toggleLightBar;
     return function (show,light,position,colors){
+        return // 封禁该功能
         if(toggleLightBar){
             return toggleLightBar(show,light,position);
         }
