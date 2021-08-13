@@ -1,3 +1,5 @@
+// 如何使用 就看这里就好了，使用前，记得先引入 SDK
+
 window.pagenote = new window.PageNote('demos',{
     saveInLocal: false, // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
     functionColors:[ // 支持扩展的功能按钮区，
@@ -43,21 +45,39 @@ window.pagenote = new window.PageNote('demos',{
     showBarTimeout: 0, // 延迟功能时间 单位毫秒
     renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
         const element = document.createElement('div');
+        element.style.outline = '1px solid red'
         const {tip,lightId,time} = data;
         const content = document.createElement('div');
         content.innerHTML =  `
-          <div id="${lightId}" style="font-size: 12px; color: #666;">${tip}</div>
+          <div id="${lightId}" style="font-size: 12px; color: #666;">
+           ${tip}
+          </div>
         `
         element.appendChild(content);
-        const aside = document.createElement('aside');
-        aside.innerHTML = `<pagenote-block aria-controls="aside-info">${new Date(time).toLocaleDateString()}</pagenote-block>`
+        const aside = document.createElement('p');
+        aside.innerHTML = `<pagenote-block aria-controls="aside-info">
+            ${new Date(time).toLocaleDateString()}红框内的部分，交由你自己来自定义内容。你可以自己来实现
+        </pagenote-block>`
 
         element.appendChild(aside);
 
         element.ondblclick = function () {
             light.openEditor();
         };
-        return element
+
+
+        const asides = [{
+            text: '分享到朋友圈',
+            onclick: function () {
+                alert('分享啦')
+            }
+        },{
+            text: '好好收藏',
+            onclick: function () {
+                alert('收藏了')
+            }
+        }];
+        return [element,asides]
     }
 });
 

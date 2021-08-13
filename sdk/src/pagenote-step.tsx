@@ -71,6 +71,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
     isFocusAnnotation: false,
     relatedNode: [],
     relatedAnnotationNode: null,
+    focusTimer: null,
   }
 
   this.listeners = {};
@@ -137,15 +138,17 @@ Step.prototype.initKeywordTags = function (){
       }
 
       lightElement.onmouseenter = ()=> {
+        clearTimeout(step.runtime.focusTimer);
         step.changeData({
-          isFocusTag: true
-        },true)
-        setTimeout(()=>{
-          step.runtime.isFocusTag && toggleLightMenu(true,step);
-        },500)
+          isFocusTag: true,
+        },true);
+
+        // setTimeout(()=>{
+        //   step.runtime.isFocusTag && toggleLightMenu(true,step);
+        // },500)
       }
       lightElement.onmouseleave =  ()=> {
-        setTimeout(()=>{
+        step.runtime.focusTimer = setTimeout(()=>{
           step.changeData({
             isFocusTag: false
           },true)
@@ -173,7 +176,7 @@ Step.prototype.initKeywordTags = function (){
     appendElement.dataset.size = 'small'
     appendElement.onclick=function (e) {
       step.openEditor(true,{
-        
+
       });
       step.changeData({
         lightStatus: LightStatus.LIGHT
@@ -232,9 +235,13 @@ Step.prototype.initAnnotation = function () {
   const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
   const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
   // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
+
+  const appends = renderMethod(step.data,step);
+
   renderAnnotationMenu(actionArray,{
     light:step,
     colors: step.options.colors,
+    moreActions: appends[1],
   })
   customInner.appendChild(actionArray);
 
@@ -244,15 +251,17 @@ Step.prototype.initAnnotation = function () {
 
   function renderContent() {
     emptyChildren(customContent);
-    const customAnnotation = renderMethod(step.data,step);
-    customContent.appendChild(customAnnotation);
+    const appends = renderMethod(step.data,step);
+    customContent.appendChild(appends[0]);
   }
 
-  renderContent();
+  customContent.appendChild(appends[0]);
+
   element.appendChild(customInner);
 
   // TODO 统一优化
   element.onmouseenter = ()=> {
+    clearTimeout(step.runtime.focusTimer)
     step.changeData({
       isFocusAnnotation: true
     },true)
@@ -314,7 +323,7 @@ Step.prototype.openEditor = function (show=true) {
       bodyLeft: getScroll().y + 200,
     }
   }
-  
+
   editorModal.show(null,{
     left: pos.bodyLeft+'px',
     top: pos.bodyTop+pos.height+4+'px',
