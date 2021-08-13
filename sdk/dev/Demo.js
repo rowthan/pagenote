@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import '../demo/index.css'
+import '../../demos/index.css'
 export default function Demo() {
     return (
         <div className="demo">
