@@ -1,0 +1,9 @@
+pagenote-block[data-role="more-action-item"]{
+  padding: 2px;
+  cursor: pointer;
+  margin: 4px 0;
+  &:hover{
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+}

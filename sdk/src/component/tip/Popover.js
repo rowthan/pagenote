@@ -5,7 +5,8 @@ import './popover.less'
 export default function Popover({message,children,inner=false,...props}) {
   const ref = createRef();
   return(
-    <ToolTip destroyTooltipOnHide={{ keepParent: false }}
+    <ToolTip
+        // destroyTooltipOnHide={{ keepParent: false }}
              // align={{
              //   offset: [0, 10],
              // }}
