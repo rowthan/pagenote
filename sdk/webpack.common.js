@@ -20,7 +20,7 @@ module.exports = {
       { test: /\.tsx?$/, loader: "ts-loader" },
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?!(@webcomponents\/shadycss|lit-html|@polymer|@vaadin|@lit)\/).*/,
+        // exclude: /node_modules\/(?!(@webcomponents\/shadycss|lit-html|@polymer|@vaadin|@lit)\/).*/,
         use: {
           loader: 'babel-loader',
           options: {
