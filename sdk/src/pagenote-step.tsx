@@ -18,15 +18,27 @@ interface StepOptions{
 
 const Step = function (info: StepProps,options: StepOptions,callback) {
   this.options = options;
+
+  this.listeners = {
+    data: {},
+    runtime: {},
+  };
+
   // 初始化需要持久化存储的数据
   const data = {
     lightStatus: LightStatus.LIGHT,
     annotationStatus: AnnotationStatus.SHOW,
     lightId : md5(info.id+info.text),
   };
+  const that = this;
   this.data = new Proxy(data, {
     set(target,key,value){
-      return Reflect.set(target, key, value);
+      Reflect.set(target, key, value);
+      for(let i in that.listeners.data){
+        const fun = that.listeners.data[i];
+        typeof fun === 'function'  && fun(target,key,value);
+      }
+      return target;
     }
   });
   STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
@@ -45,11 +57,15 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
-      return Reflect.set(target, key, value);
+      Reflect.set(target, key, value);
+      for(let i in that.listeners.runtime){
+        const fun = that.listeners.runtime[i];
+        typeof fun === 'function'  && fun(target,key,value);
+      }
+      return target;
     }
-  })
+  });
 
-  this.listeners = {};
   this.initKeywordTags();
   this.initAnnotation();
 
@@ -69,7 +85,7 @@ Step.prototype.openEditor = function (show=true) {
   }
 
   const that = this;
-  this.changeData({annotationStatus:2});
+  this.data.annotationStatus = AnnotationStatus.SHOW;
   const {tip,x,y,text,bg} = this.data;
 
   let pos = {};
@@ -90,10 +106,8 @@ Step.prototype.openEditor = function (show=true) {
     color:bg,
     text,
     onchange: function (e) {
-      that.changeData({
-        tip: e.target.value.trim(),
-        annotationStatus: !!e.target.value ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
-      })
+      that.data.tip = e.target.value.trim();
+      that.data.annotationStatus = !!e.target.value ? AnnotationStatus.SHOW : AnnotationStatus.HIDE;
     },
     root:editorModal.content,
   });
@@ -120,38 +134,9 @@ Step.prototype.delete = function () {
   editorModal.destroy();
 }
 
-Step.prototype.addListener = function (key,fun) {
-  if(key && typeof fun === 'function'){
-    if(Array.isArray(key)){
-      key.forEach((item)=>{
-        this.listeners[item] = fun;
-      })
-    }else{
-      this.listeners[key] = fun;
-    }
-  }
-}
-
-// 修改 data 数据 TODO 使用 proxy
-Step.prototype.changeData = function (object,isRuntime) {
-  let changed = false;
-  const targetObject = isRuntime ? this.runtime : this.data;
-  for(let i in object){
-    if(targetObject[i]!==object[i]){
-      targetObject[i] = object[i];
-      changed = true;
-    }
-  }
-  if(changed){
-    this._triggerChangeData(object);
-  }
-}
-
-Step.prototype._triggerChangeData = function (object) {
-  for(let i in this.listeners){
-    this.listeners[i](this.data,object);
-  }
-  this.options.onChange(this.data);
+Step.prototype.addListener = function (fun,isRuntime=false,funId='default-change-fun') {
+  const runtimeKey = isRuntime ? 'runtime' : 'data';
+  this.listeners[runtimeKey][funId] = fun;
 }
 
 
@@ -160,7 +145,7 @@ function Steps(option: { max: number; }) {
 }
 Steps.prototype = Array.prototype;
 Steps.prototype.add = function (item) {
-  if(item.changeData){
+  if(item.delete){
     this.push(item);
   }else{
     console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);

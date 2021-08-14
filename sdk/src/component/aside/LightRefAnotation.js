@@ -15,9 +15,7 @@ export default  function LightRefAnotation({step,showTarget}) {
           onClick={()=>{
             step.openEditor(false);
             step.gotoView();
-            step.changeData({
-                lightStatus: 2
-            });
+            step.data.lightStatus = 2;
           }}
           onDblClick={()=>{
               step.openEditor();
