@@ -8,11 +8,11 @@ import Draggable from 'draggable';
 function initAnnotation() {
     const step = this;
     const renderMethod = step.options.renderAnnotation;
-    if(typeof renderMethod!=="function"){
+    if(renderMethod && typeof renderMethod!=="function"){
         return;
     }
 
-    const {bg,x,y,text} = step.data;
+    const {bg,x,y} = step.data;
     const element = document.createElement('pagenote-annotation');// 根容器
     const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
     const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
@@ -41,17 +41,12 @@ function initAnnotation() {
 
     element.appendChild(customInner);
 
-    // TODO 统一优化
     element.onmouseenter = ()=> {
-        clearTimeout(step.runtime.focusTimer)
-        step.changeData({
-            isFocusAnnotation: true
-        },true)
+        clearTimeout(step.runtime.focusTimer);
+        step.runtime.isFocusAnnotation = true;
     }
     element.onmouseleave =  ()=> {
-        step.changeData({
-            isFocusAnnotation: false
-        },true)
+        step.runtime.isFocusAnnotation = false;
     }
 
     const options = {
@@ -60,9 +55,8 @@ function initAnnotation() {
         setCursor: false,
         handle: actionArray,
         onDragEnd: function(result: any, x: any, y: any){
-            step.changeData({
-                x,y,
-            })
+            step.data.x = x;
+            step.data.y = y;
         }
     };
     // @ts-ignore
@@ -81,10 +75,14 @@ function initAnnotation() {
     }
 
     wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
-    this.addListener(['annotation','isFocusTag'],function (data: { bg: any; }, change: any) {
+    this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,data.bg,checkShowAnnotation());
-    })
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation());
+    },true,'annotation')
+    this.addListener(function () {
+        renderContent();
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation());
+    },false,'annotation')
     // @ts-ignore
     element.toggleShow = wrapperAnnotationAttr;
 }

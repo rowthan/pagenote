@@ -25,9 +25,7 @@ export default function LightActionBar({step,colors}) {
 
     function onchangeColor(color) {
         setCurrentColor(color);
-        step.changeData({
-            bg: color,
-        });
+        step.data.bg = color;
     }
 
     return(

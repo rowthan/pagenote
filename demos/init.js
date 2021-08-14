@@ -1,7 +1,7 @@
 // 如何使用 就看这里就好了，使用前，记得先引入 SDK
 
 window.pagenote = new window.PageNote('demos',{
-    saveInLocal: false, // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
+    saveInLocalId: 'demo-store', // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
     functionColors:[ // 支持扩展的功能按钮区，
         [
             {
@@ -96,27 +96,22 @@ window.pagenote = new window.PageNote('demos',{
         },{
             text: '贴进',
             onclick: function (e) {
-                
+                console.log(light)
             }
         }];
         return [element,asides]
     }
 });
 
-const userData = localStorage.getItem('user_data');
 
 const defaultData = {"steps":[{"lightStatus":2,"annotationStatus":2,"lightId":"83244d1d159c5edc9a547a5b5361b7fa","x":520,"y":130,"id":"span","text":"4.8.0-typescript","tip":"这里是最新的版本，快来试试吧","bg":"rgb(225,192,63)","time":1627742525241,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":0,"pre":"","suffix":"。我们对 UI、交互","images":[],"level":1},{"lightStatus":2,"annotationStatus":1,"lightId":"8e7f34a04d8ca85194e150445d4f2ba3","x":730,"y":330,"id":"li  ul  li:nth-child(3)","text":"双击可以快速进入编辑状态","tip":"侧边栏的双击同样有效","bg":"rgb(87,134,248)","time":1627743186494,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":620,"pre":"单击高亮区域能切换状态：浅高亮、深高亮；","suffix":"。","images":[],"level":1},{"lightStatus":2,"annotationStatus":2,"lightId":"99b3bd737f025921d26761865f84b672","x":448,"y":1666,"id":"article  section:nth-child(8)  h2","text":"关于我","tip":"多谢关注","bg":"rgb(246,227,154)","time":1627743132776,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":700,"pre":"","suffix":"","images":[],"level":1}],"setting":{"barInfo":{"right":96,"top":132,"status":"fold"}},"url":"http://0.0.0.0:8080/","lastModified":1627743295253,"icon":"https://pagenote.cn/favicon.ico","title":"pagenote demos","description":"这是pagenote 运行 demos","images":[],"snapshots":[],"version":2,"categories":[],"note":""};
-const initData = userData ? JSON.parse(userData) : defaultData;
 // 这里可以从服务器端拉取数据，用于 init
-pagenote.init(initData); // 初始化开始工作
+pagenote.init(); // 初始化开始工作
 
 pagenote.addListener(function (status) {
     if(status===pagenote.CONSTANT.SYNCED){
         // 数据变化回调，将数据发送到服务器端，在这里处理
         console.log('数据发生的变化',pagenote.plainData)
-        const dataString = JSON.stringify(pagenote.plainData);
-        // 这里可以改为将数据存储到服务器端
-        localStorage.setItem('user_data',dataString);
     }
 })
 

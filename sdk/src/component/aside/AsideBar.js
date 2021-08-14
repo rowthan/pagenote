@@ -75,10 +75,8 @@ class AsideBar extends Component{
         const nextStatus = this.state.allStepStatus + 1;
         const finalStatus = nextStatus > 2 ? 0 : nextStatus;
         pagenote.recordedSteps.forEach((light)=>{
-            light.changeData({
-                lightStatus: finalStatus,
-                annotationStatus: finalStatus === 2 ? 1: 0,
-            })
+            light.data.lightStatus = finalStatus;
+            light.data.annotationStatus = finalStatus === 2 ? 1: 0;
         });
         this.setState({
             allStepStatus: finalStatus
@@ -343,10 +341,8 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
 
     function toggleLight() {
         const nextStatus = step.data.lightStatus + 1;
-        step.changeData({
-            lightStatus: nextStatus > 2 ? 0 : nextStatus,
-            annotationStatus: nextStatus === 2 ? 1 :0,
-        })
+        step.data.lightStatus = nextStatus > 2 ? 0 : nextStatus;
+        step.data.annotationStatus = nextStatus === 2 ? 1 :0;
     }
 
     const isVisible = step.runtime.isVisible ? '1':'';

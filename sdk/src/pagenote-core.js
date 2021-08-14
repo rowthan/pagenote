@@ -127,7 +127,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     // TODO 初始化动效
     this.init = function(initData){ // 为一段加密过的数据信息
         if(!initData && this.options.saveInLocalId){
-            initData = localStorage.getItem(this.options.saveInLocalId)
+            initData = JSON.parse(localStorage.getItem(this.options.saveInLocalId)||"{}")
         }
         let simpleStep = [];
         let setting = {};
