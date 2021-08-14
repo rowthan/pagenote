@@ -600,7 +600,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         try{
             const simpleSteps = [];
             this.recordedSteps.forEach((step)=>{
-                simpleSteps.push(step.data);
+                simpleSteps.push(JSON.parse(JSON.stringify(step.data)));
             });
 
             const differentSetting = {};

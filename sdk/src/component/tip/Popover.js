@@ -6,7 +6,7 @@ export default function Popover({message,children,inner=false,...props}) {
   const ref = createRef();
   return(
     <ToolTip
-        // destroyTooltipOnHide={{ keepParent: false }}
+             destroyTooltipOnHide={{ keepParent: false }}
              // align={{
              //   offset: [0, 10],
              // }}
