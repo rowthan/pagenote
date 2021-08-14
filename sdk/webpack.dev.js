@@ -26,8 +26,8 @@ module.exports = merge(common, {
       <head>
         <link href="https://pagenote.cn/favicon.ico" rel="shortcut icon">
         ${htmlWebpackPlugin.tags.headTags}
-        <title>pagenote demo</title>
-        <meta name="description" content="这是pagenote 运行 demo" />
+        <title>pagenote 开发页</title>
+        <meta name="description" content="这是pagenote 开发页面" />
         <meta name="keywords" content="keywords, 标记" />
       </head>
       <body data-blockpagenote='1'>

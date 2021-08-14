@@ -71,9 +71,9 @@ window.pagenote = new window.PageNote('demos',{
           </div>
         `
         element.appendChild(content);
-        const aside = document.createElement('p');
+        const aside = document.createElement('div');
         aside.innerHTML = `<pagenote-block aria-controls="aside-info">
-            ${new Date(time).toLocaleDateString()}红框内的部分，交由你自己来自定义内容。你可以自己来实现
+            ${new Date(time).toLocaleDateString()}
         </pagenote-block>`
 
         element.appendChild(aside);
@@ -92,6 +92,11 @@ window.pagenote = new window.PageNote('demos',{
             text: '好好收藏',
             onclick: function () {
                 alert('收藏了')
+            }
+        },{
+            text: '贴进',
+            onclick: function (e) {
+                
             }
         }];
         return [element,asides]
