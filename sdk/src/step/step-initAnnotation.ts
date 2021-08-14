@@ -60,7 +60,8 @@ function initAnnotation() {
         }
     };
     // @ts-ignore
-    new Draggable (element, options).set(x,y);
+    const drag = new Draggable (element, options).set(x,y);
+
     const container = document.querySelector('pagenote-annotations');
     container.appendChild(element);
 
@@ -69,6 +70,7 @@ function initAnnotation() {
     }
 
     this.runtime.relatedAnnotationNode = element;
+    this.runtime.annotationDrag = drag;
 
     function checkShowAnnotation() {
         return step.data.lightStatus===LightStatus.LIGHT || step.runtime.isFocusTag || step.runtime.isFocusAnnotation;

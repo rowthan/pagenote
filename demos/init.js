@@ -1,5 +1,7 @@
 // 如何使用 就看这里就好了，使用前，记得先引入 SDK
 
+import connectToKeywordTag from "../sdk/src/step/step-connectToKeywordTag";
+
 window.pagenote = new window.PageNote('demos',{
     saveInLocalId: 'demo-store', // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
     functionColors:[ // 支持扩展的功能按钮区，
@@ -94,9 +96,10 @@ window.pagenote = new window.PageNote('demos',{
                 alert('收藏了')
             }
         },{
-            text: '贴进',
+            text: '贴紧',
             onclick: function (e) {
                 console.log(light)
+                light.connectToKeywordTag();
             }
         }];
         return [element,asides]

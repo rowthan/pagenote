@@ -8,6 +8,7 @@ import {LightStatus, AnnotationStatus, StepProps, STORE_KEYS_VERSION_2_VALIDATE}
 import initKeywordTags from "./step/step-initKeywordTags";
 import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
+import connectToKeywordTag from './step/step-connectToKeywordTag';
 
 const editorModal = new modal();
 
@@ -38,6 +39,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
         const fun = that.listeners.data[i];
         typeof fun === 'function'  && fun(target,key,value);
       }
+      that.options.onChange(data);
       return target;
     }
   });
@@ -54,6 +56,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
     relatedNode: [],
     relatedAnnotationNode: null,
     focusTimer: null,
+    annotationDrag: null,
   }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
@@ -77,6 +80,8 @@ Step.prototype.initKeywordTags = initKeywordTags;
 Step.prototype.initAnnotation = initAnnotation;
 
 Step.prototype.gotoView = stepGotoView;
+
+Step.prototype.connectToKeywordTag = connectToKeywordTag;
 
 Step.prototype.openEditor = function (show=true) {
   if(show===false){
