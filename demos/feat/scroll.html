@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>pagenote 滚动试验场</title>
-  <link rel="stylesheet" href="../../core/dist/pagenote.css">
+  <link rel="stylesheet" href="../../sdk/dist/pagenote.css">
   <link rel="stylesheet" href="../index.css">
+  <style>
+    .demo{
+      position: relative;
+      height: 80vh;
+      overflow: scroll;
+    }
+  </style>
 </head>
 <body data-blockpagenote='1'>
   <div class="demo">
-  <article>
+    <pagenote-annotations></pagenote-annotations>
+    <article>
     <section>
       <h2>
         PAGENOTE SDK 尝鲜功能
@@ -20,6 +28,10 @@
           </h3>
           <p>
             你现在访问的是 PAGENOTE SDK 滚动问题解决页面
+          </p>
+          <p>
+            如果你的页面不是基于 body 滚动。例如本页面，.demo 容器滚动，为了让批注滚动正常，
+            你需要在滚动容器下创建一个 pagenote-annotations 标签。并将滚动容器 position 设置为 relative。
           </p>
         </div>
       </div>
@@ -217,7 +229,7 @@
     </section>
   </article>
 </div>
-  <script src="../../core/dist/pagenote.js"></script>
+  <script src="../../sdk/dist/pagenote.js"></script>
   <script src="../init.js"></script>
 </body>
 </html>

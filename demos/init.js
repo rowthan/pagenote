@@ -43,16 +43,22 @@ window.pagenote = new window.PageNote('demos',{
     }],
     brushes:[ // 画笔
         {
-            bg:'rgb(225,192,63)', // rgb 颜色值
+            bg:'#FF6900', // rgb 颜色值
             shortcut:'p', // 快捷键，可选
             label:'一级画笔', // 说明
             level:1, // 暂不支持
         },
         {
-            bg:'rgb(246,227,154)',
+            bg:'#FCB900',
             shortcut:'p',
             label:'一级画笔',
             level:1,
+        },
+        {
+          bg: '#7BDCB5',
+        },
+        {
+            bg: '#8ED1FC',
         },
         {
             bg:'rgb(87,134,248)',
