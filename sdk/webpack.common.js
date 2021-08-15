@@ -6,7 +6,7 @@ const profile = require('./package');
 module.exports = {
   entry: './src/pagenote.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/'+profile.version),
     filename: 'pagenote.js',
     libraryTarget: 'umd'
   },
