@@ -94,10 +94,11 @@ function initAnnotation() {
     this.runtime.annotationDrag = drag;
 
     function checkShowAnnotation() {
-        return step.data.lightStatus===LightStatus.LIGHT
+        const hasTip = !!step.data.tip;
+        return (step.data.lightStatus===LightStatus.LIGHT && hasTip)
             || step.runtime.isFocusTag
             || step.runtime.isFocusAnnotation
-            || step.data.annotationStatus === AnnotationStatus.SHOW;
+            || (step.data.annotationStatus === AnnotationStatus.SHOW && hasTip);
     }
 
     wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
