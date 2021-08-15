@@ -37,8 +37,11 @@ function PageNote(id,options={}){
     },16));
 
     // lights
-    const stepBar = document.createElement('pagenote-annotations');
-    rootElement.appendChild(stepBar);
+    let stepBar = document.querySelector('pagenote-annotations');
+    if(!stepBar){
+        stepBar = document.createElement('pagenote-annotations')
+        rootElement.appendChild(stepBar);
+    }
 
     return pagenoteCore;
 }

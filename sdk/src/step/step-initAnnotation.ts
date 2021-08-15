@@ -33,7 +33,7 @@ function initAnnotation() {
     editor.dataset.role = 'annotation-editor';
     editor.contentEditable = 'true';
     editor.innerHTML = tip;
-    editor.onmouseleave = function () {
+    editor.onmouseleave = editor.onblur = function () {
         step.runtime.editing = false;
     }
     editor.ondblclick = function () {
