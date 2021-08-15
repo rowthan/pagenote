@@ -1,6 +1,6 @@
 import renderAnnotationMenu from "../documents/annotationMenus";
 import {emptyChildren} from "../utils/document";
-import {LightStatus} from "./const";
+import {AnnotationStatus, LightStatus} from "./const";
 import {wrapperAnnotationAttr} from "../utils/light";
 // @ts-ignore
 import Draggable from 'draggable';
@@ -41,12 +41,15 @@ function initAnnotation() {
 
     element.appendChild(customInner);
 
+    let timer: NodeJS.Timeout = null;
     element.onmouseenter = ()=> {
-        clearTimeout(step.runtime.focusTimer);
+        clearTimeout(timer);
         step.runtime.isFocusAnnotation = true;
     }
     element.onmouseleave =  ()=> {
-        step.runtime.isFocusAnnotation = false;
+        timer = setTimeout(function () {
+            step.runtime.isFocusAnnotation = false;
+        },200)
     }
 
     const options = {
@@ -73,7 +76,10 @@ function initAnnotation() {
     this.runtime.annotationDrag = drag;
 
     function checkShowAnnotation() {
-        return step.data.lightStatus===LightStatus.LIGHT || step.runtime.isFocusTag || step.runtime.isFocusAnnotation;
+        return step.data.lightStatus===LightStatus.LIGHT
+            || step.runtime.isFocusTag
+            || step.runtime.isFocusAnnotation
+            || step.data.annotationStatus === AnnotationStatus.SHOW;
     }
 
     wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())

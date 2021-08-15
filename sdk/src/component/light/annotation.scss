@@ -27,7 +27,7 @@ pagenote-annotation{
     &[data-visiable='0']{
       transition: 0.5s ease-in-out;
       opacity: 0;
-      transition-delay: 1s;
+      //transition-delay: 0.5s;
       pointer-events: none;
     }
     &[data-visiable='1'],&:focus,&:hover{
