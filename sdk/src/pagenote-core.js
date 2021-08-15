@@ -414,7 +414,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         this.status = constant.RECORDING;
 
         const newStep = new Step(info,StepOptions,function (step) {
-            toggleLightMenu(true,step)
+            // toggleLightMenu(true,step)
+            step.runtime.isFocusAnnotation = true;
         });
 
 
@@ -424,6 +425,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         //     newStep.thumbnail = imageSrc;
         //     newStep.save();
         // });
+
         this.recordedSteps.add(newStep);
         this.recordedSteps = this.recordedSteps.sort((a,b)=>{
             return a.data.y - b.data.y

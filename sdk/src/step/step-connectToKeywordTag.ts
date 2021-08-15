@@ -7,7 +7,7 @@ const connectToKeywordTag = function () {
         const position = whats.compute(tag);
         const height = tag.offsetHeight;
         const left = position.left;
-        const top = position.top + height + 2;
+        const top = position.top + height + 8;
 
         this.runtime.annotationDrag.set(left,top)
         this.data.x = left;

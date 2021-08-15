@@ -1,4 +1,5 @@
 import whatsPure from "whats-element/pure";
+import {AnnotationStatus, LightStatus} from "../step/const";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
@@ -155,8 +156,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         canHighlight: canHighlight,
         selectionElements: selectedElementContent,
         images: markImages,
-        annotationStatus: 1,
-        lightStatus: 2
+        annotationStatus: AnnotationStatus.HIDE,
+        lightStatus: LightStatus.HALF
     };
 
     return target
