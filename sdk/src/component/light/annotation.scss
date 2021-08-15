@@ -47,13 +47,24 @@ pagenote-annotation{
         background: #f7f6f6;
       }
     }
-    pagenote-block[data-role="custom-content"]{
+    pagenote-block[data-role="custom-content"],pagenote-block[data-role="annotation-editor"]{
+      font-size: 12px;
+      color: #666;
       padding: 4px 10px;
       img{
         max-width: 100%;
       }
-
     }
+    pagenote-block[data-role="annotation-editor"]{
+      padding: 0 10px;
+      &:focus-visible{
+        outline: unset;
+      }
+      &[contenteditable='true']{
+        outline: 1px solid var(--color);
+      }
+    }
+
     pagenote-icon{
       display: inline-block;
       width: 20px;
