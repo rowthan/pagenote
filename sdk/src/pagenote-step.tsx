@@ -57,6 +57,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
     relatedAnnotationNode: null,
     focusTimer: null,
     annotationDrag: null,
+    editing: false,
   }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
@@ -84,6 +85,8 @@ Step.prototype.gotoView = stepGotoView;
 Step.prototype.connectToKeywordTag = connectToKeywordTag;
 
 Step.prototype.openEditor = function (show=true) {
+  this.runtime.editing = show;
+  return;
   if(show===false){
     editorModal.destroy();
     return;

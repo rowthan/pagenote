@@ -1,7 +1,8 @@
 import renderAnnotationMenu from "../documents/annotationMenus";
-import {emptyChildren} from "../utils/document";
+import {emptyChildren, keepLastIndex} from "../utils/document";
 import {AnnotationStatus, LightStatus} from "./const";
 import {wrapperAnnotationAttr} from "../utils/light";
+import {throttle} from "../utils/index";
 // @ts-ignore
 import Draggable from 'draggable';
 
@@ -12,8 +13,9 @@ function initAnnotation() {
         return;
     }
 
-    const {bg,x,y} = step.data;
+    const {bg,x,y,tip,lightId} = step.data;
     const element = document.createElement('pagenote-annotation');// 根容器
+    element.dataset.lightid = lightId;
     const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
     const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
@@ -26,6 +28,21 @@ function initAnnotation() {
         moreActions: appends[1],
     })
     customInner.appendChild(actionArray);
+
+    const editor = document.createElement('pagenote-block');
+    editor.dataset.role = 'annotation-editor';
+    editor.contentEditable = 'true';
+    editor.innerHTML = tip;
+    editor.onmouseleave = function () {
+        step.runtime.editing = false;
+    }
+    editor.ondblclick = function () {
+        step.runtime.editing = true;
+    }
+    editor.oninput = throttle(function () {
+        step.data.tip = editor.innerHTML;
+    },400)
+    customInner.appendChild(editor);
 
     const customContent = document.createElement('pagenote-block');
     customContent.dataset.role = 'custom-content';
@@ -49,11 +66,12 @@ function initAnnotation() {
     element.onmouseleave =  ()=> {
         timer = setTimeout(function () {
             step.runtime.isFocusAnnotation = false;
+            step.runtime.editing = false;
         },200)
     }
 
     const options = {
-        grid: 4,
+        grid: 1,
         setPosition: true,
         setCursor: false,
         handle: actionArray,
@@ -86,6 +104,13 @@ function initAnnotation() {
     this.addListener(function () {
         renderContent();
         wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation());
+        editor.contentEditable = step.runtime.editing ? 'true' : 'false'
+        if(step.runtime.editing){
+            editor.focus();
+            keepLastIndex(editor);
+        } else{
+            editor.blur();
+        }
     },true,'annotation')
     this.addListener(function () {
         renderContent();

@@ -64,26 +64,19 @@ window.pagenote = new window.PageNote('demos',{
     showBarTimeout: 0, // 延迟功能时间 单位毫秒
     renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
         const element = document.createElement('div');
-        element.style.outline = '1px solid red'
         const {tip,lightId,time} = data;
-        const content = document.createElement('div');
-        content.innerHTML =  `
-          <div id="${lightId}" style="font-size: 12px; color: #666;">
-           ${tip}
-          </div>
-        `
-        element.appendChild(content);
         const aside = document.createElement('div');
         aside.innerHTML = `<pagenote-block aria-controls="aside-info">
             ${new Date(time).toLocaleDateString()}
-        </pagenote-block>`
-
+            <a style="position: absolute;right:0" target="_blank" href="https://pagenote.cn/me">
+                <img  width="16" height="16" src="https://pagenote.cn/favicon.ico" alt="用户名" title="用户名">
+            </a>
+            </pagenote-block>`
         element.appendChild(aside);
 
         element.ondblclick = function () {
             light.openEditor();
         };
-
 
         const asides = [{
             text: '分享到朋友圈',
@@ -98,8 +91,7 @@ window.pagenote = new window.PageNote('demos',{
         },{
             text: '贴紧',
             onclick: function (e) {
-                console.log(light)
-                light.connectToKeywordTag();
+                light.connectToKeywordTag();// 将批注贴紧至高亮处
             }
         }];
         return [element,asides]
