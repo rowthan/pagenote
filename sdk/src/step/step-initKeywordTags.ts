@@ -22,6 +22,11 @@ function initKeywordTags(){
     const {bg,id,text,pre,suffix,lightId,lightStatus} = step.data;
 
     function highlightElement(target: HTMLElement) {
+        // 元素内的所有内容都被高亮时 直接高亮元素，不再使用 highlight 正则匹配
+        // if(target.innerText.trim() === text){
+        //     debugger
+        // }
+
         // 查找文字、高亮元素
         let index = 0;
         const result = highlightKeywordInElement(target,text,pre,suffix,null,function(text: string, children: { parentNode: { tagName: string; }; cloneNode: () => any; }){
@@ -42,14 +47,22 @@ function initKeywordTags(){
                 lightElement.appendChild(children.cloneNode());
             }
 
-            wrapperLightAttr(lightElement,step.data)
+
 
             lightElement.onclick = function (e) {
                 const {data} = step;
                 const nextLightStatus = data.lightStatus + 1;
                 toggleLightMenu(true,step)
                 step.data.lightStatus = nextLightStatus>2?0:nextLightStatus;
-                step.data.annotationStatus = nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
+                switch (step.data.lightStatus){
+                    case LightStatus.UN_LIGHT:
+                        step.data.annotationStatus = AnnotationStatus.HIDE
+                        break;
+                    case LightStatus.LIGHT:
+                        step.data.annotationStatus = AnnotationStatus.SHOW;
+                        break;
+                }
+                // step.data.annotationStatus = nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
                 e.stopPropagation();
             };
 
@@ -76,6 +89,8 @@ function initKeywordTags(){
             }
             // @ts-ignore-next-line
             lightElement._light = step;
+
+            wrapperLightAttr(lightElement,step.data)
             return lightElement;
         });
         step.runtime.warn = result ? '' : '未找到匹配内容';

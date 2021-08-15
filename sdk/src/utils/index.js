@@ -87,8 +87,10 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         return
     }
 
+    // TODO 双击情况下 ，before 计算会存在问题
     let before = range0.startContainer.textContent.substr(0,range0.startOffset);
     let after = range0.endContainer.textContent.substr(range0.endOffset,10);
+
     if(!before){
         const preElement = parentElement.previousSibling;
         if(preElement && parentElement.contains(preElement)){

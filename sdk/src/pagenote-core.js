@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
 import {getWebIcon, captureElementImage, showCamera, writeTextToClipboard} from './utils/document'
-import {decryptedData, encryptData, getParams, prepareSelectionTarget, throttle, whats} from "./utils";
+import {decryptedData, encryptData, prepareSelectionTarget, throttle, whats} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step, Steps} from './pagenote-step';

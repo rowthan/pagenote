@@ -1,7 +1,7 @@
 
 // 按字符串逐字高亮
 function wrapMatchesAcrossElements(dict,regex, ignoreGroups, warpTagFun,filter, eachCb, endCb) {
-    const matchIdxDef = ignoreGroups === 0 ? 0 : ignoreGroups+1;
+    const matchIdxDef = ignoreGroups+1;
 
     (function checkMatch(dict,matchIdx){
         const tempMatch = regex.exec(dict.value);
@@ -106,6 +106,9 @@ function getTextNodes(element) {
 
 // 处理关键词转义
 function formatKeyword(keyword){
+    if(!keyword){
+        return "\\s*"
+    }
     return keyword.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/[\s]+/gmi, '[\\s]*');
 }
 
@@ -133,8 +136,13 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         const formatKw = formatKeyword(kw);
         const formatPre = formatKeyword(pre);
         const formatSuffix = formatKeyword(suffix);
-        const regex = new RegExp('('+formatPre+')'+'\\s*('+formatKw+')\\s*'+'('+formatSuffix+')','gmi');  // TODO 考虑pre next (${formatPre}) (${formatSuffix})
-        wrapMatchesAcrossElements(dict,regex, 1,warpTagFun, (term, node) => {
+
+        const hasPre = !!pre ? 1 : 0;
+        const hasSuffix = !!suffix;
+        const checkStr = `${hasPre? `(${formatPre})` : ''}\\s*(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`
+
+        const regex = new RegExp(checkStr,'gmi');
+        wrapMatchesAcrossElements(dict,regex, hasPre,warpTagFun, (term, node) => {
             const isBlack = blackNodes.some((black)=>{
                 return black.contains(node);
             });
@@ -142,13 +150,16 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
             let hasLighted = !!parent.dataset.highlight;
             return !isBlack && !hasLighted && node.tagName!=='LIGHT';
         }, element => {
+            result.match ++;
             result.lightsElement.push(element);
-        }, () => {
-
+        }, (res) => {
         });
     };
 
     handler(keywords,pre,next);
+    if(result.match===0){
+        handler(keywords)
+    }
     return result;
 };
 
