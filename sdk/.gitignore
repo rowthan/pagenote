@@ -64,7 +64,6 @@ typings/
 .DS_Store
 .idea
 package-lock.json
-.dist
 ./extenstion.zip
 extenstion/node_modules
 extenstion/package-lock.json
@@ -72,5 +71,3 @@ extenstion/dist/scripts
 **/package-lock.json
 *.origin.zip
 dist/pagenote.js.LICENSE.txt
-
-.DS_Store
