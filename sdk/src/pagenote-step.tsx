@@ -149,7 +149,7 @@ Step.prototype.addListener = function (fun,isRuntime=false,funId='default-change
 }
 
 
-function Steps(option: { max: number; }) {
+function Steps(option: any) {
   this.option = option;
 }
 Steps.prototype = Array.prototype;
@@ -160,6 +160,12 @@ Steps.prototype.add = function (item) {
     console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);
   }
 };
+
+Step.prototype.delete = function (index) {
+  if(this[index]){
+    this.splice(i,1);
+  }
+}
 
 export {
   Step,

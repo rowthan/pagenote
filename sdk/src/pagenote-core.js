@@ -18,7 +18,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         initType:'default',
         dura:100,
         saveInLocalId: '',
-        maxMarkNumber:50,
         enableMarkImg: false,
         blacklist:[],
         autoLight: false,
@@ -55,10 +54,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         autoTag: true, // 自动添加标签
         renderAnnotation: function () {
 
+        },
+        // check 函数
+        beforeRecord: function () {
+            return true;
         }
     },options);
     this.status = this.CONSTANT.UN_INIT;
-    this.recordedSteps = new Steps({max:999},this);
+    this.recordedSteps = new Steps({},this);
     this.snapshots = [];
     this.categories = new Set();
     this.note='';
@@ -406,13 +409,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     // success: true,faild:false 增加参数 排序方式，按时间、按网页位置（默认)
     this.record = function(info={},showComment){
         info = Object.assign(this.target,info);
-        const maxNn = OPTIONS.maxMarkNumber;
-        if(this.recordedSteps.length>=maxNn){
-            alert(i18n.t('mark_limited',[maxNn]));
-            return false
-        }
         this.status = constant.RECORDING;
-
+        if(options.beforeRecord()===false){
+            return;
+        }
         const newStep = new Step(info,StepOptions,function (step) {
             // toggleLightMenu(true,step)
             step.runtime.isFocusAnnotation = true;
@@ -420,7 +420,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
 
         // TODO target 存储在 info 中 避免再次寻找
-        const target = whats.getTarget(info.id);
+        // const target = whats.getTarget(info.id);
         // captureElementImage(target).then((imageSrc)=>{
         //     newStep.thumbnail = imageSrc;
         //     newStep.save();
