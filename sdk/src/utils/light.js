@@ -18,7 +18,8 @@ export function wrapperLightAttr(lightElement,{bg,lightStatus,tip},appendEl) {
     }
 }
 
-export function wrapperAnnotationAttr(element,color,show) {
+export function wrapperAnnotationAttr(element,color,show,tip) {
     element.dataset.visiable = show ? '1' :'0';
+    element.dataset.tip = !!tip ? '1' : '0'
     element.style = `--color:${color}`;
 }
