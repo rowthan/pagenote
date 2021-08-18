@@ -1,6 +1,6 @@
 {
   "name": "pagenote",
-  "version": "4.10.0",
+  "version": "4.10.1",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
