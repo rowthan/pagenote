@@ -10,7 +10,7 @@
 pagenote-annotation{
   display: block;
   width: auto !important;
-  min-width: 200px;
+  min-width: 220px;
   max-width: 350px;
   height: auto;
   font-size: 14px;
@@ -25,14 +25,15 @@ pagenote-annotation{
     background: rgba(255, 255, 255, 0.95);
     border-top: 4px solid var(--color);
     &[data-visiable='0']{
-      transition: 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
       opacity: 0;
-      //transition-delay: 0.5s;
+      transform: translateY(10px);
       pointer-events: none;
     }
     &[data-visiable='1'],&:focus,&:hover{
       transition: 0.5s ease-in-out;
       opacity: 1;
+      transform: translateY(0);
       pointer-events: unset;
     }
 
