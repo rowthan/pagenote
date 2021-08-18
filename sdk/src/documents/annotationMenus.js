@@ -109,7 +109,7 @@ export default function renderAnnotationMenu(rootElement,setting) {
                 } inner={true} placement='rightBottom' trigger='hover'
                 >
                     <pagenote-icon aria-controls="more-icon">
-                        <MoreIcon />
+                        <MoreIcon fill='#999'/>
                     </pagenote-icon>
                 </Popover>
             }

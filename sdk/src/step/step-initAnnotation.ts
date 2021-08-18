@@ -51,10 +51,12 @@ function initAnnotation() {
     function renderContent() {
         emptyChildren(customContent);
         const appends = renderMethod(step.data,step);
-        customContent.appendChild(appends[0]);
+        if (appends[0]){
+            customContent.appendChild(appends[0]);
+        }
     }
 
-    customContent.appendChild(appends[0]);
+    renderContent();
 
     element.appendChild(customInner);
 
@@ -101,10 +103,10 @@ function initAnnotation() {
             || (step.data.annotationStatus === AnnotationStatus.SHOW && hasTip);
     }
 
-    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation())
+    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),step.data.tip)
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip);
         editor.contentEditable = step.runtime.editing ? 'true' : 'false'
         if(step.runtime.editing){
             editor.focus();
@@ -115,10 +117,8 @@ function initAnnotation() {
     },true,'annotation')
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip);
     },false,'annotation')
-    // @ts-ignore
-    element.toggleShow = wrapperAnnotationAttr;
 }
 
 export default initAnnotation

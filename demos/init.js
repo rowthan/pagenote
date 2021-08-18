@@ -97,7 +97,7 @@ window.pagenote = new window.PageNote('demos',{
                 light.connectToKeywordTag();// 将批注贴紧至高亮处
             }
         }];
-        return [element,asides]
+        return [null,asides]
     }
 });
 
