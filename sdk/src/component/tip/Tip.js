@@ -2,7 +2,7 @@ import {h} from 'preact';
 import ToolTip from "rc-tooltip";
 import './tip.less'
 
-export default function Tip({message,children}) {
+export default function Tip({message,children,inner=false}) {
   return(
     <ToolTip destroyTooltipOnHide={{ keepParent: false }}
 
@@ -13,7 +13,7 @@ export default function Tip({message,children}) {
              placement="top"
              trigger={['hover']}
              getTooltipContainer={function (a) {
-                 return a.parentNode
+                 return inner ? a.parentNode : document.body;
              }}
              offsetX={10} overlay={<span>{message}</span>}>
       {children}

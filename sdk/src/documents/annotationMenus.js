@@ -45,6 +45,7 @@ function LightActionBar({step,colors}) {
 
     step.addListener(function () {
         setStatus(step.data.annotationStatus);
+        setCurrentColor(step.data.bg);
     },false,'actions')
 
     const pin = annotationStatus === AnnotationStatus.SHOW;

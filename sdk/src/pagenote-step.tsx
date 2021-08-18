@@ -86,6 +86,7 @@ Step.prototype.connectToKeywordTag = connectToKeywordTag;
 
 Step.prototype.openEditor = function (show=true) {
   this.runtime.editing = show;
+  this.data.annotationStatus = AnnotationStatus.SHOW;
   return;
   if(show===false){
     editorModal.destroy();
