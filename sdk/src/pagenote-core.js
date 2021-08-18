@@ -410,7 +410,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     this.record = function(info={},showComment){
         info = Object.assign(this.target,info);
         this.status = constant.RECORDING;
-        if(options.beforeRecord()===false){
+        if(typeof options.beforeRecord === 'function' && options.beforeRecord()===false){
             return;
         }
         const newStep = new Step(info,StepOptions,function (step) {
