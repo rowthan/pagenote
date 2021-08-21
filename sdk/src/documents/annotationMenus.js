@@ -94,7 +94,7 @@ export default function renderAnnotationMenu(rootElement,setting) {
     }
 
     render(
-        <pagenote-light-actions>
+        <pagenote-block>
             <LightActionBar step={light} colors={colors}/>
             {
                 moreActions.length>0 &&
@@ -113,6 +113,6 @@ export default function renderAnnotationMenu(rootElement,setting) {
                     </pagenote-icon>
                 </Popover>
             }
-        </pagenote-light-actions>
+        </pagenote-block>
         ,rootElement)
 }
