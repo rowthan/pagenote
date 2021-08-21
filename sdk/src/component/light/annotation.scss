@@ -22,11 +22,18 @@ pagenote-annotation{
     max-width: 350px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
-    //background: rgba(255, 255, 255, 0.95);
-    border-top: 4px solid var(--color);
+    background: rgba(255, 255, 255, 0.95);
     transition-property: opacity,transform,min-width;
     transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
+    &:before{
+      content: '';
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: var(--color);
+      border-radius: 4px 4px 0 0;
+    }
     &[data-visiable='0']{
       opacity: 0;
       transform: translateY(10px);
@@ -40,6 +47,10 @@ pagenote-annotation{
 
     &[data-tip='0']{
       min-width: 132px;
+      &:before{
+        display: none;
+        background: #fff;
+      }
       pagenote-block[data-role="annotation-editor"]{
         display: none;
       }
@@ -55,7 +66,7 @@ pagenote-annotation{
       box-sizing: border-box;
       cursor: move;
       padding: 2px;
-      background: #f7f6f6;
+      background: #fbfbfb;
       //&:hover{
       //  background: #f7f6f6;
       //}
@@ -70,7 +81,6 @@ pagenote-annotation{
       padding: 8px;
       font-size: 12px;
       color: #666;
-      background: rgba(255,255,255,0.95);
       img{
         max-width: 100%;
       }

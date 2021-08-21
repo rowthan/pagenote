@@ -161,12 +161,6 @@ Steps.prototype.add = function (item) {
   }
 };
 
-Step.prototype.delete = function (index) {
-  if(this[index]){
-    this.splice(i,1);
-  }
-}
-
 export {
   Step,
   Steps,
