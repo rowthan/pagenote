@@ -4,6 +4,15 @@ const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
 
+function getPagenoteRoot() {
+    const root =  document.querySelector('pagenote-root') || document.documentElement || document.body;
+    return root;
+}
+
+function getRootOffset() {
+    return getPagenoteRoot().getBoundingClientRect();
+}
+
 const prepareSelectionTarget = function (enableMarkImg,positions) {
     const selection = document.getSelection();
     if(selection.rangeCount===0){
@@ -139,9 +148,12 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     const whatsEl = whats.getUniqueId(parentElement);
     const cursorX = parseInt(x);
     const cursorY = parseInt(y);
+
+    const rootOffset = getRootOffset();
+
     const target = {
-        x:cursorX,
-        y:cursorY,
+        x:cursorX - rootOffset.left,
+        y:cursorY - rootOffset.top,
         offsetX: 0.5,
         offsetY: 0.9,
         pre:(''||before).trim(),
@@ -280,5 +292,7 @@ export {
     prepareSelectionTarget,
     isMobile,
     whats,
+    getPagenoteRoot,
+    getRootOffset,
 }
 

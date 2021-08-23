@@ -1,8 +1,20 @@
 import {h} from 'preact';
+import "../src/pagenote";
 import '../../demos/index.css'
+import "../../demos/init"
+import {useEffect} from "preact/hooks";
+
 export default function Demo() {
+
+    useEffect(()=>{
+        window.initPagenote();
+    },[])
+
     return (
         <div className="demo">
+            <pagenote-root>
+                <pagenote-annotations></pagenote-annotations>
+            </pagenote-root>
             <article>
                 <section>
                     <h2>

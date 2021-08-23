@@ -2,13 +2,13 @@ import PagenoteCore from './pagenote-core'
 import { h, render } from 'preact';
 import AsideBar from "./component/aside/AsideBar";
 import ActionBars from "./component/action/ActionBars";
-import {debounce} from './utils';
+import {debounce, getPagenoteRoot} from './utils';
 import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
-    const rootElement = document.documentElement || document.body || document.createElement('div');
+    const rootElement = getPagenoteRoot();
 
     const colors = options.brushes.map((brush)=>{return brush.bg})
     toggleLightMenu(false,null,null,colors);

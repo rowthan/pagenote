@@ -46,16 +46,19 @@ pagenote-annotation{
     }
 
     &[data-tip='0']{
-      min-width: 132px;
+      min-width: 160px;
+      box-shadow: none;
       &:before{
         display: none;
-        background: #fff;
       }
       pagenote-block[data-role="annotation-editor"]{
         display: none;
       }
       pagenote-icon[aria-controls="pin"]{
         display: none;
+      }
+      pagenote-icon{
+        box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px 0 rgba(60,64,67,0.3);
       }
     }
 
@@ -67,9 +70,10 @@ pagenote-annotation{
       cursor: move;
       padding: 2px;
       background: #fbfbfb;
-      //&:hover{
-      //  background: #f7f6f6;
-      //}
+      border-radius: 4px;
+      &:hover{
+        background: #f7f6f6;
+      }
     }
 
     pagenote-block[data-role="custom-content"]{
