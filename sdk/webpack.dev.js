@@ -29,6 +29,14 @@ module.exports = merge(common, {
         <title>pagenote 开发页</title>
         <meta name="description" content="这是pagenote 开发页面" />
         <meta name="keywords" content="keywords, 标记" />
+        <style>
+          .demo{
+            margin-top: 100px;
+            position: relative;
+            height: 80vh;
+            overflow: scroll;
+          }
+        </style>
       </head>
       <body data-blockpagenote='1'>
         <div id="guide" data-blockpagenote="1"></div>

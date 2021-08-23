@@ -52,26 +52,26 @@ function LightActionBar({step,colors}) {
 
     return(
         <Fragment>
-            <pagenote-icon aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
+            <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
                 <PinIcon fill={pin ? currentColor : '#fff'} />
             </pagenote-icon>
-            <Tip message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
+            <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
                 <pagenote-icon onClick={()=>copyHightlight(false)}
                                onDblClick={()=>{copyHightlight(true)}}>
                     <CopyIcon fill={currentColor}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>
-            <Tip message={i18n.t('comment')}>
+            <Tip inner={true} message={i18n.t('comment')}>
                 <pagenote-icon onClick={()=>{
                     step.openEditor();
                 }}>
                     <NoteIcon fill={currentColor} width={20} height={20}/>
                 </pagenote-icon>
             </Tip>
-            <Tip message={i18n.t('change_color')}>
+            <Tip inner={true} message={i18n.t('change_color')}>
                 <Colors colors={colors} current={currentColor} selectColor={onchangeColor}></Colors>
             </Tip>
-            <Tip message={i18n.t('remove_marks')}>
+            <Tip inner={true} message={i18n.t('remove_marks')}>
                 <pagenote-icon aria-controls="delete-icon">
                     <DeleteIcon  width={20} height={20} fill={currentColor}  onClick={()=>{step.delete()}} />
                 </pagenote-icon>
@@ -108,7 +108,7 @@ export default function renderAnnotationMenu(rootElement,setting) {
                     }</pagenote-block>
                 } inner={true} placement='rightBottom' trigger='hover'
                 >
-                    <pagenote-icon aria-controls="more-icon">
+                    <pagenote-icon inner={true} aria-controls="more-icon">
                         <MoreIcon fill='#999'/>
                     </pagenote-icon>
                 </Popover>

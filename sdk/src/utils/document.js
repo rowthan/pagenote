@@ -152,7 +152,7 @@ const gotoPosition = function(element,targetX,targetY,onFinished){
     }
     const inBottomView = targetY>document.documentElement.clientHeight/2;
     // 优先使用算法，移动到视野的 1/3位置，然后计算确认，兜底使用scrolltoView
-    if(inBottomView && element&&element.scrollIntoView){
+    if(element&&element.scrollIntoView){
         element.scrollIntoView({block:"center",behavior:'smooth'});
         typeof callback === "function" && setTimeout(()=>callback(),100);
         return;
