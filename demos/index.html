@@ -5,10 +5,20 @@
     <title>pagenote 试验场</title>
   <link rel="stylesheet" href="../sdk/dist/pagenote.css">
   <link rel="stylesheet" href="index.css">
+  <style>
+    .demo{
+      margin-top: 100px;
+      position: relative;
+      height: 80vh;
+      overflow: scroll;
+    }
+  </style>
 </head>
 <body data-blockpagenote='1'>
   <div class="demo">
-    <pagenote-annotations></pagenote-annotations>
+    <pagenote-root>
+      <pagenote-annotations></pagenote-annotations>
+    </pagenote-root>
     <div id="app">
       <article>
         <section>
