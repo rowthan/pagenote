@@ -416,6 +416,26 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         const newStep = new Step(info,StepOptions,function (step) {
             // toggleLightMenu(true,step)
             step.runtime.isFocusAnnotation = true;
+
+            const onMouseMove = debounce(function (e) {
+                const annotation = step.runtime.relatedAnnotationNode;
+                const annotationPosition = annotation.getBoundingClientRect();
+
+                const relativeX = e.screenX - annotationPosition.x;
+                const offsetX = relativeX > 0 ? relativeX - 100 : Math.abs( relativeX);
+                const offsetY = Math.abs(e.screenY - annotationPosition.y);
+                const offset = Math.max(offsetY,offsetX)
+
+                if(offset>250){
+                    const customEvent = document.createEvent('Event');
+                    customEvent.initEvent('mouseleave');
+                    annotation.dispatchEvent(customEvent);
+                    document.removeEventListener('mousemove',onMouseMove)
+                }
+            },60);
+
+            document.addEventListener('mousemove',onMouseMove)
+
         });
 
 
