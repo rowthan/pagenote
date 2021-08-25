@@ -1,4 +1,5 @@
 import {getRootOffset, whats} from "../utils/index";
+import {gotoPosition} from "../utils/document";
 
 const connectToKeywordTag = function () {
     const tag = this.runtime.relatedNode[this.runtime.relatedNode.length-1];
@@ -13,6 +14,7 @@ const connectToKeywordTag = function () {
         this.runtime.annotationDrag.set(left,top)
         this.data.x = left;
         this.data.y = top;
+        gotoPosition(null,left,top);
     }
 }
 
