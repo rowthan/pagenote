@@ -139,7 +139,7 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         const formatSuffix = formatKeyword(suffix);
 
         const hasSuffix = !!suffix;
-        const checkStr = `(${formatPre})\\s*(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`
+        const checkStr = `(${formatPre}\\s*)(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`
 
         const regex = new RegExp(checkStr,'gmi');
         wrapMatchesAcrossElements(dict,regex, 1,warpTagFun, (term, node) => {

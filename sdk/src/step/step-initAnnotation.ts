@@ -40,7 +40,7 @@ function initAnnotation() {
         step.runtime.editing = true;
     }
     editor.oninput = throttle(function () {
-        step.data.tip = editor.innerText ? editor.innerHTML : '';
+        step.data.tip = editor.innerText.trim() ? editor.innerHTML : '';
     },400)
     customInner.appendChild(editor);
 
