@@ -1,5 +1,6 @@
 import whatsPure from "whats-element/pure";
 import {AnnotationStatus, LightStatus} from "../step/const";
+import {getScroll} from "./document";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
@@ -10,7 +11,12 @@ function getPagenoteRoot() {
 }
 
 function getRootOffset() {
-    return getPagenoteRoot().getBoundingClientRect();
+    let offset = getPagenoteRoot().getBoundingClientRect();
+
+    return {
+        left: offset.left + getScroll().x,
+        top: offset.top + getScroll().y,
+    };
 }
 
 const prepareSelectionTarget = function (enableMarkImg,positions) {
