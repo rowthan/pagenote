@@ -25,7 +25,7 @@ function initAnnotation() {
     renderAnnotationMenu(actionArray,{
         light:step,
         colors: step.options.colors,
-        moreActions: appends[1],
+        moreActions: appends[1] || [],
     })
     customInner.appendChild(actionArray);
 
