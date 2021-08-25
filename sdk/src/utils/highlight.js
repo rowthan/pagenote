@@ -22,6 +22,7 @@ function wrapMatchesAcrossElements(dict,regex, ignoreGroups, warpTagFun,filter, 
                 regex.lastIndex = lastIndex; // 重置上次匹配结果
                 eachCb(node);
             });
+            // 继续查找后续节点，匹配关键词。能够做到一个根节点下高亮相同的关键词
             checkMatch(dict,matchIdx);
         }
     })(dict,matchIdxDef)
@@ -137,12 +138,11 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         const formatPre = formatKeyword(pre);
         const formatSuffix = formatKeyword(suffix);
 
-        const hasPre = !!pre ? 1 : 0;
         const hasSuffix = !!suffix;
-        const checkStr = `${hasPre? `(${formatPre})` : ''}\\s*(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`
+        const checkStr = `(${formatPre})\\s*(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`
 
         const regex = new RegExp(checkStr,'gmi');
-        wrapMatchesAcrossElements(dict,regex, hasPre,warpTagFun, (term, node) => {
+        wrapMatchesAcrossElements(dict,regex, 1,warpTagFun, (term, node) => {
             const isBlack = blackNodes.some((black)=>{
                 return black.contains(node);
             });
@@ -155,7 +155,6 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         }, (res) => {
         });
     };
-
     handler(keywords,pre,next);
     if(result.match===0){
         handler(keywords)
