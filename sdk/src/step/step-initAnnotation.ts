@@ -2,7 +2,7 @@ import renderAnnotationMenu from "../documents/annotationMenus";
 import {emptyChildren, keepLastIndex} from "../utils/document";
 import {AnnotationStatus, LightStatus} from "./const";
 import {wrapperAnnotationAttr} from "../utils/light";
-import {throttle} from "../utils/index";
+import {throttle,debounce} from "../utils/index";
 // @ts-ignore
 import Draggable from 'draggable';
 
@@ -61,14 +61,31 @@ function initAnnotation() {
     element.appendChild(customInner);
 
     let timer: NodeJS.Timeout = null;
+    const onMouseMove = debounce(function (e: { screenX: number; screenY: number; }) {
+        const annotation = step.runtime.relatedAnnotationNode;
+        const annotationPosition = annotation.getBoundingClientRect();
+
+        const relativeX = e.screenX - annotationPosition.x;
+        const offsetX = relativeX > 0 ? relativeX - 100 : Math.abs( relativeX);
+        const offsetY = Math.abs(e.screenY - annotationPosition.y);
+        const offset = Math.max(offsetY,offsetX)
+
+        if(offset>250){
+            const customEvent = document.createEvent('Event');
+            customEvent.initEvent('mouseleave');
+            annotation.dispatchEvent(customEvent);
+        }
+    },60);
     element.onmouseenter = ()=> {
         clearTimeout(timer);
         step.runtime.isFocusAnnotation = true;
+        document.addEventListener('mousemove',onMouseMove)
     }
     element.onmouseleave =  ()=> {
         timer = setTimeout(function () {
             step.runtime.isFocusAnnotation = false;
             step.runtime.editing = false;
+            document.removeEventListener('mousemove',onMouseMove)
         },200)
     }
 
