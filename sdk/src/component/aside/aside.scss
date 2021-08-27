@@ -4,6 +4,8 @@
 
 pagenote-aside{
   position: fixed;
+  max-height: 95vh;
+  overflow: auto;
   right: 2px;
   z-index: 99991;
   top: 0;
@@ -108,8 +110,8 @@ pagenote-description{
 
 pagenote-lights{
   max-height: 90vh;
-  overflow-y: auto;
-  padding: 1px;
+  //overflow-y: auto;
+  //padding: 1px;
   pagenote-light-aside-mask{
     display: block;
     width: 100%;

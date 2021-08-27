@@ -76,6 +76,8 @@ function initAnnotation() {
             annotation.dispatchEvent(customEvent);
         }
     },60);
+
+    document.addEventListener('mousemove',onMouseMove)
     element.onmouseenter = ()=> {
         clearTimeout(timer);
         step.runtime.isFocusAnnotation = true;
@@ -86,7 +88,7 @@ function initAnnotation() {
             step.runtime.isFocusAnnotation = false;
             step.runtime.editing = false;
             document.removeEventListener('mousemove',onMouseMove)
-        },200)
+        },60)
     }
 
     const options = {

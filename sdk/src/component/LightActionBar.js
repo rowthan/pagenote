@@ -30,25 +30,25 @@ export default function LightActionBar({step,colors}) {
 
     return(
         <pagenote-light-actions>
-            <Tip message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
+            <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
                 <pagenote-icon onClick={()=>copyHightlight(false)}
                                onDblClick={()=>{copyHightlight(true)}}>
                     <CopyIcon fill={currentColor}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>
-            <Tip message={i18n.t('comment')}>
+            <Tip inner={true} message={i18n.t('comment')}>
                 <pagenote-icon onClick={()=>{
                     step.openEditor();
                 }}>
                     <NoteIcon fill={currentColor} width={20} height={20}/>
                 </pagenote-icon>
             </Tip>
-            <Tip message={i18n.t('remove_marks')}>
+            <Tip inner={true} message={i18n.t('remove_marks')}>
                 <pagenote-icon>
                     <DeleteIcon  width={20} height={20} fill={currentColor}  onClick={()=>{step.delete()}} />
                 </pagenote-icon>
             </Tip>
-            <Tip message={i18n.t('change_color')}>
+            <Tip inner={true} message={i18n.t('change_color')}>
                 <Colors colors={colors} current={currentColor} selectColor={onchangeColor}></Colors>
             </Tip>
         </pagenote-light-actions>
