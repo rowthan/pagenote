@@ -7,7 +7,7 @@ export default function Tip({message,children,inner=false}) {
     <ToolTip destroyTooltipOnHide={{ keepParent: false }}
 
              align={{
-               offset: [0, -10],
+               offset: [0, 0],
              }}
              overlayStyle={{zIndex:9999999}}
              placement="top"

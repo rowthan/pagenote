@@ -51,7 +51,7 @@
     "message": "固定"
   },
   "copy_keyword_annotation": {
-    "message": "单击复制划词，双击复制划词和批注"
+    "message": "复制划词"
   },
   "change_color": {
     "message": "变更颜色"
@@ -112,5 +112,8 @@
   },
   "not_found": {
     "message": "此段标记没有在文中找到，可能网页内容已经发生了改变"
+  },
+  "comment": {
+    "message": "批注"
   }
 }
