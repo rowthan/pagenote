@@ -22,8 +22,6 @@ export class OptionsProps{
     renderNote? : Function;
     // true: 将数据存储至localstorage中，刷新页面后笔记仍然存在。false: 不存储数据于用户本地，刷新后数据丢失。
     saveInLocal?: boolean; // true；
-    // 最大标记数
-    maxMarkNumber?: number; // 30
     // 控制侧边栏位置
     barInfo?: {right:number,top:number,status:BAR_STATUS}; // {right:0,top:0,status:0}
     // 画笔配置
