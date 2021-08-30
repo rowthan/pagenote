@@ -12,9 +12,9 @@ export default function Demo() {
 
     return (
         <div className="demo">
-            <pagenote-root>
-                <pagenote-annotations></pagenote-annotations>
-            </pagenote-root>
+            {/*<pagenote-root>*/}
+            {/*    <pagenote-annotations></pagenote-annotations>*/}
+            {/*</pagenote-root>*/}
             <article>
                 <section>
                     <h2>

@@ -8,6 +8,7 @@ import sideStyle from './aside.scss';
 import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
 import Tags from "./Tags";
+import {LightStatus} from "../../step/const";
 
 let lastTop = -1;
 let pagenote = null;
@@ -77,6 +78,9 @@ class AsideBar extends Component{
         pagenote.recordedSteps.forEach((light)=>{
             light.data.lightStatus = finalStatus;
             light.data.annotationStatus = finalStatus === 2 ? 1: 0;
+            if(finalStatus===LightStatus.LIGHT){
+                light.connectToKeywordTag(true);
+            }
         });
         this.setState({
             allStepStatus: finalStatus
