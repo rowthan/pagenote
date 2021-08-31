@@ -15,7 +15,9 @@ const connectToKeywordTag = function (ignoreScroll=false) {
         this.data.x = left;
         this.data.y = top;
         if(ignoreScroll !== true){
-            gotoPosition(null,left,top);
+            if(!this.runtime.isVisible){
+                gotoPosition(null,position.left,position.top - height - 8);
+            }
         }
     }
 }

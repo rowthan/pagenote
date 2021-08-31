@@ -241,7 +241,7 @@ class AsideBar extends Component{
                                 </pagenote-action>
                             </Tip> */}
                             <pagenote-all-actions>
-                                <Tip message={message}>
+                                <Tip placement='right'  inner={true} message={message}>
                                     <pagenote-light-aside-item-sign data-level={1} data-active={allStepStatus}   onClick={()=>{this.toggleAllLight()}} />
                                 </Tip>
                                 
