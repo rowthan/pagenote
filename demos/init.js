@@ -67,7 +67,7 @@ window.initPagenote = function () {
                 level:1,
             }
         ],
-        showBarTimeout: 0, // 延迟功能时间 单位毫秒
+        showBarTimeout: 100, // 延迟功能时间 单位毫秒
         renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
             const element = document.createElement('div');
             const {tip,lightId,time} = data;
