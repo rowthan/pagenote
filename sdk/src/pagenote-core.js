@@ -222,6 +222,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 function checkShow(currentTime,callback) {
                     const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
                     that.target = prepareSelectionTarget(that.options.enableMarkImg, [startPosition,lastPosition])
+                    console.log('target',that.target)
                     // 满足计算条件
                     const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
                     if(computeResult){
