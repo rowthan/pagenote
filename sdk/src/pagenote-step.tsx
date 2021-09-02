@@ -1,6 +1,6 @@
 // @ts-nocheck // TODO enable
 import md5 from "blueimp-md5";
-import { getScroll, getViewPosition,keepLastIndex} from "./utils/document";
+import {getScroll, getViewPosition, keepLastIndex, writeTextToClipboard} from "./utils/document";
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
 import AnnotationEditor from "./annotationEditor";
@@ -9,6 +9,7 @@ import initKeywordTags from "./step/step-initKeywordTags";
 import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
 import connectToKeywordTag from './step/step-connectToKeywordTag';
+import notification from "./utils/notification";
 
 const editorModal = new modal();
 
@@ -59,6 +60,26 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
     annotationDrag: null,
     editing: false,
   }
+  const that = this;
+  const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
+    const key = e.key;
+    switch (key) {
+      case 'c':
+        if(that.runtime.editing){
+          return
+        }
+        const scroll = getScroll();
+        that.copyToClipboard(false,{
+          x: that.data.x - scroll.x,
+          y: that.data.y - scroll.y,
+        })
+        break;
+      case 'm':
+        that.openEditor();
+        break;
+    }
+    // e.stopPropagation();
+  }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
       Reflect.set(target, key, value);
@@ -66,6 +87,15 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
         const fun = that.listeners.runtime[i];
         typeof fun === 'function'  && fun(target,key,value);
       }
+
+      if(key==='isFocusTag' || key==='isFocusAnnotation'){
+        if(target.isFocusTag || target.isFocusAnnotation){
+          document.addEventListener('keyup',listenShortcut,{capture:true})
+        } else {
+          document.removeEventListener('keyup',listenShortcut,{capture:true})
+        }
+      }
+
       return target;
     }
   });
@@ -142,6 +172,18 @@ Step.prototype.delete = function () {
   this.options.onRemove(this.data);
   toggleLightMenu(false);
   editorModal.destroy();
+}
+
+Step.prototype.copyToClipboard = function (copyAll=false,position) {
+  let value = copyAll? (this.data.text + '\n' + this.data.tip): this.data.text;
+  writeTextToClipboard(value).then(r => {
+    notification({
+      message:'已复制',
+      color: this.data.bg,
+      duration: 15000,
+      position: position,
+    })
+  });
 }
 
 Step.prototype.addListener = function (fun,isRuntime=false,funId='default-change-fun') {

@@ -124,15 +124,30 @@ pagenote-notification{
   font-size: 12px;
   padding: 2px 4px;
   border-radius: 2px;
-  background: #ffd581;
+  background: var(--color,#ffd581);
   color:#000;
-  &.success{
+  &[data-type='success']{
     background: #ffd581;
   }
-  &.error{
+  &[data-type='error']{
     background: #ff7b82;
   }
-  &.fade{
-    animation: notification 3s ease-in-out forwards;
+  &[data-status='fade']{
+    animation: notification 2s ease-in-out forwards;
+  }
+}
+
+@keyframes notification {
+  0%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  //80%{
+  //  transform: translateY(-16px);
+  //  opacity: 1;
+  //}
+  100%{
+    transform: translateY(-20px);
+    opacity: 0;
   }
 }

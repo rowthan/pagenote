@@ -14,10 +14,8 @@ export default function LightActionBar({step,colors}) {
     const [copied,setCopy] = useState(false);
     const [currentColor,setCurrentColor] = useState(step.data.bg);
 
-    const copyHightlight=(copyAll)=>{
+    const copyHightlight=()=>{
         setCopy(true)
-        const value =copyAll? (data.text + '\n' + data.tip):data.text;
-        writeTextToClipboard(value);
         setTimeout(()=>{
             setCopy(false)
         },3000)
@@ -31,8 +29,8 @@ export default function LightActionBar({step,colors}) {
     return(
         <pagenote-light-actions>
             <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
-                <pagenote-icon onClick={()=>copyHightlight(false)}
-                               onDblClick={()=>{copyHightlight(true)}}>
+                <pagenote-icon onClick={()=>{step.copyToClipboard(false);copyHightlight()}}
+                               onDblClick={()=>{step.copyToClipboard(true);copyHightlight()}}>
                     <CopyIcon fill={currentColor}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>

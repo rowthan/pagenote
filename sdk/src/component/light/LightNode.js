@@ -13,6 +13,7 @@ import whatsPure from "whats-element/pure";
 import Tip from '../tip/Tip'
 const whats = new whatsPure();
 import i18n from '../../locale/i18n';
+import notification from "../../utils/notification";
 
 export default class LightNode extends Component{
   constructor(props){
@@ -112,8 +113,11 @@ export default class LightNode extends Component{
 
   copyHightlight=(copyAll)=>{
     const value =copyAll? (this.props.light.text + '\n' + this.props.light.tip):this.props.light.text;
-    writeTextToClipboard(value);
-    this.props.pagenote.notification(i18n.t('copied')+(copyAll?(i18n.t('keywords')+'&'+i18n.t('annotation')):i18n.t('keywords')));
+    writeTextToClipboard(value).then(()=>{
+      notification({
+        message: i18n.t('copied')+(copyAll?(i18n.t('keywords')+'&'+i18n.t('annotation')):i18n.t('keywords'))
+      });
+    });
   };
 
   onChangeColor=(color)=>{

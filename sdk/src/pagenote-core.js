@@ -8,6 +8,7 @@ import { dataToString } from "./utils/data";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
 import toggleLightMenu from "./light-menu";
+import notification from "./utils/notification";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 
@@ -255,7 +256,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         if(text.trim()){
                             // TODO 优化剪切板方法，写入复制区会导致丢失当前选区
                             // writeTextToClipboard(text);
-                            // this.notification('已复制选区至剪切板');
+                            // notification({
+                            //  message: '已复制选区至剪切板'
+                            // });
                         }
                         console.log('选区',text);
                     },2000)
@@ -318,7 +321,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         that.record({
                             bg: brush.bg,
                             level: brush.level, // TODO 支持 level 级别参数
-                        },true);
+                        },false);
                     } else if(typeof extensionActions[key] === 'function'){ // 扩展插件快捷键
                         extensionActions[key](e,that.target);
                     }
@@ -559,30 +562,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         return content;
     };
 
-    this.notification = (message,type,duration = 3000, position={x:"50%",y:"50%"})=>{
-       const ele =  document.createElement('pagenote-notification');
-       ele.className = type || 'success';
-       ele.innerHTML = message;
-       ele.style.left = position.x || this.target.clientX || window.innerWidth/2 + 'px';
-       ele.style.top = position.y || this.target.clientY || window.innerHeight/2 + 'px';
-       document.body.appendChild(ele);
-       let timer = null;
-       setTimer();
-       ele.addEventListener('mouseover',function () {
-           ele.classList.remove('fade');
-           clearTimeout(timer);
-       },{capture:true});
-       ele.addEventListener('mouseout',function () {
-           setTimer();
-       },{capture:true});
-
-        function setTimer() {
-            ele.classList.add('fade');
-            timer = setTimeout(()=>{
-                ele.remove();
-            },duration);
-        }
-    };
+    this.notification = notification;
 
     this.capture = (target=document.documentElement || document.body)=>{
         return new Promise((resolve,reject)=>{
@@ -594,7 +574,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             }).catch((e)=>{
                 console.error(e);
                 reject(e);
-                this.notification(i18n.t('capture_error'),'error')
+                notification({
+                    message: i18n.t('capture_error'),
+                    type: 'error'
+                })
             });
         })
     };

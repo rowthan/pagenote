@@ -40,7 +40,8 @@ function initAnnotation() {
         step.runtime.editing = true;
     }
     editor.oninput = throttle(function () {
-        step.data.tip = editor.innerText.trim() ? editor.innerHTML : '';
+        const content = editor.innerText.trim() ? editor.innerHTML : ''
+        step.data.tip = content;
     },400)
     customInner.appendChild(editor);
 
@@ -60,7 +61,8 @@ function initAnnotation() {
 
     element.appendChild(customInner);
 
-    let timer: NodeJS.Timeout = null;
+    let outTimer: NodeJS.Timeout = null;
+    // TODO delete step 时候删除监听
     const onMouseMove = debounce(function (e: { screenX: number; screenY: number; }) {
         const annotation = step.runtime.relatedAnnotationNode;
         const annotationPosition = annotation.getBoundingClientRect();
@@ -79,12 +81,12 @@ function initAnnotation() {
 
     document.addEventListener('mousemove',onMouseMove)
     element.onmouseenter = ()=> {
-        clearTimeout(timer);
+        clearTimeout(outTimer);
         step.runtime.isFocusAnnotation = true;
         document.addEventListener('mousemove',onMouseMove)
     }
     element.onmouseleave =  ()=> {
-        timer = setTimeout(function () {
+        outTimer = setTimeout(function () {
             step.runtime.isFocusAnnotation = false;
             step.runtime.editing = false;
             document.removeEventListener('mousemove',onMouseMove)

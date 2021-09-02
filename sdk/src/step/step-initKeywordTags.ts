@@ -3,6 +3,7 @@ import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {whats} from "../utils/index";
 import {AnnotationStatus, LightStatus} from "./const";
+import {getScroll, writeTextToClipboard} from "../utils/document";
 
 const options = {
 
@@ -73,12 +74,20 @@ function initKeywordTags(){
 
             lightElement.onmouseenter = ()=> {
                 clearTimeout(step.runtime.focusTimer);
-                step.runtime.isFocusTag = true;
+                // 如果没有标记内容，则自动贴紧
+                if(!step.data.tip){
+                    step.connectToKeywordTag(true);
+                }
+                // 鼠标经过后0.5s标记为 isFocusTag
+                step.runtime.focusTimer = setTimeout(()=>{
+                    step.runtime.isFocusTag = true;
+                },500)
             }
             lightElement.onmouseleave =  ()=> {
+                clearTimeout(step.runtime.focusTimer);
                 step.runtime.focusTimer = setTimeout(()=>{
                     step.runtime.isFocusTag = false;
-                },1000)
+                },100)
             }
 
             io.observe(lightElement)

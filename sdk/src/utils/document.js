@@ -372,6 +372,7 @@ function writeTextToClipboard(text) {
         textarea.select();
         document.execCommand('Copy', false, null);
         document.body.removeChild(textarea)
+        return Promise.resolve();
     }
 }
 
