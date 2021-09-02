@@ -18,7 +18,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     this.options =  Object.assign({
         initType:'default',
         dura:100,
-        saveInLocalId: '',
         enableMarkImg: false,
         blacklist:[],
         autoLight: false,
@@ -130,9 +129,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     }
     // TODO 初始化动效
     this.init = function(initData){ // 为一段加密过的数据信息
-        if(!initData && this.options.saveInLocalId){
-            initData = JSON.parse(localStorage.getItem(this.options.saveInLocalId)||"{}")
-        }
         let simpleStep = [];
         let setting = {};
         if(initData){
@@ -155,7 +151,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 console.error('解析step异常',e,initData);
             }
         }
-        this.recordedSteps.splice(0,this.recordedSteps.length);
+        // 清空当前已有数据
+        this.recordedSteps.forEach((step)=>{
+            step.delete();
+        });
         simpleStep.forEach((step)=>{
             const newStep = new Step(step,StepOptions);
             this.recordedSteps.add(newStep);
@@ -640,11 +639,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             this.plainData = storeInfo;
             // json parse 避免存储一些异常数据 如 function
             const storeData = simpleSteps.length?JSON.parse(JSON.stringify(storeInfo)):{};
-            const localId = this.options.saveInLocalId;
-            if(localId){
-                localStorage.setItem(localId,JSON.stringify(storeData));
-            }
-
             // let searchString = '';
             // 复原search参数
             // paramKeys.forEach((key,index)=>{
