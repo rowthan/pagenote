@@ -14,7 +14,6 @@ pagenote-aside{
   background: #fff;
   transition: width 0.2s ease-out;
   border-radius: 4px;
-  line-height: 1.414em;
   box-shadow: 0px 0px 5px 0px #efefef;
   &[data-status="expand"]{
     border: none;
@@ -102,7 +101,6 @@ pagenote-actions{
 pagenote-description{
   color: #8f959e;
   font-size: 12px;
-  line-height: 1.414em;
   max-height: 2.828em;
   overflow: hidden;
   text-overflow: ellipsis;
