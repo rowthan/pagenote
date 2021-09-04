@@ -63,11 +63,11 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   const that = this;
   const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
     const key = e.key;
+    if(that.runtime.editing){
+      return
+    }
     switch (key) {
       case 'c':
-        if(that.runtime.editing){
-          return
-        }
         const scroll = getScroll();
         that.copyToClipboard(false,{
           x: that.data.x - scroll.x,

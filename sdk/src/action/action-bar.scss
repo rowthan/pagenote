@@ -2,14 +2,14 @@ pagenote-colors-container{
   display: block;
   position: relative;
   &:hover pagenote-color-button:not(:first-child){
-    transform: translate(0,0) scale(0.59)!important;
+    transform: translate(0,0) scale(0.75)!important;
     opacity: 1;
   }
 }
 pagenote-color-button{
   display: block;
-  width: 30px !important;
-  height: 30px !important;
+  width: 30px;
+  height: 30px;
   position: absolute;
   opacity: 0;
   border: none !important;
@@ -88,11 +88,11 @@ pagenote-plugin-group{
     opacity: 0;
   }
   10%{
-    transform: translate(0,0) scale(0.59);
+    transform: translate(0,0) scale(0.75);
     opacity: 1;
   }
   80%{
-    transform: translate(0,0) scale(0.59);
+    transform: translate(0,0) scale(0.75);
     opacity: 1;
   }
   100%{

@@ -234,13 +234,13 @@ export const Colors = function ({colors,current,selectColor}) {
       <div className={style.colorOptions}>
         {
           colors.map((color)=>{
-            return <pagenote-icon onClick={() => { setColor(color)}}
+            return <pagenote-icon aria-controls='color-item' onClick={() => { setColor(color)}}
                         className={`${style.colorItem} ${color === current ? style.active : ''}`}
                         style={{backgroundColor: color}}/>
           })
         }
       </div>
-      <pagenote-icon>
+      <pagenote-icon aria-controls='color-item'>
         <ColorIcon width={20} height={20} fill={current}/>
       </pagenote-icon>
     </div>

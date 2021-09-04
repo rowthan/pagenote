@@ -2,7 +2,7 @@ import { h } from 'preact';
 import {computePosition, convertColor, isMobile} from "@/utils";
 import Highlight from '@/assets/images/highlight.svg';
 import i18n from '@/locale/i18n';
-import Tip from '../tip/Tip'
+import Tip from '../component/tip/Tip'
 import './action-bar.scss';
 
 export default function ActionBars ({pagenote}) {
@@ -43,10 +43,11 @@ export default function ActionBars ({pagenote}) {
             <pagenote-colors-container>
               {
                 brushes.map((item, index) => {
+                  const radios = 30;
                   const {x:offsetX,y:offsetY} = (isMobile || index===0) ? {
                     x: (index) * - 40,
                     y: 0,
-                  } : computePosition(index-1);
+                  } : computePosition(index-1,radios);
 
                   return(
                     <pagenote-color-button
@@ -56,6 +57,8 @@ export default function ActionBars ({pagenote}) {
                            transform: `translate(${offsetX}px,${offsetY}px)`,
                            top: (offsetY / -1) + 'px',
                            left: (offsetX / -1) + 'px',
+                           width: radios + 'px',
+                           height: radios + 'px',
                            color: convertColor(item.bg).textColor,
                            textShadow: `1px 1px 0px ${convertColor(convertColor(item.bg).textColor).textColor}`,
                            animation:`${(showAnimation&&index!==0)?'colorShow 3s ease-out':''}`,
