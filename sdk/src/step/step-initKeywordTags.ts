@@ -81,7 +81,7 @@ function initKeywordTags(){
                 // 鼠标经过后0.5s标记为 isFocusTag
                 step.runtime.focusTimer = setTimeout(()=>{
                     step.runtime.isFocusTag = true;
-                },500)
+                },300)
             }
             lightElement.onmouseleave =  ()=> {
                 clearTimeout(step.runtime.focusTimer);

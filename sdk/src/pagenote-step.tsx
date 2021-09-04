@@ -4,7 +4,7 @@ import {getScroll, getViewPosition, keepLastIndex, writeTextToClipboard} from ".
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
 import AnnotationEditor from "./annotationEditor";
-import {LightStatus, AnnotationStatus, StepProps, STORE_KEYS_VERSION_2_VALIDATE} from "./step/const";
+import {AnnotationStatus, LightStatus, StepProps, STORE_KEYS_VERSION_2_VALIDATE} from "./step/const";
 import initKeywordTags from "./step/step-initKeywordTags";
 import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
@@ -63,6 +63,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   const that = this;
   const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
     const key = e.key;
+    console.log(key)
     if(key==='Escape'){
       that.runtime.editing = false;
       return;
@@ -81,6 +82,9 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
         break;
       case 'm':
         that.openEditor();
+        break;
+      case '`':
+        that.changeStatus(1)
         break;
       default:
         const index = Number(key) - 1;
@@ -106,10 +110,12 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
         typeof fun === 'function'  && fun(target,key,value);
       }
 
-      if(key==='isFocusTag' || key==='isFocusAnnotation'){
-        if(target.isFocusTag || target.isFocusAnnotation){
+      if(key==='isFocusTag' || key==='isFocusAnnotation' || key==='editing'){
+        if(target.isFocusTag || target.isFocusAnnotation || target.editing){
+          // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
           document.addEventListener('keyup',listenShortcut,{capture:true})
         } else {
+          // console.log('remove keyup',target.isFocusAnnotation,target.isFocusTag)
           document.removeEventListener('keyup',listenShortcut,{capture:true})
         }
       }
@@ -132,10 +138,25 @@ Step.prototype.gotoView = stepGotoView;
 
 Step.prototype.connectToKeywordTag = connectToKeywordTag;
 
+Step.prototype.changeStatus = function (cnt:number) {
+  let finalStatus = LightStatus.UN_LIGHT;
+  if(cnt!==0){
+     finalStatus = this.data.lightStatus + cnt;
+  }
+
+  if(finalStatus>LightStatus.LIGHT){
+    finalStatus = LightStatus.UN_LIGHT;
+  }else if(finalStatus<LightStatus.UN_LIGHT){
+    finalStatus = LightStatus.LIGHT;
+  }
+
+  this.data.annotationStatus = finalStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
+  this.data.lightStatus = finalStatus;
+}
+
 Step.prototype.openEditor = function (show=true) {
   this.runtime.editing = show;
   this.data.annotationStatus = AnnotationStatus.SHOW;
-  this.runtime.isFocusAnnotation = true;
   return;
   if(show===false){
     editorModal.destroy();

@@ -420,7 +420,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             return;
         }
         const newStep = new Step(info,StepOptions,function (step) {
-            step.runtime.isFocusAnnotation = true;
+            step.runtime.isFocusTag = true;
+            // 2 秒后无操作，自动隐藏
+            step.runtime.focusTimer = setTimeout(function () {
+                step.runtime.isFocusTag = false;
+            },2000)
             step.connectToKeywordTag(true);
         });
 
