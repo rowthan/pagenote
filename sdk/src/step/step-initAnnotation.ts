@@ -63,33 +63,40 @@ function initAnnotation() {
 
     let outTimer: NodeJS.Timeout = null;
     // TODO delete step 时候删除监听
-    const onMouseMove = debounce(function (e: { screenX: number; screenY: number; }) {
+    const onMouseMove = throttle(function (e: { screenX: number; screenY: number; }) {
         const annotation = step.runtime.relatedAnnotationNode;
         const annotationPosition = annotation.getBoundingClientRect();
-
+        //
         const relativeX = e.screenX - annotationPosition.x;
         const offsetX = relativeX > 0 ? relativeX - 100 : Math.abs( relativeX);
         const offsetY = Math.abs(e.screenY - annotationPosition.y);
         const offset = Math.max(offsetY,offsetX)
 
-        if(offset>200){
+        if(offset>100){
             const customEvent = document.createEvent('Event');
             customEvent.initEvent('out');
             annotation.dispatchEvent(customEvent);
         }
+
+        // const customEvent = document.createEvent('Event');
+        // customEvent.initEvent('out');
+        // annotation.dispatchEvent(customEvent);
+        // console.log('trigger log')
     },60);
 
-    document.addEventListener('mousemove',onMouseMove)
+    // document.addEventListener('mousemove',onMouseMove)
     element.onmouseenter = ()=> {
         clearTimeout(outTimer);
         step.runtime.isFocusAnnotation = true;
-        document.addEventListener('mousemove',onMouseMove)
+        // document.addEventListener('mousemove',onMouseMove)
     }
-    element.addEventListener('out',()=> {
-        step.runtime.isFocusAnnotation = false;
-        step.runtime.editing = false;
-        document.removeEventListener('mousemove',onMouseMove)
-    })
+    element.onmouseleave = function () {
+        outTimer = setTimeout(()=>{
+            step.runtime.isFocusAnnotation = false;
+            step.runtime.editing = false;
+            // document.removeEventListener('mousemove',onMouseMove)
+        },0)
+    }
 
     const options = {
         grid: 1,
