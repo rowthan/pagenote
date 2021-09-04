@@ -183,9 +183,9 @@ Step.prototype.copyToClipboard = function (copyAll=false,position) {
   let value = copyAll? (this.data.text + '\n' + this.data.tip): this.data.text;
   writeTextToClipboard(value).then(r => {
     notification({
-      message:'已复制',
+      message:`已复制【${value}】`,
       color: this.data.bg,
-      duration: 15000,
+      duration: 3000,
       position: position,
     })
   });
