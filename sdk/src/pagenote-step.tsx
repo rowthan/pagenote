@@ -63,6 +63,10 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   const that = this;
   const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
     const key = e.key;
+    if(key==='Escape'){
+      that.runtime.editing = false;
+      return;
+    }
     if(that.runtime.editing){
       return
     }
