@@ -82,6 +82,19 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
       case 'm':
         that.openEditor();
         break;
+      default:
+        const index = Number(key) - 1;
+        const color = options.colors[index];
+        if(color){
+          that.data.bg = color;
+          return;
+        }
+        if(Number.isInteger(index)){
+          notification({
+            message:`只有${options.colors.length}只画笔，无法使用第${index}只`,
+            type: 'error',
+          })
+        }
     }
     // e.stopPropagation();
   }
