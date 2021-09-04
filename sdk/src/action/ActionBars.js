@@ -65,7 +65,8 @@ export default function ActionBars ({pagenote}) {
                            // animationDelay: index*0.1+'s',
                            // transitionDelay: index*0.1+'s',
                          }}
-                         onClick={()=>recordNew(item)}
+                         onMouseUpCapture={(e)=>{recordNew(item);}}
+                         // onClickCapture={(e)=>{recordNew(item);e.stopPropagation();}}
                     >{index!==0?item.shortcut:
                       <span>
                           <Highlight  data-pagenotecolor={item.bg} style={{userSelect:'none'}} fill={item.bg}/>

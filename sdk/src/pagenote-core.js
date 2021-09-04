@@ -280,13 +280,17 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 },{capture:true})
 
                 document.addEventListener(upEvent,(e)=>{
-                    that.lastEvent = e;
-                    lastPosition = e;
-                    checkShow();
-                    lastActionTime = new Date().getTime();
-                    isPressingMouse = false;
-                    clearInterval(showBarTimer)
-                    document.removeEventListener(mouseMove,onMouseMove);
+                    // 这里 timeout 下个周期执行，是为了兼容 Safari。Safari 在 up 时 selection 已清空。
+                    // 点击按钮也要通过 mouseup 来监听，不能通过 click 事件
+                    setTimeout(function () {
+                        that.lastEvent = e;
+                        lastPosition = e;
+                        checkShow();
+                        lastActionTime = new Date().getTime();
+                        isPressingMouse = false;
+                        clearInterval(showBarTimer)
+                        document.removeEventListener(mouseMove,onMouseMove);
+                    },0)
                 },{capture:true});
             }
 
