@@ -89,7 +89,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
           that.data.bg = color;
           return;
         }
-        if(Number.isInteger(index)){
+        if(Number.isInteger(index) && index>=0){
           notification({
             message:`只有${options.colors.length}只画笔，无法使用第${index}只`,
             type: 'error',

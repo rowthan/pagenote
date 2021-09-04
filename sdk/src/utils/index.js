@@ -277,13 +277,14 @@ function convertColor(color='') {
 
 
 function computePosition(index,radio=30) {
-    const p = 50//360/(colors.length-1);// 角度
-    const hudu = -(2 * Math.PI / 360) * p * index;
-    const x =  Number.parseFloat(radio * Math.sin(hudu)).toFixed(3);
-    const y = Number.parseFloat(radio * Math.cos(hudu)).toFixed(3);
+    const p = 45//360/(colors.length-1);// 角度
+    const hudu = ((2 * Math.PI / 360) * p ) * index;
+    const offsetHudu = -45 * ( 2 * Math.PI / 360);
+    const x =  Number.parseFloat(radio * Math.sin(hudu + offsetHudu)).toFixed(3);
+    const y = Number.parseFloat(radio * Math.cos(hudu + offsetHudu)).toFixed(3);
     return {
-        x:-x,
-        y:-y,
+        x:x,
+        y:y,
     }
 }
 
