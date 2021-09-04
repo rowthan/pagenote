@@ -1,8 +1,10 @@
+$ACTIVE_SCALE: 0.8;
+
 pagenote-colors-container{
   display: block;
   position: relative;
   &:hover pagenote-color-button:not(:first-child){
-    transform: translate(0,0) scale(0.75)!important;
+    transform: translate(0,0) scale($ACTIVE_SCALE)!important;
     opacity: 1;
   }
 }
@@ -56,7 +58,7 @@ pagenote-plugin-group{
     width: 30px !important;
     height: 30px !important;
     border-radius: 50%;
-    transform: scale(0.75);
+    transform: scale($ACTIVE_SCALE);
     animation: plugInZoomIn 0.8s ease-in-out forwards;
     background-position: center;
     background-repeat: no-repeat;
@@ -88,11 +90,11 @@ pagenote-plugin-group{
     opacity: 0;
   }
   10%{
-    transform: translate(0,0) scale(0.75);
+    transform: translate(0,0) scale($ACTIVE_SCALE);
     opacity: 1;
   }
   80%{
-    transform: translate(0,0) scale(0.75);
+    transform: translate(0,0) scale($ACTIVE_SCALE);
     opacity: 1;
   }
   100%{
@@ -105,6 +107,6 @@ pagenote-plugin-group{
     transform: scale(0);
   }
   100%{
-    transform: scale(0.75);
+    transform: scale($ACTIVE_SCALE);
   }
 }

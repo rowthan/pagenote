@@ -54,9 +54,9 @@ export default function ActionBars ({pagenote}) {
                          data-pagenotecolor={item.bg}
                          style={{
                            '--color': item.bg,
-                           transform: `translate(${offsetX}px,${offsetY}px)`,
-                           top: (offsetY / -1) + 'px',
-                           left: (offsetX / -1) + 'px',
+                           transform: `translate(${offsetX}px,${-offsetY}px)`,
+                           top: (offsetY) + 'px',
+                           left: (-offsetX) + 'px',
                            width: radios + 'px',
                            height: radios + 'px',
                            color: convertColor(item.bg).textColor,

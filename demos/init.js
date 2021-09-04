@@ -64,6 +64,12 @@ window.initPagenote = function () {
                 shortcut:'b',
                 label:'一级画笔',
                 level:1,
+            },
+            {
+                bg: '#5a0e38',
+            },
+            {
+                bg: '#6b4dea',
             }
         ],
         showBarTimeout: 0, // 延迟功能时间 单位毫秒
@@ -105,13 +111,16 @@ window.initPagenote = function () {
 
 
     const defaultData = {"steps":[{"lightStatus":2,"annotationStatus":2,"lightId":"83244d1d159c5edc9a547a5b5361b7fa","x":520,"y":130,"id":"span","text":"4.8.0-typescript","tip":"这里是最新的版本，快来试试吧","bg":"rgb(225,192,63)","time":1627742525241,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":0,"pre":"","suffix":"。我们对 UI、交互","images":[],"level":1},{"lightStatus":2,"annotationStatus":1,"lightId":"8e7f34a04d8ca85194e150445d4f2ba3","x":730,"y":330,"id":"li  ul  li:nth-child(3)","text":"双击可以快速进入编辑状态","tip":"侧边栏的双击同样有效","bg":"rgb(87,134,248)","time":1627743186494,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":620,"pre":"单击高亮区域能切换状态：浅高亮、深高亮；","suffix":"。","images":[],"level":1},{"lightStatus":2,"annotationStatus":2,"lightId":"99b3bd737f025921d26761865f84b672","x":448,"y":1666,"id":"article  section:nth-child(8)  h2","text":"关于我","tip":"多谢关注","bg":"rgb(246,227,154)","time":1627743132776,"isActive":false,"offsetX":0.5,"offsetY":0.9,"parentW":700,"pre":"","suffix":"","images":[],"level":1}],"setting":{"barInfo":{"right":96,"top":132,"status":"fold"}},"url":"http://0.0.0.0:8080/","lastModified":1627743295253,"icon":"https://pagenote.cn/favicon.ico","title":"pagenote demos","description":"这是pagenote 运行 demos","images":[],"snapshots":[],"version":2,"categories":[],"note":""};
-// 这里可以从服务器端拉取数据，用于 init
-    pagenote.init(); // 初始化开始工作
+    // 这里可以从服务器端拉取数据，用于 init
+    const data = localStorage.getItem('page_demo');
+    const initData = data ? JSON.parse(data) : null;
+    pagenote.init(initData); // 初始化开始工作
 
     pagenote.addListener(function (status) {
         if(status===pagenote.CONSTANT.SYNCED){
             // 数据变化回调，将数据发送到服务器端，在这里处理
             console.log('数据发生的变化',pagenote.plainData)
+            localStorage.setItem('page_demo',JSON.stringify(pagenote.plainData))
         }
     })
 

@@ -72,9 +72,9 @@ function initAnnotation() {
         const offsetY = Math.abs(e.screenY - annotationPosition.y);
         const offset = Math.max(offsetY,offsetX)
 
-        if(offset>250){
+        if(offset>200){
             const customEvent = document.createEvent('Event');
-            customEvent.initEvent('mouseleave');
+            customEvent.initEvent('out');
             annotation.dispatchEvent(customEvent);
         }
     },60);
@@ -85,13 +85,11 @@ function initAnnotation() {
         step.runtime.isFocusAnnotation = true;
         document.addEventListener('mousemove',onMouseMove)
     }
-    element.onmouseleave =  ()=> {
-        outTimer = setTimeout(function () {
-            step.runtime.isFocusAnnotation = false;
-            step.runtime.editing = false;
-            document.removeEventListener('mousemove',onMouseMove)
-        },60)
-    }
+    element.addEventListener('out',()=> {
+        step.runtime.isFocusAnnotation = false;
+        step.runtime.editing = false;
+        document.removeEventListener('mousemove',onMouseMove)
+    })
 
     const options = {
         grid: 1,
