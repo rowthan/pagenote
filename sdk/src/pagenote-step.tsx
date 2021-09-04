@@ -67,6 +67,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
       that.runtime.editing = false;
       return;
     }
+    // 编辑中
     if(that.runtime.editing){
       return
     }
