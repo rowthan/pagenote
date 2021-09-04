@@ -32,7 +32,7 @@ export default function notification(showMessage: Message) {
     function setTimer() {
         ele.dataset.status = 'fade';
         timer = setTimeout(()=>{
-            ele.remove();
+            ele.parentNode.removeChild(ele);
         },duration);
     }
 }

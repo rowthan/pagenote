@@ -49,7 +49,7 @@ window.initPagenote = function () {
             },
             {
                 bg:'#FCB900',
-                shortcut:'p',
+                shortcut:'y',
                 label:'一级画笔',
                 level:1,
             },
@@ -61,7 +61,7 @@ window.initPagenote = function () {
             },
             {
                 bg:'rgb(87,134,248)',
-                shortcut:'p',
+                shortcut:'b',
                 label:'一级画笔',
                 level:1,
             }
