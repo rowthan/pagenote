@@ -1,7 +1,7 @@
 import PagenoteCore from './pagenote-core'
 import { h, render } from 'preact';
 import AsideBar from "./component/aside/AsideBar";
-import ActionBars from "./component/action/ActionBars";
+import ActionBars from "./action/ActionBars";
 import {debounce, getPagenoteRoot} from './utils';
 import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'

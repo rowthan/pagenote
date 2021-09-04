@@ -30,3 +30,8 @@ pagenote-icon[aria-controls="pin"]{
     transform: rotate(45deg);
   }
 }
+pagenote-menu{
+  pagenote-icon[aria-controls="color-item"]{
+    display: block !important;
+  }
+}

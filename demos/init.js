@@ -3,7 +3,6 @@
 window.initPagenote = function () {
     // 如何使用 就看这里就好了，使用前，记得先引入 SDK
     window.pagenote = new window.PageNote('demos',{
-        saveInLocalId: 'demo-store', // 是否缓存数据在用户侧 localstorage中，如果要讲数据存储在服务器端，则不用
         functionColors:[ // 支持扩展的功能按钮区，
             [
                 {
@@ -67,7 +66,7 @@ window.initPagenote = function () {
                 level:1,
             }
         ],
-        showBarTimeout: 100, // 延迟功能时间 单位毫秒
+        showBarTimeout: 0, // 延迟功能时间 单位毫秒
         renderAnnotation: function (data,light) { // 自定义笔记渲染逻辑，这里可以处理为从服务器端根据 lightId 查询数据来渲染，包括点赞量等数据
             const element = document.createElement('div');
             const {tip,lightId,time} = data;
