@@ -55,13 +55,13 @@ function LightActionBar({step,colors}) {
             <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
                 <PinIcon fill={pin ? currentColor : '#fff'} />
             </pagenote-icon>
-            <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')}>
+            <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')+'[c]'}>
                 <pagenote-icon onClick={()=>copyHightlight(false)}
                                onDblClick={()=>{copyHightlight(true)}}>
                     <CopyIcon fill={currentColor}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>
-            <Tip inner={true} message={i18n.t('comment')}>
+            <Tip inner={true} message={i18n.t('comment')+'[m]'}>
                 <pagenote-icon onClick={()=>{
                     step.openEditor();
                 }}>
