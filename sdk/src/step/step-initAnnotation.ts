@@ -13,11 +13,13 @@ function initAnnotation() {
         return;
     }
 
-    const {bg,x,y,tip,lightId} = step.data;
+    const {bg,x,y,tip,lightId,text} = step.data;
     const element = document.createElement('pagenote-annotation');// 根容器
     element.dataset.lightid = lightId;
     const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
-    const actionArray = document.createElement('pagenote-annotation-menus') // 拖拽容器
+    const header = document.createElement('pagenote-annotation-header');
+
+    const actionArray = document.createElement('pagenote-annotation-menus')
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
 
     const appends = renderMethod(step.data,step);
@@ -27,7 +29,14 @@ function initAnnotation() {
         colors: step.options.colors,
         moreActions: appends[1] || [],
     })
-    customInner.appendChild(actionArray);
+
+    header.appendChild(actionArray);
+
+    const ref = document.createElement('pagenote-annotation-ref');
+    ref.innerText = text;
+    header.appendChild(ref);
+
+    customInner.appendChild(header);
 
     const editor = document.createElement('pagenote-block');
     editor.dataset.role = 'annotation-editor';
@@ -62,39 +71,14 @@ function initAnnotation() {
     element.appendChild(customInner);
 
     let outTimer: NodeJS.Timeout = null;
-    // TODO delete step 时候删除监听
-    const onMouseMove = throttle(function (e: { screenX: number; screenY: number; }) {
-        const annotation = step.runtime.relatedAnnotationNode;
-        const annotationPosition = annotation.getBoundingClientRect();
-        //
-        const relativeX = e.screenX - annotationPosition.x;
-        const offsetX = relativeX > 0 ? relativeX - 100 : Math.abs( relativeX);
-        const offsetY = Math.abs(e.screenY - annotationPosition.y);
-        const offset = Math.max(offsetY,offsetX)
-
-        if(offset>100){
-            const customEvent = document.createEvent('Event');
-            customEvent.initEvent('out');
-            annotation.dispatchEvent(customEvent);
-        }
-
-        // const customEvent = document.createEvent('Event');
-        // customEvent.initEvent('out');
-        // annotation.dispatchEvent(customEvent);
-        // console.log('trigger log')
-    },60);
-
-    // document.addEventListener('mousemove',onMouseMove)
     element.onmouseenter = ()=> {
         clearTimeout(outTimer);
         step.runtime.isFocusAnnotation = true;
-        // document.addEventListener('mousemove',onMouseMove)
     }
     element.onmouseleave = function () {
         outTimer = setTimeout(()=>{
             step.runtime.isFocusAnnotation = false;
             step.runtime.editing = false;
-            // document.removeEventListener('mousemove',onMouseMove)
         },0)
     }
 
@@ -102,7 +86,7 @@ function initAnnotation() {
         grid: 1,
         setPosition: true,
         setCursor: false,
-        handle: actionArray,
+        handle: header,
         onDragEnd: function(result: any, x: any, y: any){
             step.data.x = x;
             step.data.y = y;
@@ -129,10 +113,15 @@ function initAnnotation() {
             || (step.data.annotationStatus === AnnotationStatus.SHOW && hasTip);
     }
 
-    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),step.data.tip)
+    function checkShowRef(){
+        const showMenu = step.runtime.editing || step.runtime.isFocusAnnotation;
+        return showMenu?'menu':''
+    }
+
+    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),step.data.tip,checkShowRef())
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip);
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip,checkShowRef());
         editor.contentEditable = step.runtime.editing ? 'true' : 'false'
         if(step.runtime.editing){
             editor.focus();
@@ -143,7 +132,7 @@ function initAnnotation() {
     },true,'annotation')
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip);
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip,checkShowRef());
     },false,'annotation')
 }
 

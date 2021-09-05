@@ -8,6 +8,8 @@
   }
 }
 
+$header-height: 28px;
+
 pagenote-annotation{
   display: block;
   width: auto !important;
@@ -16,12 +18,11 @@ pagenote-annotation{
   color: #333;
   z-index: $annotationIndex;
   &:hover{
-    z-index: 1;
+    z-index: 9;
   }
   pagenote-annotation-inner{
     display: block;
-    min-width: 220px;
-    max-width: 350px;
+    width: 250px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
     background: rgba(255, 255, 255, 0.95);
@@ -48,7 +49,7 @@ pagenote-annotation{
     }
 
     &[data-tip='0']{
-      min-width: 128px;
+      width: 128px;
       box-shadow: none;
       &:before{
         display: none;
@@ -62,21 +63,73 @@ pagenote-annotation{
       pagenote-icon{
         box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15), 0 1px 2px 0 rgba(60,64,67,0.3);
       }
-    }
-
-    pagenote-annotation-menus{
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      box-sizing: border-box;
-      cursor: move;
-      padding: 2px;
-      background: #fbfbfb;
-      border-radius: 4px;
-      &:hover{
-        background: #f7f6f6;
+      pagenote-annotation-ref{
+        display: none;
       }
     }
+
+    &[data-tip='1']{
+      &[data-focus='menu']{
+        z-index: 1;
+        pagenote-annotation-menus{
+          //display: none;
+          margin-bottom: $header-height + 1px;
+        }
+        pagenote-annotation-ref{
+          //display: block;
+          //height: $header-height;
+          transform: translateY($header-height);
+        }
+      }
+    }
+
+    pagenote-annotation-header{
+      position: relative;
+      display: block;
+      line-height: $header-height;
+
+      //margin-bottom: 1px;
+      pagenote-annotation-menus,pagenote-annotation-ref{
+        height: $header-height;
+        transition-property: margin-bottom, transform;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+      }
+
+      pagenote-annotation-menus{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: move;
+        padding: 2px;
+        &:hover{
+          background: #f7f6f6;
+        }
+      }
+      pagenote-annotation-ref{
+        display: block;
+        //z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #fff;
+        //transform: translateY(28px);
+        //display: none;
+        font-size: 12px;
+        //background: #fff;
+        height: $header-height;
+        overflow: hidden;
+        padding: 0 8px;
+        width: 100%;
+        box-sizing: border-box;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--color);
+      }
+    }
+
+
 
     pagenote-block[data-role="custom-content"]{
       font-size: 12px;
@@ -121,4 +174,5 @@ pagenote-annotation{
       }
     }
   }
+
 }

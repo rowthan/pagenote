@@ -64,6 +64,9 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
   const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
     const key = e.key;
     console.log(key)
+    if(that.lastFocus!==null && that.lastFocus!==that.data.lightId){
+      return;
+    }
     if(key==='Escape'){
       that.runtime.editing = false;
       return;
@@ -111,6 +114,7 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
       }
 
       if(key==='isFocusTag' || key==='isFocusAnnotation' || key==='editing'){
+        that.lastFocus = that.data.lightId;
         if(target.isFocusTag || target.isFocusAnnotation || target.editing){
           // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
           document.addEventListener('keyup',listenShortcut,{capture:true})
@@ -129,6 +133,9 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
 
   typeof callback === 'function' && callback(this)
 }
+
+// 多个step的focus标识不能做到互斥，这个标识用来标记最后一个聚焦的step, 保证唯一性。
+Step.prototype.lastFocus = null;
 
 Step.prototype.initKeywordTags = initKeywordTags;
 
@@ -231,8 +238,10 @@ Step.prototype.addListener = function (fun,isRuntime=false,funId='default-change
 }
 
 
+// TODO step 继承 Steps
 function Steps(option: any) {
   this.option = option;
+  this.focusTarget = null;
 }
 Steps.prototype = Array.prototype;
 Steps.prototype.add = function (item) {
