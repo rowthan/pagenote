@@ -7,10 +7,10 @@ import DeleteIcon from "../assets/images/delete.svg";
 import NoteIcon from '../assets/images/note.svg';
 import PinIcon from '../assets/images/pin.svg';
 import Popover from "../component/tip/Popover";
-import '../assets/styles/annotationMenu.scss'
+import './annotationMenu.scss'
 import {useState} from "preact/hooks";
 import {writeTextToClipboard} from "../utils/document";
-import {Colors} from "../component/light/LightNode";
+import Colors from "../component/Colors";
 import {AnnotationStatus, LightStatus} from "../step/const";
 
 
@@ -55,23 +55,23 @@ function LightActionBar({step,colors}) {
             <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
                 <PinIcon fill={pin ? currentColor : '#fff'} />
             </pagenote-icon>
-            <Tip inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')+'[c]'}>
+            <Tip placement="bottom" inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')+'[c]'}>
                 <pagenote-icon onClick={()=>copyHightlight(false)}
                                onDblClick={()=>{copyHightlight(true)}}>
                     <CopyIcon fill={currentColor}  width={20} height={20}  />
                 </pagenote-icon>
             </Tip>
-            <Tip inner={true} message={i18n.t('comment')+'[m]'}>
+            <Tip placement="top" inner={true} message={i18n.t('comment')+'[m]'}>
                 <pagenote-icon onClick={()=>{
                     step.openEditor();
                 }}>
                     <NoteIcon fill={currentColor} width={20} height={20}/>
                 </pagenote-icon>
             </Tip>
-            <Tip inner={true} message={i18n.t('change_color')}>
+            <Tip placement="top" inner={true} message={i18n.t('change_color')}>
                 <Colors colors={colors} current={currentColor} selectColor={onchangeColor}></Colors>
             </Tip>
-            <Tip inner={true} message={i18n.t('remove_marks')}>
+            <Tip placement="top" inner={true} message={i18n.t('remove_marks')}>
                 <pagenote-icon aria-controls="delete-icon">
                     <DeleteIcon  width={20} height={20} fill={currentColor}  onClick={()=>{step.delete()}} />
                 </pagenote-icon>

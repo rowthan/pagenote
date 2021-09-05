@@ -4,9 +4,8 @@ import i18n from "@/locale/i18n";
 import CopyIcon from "@/assets/images/copy.svg";
 import DeleteIcon from "@/assets/images/delete.svg";
 import NoteIcon from '@/assets/images/note.svg';
-import {writeTextToClipboard} from "@/utils/document";
 import {useState, useEffect, useCallback} from "preact/hooks";
-import {Colors} from "@/component/light/LightNode";
+import Colors from "@/component/Colors";
 import "@/component/light/light-node.scss";
 
 export default function LightActionBar({step,colors}) {
