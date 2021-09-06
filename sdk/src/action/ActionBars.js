@@ -90,7 +90,7 @@ export default function ActionBars ({pagenote}) {
                     actionGroup.map((action)=>{
                       const image = /^<svg/.test(action.icon) ?  `data:image/svg+xml;base64,${window.btoa(action.icon)}` : action.icon;
                       return (
-                        <Tip inner={true} message={`${action.name}${action.shortcut?i18n.t('shortcut')+action.shortcut:''}`}>
+                        <Tip inner={true} message={`${action.name}${action.shortcut?`${i18n.t('shortcut')}[${action.shortcut}]`:''}`}>
                           <pagenote-action-button
                             key={action.name}
                             data-eventid={action.eventid}
