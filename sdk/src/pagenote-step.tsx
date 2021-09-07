@@ -18,7 +18,7 @@ interface StepOptions{
   onRemove: Function,
 }
 
-const Step = function (info: StepProps,options: StepOptions,callback) {
+const Step = function (info: StepProps,options: StepOptions,callback?:function) {
   this.options = options;
 
   this.listeners = {
@@ -88,6 +88,9 @@ const Step = function (info: StepProps,options: StepOptions,callback) {
         break;
       case '`':
         that.changeStatus(1)
+        break;
+      case 'ArrowLeft':
+
         break;
       default:
         const index = Number(key) - 1;
