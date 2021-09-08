@@ -692,6 +692,12 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     }
 }
 
+PagenoteCore.prototype.updateSetting = function (setting) {
+    this.options = {
+        ...this.options,
+        ...setting,
+    }
+}
 
 PagenoteCore.prototype.decodeData = function(data) {
     return decryptedData(data);
