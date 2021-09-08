@@ -7,7 +7,7 @@ export function wrapperLightAttr(lightElement,{bg,lightStatus,tip},appendEl) {
 
     lightElement.dataset.active = [1,2,3].includes(lightStatus) ? `${lightStatus}` : (lightStatus ? '1' : '0');
     lightElement.dataset.note = !!tip ? '1' : '0'
-    lightElement.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor}`;
+    lightElement.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor};background-image: linear-gradient(0deg,${bgColor} 2em,${bgColor} 0);`;
 
     if(appendEl){
         if(tip){
