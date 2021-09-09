@@ -9,7 +9,7 @@ npm install pagenote --save
 
 import Pagenote from 'pagenote';
 import 'pagenote/dist/pagenote.css';
-var pagenote = new Pagenote('demo',option);
+var pagenote = new Pagenote('demos',option);
 pagenote.init();
 ```
 
@@ -17,5 +17,5 @@ pagenote.init();
 ```javascript
 -- core // 核心SDK代码
 -- docs // 帮助文档
--- snapshots // 项目 demo 图
+-- snapshots // 项目 demos 图
 ```

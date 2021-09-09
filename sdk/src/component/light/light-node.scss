@@ -1,0 +1,32 @@
+
+.colors{
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  &:hover{
+    .colorOptions{
+      display: block;
+    }
+  }
+  .colorOptions{
+    display: none;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 1;
+  }
+  .colorItem{
+    display: inline-block;
+    margin-right: -5px;
+    width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    box-shadow: -1px 0 0 rgba(0,0,0,0.1), 1px 0 0 rgba(0,0,0,0.1), 0px 1px 1px rgba(0,0,0,0.2);
+    &:hover{
+      transform: scale(1.2);
+    }
+    &.active{
+      border: 3px solid #ffffff;
+      box-sizing: border-box;
+    }
+  }
+}
