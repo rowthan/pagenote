@@ -1,0 +1,40 @@
+pagenote-block[data-role="more-action-item"]{
+  padding: 2px;
+  cursor: pointer;
+  margin: 4px 0;
+  &:hover{
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+}
+
+pagenote-icon[aria-controls="delete-icon"]{
+  position: absolute;
+  right: 28px;
+}
+
+pagenote-icon[aria-controls="more-icon"]{
+  position: absolute;
+  right: 4px;
+}
+
+pagenote-icon[aria-controls="pin"]{
+  position: absolute;
+  left: -14px;
+  top: -14px;
+  //box-shadow: 0px 0px 1px 1px #efefef;
+  //box-shadow: rgb(255,255 ,255) 0 0 0 200px;
+  border: 1px dashed var(--color);
+  border-radius: 50%;
+  transition: all 0.2s;
+  &[data-status='pin']{
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+}
+pagenote-menu{
+  //overflow: hidden;
+  pagenote-icon[aria-controls="color-item"]{
+    display: block !important;
+  }
+}
