@@ -39,8 +39,8 @@ pagenote-color-button{
   }
   &:not(:first-child){
     padding: 2px;
-    animation: colorShow 3s ease-out;
-    animation-delay: 0.6s;
+    //animation: colorShow 3s ease-out;
+    //animation-delay: 0.6s;
   }
   &:hover{
     opacity: 1 !important;
