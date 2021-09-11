@@ -118,10 +118,14 @@ function initAnnotation() {
         return showMenu?'menu':''
     }
 
-    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),step.data.tip,checkShowRef())
+    function showTipStyle(){
+        return step.data.tip || step.runtime.editing;
+    }
+
+    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),showTipStyle(),checkShowRef())
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip,checkShowRef());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef());
         editor.contentEditable = step.runtime.editing ? 'true' : 'false'
         if(step.runtime.editing){
             editor.focus();
@@ -132,7 +136,7 @@ function initAnnotation() {
     },true,'annotation')
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),step.data.tip,checkShowRef());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef());
     },false,'annotation')
 }
 
