@@ -61,7 +61,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
     },options);
     this.status = this.CONSTANT.UN_INIT;
-    this.recordedSteps = new Steps({},this);
+    this.recordedSteps = new Steps({
+        saveDatas:  ()=> {
+            this.makelink()
+        },
+        colors: this.options.brushes.map((brush)=>{
+            return brush.bg;
+        })
+    });
     this.snapshots = [];
     this.categories = new Set();
     this.note='';
@@ -110,18 +117,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     };
 
     const StepOptions = {
-        onChange:  ()=> {
-            this.makelink()
-        },
-        onRemove: (data)=> {
-            for(let i=0; i<this.recordedSteps.length; i++){
-                if(data.lightId===this.recordedSteps[i].data.lightId){
-                    this.recordedSteps.splice(i,1);
-                    break;
-                }
-            }
-            this.makelink()
-        },
         renderAnnotation: OPTIONS.renderAnnotation,
         colors: OPTIONS.brushes.map((brush)=>{
             return brush.bg;
@@ -420,12 +415,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             return;
         }
         const newStep = new Step(info,StepOptions,function (step) {
-            step.runtime.isFocusTag = true;
             // 2 秒后无操作，自动隐藏
             step.runtime.focusTimer = setTimeout(function () {
                 step.runtime.isFocusTag = false;
             },2000)
-            step.connectToKeywordTag(true);
+            step.runtime.isFocusTag = true;
         });
 
 
@@ -437,6 +431,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         // });
 
         this.recordedSteps.add(newStep);
+        newStep.connectToKeywordTag(true);
         this.recordedSteps = this.recordedSteps.sort((a,b)=>{
             return a.data.y - b.data.y
         });
