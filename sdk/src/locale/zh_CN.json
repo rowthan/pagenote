@@ -115,5 +115,11 @@
   },
   "comment": {
     "message": "批注"
+  },
+  "pin": {
+    "message": "固定"
+  },
+  "un_pin": {
+    "message": "取消固定"
   }
 }

@@ -18,7 +18,7 @@ pagenote-annotation{
   color: #333;
   z-index: $annotationIndex;
   &:hover{
-    z-index: 9;
+    z-index: $on_hover_annotationIndex;
   }
   pagenote-annotation-inner{
     display: block;
