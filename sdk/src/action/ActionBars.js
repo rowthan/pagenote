@@ -61,7 +61,7 @@ export default function ActionBars ({pagenote}) {
                            height: radios + 'px',
                            color: convertColor(item.bg).textColor,
                            textShadow: `1px 1px 0px ${convertColor(convertColor(item.bg).textColor).textColor}`,
-                           animation:`${(showAnimation&&index!==0)?'colorShow 3s ease-out':''}`,
+                           // animation:`${(showAnimation&&index!==0)?'colorShow 3s ease-out':''}`,
                            // animationDelay: index*0.1+'s',
                            // transitionDelay: index*0.1+'s',
                          }}
