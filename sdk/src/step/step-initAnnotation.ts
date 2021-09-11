@@ -107,7 +107,7 @@ function initAnnotation() {
 
     function checkShowAnnotation() {
         const hasTip = !!step.data.tip;
-        return (step.data.lightStatus===LightStatus.LIGHT && hasTip)
+        return step.runtime.editing
             || step.runtime.isFocusTag
             || step.runtime.isFocusAnnotation
             || (step.data.annotationStatus === AnnotationStatus.SHOW && hasTip);

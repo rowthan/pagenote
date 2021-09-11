@@ -54,7 +54,7 @@ function initKeywordTags(){
                 const {data} = step;
                 const nextLightStatus = data.lightStatus + 1;
                 toggleLightMenu(true,step)
-                step.data.lightStatus = nextLightStatus>2?0:nextLightStatus;
+                step.data.lightStatus = nextLightStatus>LightStatus.LIGHT?LightStatus.UN_LIGHT:nextLightStatus;
                 switch (step.data.lightStatus){
                     case LightStatus.UN_LIGHT:
                         step.data.annotationStatus = AnnotationStatus.HIDE

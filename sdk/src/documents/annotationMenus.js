@@ -52,9 +52,11 @@ function LightActionBar({step,colors}) {
 
     return(
         <Fragment>
-            <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
-                <PinIcon fill={pin ? currentColor : '#fff'} />
-            </pagenote-icon>
+            <Tip placement='top' inner={true} message={(!pin?i18n.t('pin'):i18n.t('un_pin'))+'[p]'}>
+                <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
+                    <PinIcon fill={pin ? currentColor : '#fff'} />
+                </pagenote-icon>
+            </Tip>
             <Tip placement="bottom" inner={true} message={i18n.t(copied?'copied':'copy_keyword_annotation')+'[c]'}>
                 <pagenote-icon onClick={()=>copyHightlight(false)}
                                onDblClick={()=>{copyHightlight(true)}}>
