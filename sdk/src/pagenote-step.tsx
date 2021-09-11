@@ -14,8 +14,8 @@ import notification from "./utils/notification";
 const editorModal = new modal();
 
 interface StepOptions{
-  onChange: Function,
-  onRemove: Function,
+  colors: Array,
+  renderAnnotation: any,
 }
 
 const Step = function (info: StepProps,options: StepOptions,callback?:function) {
@@ -35,12 +35,18 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
   const that = this;
   this.data = new Proxy(data, {
     set(target,key,value){
+      if(target[key]===value){
+        return target;
+      }
       Reflect.set(target, key, value);
       for(let i in that.listeners.data){
         const fun = that.listeners.data[i];
         typeof fun === 'function'  && fun(target,key,value);
       }
-      that.options.onChange(data);
+      const saveFun = that?.steps?.option?.saveDatas();
+      if(saveFun){
+        saveFun(data);
+      }
       return target;
     }
   });
@@ -59,12 +65,13 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
     focusTimer: null,
     annotationDrag: null,
     editing: false,
+    lighting: false, // 是否需要高亮提醒
   }
   const that = this;
   const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
     const key = e.key;
-    console.log(key)
-    if(that.lastFocus!==null && that.lastFocus!==that.data.lightId){
+    // console.log(key)
+    if(that.steps.lastFocus !== that.data.lightId){
       return;
     }
     if(key==='Escape'){
@@ -78,9 +85,14 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
     switch (key) {
       case 'c':
         const scroll = getScroll();
+        const relatedNote = that.runtime.relatedNode[0];
+        let offset = -50;
+        if(relatedNote){
+          offset += relatedNote.offsetHeight * -1
+        }
         that.copyToClipboard(false,{
           x: that.data.x - scroll.x,
-          y: that.data.y - scroll.y,
+          y: that.data.y - scroll.y + offset,
         })
         break;
       case 'm':
@@ -89,9 +101,28 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
       case '`':
         that.changeStatus(1)
         break;
-      case 'ArrowLeft':
-
+      case 'p':
+        const status = that.data.annotationStatus === AnnotationStatus.SHOW ? AnnotationStatus.HIDE : AnnotationStatus.SHOW ;
+        that.data.annotationStatus = status;
         break;
+      // case 'ArrowLeft':
+      //   const near = that.getNear(true);
+      //   if(near[0]){
+      //     near[0].gotoView();
+      //     near[1].runtime.lighting = true;
+      //     that.steps.lastFocus = near[0].data.lightId;
+      //   }
+      //   console.log(that.steps.lastFocus,near[0].data.text)
+      //   break;
+      // case 'ArrowRight':
+      //   const near = that.getNear(true);
+      //   if(near[1]){
+      //     near[1].gotoView()
+      //     near[1].runtime.lighting = true;
+      //     that.steps.lastFocus = near[1].data.lightId;
+      //   }
+      //   console.log(that.steps.lastFocus,near[1].data.text)
+      //   break;
       default:
         const index = Number(key) - 1;
         const color = options.colors[index];
@@ -101,7 +132,7 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
         }
         if(Number.isInteger(index) && index>=0){
           notification({
-            message:`只有${options.colors.length}只画笔，无法使用第${index}只`,
+            message:`只有${options.colors.length}只画笔，无法使用第${key}只`,
             type: 'error',
           })
         }
@@ -116,9 +147,9 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
         typeof fun === 'function'  && fun(target,key,value);
       }
 
-      if(key==='isFocusTag' || key==='isFocusAnnotation' || key==='editing'){
-        that.lastFocus = that.data.lightId;
-        if(target.isFocusTag || target.isFocusAnnotation || target.editing){
+      if(['lighting','isFocusTag','isFocusAnnotation','editing'].includes(key)){
+        that.steps.lastFocus = that.data.lightId;
+        if(target.isFocusTag || target.isFocusAnnotation || target.editing || target.lighting){
           // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
           document.addEventListener('keyup',listenShortcut,{capture:true})
         } else {
@@ -131,14 +162,14 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
     }
   });
 
-  this.initKeywordTags();
-  this.initAnnotation();
-
   typeof callback === 'function' && callback(this)
 }
 
-// 多个step的focus标识不能做到互斥，这个标识用来标记最后一个聚焦的step, 保证唯一性。
-Step.prototype.lastFocus = null;
+Step.prototype.init = function () {
+  this.initKeywordTags();
+  this.initAnnotation();
+}
+
 
 Step.prototype.initKeywordTags = initKeywordTags;
 
@@ -218,7 +249,7 @@ Step.prototype.delete = function () {
     element.remove();
   });
   this.runtime.relatedAnnotationNode.remove();
-  this.options.onRemove(this.data);
+  this.steps.removeStep(this.data.lightId);
   toggleLightMenu(false);
   editorModal.destroy();
 }
@@ -240,15 +271,61 @@ Step.prototype.addListener = function (fun,isRuntime=false,funId='default-change
   this.listeners[runtimeKey][funId] = fun;
 }
 
+Step.prototype.getCurrentIndex = function () {
+  let index = -1;
+  for(let i=0; i<this.steps.length; i++){
+    if(this.steps[i]?.data?.lightId===this.data.lightId){
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
+Step.prototype.getNear = function (loop=false) {
+  const current = this.getCurrentIndex();
+  if(current===-1){
+    return []
+  }
+  let pre = this.steps[current - 1],next = this.steps[current + 1];
+
+  if(loop){
+    if(current===0){
+      pre = this.steps[this.steps.length-1]
+    } else if(current===this.steps.length-1){
+      next = 0
+    }
+  }
+
+  return [pre,next];
+}
 
 // TODO step 继承 Steps
 function Steps(option: any) {
   this.option = option;
-  this.focusTarget = null;
+  this.lastFocus = null;
 }
 Steps.prototype = Array.prototype;
+
+Steps.prototype.removeStep = function (lightId) {
+  for(let i=0; i<this.length; i++){
+    const item = this[i];
+    if(lightId===item.data.lightId){
+      this.splice(i,1);
+      break;
+    }
+  }
+  this.option.saveDatas();
+}
+
+Steps.prototype.save = function () {
+  this.option.saveDatas();
+}
+
 Steps.prototype.add = function (item) {
+  item.__proto__.steps = this;
   if(item.delete){
+    item.init();
     this.push(item);
   }else{
     console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);
