@@ -133,18 +133,11 @@ highlightKeyword = function (wid,element,text,hightlight,color='',blackNodes=[],
     }
 };
 
-let lock = false
+let timer
 const gotoPosition = function(element,targetX,targetY,onFinished){
-    if(lock){
-        // 互斥锁
-        setTimeout(()=>{
-            gotoPosition(element,targetX,targetY,onFinished)
-        },1000)
-        return;
-    }
-    lock = true;
+    clearInterval(timer)
     const callback = function () {
-        lock = false;
+        clearInterval(timer)
         typeof onFinished === "function" && onFinished()
     }
     if(!element){
@@ -157,7 +150,7 @@ const gotoPosition = function(element,targetX,targetY,onFinished){
         typeof callback === "function" && setTimeout(()=>callback(),100);
         return;
     }
-    const timer = setInterval(function () {
+    timer = setInterval(function () {
         //移动前
         const { x:beforeScrollLeft,y:beforeScrollTop} = getScroll();
         const distanceX = targetX - beforeScrollLeft
@@ -169,7 +162,6 @@ const gotoPosition = function(element,targetX,targetY,onFinished){
         const {x:afterScrollLeft,y:afterScrollTop} = getScroll()
 
         if(beforeScrollTop === afterScrollTop && beforeScrollLeft === afterScrollLeft){
-            clearInterval(timer)
             callback();
         }
     },30)
