@@ -63,7 +63,9 @@ function initKeywordTags(){
                         step.data.annotationStatus = AnnotationStatus.SHOW;
                         break;
                 }
-                step.runtime.lighting = 'annotation';
+                if(step.data.tip){
+                    step.runtime.lighting = 'annotation';
+                }
                 setTimeout(function () {
                     step.runtime.lighting = '';
                 },2000)
