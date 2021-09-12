@@ -51,7 +51,7 @@ function LightActionBar({step,colors}) {
     const pin = annotationStatus === AnnotationStatus.SHOW;
 
     return(
-        <Fragment>
+        <pagenote-span onClick={(e)=>{e.stopPropagation()}}>
             <Tip placement='top' inner={true} message={(!pin?i18n.t('pin'):i18n.t('un_pin'))+'[p]'}>
                 <pagenote-icon inner={true} aria-controls='pin' data-status={pin?'pin':''} onClick={changeAnnotationStatus}>
                     <PinIcon fill={pin ? currentColor : '#fff'} />
@@ -78,7 +78,7 @@ function LightActionBar({step,colors}) {
                     <DeleteIcon  width={20} height={20} fill={currentColor}  onClick={()=>{step.delete()}} />
                 </pagenote-icon>
             </Tip>
-        </Fragment>
+        </pagenote-span>
     )
 }
 

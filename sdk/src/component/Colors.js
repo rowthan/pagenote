@@ -17,7 +17,7 @@ export default function Colors({colors,current,selectColor}) {
                     })
                 }
             </pagenote-color-items>
-            <pagenote-icon aria-controls='color-item'>
+            <pagenote-icon>
                 <ColorIcon width={20} height={20} fill={current}/>
             </pagenote-icon>
         </pagenote-colors>
