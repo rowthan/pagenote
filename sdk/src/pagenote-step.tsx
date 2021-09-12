@@ -52,6 +52,9 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
   });
   STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
     this.data[key] = info[key];
+    if(key==='lightStatus'){
+      this.data[key] = info[key] || LightStatus.LIGHT;
+    }
   });
 
   // 初始化运行时产生的数据，不需要持久化存储
