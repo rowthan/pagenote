@@ -26,7 +26,7 @@ export default function Demo() {
                                 这个页面是什么？
                             </h3>
                             <p>
-                                你现在访问的是 PAGENOTE SDK 功能预览页面，你不必安装插件也可以试用主要功能。
+                                你现在访问的是 <a href="https://pagenote.cn">PAGENOTE</a> SDK 功能预览页面，你不必安装插件也可以试用主要功能。
                             </p>
                         </div>
                     </div>

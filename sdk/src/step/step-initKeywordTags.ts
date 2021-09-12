@@ -121,6 +121,7 @@ function initKeywordTags(){
             step.openEditor(true);
             // step.data.lightStatus = LightStatus.LIGHT
             e.stopPropagation();
+            e.preventDefault();
         }
 
         const nodes = step.runtime.relatedNode || [];
