@@ -1,4 +1,5 @@
 @import "../../assets/styles/variable";
+@import "../../assets/styles/animation";
 @keyframes annotation-out {
   0%{
     pointer-events: unset;
@@ -36,6 +37,9 @@ pagenote-annotation{
       height: 4px;
       background: var(--color);
       border-radius: 4px 4px 0 0;
+    }
+    &[data-lighting='annotation']{
+      animation: headShake $shakeTime ease-in-out;
     }
     &[data-visiable='0']{
       opacity: 0;

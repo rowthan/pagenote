@@ -18,6 +18,12 @@ function initAnnotation() {
     element.dataset.lightid = lightId;
     const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
     const header = document.createElement('pagenote-annotation-header');
+    header.onclick = function () {
+        step.runtime.lighting = 'light';
+        setTimeout(()=>{
+            step.runtime.lighting = '';
+        },2000)
+    }
 
     const actionArray = document.createElement('pagenote-annotation-menus')
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
@@ -115,17 +121,17 @@ function initAnnotation() {
 
     function checkShowRef(){
         const showMenu = step.runtime.editing || step.runtime.isFocusAnnotation;
-        return showMenu?'menu':''
+        return showMenu?'menu': ''//((step.runtime.isFocusTag?'light':''))
     }
 
     function showTipStyle(){
         return step.data.tip || step.runtime.editing;
     }
 
-    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),showTipStyle(),checkShowRef())
+    wrapperAnnotationAttr(customInner,bg,checkShowAnnotation(),showTipStyle(),checkShowRef(),step.runtime.lighting)
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef(),step.runtime.lighting);
         editor.contentEditable = step.runtime.editing ? 'true' : 'false'
         if(step.runtime.editing){
             editor.focus();
@@ -136,7 +142,7 @@ function initAnnotation() {
     },true,'annotation')
     this.addListener(function () {
         renderContent();
-        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef());
+        wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef(),step.runtime.lighting);
     },false,'annotation')
 }
 
