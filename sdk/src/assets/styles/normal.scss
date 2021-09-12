@@ -1,4 +1,5 @@
-@import '../styles//variable.scss';
+@import '../styles/variable.scss';
+@import "../styles/animation.scss";
 
 pagenote-description,pagenote-lights,pagenote-light,pagenote-light-ref,
 pagenote-light-anotation,pagenote-snapshots,pagenote-infos,pagenote-dot,
@@ -71,6 +72,10 @@ light[data-highlight]{
   &:hover{
     z-index: 1;
     //opacity: 0.85;
+  }
+  &[data-lighting='light']{
+    display: inline-block;
+    animation: headShake $shakeTime ease-in-out;;
   }
   &[data-active='1']{
     background-size: 100% calc(2em);

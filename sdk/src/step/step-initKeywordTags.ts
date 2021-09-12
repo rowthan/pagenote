@@ -63,6 +63,10 @@ function initKeywordTags(){
                         step.data.annotationStatus = AnnotationStatus.SHOW;
                         break;
                 }
+                step.runtime.lighting = 'annotation';
+                setTimeout(function () {
+                    step.runtime.lighting = '';
+                },2000)
                 // step.data.annotationStatus = nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
                 e.stopPropagation();
             };
@@ -99,7 +103,7 @@ function initKeywordTags(){
             // @ts-ignore-next-line
             lightElement._light = step;
 
-            wrapperLightAttr(lightElement,step.data)
+            // wrapperLightAttr(lightElement,step.data,)
             return lightElement;
         });
         step.runtime.warn = result ? '' : '未找到匹配内容';
@@ -112,10 +116,8 @@ function initKeywordTags(){
         const appendElement = document.createElement('pagenote-icon');
         appendElement.dataset.size = 'small'
         appendElement.onclick=function (e) {
-            step.openEditor(true,{
-
-            });
-            step.data.lightStatus = LightStatus.LIGHT
+            step.openEditor(true);
+            // step.data.lightStatus = LightStatus.LIGHT
             e.stopPropagation();
         }
 
@@ -127,17 +129,20 @@ function initKeywordTags(){
         }
 
         appendElement.innerHTML  = '<svg t="1628959484097"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2050"><path d="M800 96a128 128 0 0 1 128 128v576a128 128 0 0 1-128 128H224A128 128 0 0 1 96 800V224A128 128 0 0 1 224 96z m0 64H224a64 64 0 0 0-64 64v576a64 64 0 0 0 64 64h576a64 64 0 0 0 64-64V224a64 64 0 0 0-64-64zM469.312 757.312a32 32 0 0 1-5.76-63.488l5.76-0.512H480V384a32 32 0 0 1 1.792-10.688h-108.48v32a32 32 0 0 1-26.24 31.488l-5.76 0.512a32 32 0 0 1-31.488-26.24l-0.512-5.76v-64a32 32 0 0 1 26.24-31.488l5.76-0.512h341.376a32 32 0 0 1 31.488 26.24l0.512 5.76v64a32 32 0 0 1-63.488 5.76l-0.512-5.76-0.064-32H542.208c0.512 1.6 0.96 3.2 1.28 4.928L544 384v309.312h10.688a32 32 0 0 1 5.76 63.488l-5.76 0.512h-85.376z" p-id="2051"></path></svg>'
-        wrapperLightAttr(lastNode,step.data,appendElement)
+        wrapperLightAttr(lastNode,step.data,appendElement,step.runtime)
 
-        step.addListener(function (data: { bg: any; lightStatus: any; tip: any; }) {
+        const onDataChange = function () {
             nodes.forEach((node: any, index: number)=>{
                 if(index===nodes.length - 1){
-                    wrapperLightAttr(node,data,appendElement)
+                    wrapperLightAttr(node,step.data,appendElement,step.runtime)
                 }else{
-                    wrapperLightAttr(node,data)
+                    wrapperLightAttr(node,step.data,null,step.runtime)
                 }
             })
-        })
+        }
+
+        step.addListener(onDataChange,false)
+        step.addListener(onDataChange,true)
     }
 
     let timer = null;

@@ -141,7 +141,12 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
   }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
+      if(target[key]===value){
+        return target;
+      }
       Reflect.set(target, key, value);
+      const isFocus = target.isFocusTag || target.isFocusAnnotation || target.editing;
+      // target.lighting = isFocus;
       for(let i in that.listeners.runtime){
         const fun = that.listeners.runtime[i];
         typeof fun === 'function'  && fun(target,key,value);
@@ -149,7 +154,7 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
 
       if(['lighting','isFocusTag','isFocusAnnotation','editing'].includes(key)){
         that.steps.lastFocus = that.data.lightId;
-        if(target.isFocusTag || target.isFocusAnnotation || target.editing || target.lighting){
+        if(isFocus){
           // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
           document.addEventListener('keyup',listenShortcut,{capture:true})
         } else {
@@ -197,7 +202,7 @@ Step.prototype.changeStatus = function (cnt:number) {
 
 Step.prototype.openEditor = function (show=true) {
   this.runtime.editing = show;
-  this.data.annotationStatus = AnnotationStatus.SHOW;
+  // this.data.annotationStatus = AnnotationStatus.SHOW;
   return;
   if(show===false){
     editorModal.destroy();
