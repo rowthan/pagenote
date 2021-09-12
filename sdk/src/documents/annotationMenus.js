@@ -87,11 +87,14 @@ export default function renderAnnotationMenu(rootElement,setting) {
 
     function generateOnclick(fun) {
         if (typeof fun === 'function'){
-            return function () {
+            return function (e) {
                 fun(light)
+                e.stopPropagation();
             }
         }else{
-            return function(){};
+            return function(e){
+                e.stopPropagation();
+            };
         }
     }
 
