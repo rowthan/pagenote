@@ -46,7 +46,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
 
     function checkInPagenoteElement(element) {
         if(element && element.tagName){
-            const isPagenote = element.tagName.toLowerCase().indexOf('pagenote')>-1;
+            const tagName = element.tagName.toLowerCase();
+            const isPagenote = ['light'].includes(tagName) || tagName.indexOf('pagenote')>-1;
             if(isPagenote){
                 return true
             } else if(element.parentNode){
