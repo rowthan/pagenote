@@ -11,13 +11,14 @@ pagenote-colors{
   pagenote-color-items{
     display: none;
     position: absolute;
+    top: 20px;
     white-space: nowrap;
     z-index: 1;
     & > pagenote-icon{
       display: inline-block;
       margin-right: -5px;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 20px;
       box-shadow: -1px 0 0 rgba(0,0,0,0.1), 1px 0 0 rgba(0,0,0,0.1), 0px 1px 1px rgba(0,0,0,0.2);
       &:hover{

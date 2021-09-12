@@ -419,7 +419,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             step.runtime.focusTimer = setTimeout(function () {
                 step.runtime.isFocusTag = false;
             },2000)
-            step.runtime.isFocusTag = true;
+            setTimeout(function () {
+                step.runtime.isFocusTag = true;
+            },0)
         });
 
 
