@@ -40,7 +40,7 @@ module.exports = {
       use: [MiniCssExtractPlugin.loader,{
           loader: 'css-loader',
           options: {
-              modules: true,
+              modules: false,
               localIdentName: '[hash:base64:3]'
           }
         },{
