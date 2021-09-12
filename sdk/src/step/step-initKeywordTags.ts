@@ -52,9 +52,9 @@ function initKeywordTags(){
 
             lightElement.onclick = function (e) {
                 const {data} = step;
-                const nextLightStatus = data.lightStatus + 1;
+                const nextLightStatus = (data.lightStatus || LightStatus.UN_LIGHT) + 1;
                 toggleLightMenu(true,step)
-                step.data.lightStatus = nextLightStatus>LightStatus.LIGHT?LightStatus.UN_LIGHT:nextLightStatus;
+                step.data.lightStatus = nextLightStatus > LightStatus.LIGHT ? LightStatus.UN_LIGHT : nextLightStatus;
                 switch (step.data.lightStatus){
                     case LightStatus.UN_LIGHT:
                         step.data.annotationStatus = AnnotationStatus.HIDE
