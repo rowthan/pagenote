@@ -568,8 +568,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         return content;
     };
 
-    this.notification = notification;
-
     this.capture = (target=document.documentElement || document.body)=>{
         return new Promise((resolve,reject)=>{
             captureElementImage(target).then((imageSrc)=>{
@@ -691,6 +689,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         })
     }
 }
+
+PagenoteCore.prototype.notification = notification;
 
 PagenoteCore.prototype.updateSetting = function (setting) {
     this.options = {
