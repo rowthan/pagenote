@@ -132,7 +132,7 @@ function initAnnotation() {
     this.addListener(function () {
         renderContent();
         wrapperAnnotationAttr(customInner,step.data.bg,checkShowAnnotation(),showTipStyle(),checkShowRef(),step.runtime.lighting);
-        editor.contentEditable = step.runtime.editing ? 'true' : 'false'
+        // editor.contentEditable = step.runtime.editing ? 'true' : 'false'
         if(step.runtime.editing){
             editor.focus();
             keepLastIndex(editor);
