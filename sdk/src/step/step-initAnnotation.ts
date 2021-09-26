@@ -54,6 +54,12 @@ function initAnnotation() {
     editor.ondblclick = function () {
         step.runtime.editing = true;
     }
+    editor.onfocus =  function (e) {
+        step.runtime.editing = true;
+    }
+    editor.onblur = function () {
+        step.runtime.editing = false;
+    }
     editor.oninput = throttle(function () {
         const content = editor.innerText.trim() ? editor.innerHTML : ''
         step.data.tip = content;
