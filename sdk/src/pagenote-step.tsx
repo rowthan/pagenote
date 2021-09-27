@@ -53,7 +53,11 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
   STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
     this.data[key] = info[key];
     if(key==='lightStatus'){
-      this.data[key] = info[key] || LightStatus.LIGHT;
+      this.data[key] = info[key] === undefined ? LightStatus.LIGHT : info[key];
+    } else if(key==='annotationStatus'){
+      if(info[key]===undefined){
+        this.data.annotationStatus = this.data.lightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE;
+      }
     }
   });
 
