@@ -156,10 +156,10 @@ function initKeywordTags(){
         if(targetEl){
             highlightElement(targetEl);
             appendElement();
-        }else if(times<5){
+        }else if(times<8){
             timer = setTimeout(()=>{
                 findElement(++times)
-            },1000*times)
+            },2000*times)
         }else{
             highlightElement(document.body);
             appendElement();
