@@ -9,6 +9,12 @@ pagenote-line,pagenote-block,pagenote-progress,pagenote-progress-percent,pagenot
   font-size: 14px;
 }
 
+pagenote-root{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 pagenote-inline-block{
   display: inline-block;
 }
