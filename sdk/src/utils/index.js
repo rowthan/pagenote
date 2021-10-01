@@ -6,7 +6,12 @@ const whats = new whatsPure();
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
 
 function getPagenoteRoot() {
-    const root =  document.querySelector('pagenote-root') || document.documentElement || document.body;
+    let root =  document.querySelector('pagenote-root');
+    if(!root){
+        root = document.createElement('pagenote-root');
+        // Firefox 下 必须要放在 body 内 delete 键才会生效
+        (document.body || document.documentElement).appendChild(root)
+    }
     return root;
 }
 
