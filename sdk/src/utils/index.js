@@ -16,11 +16,13 @@ function getPagenoteRoot() {
 }
 
 function getRootOffset() {
-    let offset = getPagenoteRoot().getBoundingClientRect();
+    const root = getPagenoteRoot();
+    let offset = root.getBoundingClientRect();
 
     return {
         left: offset.left + getScroll().x,
         top: offset.top + getScroll().y,
+        scrollHeight: root.parentElement.scrollHeight,
     };
 }
 
@@ -162,10 +164,10 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     const cursorY = parseInt(y);
 
     const rootOffset = getRootOffset();
-
+    const ignoreOffsetY = cursorY - rootOffset.top;
     const target = {
         x:cursorX - rootOffset.left,
-        y:cursorY - rootOffset.top,
+        y: Math.min(ignoreOffsetY, rootOffset.scrollHeight - 60),
         offsetX: 0.5,
         offsetY: 0.9,
         pre:(''||before).trim(),
