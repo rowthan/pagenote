@@ -2,7 +2,7 @@ import renderAnnotationMenu from "../documents/annotationMenus";
 import {emptyChildren, keepLastIndex} from "../utils/document";
 import {AnnotationStatus, LightStatus} from "./const";
 import {wrapperAnnotationAttr} from "../utils/light";
-import {throttle,debounce} from "../utils/index";
+import {throttle, debounce, getPagenoteRoot} from "../utils/index";
 // @ts-ignore
 import Draggable from 'draggable';
 
@@ -60,6 +60,9 @@ function initAnnotation() {
     editor.onblur = function () {
         step.runtime.editing = false;
     }
+    editor.addEventListener('keyup',function (e) {
+        e.stopPropagation();
+    },{capture:true})
     editor.oninput = throttle(function () {
         const content = editor.innerText.trim() ? editor.innerHTML : ''
         step.data.tip = content;
@@ -99,10 +102,14 @@ function initAnnotation() {
         setPosition: true,
         setCursor: false,
         handle: header,
+        limit: {
+          x: [10,window.innerWidth-250-10],
+          y: [10,getPagenoteRoot().parentElement.scrollHeight - 100]
+        },
         onDragEnd: function(result: any, x: any, y: any){
             step.data.x = x;
             step.data.y = y;
-        }
+        },
     };
     // @ts-ignore
     const drag = new Draggable (element, options).set(x,y);
