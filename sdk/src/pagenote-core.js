@@ -616,6 +616,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 setting:{},
                 url: window.location.href,
                 lastModified:new Date().getTime(),
+                // TODO createAt 时间
+                createAt: plainData.createAt,
                 icon:getWebIcon(),
                 title: titleEle? titleEle.innerText.trim() :'',
                 description: descriptionEle? descriptionEle.content : '',
