@@ -295,7 +295,7 @@ function wrapRangeInMappedTextNode(dict, start, end, filterCb, eachCb) {
 
 function getWebIcon() {
     const iconEle = document.querySelector('link[rel~=icon]');
-    return iconEle ? iconEle.href : window.location.origin+'/favicon.ico';
+    return iconEle ? iconEle.href : '';
 }
 
 function convertImgToBase64(url,width,height, callback, outputFormat){
