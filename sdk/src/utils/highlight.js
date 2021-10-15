@@ -135,8 +135,8 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
     const dict = getTextNodes(element);
     const handler = (kw,pre,suffix) => {
         const formatKw = formatKeyword(kw);
-        const formatPre = formatKeyword(pre);
-        const formatSuffix = formatKeyword(suffix);
+        const formatPre = formatKeyword(pre.trim());
+        const formatSuffix = formatKeyword(suffix.trim());
 
         const hasSuffix = !!suffix;
         const checkStr = `(${formatPre}\\s*)(${formatKw})\\s*${hasSuffix ? `(${formatSuffix})`:''}`

@@ -611,13 +611,13 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
             const titleEle = document.querySelector('title');
             const descriptionEle = document.querySelector('meta[name=description]');
+            const now = new Date().getTime();
             const storeInfo={
                 steps:simpleSteps,
                 setting:{},
                 url: window.location.href,
-                lastModified:new Date().getTime(),
-                // TODO createAt 时间
-                createAt: plainData.createAt,
+                lastModified: now,
+                createAt: this.plainData.createAt || now,
                 icon:getWebIcon(),
                 title: titleEle? titleEle.innerText.trim() :'',
                 description: descriptionEle? descriptionEle.content : '',
