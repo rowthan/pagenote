@@ -1,13 +1,12 @@
 import debounce from 'lodash/debounce';
 import {getWebIcon, captureElementImage, showCamera, writeTextToClipboard} from './utils/document'
-import {decryptedData, encryptData, prepareSelectionTarget, throttle, whats} from "./utils";
+import {decryptedData, encryptData, prepareSelectionTarget, throttle} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
 import {Step, Steps} from './pagenote-step';
 import { dataToString } from "./utils/data";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
-import toggleLightMenu from "./light-menu";
 import notification from "./utils/notification";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
@@ -342,27 +341,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 handleKey(e.key,e)
                 clearTimeout(keyCheckTimer)
             },{capture:true});
-
-
-            // url listen start
-            window.addEventListener('hashchange', ()=> {
-                this.status = constant.HASHCHANGED;
-            },{capture:true});
-            window.addEventListener('popstate', ()=> {
-                this.status = constant.URLCHANGED;
-            },{capture:true});
-
-            const originPush = window.history.pushState;
-            window.history.pushState = ()=>{
-                originPush.apply(this,arguments);
-                this.status = constant.URLCHANGED;
-            };
-            const originReplace = window.history.replaceState;
-            window.history.replaceState = ()=>{
-                originReplace.apply(this,arguments);
-                this.status = constant.URLCHANGED;
-            };
-            /*url change end*/
         }
         this.status = constant.READY;
 

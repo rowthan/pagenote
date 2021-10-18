@@ -10,6 +10,10 @@ export default function Demo() {
         window.initPagenote();
     },[])
 
+    function push(url) {
+        window.history.pushState({},'title_test',url);
+    }
+
     return (
         <div className="demo">
             {/*<pagenote-root>*/}
@@ -58,26 +62,12 @@ export default function Demo() {
                     </ul>
                 </section>
 
-                <section>
-                    <h3>接下来的新功能规划是什么？</h3>
-                    <ol>
-                        <li>
-                            侧边栏会被去掉。PAGENOTE 会更少的侵入原本网页。减少不必要的元素，影响原网页。
-                        </li>
-                        <li>
-                            会将「长按唤起」升级为「召唤模式」，长按鼠标来激活划词功能，否则不激活。就像数码宝贝变身有没有？
-                        </li>
-                        <li>
-                            开放对 图像、视频、音频的标记功能。并针对选区的不同内容，展示不同的功能按钮。
-                        </li>
-                        <li>
-                            画笔也要分级，除了支持自定义颜色，增加 1、2级区分。
-                        </li>
-                        <li>
-                            暂时就透露这些功能啦，想法还有超级多，一个一个实现吧。
-                        </li>
-                    </ol>
-                </section>
+                <ul>
+                    <li><a href="#hash1">hash1路由切换</a></li>
+                    <li><a href="#hash2">hash2路由切换</a></li>
+                    <li><a href="#hash3">hash3路由切换</a></li>
+                    <li><button onClick={()=>{push('/test')}}>push 路由切换</button></li>
+                </ul>
 
                 <hr/>
 
