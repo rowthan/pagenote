@@ -42,7 +42,6 @@ export class OptionsProps{
     /**以下配置不推荐使用，未来可能废弃**/
     categories: string[]; // 初始化待选择标签
     saveInURL?: boolean; // 是否将数据存储至 URL 中 如 https://baidu.com?pagenote_data=xxxxx 。将废弃
-    initType?: string; // 将废弃，
     dura?: number; // 将废弃
     actionBarOffset?: {offsetX:number,offsetY:number}; // 划词操作面板偏移量，用于防止与其他插件重叠遮挡。 暂不支持
     showIconAnimation?: boolean; // false, 启动icon动画
