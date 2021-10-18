@@ -133,7 +133,7 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         return light;
     };
     const dict = getTextNodes(element);
-    const handler = (kw,pre,suffix) => {
+    const handler = (kw,pre='',suffix='') => {
         const formatKw = formatKeyword(kw);
         const formatPre = formatKeyword(pre.trim());
         const formatSuffix = formatKeyword(suffix.trim());
