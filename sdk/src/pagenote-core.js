@@ -15,7 +15,6 @@ import notification from "./utils/notification";
 export default function PagenoteCore(id, options={}){ // TODO 支持载入语言包
     this.id = id || "pagenote-container";
     this.options =  Object.assign({
-        initType:'default',
         dura:100,
         enableMarkImg: false,
         blacklist:[],
@@ -76,7 +75,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     const runBarInfo = JSON.parse(JSON.stringify(this.options.barInfo));
     runBarInfo.status = runBarInfo.status || 'fold';
     this.runningSetting = Object.assign({},{
-        initType: this.options.initType,
         dura: this.options.dura,
         autoLight: this.options.autoLight,
         barInfo: runBarInfo,
@@ -156,21 +154,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 
-        // switch (this.runningSetting.initType) {
-        //     case 'light':
-        //         this.replay(0,false,true,true);
-        //         break;
-        //     case 'default':
-        //         this.replay(0,false,true,function (step) {
-        //             return step.isActive;
-        //         });
-        //         break;
-        //     case 'off':
-        //         // this.recordedSteps.forEach((tempStep)=>{
-        //         //     tempStep.isActive = false;
-        //         // });
-        //         break;
-        // }
         // 销毁 pagenote ，删除所有监听
         if(!hasListened){
             hasListened = true;
