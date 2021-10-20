@@ -112,8 +112,8 @@ function initKeywordTags(){
         if(result){
             step.runtime.relatedNode.push(...result.lightsElement);
             let position = {
-                top:0,
-                left:0,
+                offsetBodyTop:0,
+                offsetBodyLeft:0,
             };
             try{
                 // @ts-ignore
@@ -122,8 +122,8 @@ function initKeywordTags(){
 
             }
             step.runtime.relatedNodePosition = {
-                top: position.top,
-                left: position.left,
+                top: position.offsetBodyTop,
+                left: position.offsetBodyLeft,
             }
         }
     }
