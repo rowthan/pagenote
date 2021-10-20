@@ -68,6 +68,7 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
     isFocusTag: false,
     isFocusAnnotation: false,
     relatedNode: [],
+    relatedNodePosition:{top:0,left:0},
     relatedAnnotationNode: null,
     focusTimer: null,
     annotationDrag: null,
@@ -188,6 +189,13 @@ Step.prototype.initKeywordTags = initKeywordTags;
 Step.prototype.initAnnotation = initAnnotation;
 
 Step.prototype.gotoView = stepGotoView;
+
+Step.prototype.lighting = function () {
+  this.runtime.lighting = 'light';
+  setTimeout(()=>{
+    this.runtime.lighting = '';
+  },2000)
+}
 
 Step.prototype.connectToKeywordTag = connectToKeywordTag;
 

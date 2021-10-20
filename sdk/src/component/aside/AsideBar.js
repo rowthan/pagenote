@@ -299,8 +299,9 @@ class AsideBar extends Component{
                                     dot={false}
                                     lastFocusId={this.state.lastFocus}
                                     colors={this.pagenote.options.brushes.map((brush)=>{return brush.bg})}
-                                    onClick={(e)=>{;
-                                      this.setLastFocus(record.lightId)
+                                    onClick={(e)=>{
+                                      this.setLastFocus(record.lightId);
+                                      record.lighting();
                                     }}
                                   />
                                 ))
