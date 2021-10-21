@@ -65,6 +65,7 @@ light[data-highlight]{
   position: relative;
   font-size: inherit !important;
   font-family: inherit !important;
+  // TODO 使用 box-shadow 替代 background
   background-image: linear-gradient(to top, rgba(255,222,93,1) 2px, rgba(255,222,93,0.84) 2px);
   background-image: linear-gradient(to top, var(--bgcolor) 2px, var(--bgcolor) 2px);
   background-size: 100% 2px;
@@ -80,6 +81,7 @@ light[data-highlight]{
     //opacity: 0.85;
   }
   &[data-lighting='light']{
+    // TODO 取消对 display的修改
     display: inline-block;
     animation: headShake $shakeTime ease-in-out;;
   }

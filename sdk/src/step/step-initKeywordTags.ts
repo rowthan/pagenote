@@ -111,6 +111,20 @@ function initKeywordTags(){
         step.runtime.warn = result ? '' : '未找到匹配内容';
         if(result){
             step.runtime.relatedNode.push(...result.lightsElement);
+            let position = {
+                offsetBodyTop:0,
+                offsetBodyLeft:0,
+            };
+            try{
+                // @ts-ignore
+                position = whats.compute(result.lightsElement[0])
+            }catch (e) {
+
+            }
+            step.runtime.relatedNodePosition = {
+                top: position.offsetBodyTop,
+                left: position.offsetBodyLeft,
+            }
         }
     }
 

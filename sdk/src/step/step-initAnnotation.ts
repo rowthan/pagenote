@@ -19,11 +19,8 @@ function initAnnotation() {
     const customInner = document.createElement('pagenote-annotation-inner') // 使用方自定义容器
     const header = document.createElement('pagenote-annotation-header');
     header.onclick = function () {
-        step.runtime.lighting = 'light';
-        setTimeout(()=>{
-            step.runtime.lighting = '';
-        },2000)
-    }
+        step.lighting()
+    };
 
     const actionArray = document.createElement('pagenote-annotation-menus')
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`

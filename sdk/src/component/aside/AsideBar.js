@@ -9,6 +9,7 @@ import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
 import Tags from "./Tags";
 import {LightStatus} from "../../step/const";
+import ExpandIcon from '@/assets/images/expand.svg';
 
 let lastTop = -1;
 let pagenote = null;
@@ -210,9 +211,9 @@ class AsideBar extends Component{
             status,barInfo,steps,runindex,categories,snapshots,allStepStatus
         } = this.state;
         const barStatus = barInfo.status||'';
-        const isExpand = false;//barStatus === BAR_STATUS.expand;
+        const isExpand = barStatus === BAR_STATUS.expand;
         const showBar = steps.length > 0 || snapshots.length > 0;
-        const top = isExpand?0:barInfo.top;
+        const top = barInfo.top;
         barInfo.right = Math.min(document.documentElement.clientWidth-200,barInfo.right);
         let right = Math.max(barInfo.right,0);
 
@@ -244,23 +245,23 @@ class AsideBar extends Component{
                                 <Tip placement='right'  inner={true} message={message}>
                                     <pagenote-light-aside-item-sign data-level={1} data-active={allStepStatus}   onClick={()=>{this.toggleAllLight()}} />
                                 </Tip>
-                                
+
                                 {/* <Tip message="全高亮">
-                                    <pagenote-light-aside-item-sign 
+                                    <pagenote-light-aside-item-sign
                                         onClick={()=>{this.setAllLightStatus(1)}}
-                                        data-level={1}  
-                                        data-active={1} 
+                                        data-level={1}
+                                        data-active={1}
                                         data-insign={0} />
                                 </Tip>
                                 <Tip message="全高亮&显示批注">
-                                    <pagenote-light-aside-item-sign 
+                                    <pagenote-light-aside-item-sign
                                         onClick={()=>{this.setAllLightStatus(2)}}
-                                        data-level={1}  
-                                        data-active={2} 
+                                        data-level={1}
+                                        data-active={2}
                                         data-insign={0} />
                                 </Tip> */}
-                            
-                                
+
+
                             </pagenote-all-actions>
 
                             {/* <pagenote-action-group>
@@ -278,9 +279,9 @@ class AsideBar extends Component{
                                 }
                             </pagenote-action-group> */}
 
-                            {/*<pagenote-action data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>*/}
-                            {/*    {isExpand ? <ExpandIcon />:  <Toggle />}*/}
-                            {/*</pagenote-action>*/}
+                            <pagenote-action data-status={isExpand?'expand':''} data-action='toggle' onClick={this.toggleHideSideBar.bind(this)}>
+                                <ExpandIcon />
+                            </pagenote-action>
 
                         </pagenote-actions>
 
@@ -295,11 +296,12 @@ class AsideBar extends Component{
                                     step={record}
                                     index={index}
                                     running={index === runindex}
-                                    dot={isExpand}
+                                    dot={false}
                                     lastFocusId={this.state.lastFocus}
                                     colors={this.pagenote.options.brushes.map((brush)=>{return brush.bg})}
-                                    onClick={(e)=>{;
-                                      this.setLastFocus(record.lightId)
+                                    onClick={(e)=>{
+                                      this.setLastFocus(record.lightId);
+                                      record.lighting();
                                     }}
                                   />
                                 ))
@@ -379,10 +381,10 @@ function StepSign({step,running=false,index,dot,lastFocusId,onClick,colors}) {
                     </pagenote-block>
                 }
             </pagenote-light-anotation>
-            <pagenote-light-aside-item-sign 
-                data-active={step.data.lightStatus} 
-                data-insign={isVisible} 
-                data-level={1} 
+            <pagenote-light-aside-item-sign
+                data-active={step.data.lightStatus}
+                data-insign={isVisible}
+                data-level={1}
                 onClick={toggleLight} />
             <pagenote-light-actions-container>
                 {/*<pagenote-light-aside-item-sign data-switch='1' data-level={step.level===1?2:1} onClick={()=>{changeLevel(step.level===1?2:1)}} />*/}
