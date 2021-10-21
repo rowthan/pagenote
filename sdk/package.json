@@ -1,6 +1,6 @@
 {
   "name": "pagenote",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
@@ -64,6 +64,6 @@
     "react-contenteditable": "^3.3.5",
     "react-useportal": "^1.0.14",
     "toastr": "^2.1.4",
-    "whats-element": "^2.4.2"
+    "whats-element": "^2.4.4"
   }
 }
