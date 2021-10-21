@@ -385,18 +385,14 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             },0)
         });
 
-
-        // TODO target 存储在 info 中 避免再次寻找
-        // const target = whats.getTarget(info.id);
-        // captureElementImage(target).then((imageSrc)=>{
-        //     newStep.thumbnail = imageSrc;
-        //     newStep.save();
-        // });
-
         this.recordedSteps.add(newStep);
         newStep.connectToKeywordTag(true);
+        // 记录时候不排序，无序状态
         this.recordedSteps = this.recordedSteps.sort((a,b)=>{
-            return a.data.y - b.data.y
+            const aPos = a.runtime.relatedNodePosition;
+            const bPos = b.runtime.relatedNodePosition;
+            const compareTop = aPos.top - bPos.top;
+            return compareTop === 0 ? (aPos.left - bPos.left) : compareTop;
         });
         window.getSelection().removeAllRanges();
         this.target = {};
