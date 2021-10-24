@@ -143,8 +143,8 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
 
         const regex = new RegExp(checkStr,'gmi');
         wrapMatchesAcrossElements(dict,regex, 1,warpTagFun, (term, node) => {
-            const isBlack = blackNodes.some((black)=>{
-                return black.contains(node);
+            const isBlack = (blackNodes || []).some((block)=>{
+                return block && block.contains(node);
             });
             const parent = node.nodeType===3 ? node.parentNode : node;
             let hasLighted = !!parent.dataset.highlight;
