@@ -1,7 +1,7 @@
 import {highlightKeywordInElement, removeElementHighlight} from "../utils/highlight";
 import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
-import {whats} from "../utils/index";
+import {getPagenoteRoot, whats} from "../utils/index";
 import {AnnotationStatus, LightStatus} from "./const";
 import {getScroll, writeTextToClipboard} from "../utils/document";
 
@@ -107,7 +107,7 @@ function initKeywordTags(){
 
             // wrapperLightAttr(lightElement,step.data,)
             return lightElement;
-        });
+        },[getPagenoteRoot()]);
         step.runtime.warn = result ? '' : '未找到匹配内容';
         if(result){
             step.runtime.relatedNode.push(...result.lightsElement);
