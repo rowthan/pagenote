@@ -14,8 +14,8 @@ const App = ({allTags=[],initTagSets,onchange}) => {
     useEffect(()=>{
         const meta = document.querySelector('meta[name="keywords"]');
         if(meta){
-            const keywords = meta.content || '';
-            keywords.replaceAll(',',' ').replaceAll('，',' ').replaceAll('、',' ');
+            let keywords = meta.content || '';
+            keywords = keywords.replaceAll(',',' ').replaceAll('，',' ').replaceAll('、',' ');
             const keys = keywords.split(/\s/).filter((key)=>{
                 return !!key;
             });
@@ -129,12 +129,12 @@ const App = ({allTags=[],initTagSets,onchange}) => {
                         {/*    )}*/}
                         {/*    // onChange={rightTags => this.setState({rightTags})}*/}
                         {/*/>*/}
-                        <pagenote-p style={{position:'relative'}}>
-                            <input ref={inputRef} type="text" placeholder='添加新标签'
-                                   onKeyUp={(e)=>{console.log(e);if(e.key==='Enter'){addTag()}}} />
-                            <button onClick={addTag}>添加</button>
-                        </pagenote-p>
                     </pagenote-block>
+                    <pagenote-p style={{position:'relative'}}>
+                        <input ref={inputRef} type="text" placeholder='添加新标签'
+                               onKeyUp={(e)=>{console.log(e);if(e.key==='Enter'){addTag()}}} />
+                        <button onClick={addTag}>添加</button>
+                    </pagenote-p>
                 </pagenote-block>
             </Modali.Modal>
         </pagenote-block>
