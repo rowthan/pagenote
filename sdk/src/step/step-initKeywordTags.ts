@@ -30,7 +30,7 @@ function initKeywordTags(){
 
         // 查找文字、高亮元素
         let index = 0;
-        const result = highlightKeywordInElement(target,text,pre,suffix,null,function(text: string, children: { parentNode: { tagName: string; }; cloneNode: () => any; }){
+        const result = highlightKeywordInElement(target,text||'',pre||'',suffix||'',null,function(text: string, children: { parentNode: { tagName: string; }; cloneNode: () => any; }){
             const lightElement = document.createElement('light');
             lightElement.dataset.highlight = lightId;
             lightElement.dataset.lightindex = String(index);
