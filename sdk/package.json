@@ -1,12 +1,14 @@
 {
   "name": "pagenote",
-  "version": "5.1.4",
+  "version": "5.2.0",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
-    "init": "npm install"
+    "init": "npm install",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "npm run tsc"
   },
   "keywords": [
     "highlight",
@@ -43,7 +45,7 @@
     "style-loader": "^0.23.0",
     "terser-webpack-plugin": "^3.0.2",
     "ts-loader": "^8.0.18",
-    "typescript": "^4.2.3",
+    "typescript": "^4.4.4",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",

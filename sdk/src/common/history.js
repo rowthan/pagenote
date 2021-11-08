@@ -1,5 +1,4 @@
 const _historyWrap = function(type) {
-    console.log(type,history)
     const orig = history[type];
     const e = new Event(type);
     return function() {
