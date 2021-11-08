@@ -15,7 +15,7 @@ pagenote.init();
 
 ## 目录
 ```javascript
--- core // 核心SDK代码
--- docs // 帮助文档
+-- demos // 存静态的演示页面
+-- sdk // PAGENOTE 的核心SDK代码
 -- snapshots // 项目 demos 图
 ```
