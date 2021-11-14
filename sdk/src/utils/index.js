@@ -1,6 +1,7 @@
 import whatsPure from "whats-element/pure";
 import {AnnotationStatus, LightStatus} from "../step/const";
 import {getScroll} from "./document";
+import console from "./console";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
@@ -93,10 +94,10 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
                         const imgUrl = element.src;
                         markImages.push({
                             id: imgId,
-                            url: imgUrl,
+                            src: imgUrl,
                             alt: element.alt,
-                            pre: element.previousSibling,
-                            suffix: element.nextSibling,
+                            // pre: element.previousSibling?.textContent,
+                            // suffix: element.nextSibling?.textContent,
                         })
                         break;
                     }
@@ -134,8 +135,11 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     }
 
 
+    // 鼠标起始位置
     const startPosition = positions[0];
+    // 鼠标落点位置
     const endPosition = positions[1];
+    // 正逆方向计算
     let offsetRelative = 1;
 
     // 判断是正逆方向
@@ -148,6 +152,7 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         offsetRelative = relativeDirection>=0 ? 1 : -1;
     }
 
+    // 根据正逆方向，选择用于计算位置的选区标准，如果是逆向，则取第一个选区
     if(offsetRelative===-1){
         relativeRect = selectionRects[0]
     }
@@ -167,7 +172,7 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     const ignoreOffsetY = cursorY - rootOffset.top;
     const target = {
         x:cursorX - rootOffset.left,
-        y: Math.min(ignoreOffsetY, rootOffset.scrollHeight - 60),
+        y: Math.min(ignoreOffsetY, scrollY+document.documentElement.scrollHeight - 60),
         offsetX: 0.5,
         offsetY: 0.9,
         pre:before,

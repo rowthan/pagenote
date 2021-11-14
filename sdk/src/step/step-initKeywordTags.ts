@@ -1,9 +1,8 @@
-import {highlightKeywordInElement, removeElementHighlight} from "../utils/highlight";
+import {highlightKeywordInElement, removeElementHighlight, wrapImages} from "../utils/highlight";
 import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {getPagenoteRoot, whats} from "../utils/index";
 import {AnnotationStatus, LightStatus} from "./const";
-import {getScroll, writeTextToClipboard} from "../utils/document";
 
 const options = {
 
@@ -20,7 +19,83 @@ const io = new IntersectionObserver(function (entries) {
 
 function initKeywordTags(){
     const step = this;
-    const {bg,id,text,pre,suffix,lightId,lightStatus} = step.data;
+
+    step.addListener(function (target:any,key:string,value:any) {
+        if(key==='relatedNode'){
+            for(let i=0; i<value.length; i++){
+                const lightElement = value[i];
+                if(lightElement._light){
+                    continue;
+                }
+                lightElement.onclick = function (e:Event) {
+                    const {data} = step;
+                    const nextLightStatus = (data.lightStatus || LightStatus.UN_LIGHT) + 1;
+                    toggleLightMenu(true,step)
+                    step.data.lightStatus = nextLightStatus > LightStatus.LIGHT ? LightStatus.UN_LIGHT : nextLightStatus;
+                    switch (step.data.lightStatus){
+                        case LightStatus.UN_LIGHT:
+                            step.data.annotationStatus = AnnotationStatus.HIDE
+                            break;
+                        case LightStatus.LIGHT:
+                            step.data.annotationStatus = AnnotationStatus.SHOW;
+                            break;
+                    }
+                    if(step.data.tip){
+                        step.runtime.lighting = 'annotation';
+                    }
+                    setTimeout(function () {
+                        step.runtime.lighting = '';
+                    },2000)
+                    // step.data.annotationStatus = nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
+                    e.stopPropagation();
+                };
+
+                lightElement.ondblclick = function(e:Event){
+                    e.stopPropagation();
+                    step.openEditor();
+                }
+
+                lightElement.onmouseenter = ()=> {
+                    clearTimeout(step.runtime.focusTimer);
+                    // 如果没有标记内容，则自动贴紧
+                    if(!step.data.tip){
+                        step.connectToKeywordTag(true);
+                    }
+                    // 鼠标经过后0.5s标记为 isFocusTag
+                    step.runtime.focusTimer = setTimeout(()=>{
+                        step.runtime.isFocusTag = true;
+                    },300)
+                }
+                lightElement.onmouseleave =  ()=> {
+                    clearTimeout(step.runtime.focusTimer);
+                    step.runtime.focusTimer = setTimeout(()=>{
+                        step.runtime.isFocusTag = false;
+                    },800)
+                }
+
+                io.observe(lightElement)
+
+                lightElement.remove = function () {
+                    io.unobserve(lightElement);
+                    removeElementHighlight(lightElement)
+                }
+                // @ts-ignore-next-line
+                lightElement._light = step;
+            }
+        }
+    },true,'initKeywordTag')
+
+    const onDataChange = function () {
+        const nodes = step.runtime.relatedNode || [];
+        nodes.forEach((node: any)=>{
+            wrapperLightAttr(node,step.data,null,step.runtime)
+        })
+    }
+
+    step.addListener(onDataChange,false)
+    step.addListener(onDataChange,true)
+
+    const {bg,id,text,pre,suffix,lightId,lightStatus,images=[]} = step.data;
 
     function highlightElement(target: HTMLElement) {
         // 元素内的所有内容都被高亮时 直接高亮元素，不再使用 highlight 正则匹配
@@ -47,70 +122,11 @@ function initKeywordTags(){
                 lightElement.dataset.type='img'
                 lightElement.appendChild(children.cloneNode());
             }
-
-
-
-            lightElement.onclick = function (e) {
-                const {data} = step;
-                const nextLightStatus = (data.lightStatus || LightStatus.UN_LIGHT) + 1;
-                toggleLightMenu(true,step)
-                step.data.lightStatus = nextLightStatus > LightStatus.LIGHT ? LightStatus.UN_LIGHT : nextLightStatus;
-                switch (step.data.lightStatus){
-                    case LightStatus.UN_LIGHT:
-                        step.data.annotationStatus = AnnotationStatus.HIDE
-                        break;
-                    case LightStatus.LIGHT:
-                        step.data.annotationStatus = AnnotationStatus.SHOW;
-                        break;
-                }
-                if(step.data.tip){
-                    step.runtime.lighting = 'annotation';
-                }
-                setTimeout(function () {
-                    step.runtime.lighting = '';
-                },2000)
-                // step.data.annotationStatus = nextLightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE
-                e.stopPropagation();
-            };
-
-            lightElement.ondblclick = function(e){
-                e.stopPropagation();
-                step.openEditor();
-            }
-
-            lightElement.onmouseenter = ()=> {
-                clearTimeout(step.runtime.focusTimer);
-                // 如果没有标记内容，则自动贴紧
-                if(!step.data.tip){
-                    step.connectToKeywordTag(true);
-                }
-                // 鼠标经过后0.5s标记为 isFocusTag
-                step.runtime.focusTimer = setTimeout(()=>{
-                    step.runtime.isFocusTag = true;
-                },300)
-            }
-            lightElement.onmouseleave =  ()=> {
-                clearTimeout(step.runtime.focusTimer);
-                step.runtime.focusTimer = setTimeout(()=>{
-                    step.runtime.isFocusTag = false;
-                },100)
-            }
-
-            io.observe(lightElement)
-
-            lightElement.remove = function () {
-                io.unobserve(lightElement);
-                removeElementHighlight(lightElement)
-            }
-            // @ts-ignore-next-line
-            lightElement._light = step;
-
-            // wrapperLightAttr(lightElement,step.data,)
             return lightElement;
         },[getPagenoteRoot()]);
         step.runtime.warn = result ? '' : '未找到匹配内容';
         if(result){
-            step.runtime.relatedNode.push(...result.lightsElement);
+            step.runtime.relatedNode = [...step.runtime.relatedNode,...result.lightsElement];
             let position = {
                 offsetBodyTop:0,
                 offsetBodyLeft:0,
@@ -128,39 +144,6 @@ function initKeywordTags(){
         }
     }
 
-    function appendElement (){
-        const appendElement = document.createElement('pagenote-icon');
-        appendElement.dataset.size = 'small'
-        appendElement.onclick=function (e) {
-            step.openEditor(true);
-            // step.data.lightStatus = LightStatus.LIGHT
-            e.stopPropagation();
-            e.preventDefault();
-        }
-
-        const nodes = step.runtime.relatedNode || [];
-        const lastNode = nodes[step.runtime.relatedNode.length-1];
-
-        if(!lastNode){
-            return;
-        }
-
-        appendElement.innerHTML  = '<svg t="1628959484097"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2050"><path d="M800 96a128 128 0 0 1 128 128v576a128 128 0 0 1-128 128H224A128 128 0 0 1 96 800V224A128 128 0 0 1 224 96z m0 64H224a64 64 0 0 0-64 64v576a64 64 0 0 0 64 64h576a64 64 0 0 0 64-64V224a64 64 0 0 0-64-64zM469.312 757.312a32 32 0 0 1-5.76-63.488l5.76-0.512H480V384a32 32 0 0 1 1.792-10.688h-108.48v32a32 32 0 0 1-26.24 31.488l-5.76 0.512a32 32 0 0 1-31.488-26.24l-0.512-5.76v-64a32 32 0 0 1 26.24-31.488l5.76-0.512h341.376a32 32 0 0 1 31.488 26.24l0.512 5.76v64a32 32 0 0 1-63.488 5.76l-0.512-5.76-0.064-32H542.208c0.512 1.6 0.96 3.2 1.28 4.928L544 384v309.312h10.688a32 32 0 0 1 5.76 63.488l-5.76 0.512h-85.376z" p-id="2051"></path></svg>'
-        wrapperLightAttr(lastNode,step.data,appendElement,step.runtime)
-
-        const onDataChange = function () {
-            nodes.forEach((node: any, index: number)=>{
-                if(index===nodes.length - 1){
-                    wrapperLightAttr(node,step.data,appendElement,step.runtime)
-                }else{
-                    wrapperLightAttr(node,step.data,null,step.runtime)
-                }
-            })
-        }
-
-        step.addListener(onDataChange,false)
-        step.addListener(onDataChange,true)
-    }
 
     let timer = null;
     (function findElement(times){
@@ -168,17 +151,26 @@ function initKeywordTags(){
         const targetEl = whats.getTarget(id);
         clearTimeout(timer);
         if(targetEl){
-            highlightElement(targetEl);
-            appendElement();
+            if(text){
+                highlightElement(targetEl);
+            }
+            images.forEach(function (image:{src:string}) {
+                const relatedImage = wrapImages(targetEl,image.src);
+                if(relatedImage){
+                    const newRelated = [...step.runtime.relatedNode,relatedImage];
+                    step.runtime.relatedNode = newRelated
+                }
+            })
         }else if(times<8){
             timer = setTimeout(()=>{
                 findElement(++times)
             },2000*times)
         }else{
             highlightElement(document.body);
-            appendElement();
         }
-    })(0)
+    })(0);
+
+
 }
 
 export default initKeywordTags;
