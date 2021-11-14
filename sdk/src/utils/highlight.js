@@ -79,6 +79,17 @@ function wrapMatchesAcrossElements(dict,regex, ignoreGroups, warpTagFun,filter, 
     }
 }
 
+function wrapImages(htmlNode,imageSrc) {
+    const target = htmlNode.querySelector(`img[src="${imageSrc}"]`);
+    if(target){
+        const warppedImg = document.createElement('light-img');
+        warppedImg.appendChild(target.cloneNode());
+        target.parentElement.replaceChild(warppedImg,target);
+        warppedImg._originNode = target
+        return warppedImg;
+    }
+}
+
 // 拆分一个 element，得到元素的文本节点集合，最小元素单位，element 整个文本字符串
 function getTextNodes(element) {
     let nodes = [];
@@ -174,8 +185,8 @@ const removeElementHighlight = function (query){
         return
     }
 
-    if(element.dataset.type==='img'){
-        element.outerHTML = element.innerHTML;
+    if(element._originNode){
+        element.parentNode.replaceChild(element._originNode,element);
     }else {
         const result = [].find.call(element.childNodes,((node)=>{
             return node.nodeType === 3 || node.nodeName==='#text'
@@ -185,6 +196,7 @@ const removeElementHighlight = function (query){
 }
 
 export {
+    wrapImages,
     highlightKeywordInElement,
     removeElementHighlight,
 }

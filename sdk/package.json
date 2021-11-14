@@ -1,11 +1,11 @@
 {
   "name": "pagenote",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "dev": "webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
+    "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublish": "npm run tsc"

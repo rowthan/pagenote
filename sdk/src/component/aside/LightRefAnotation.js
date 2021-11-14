@@ -35,7 +35,7 @@ export default  function LightRefAnotation({step,showTarget}) {
                   {text.substring(0,28)}
                   {imgs.length?<Popover trigger='hover' message={imgs.map((img)=>(
                       <div>
-                          <img style='max-width:100px' src={img.url} alt={img.alt}/>
+                          <img style='max-width:100px' src={img.src} alt={img.alt}/>
                       </div>
                   ))}>
                       <ImageIcon style={{verticalAlign:'sub',margin:'0 4px'}} />
