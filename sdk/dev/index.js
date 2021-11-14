@@ -1,5 +1,5 @@
-import { h, render } from 'preact';
-import Demo from './Demo'
+import "../src/pagenote";
+import "../../demos/init"
 
-const root = document.getElementById('guide');
-render(<Demo />, root);
+initPagenote()
+

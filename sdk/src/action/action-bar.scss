@@ -47,12 +47,16 @@ pagenote-color-button{
   }
 }
 
+pagenote-addons{
+  display: flex;
+  position: absolute;
+  top:0;
+  left:38px;
+}
 
 pagenote-plugin-group{
-  position: absolute;
-  top:0px;
-  left: 0;
-  pagenote-action-button{
+  display: block;
+  pagenote-action-button, pagenote-empty-action-button{
     cursor: pointer;
     display: block;
     width: 30px !important;
@@ -71,16 +75,18 @@ pagenote-plugin-group{
     &:hover{
       transform: scale(1) !important;
     }
+    margin-bottom: 6px;
   }
-  pagenote-action-button:not(:first-child){
-    margin-top: 6px;
-    display: none;
+  pagenote-empty-action-button{
+    user-select: none;
+    user-drag: none;
+    opacity: 0;
   }
+  //pagenote-action-button:not(:first-child){
+  //  margin-top: 6px;
+  //}
   &:hover{
     z-index: 1;
-    pagenote-action-button{
-      display: block;
-    }
   }
 }
 

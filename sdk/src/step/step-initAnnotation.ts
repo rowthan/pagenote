@@ -101,7 +101,7 @@ function initAnnotation() {
         handle: header,
         limit: {
           x: [10,window.innerWidth-250-10],
-          y: [10,getPagenoteRoot().parentElement.scrollHeight - 100]
+          y: [10,Math.max(document.documentElement.scrollHeight,window.innerHeight)]
         },
         onDragEnd: function(result: any, x: any, y: any){
             step.data.x = x;

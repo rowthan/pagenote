@@ -149,6 +149,7 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
   }
   this.runtime = new Proxy(runtime,{
     set(target,key,value){
+      // TODO 数组无法监听到 relatedNode
       if(target[key]===value){
         return target;
       }

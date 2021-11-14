@@ -87,8 +87,9 @@ pagenote-actions{
       position: absolute;
       top:2px;
       right: 12px;
+      transform: rotate(180deg);
       &[data-status='expand']{
-        transform: rotate(180deg);
+        transform: rotate(0deg);
         transform-origin: center;
       }
     }

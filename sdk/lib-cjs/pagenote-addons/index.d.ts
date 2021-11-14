@@ -103,5 +103,24 @@ declare const _default: {
             apiLink: string;
         };
     };
+    copy_to_clipboard: {
+        icon: string;
+        id: string;
+        name: string;
+        description: string;
+        scene: string;
+        settings: any[];
+        clickScript: string;
+    };
 };
 export default _default;
+declare const addons: {
+    icon: string;
+    id: string;
+    name: string;
+    description: string;
+    scene: string;
+    settings: any[];
+    clickScript: string;
+}[];
+export { addons };
