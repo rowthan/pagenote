@@ -4,7 +4,7 @@ declare const copy_to_clipboard: {
     name: string;
     description: string;
     scene: string;
-    settings: any[];
+    settings: never[];
     clickScript: string;
 };
 export default copy_to_clipboard;

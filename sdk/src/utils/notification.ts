@@ -19,7 +19,7 @@ export default function notification(showMessage: Message) {
     ele.style.left = position.x || e?.target?.clientX || window.innerWidth/2 + 'px';
     ele.style.top = position.y || e?.target?.clientY || window.innerHeight/2 + 'px';
     document.body.appendChild(ele);
-    let timer: NodeJS.Timeout = null;
+    let timer: NodeJS.Timeout;
     setTimer();
     ele.addEventListener('mouseover',function () {
         ele.dataset.status = ''

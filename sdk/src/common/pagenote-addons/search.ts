@@ -24,13 +24,17 @@ const search = {
                 {
                     value:'https://translate.google.cn/?sl=auto&tl=auto&text=${keyword}',
                     label:'Google翻译'
+                },
+                {
+                    value:'https://www.douban.com/search?q=${keyword}',
+                    label:'豆瓣搜索'
                 }
             ]
         },
         {
             gridSize: 4,
             name:'new_tab',
-            label: '结果出现方式',
+            label: '出现方式',
             type: 'select',
             data:[
                 {
@@ -48,16 +52,6 @@ const search = {
             }]
         },
         {
-            gridSize: 4,
-            name:'shortcut',
-            label: '快捷键',
-            type: 'text',
-            rules:[{
-                pattern: /^\w{0,1}$/,
-                message:'一个数字或字母'
-            }]
-        },
-        {
             gridSize: 12,
             name:'engine',
             label: '自定义搜索引擎',
@@ -68,17 +62,21 @@ const search = {
             }]
         }
     ],
-    description: '选中一段文本后，点击此按钮打开搜索引擎，如 百度、翻译等',
+    description: '点击使用搜索引擎搜索选中内容，如 百度、翻译等',
     scene: 'text',
     clickScript: `(function (API) {
-          var targetInfo = API.data.targetInfo || {};
-          var actionSetting = API.data.action.settings || {};
-          var URL = actionSetting.engine.replace("\${keyword}",targetInfo.text);
-          if(actionSetting.new_tab!=='0'){
-             API.methods.popupwindow(URL,'pagenote 带你搜索')
-          } else {
-             window.open(URL)
-          }
-        })(API)`,
+      var targetInfo = API.data.targetInfo || {};
+      var actionSetting = API.data.action.settings || {};
+      var URL = actionSetting.engine.replace("\${keyword}",targetInfo.text);
+      if(actionSetting.new_tab==='0'){
+         API.methods.popupwindow(URL,'pagenote 带你搜索')
+      } else {
+         window.open(URL)
+      }
+    })(API)`,
+    defaultSetting:{
+        engine:"https://www.baidu.com/s?ie=utf-8&wd=${keyword}",
+        new_tab:"0",
+    }
 }
 export default search;

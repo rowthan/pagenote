@@ -24,13 +24,17 @@ var search = {
                 {
                     value: 'https://translate.google.cn/?sl=auto&tl=auto&text=${keyword}',
                     label: 'Google翻译'
+                },
+                {
+                    value: 'https://www.douban.com/search?q=${keyword}',
+                    label: '豆瓣搜索'
                 }
             ]
         },
         {
             gridSize: 4,
             name: 'new_tab',
-            label: '结果出现方式',
+            label: '出现方式',
             type: 'select',
             data: [
                 {
@@ -48,16 +52,6 @@ var search = {
                 }]
         },
         {
-            gridSize: 4,
-            name: 'shortcut',
-            label: '快捷键',
-            type: 'text',
-            rules: [{
-                    pattern: /^\w{0,1}$/,
-                    message: '一个数字或字母'
-                }]
-        },
-        {
             gridSize: 12,
             name: 'engine',
             label: '自定义搜索引擎',
@@ -70,7 +64,11 @@ var search = {
     ],
     description: '选中一段文本后，点击此按钮打开搜索引擎，如 百度、翻译等',
     scene: 'text',
-    clickScript: "(function (API) {\n          var targetInfo = API.data.targetInfo || {};\n          var actionSetting = API.data.action.settings || {};\n          var URL = actionSetting.engine.replace(\"${keyword}\",targetInfo.text);\n          if(actionSetting.new_tab!=='0'){\n             API.methods.popupwindow(URL,'pagenote \u5E26\u4F60\u641C\u7D22')\n          } else {\n             window.open(URL)\n          }\n        })(API)",
+    clickScript: "(function (API) {\n      var targetInfo = API.data.targetInfo || {};\n      var actionSetting = API.data.action.settings || {};\n      var URL = actionSetting.engine.replace(\"${keyword}\",targetInfo.text);\n      if(actionSetting.new_tab==='0'){\n         API.methods.popupwindow(URL,'pagenote \u5E26\u4F60\u641C\u7D22')\n      } else {\n         window.open(URL)\n      }\n    })(API)",
+    defaultSetting: {
+        engine: "https://www.baidu.com/s?ie=utf-8&wd=${keyword}",
+        new_tab: "0",
+    }
 };
 export default search;
 //# sourceMappingURL=search.js.map

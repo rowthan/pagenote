@@ -22,7 +22,7 @@ const send_to_flomo = {
             }
             console.log(result,'result')
           }).catch(function(e){
-            API.methods.notification('发生了一些问题'+e)
+            API.methods.notification('发生了一些问题，确定 API 无误且已是 Flomo 会员？'+e)
           })
         })(API)`,
     settings:[
@@ -41,9 +41,9 @@ const send_to_flomo = {
         }
     ],
     scene: 'text',
-    description:"选中一段文本后，将数据发送到 Flomo 平台",
+    description:"将选中内容发送到 Flomo 平台。注意：flomo 会员才支持。",
     defaultSetting: {
-        apiLink:'https://flomoapp.com/xxxx/'
+        apiLink:''
     }
 };
 

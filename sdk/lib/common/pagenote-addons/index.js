@@ -13,5 +13,8 @@ export default {
 var addons = [
     create_new_light, copy_to_clipboard, send_to_email, send_to_flomo, search,
 ];
-export { addons };
+var sceneMap = {
+    text: '选中文本时'
+};
+export { addons, sceneMap, };
 //# sourceMappingURL=index.js.map

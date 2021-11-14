@@ -7,7 +7,7 @@ var create_new_light = {
     shortcut: '',
     clickScript: "(function(API){API.methods.createLight({bg:API.data.action.settings.bg});})(API);",
     scene: 'text',
-    description: "画笔颜色不够用？使用此方式还可以扩展画笔颜色。",
+    description: "画笔颜色太少了？使用此方式可以增添画笔。",
     settings: [{
             gridSize: 12,
             name: 'bg',
