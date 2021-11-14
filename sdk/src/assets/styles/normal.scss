@@ -61,6 +61,19 @@ pagenote-icon{
   }
 }
 
+light-img,light{
+  pagenote-icon{
+    fill: var(--bgcolor);
+    display: inline-block;
+    vertical-align: sub;
+  }
+}
+
+light-img{
+  img{
+    outline: 1px dashed var(--bgcolor);
+  }
+}
 light[data-highlight]{
   position: relative;
   font-size: inherit !important;
@@ -120,12 +133,6 @@ light[data-highlight]{
     background: #ffe5b0;
     padding: 8px;
     border: 1px solid #999;
-  }
-
-  pagenote-icon{
-    fill: var(--bgcolor);
-    display: inline-block;
-    vertical-align: sub;
   }
 }
 
