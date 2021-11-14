@@ -273,9 +273,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             const extensionActions = {};
             this.options.functionColors.forEach((actionGroup,groupIndex)=>{
                 actionGroup.forEach((action,itemIndex)=>{
-                    action.eventid = groupIndex + itemIndex + Math.random();
-                    if(action.shortcut){
-                        extensionActions[action.shortcut.toLowerCase()] = action.onclick;
+                    if(action && action.id){
+                        action.eventid = action.id + groupIndex +'_'+ itemIndex;
+                        if(action.shortcut){
+                            extensionActions[action.shortcut.toLowerCase()] = action.onclick;
+                        }
                     }
                 });
             });

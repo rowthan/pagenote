@@ -37,7 +37,7 @@ export default function ActionBars ({pagenote}) {
       {
         showButton
         &&
-        <pagenote-block onClick={(e)=>{e.stopPropagation()}}>
+        <pagenote-block onClick={(e)=>{e.stopPropagation();}}>
           {
             canHighlight &&
             <pagenote-colors-container>
@@ -77,40 +77,48 @@ export default function ActionBars ({pagenote}) {
               }
             </pagenote-colors-container>
           }
-          {
-            functionColors.map((actionGroup,index)=> {
-              // actionGroup filter when
-              return (
-                <pagenote-plugin-group
-                  style={{
-                  left: ((index+1)*34+4) + 'px',
-                  animationDelay: (index+1) * 0.2 + 's',
-                }}>
-                  {
-                    actionGroup.map((action)=>{
-                      const image = /^<svg/.test(action.icon) ?  `data:image/svg+xml;base64,${window.btoa(action.icon)}` : action.icon;
+          <pagenote-addons>
+              {
+                  functionColors.map((actionGroup,index)=> {
+                      // actionGroup filter when
                       return (
-                        <Tip inner={true} message={`${action.name}${action.shortcut?`${i18n.t('shortcut')}[${action.shortcut}]`:''}`}>
-                          <pagenote-action-button
-                            key={action.name}
-                            data-eventid={action.eventid}
-                            style={{
-                              backgroundImage: `url(${image})`,
-                            }}
-                            onClick={action.onclick}
-                            onMouseOver={action.onmouseover}
-                            onDblclick={action.ondbclick}
-                          >
-                          </pagenote-action-button>
-                        </Tip>
+                          <pagenote-plugin-group
+                              style={{
+                                  // left: ((index+1)*34+4) + 'px',
+                                  animationDelay: (index+1) * 0.2 + 's',
+                              }}>
+                              {
+                                  actionGroup.map((action,j)=>{
+                                      if(!action){
+                                          return (
+                                             ''
+                                          )
+                                      }
+                                      const {icon,name,shortcut,eventid,id} = action || {};
+                                      const image = /^<svg/.test(icon) ?  `data:image/svg+xml;base64,${window.btoa(icon)}` : icon;
+                                      return (
+                                          <Tip key={index+name+j} inner={true} message={`${name}${shortcut?`${i18n.t('shortcut')}[${shortcut}]`:''}`}>
+                                              <pagenote-action-button
+                                                  key={name}
+                                                  data-eventid={eventid}
+                                                  style={{
+                                                      backgroundImage: `url(${image})`,
+                                                  }}
+                                                  onClick={action.onclick}
+                                                  onMouseOver={action.onmouseover}
+                                                  onDblclick={action.ondbclick}
+                                              >
+                                              </pagenote-action-button>
+                                          </Tip>
 
+                                      )
+                                  })
+                              }
+                          </pagenote-plugin-group>
                       )
-                    })
-                  }
-                </pagenote-plugin-group>
-              )
-            })
-          }
+                  })
+              }
+          </pagenote-addons>
         </pagenote-block>
       }
     </pagenote-block>
