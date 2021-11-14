@@ -39,5 +39,9 @@ declare const search: {
     description: string;
     scene: string;
     clickScript: string;
+    defaultSetting: {
+        engine: string;
+        new_tab: string;
+    };
 };
 export default search;
