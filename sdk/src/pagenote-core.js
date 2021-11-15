@@ -61,13 +61,17 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         }
     },options);
     this.status = this.CONSTANT.UN_INIT;
+
+    const colors = this.options.brushes.filter(function (item) {
+        return item && item.bg
+    }).map((brush)=>{
+        return brush.bg;
+    })
     this.recordedSteps = new Steps({
         saveDatas:  ()=> {
             this.makelink()
         },
-        colors: this.options.brushes.map((brush)=>{
-            return brush.bg;
-        })
+        colors: colors
     });
     this.snapshots = [];
     this.categories = new Set();
@@ -117,9 +121,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
     const StepOptions = {
         renderAnnotation: OPTIONS.renderAnnotation,
-        colors: OPTIONS.brushes.map((brush)=>{
-            return brush.bg;
-        })
+        colors: colors
     }
     // TODO 初始化动效
     this.init = function(initData){ // 为一段加密过的数据信息

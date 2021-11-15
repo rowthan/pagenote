@@ -49,6 +49,12 @@ export default function ActionBars ({pagenote}) {
                     y: 0,
                   } : computePosition(index-1,radios);
 
+                  if(!item){
+                      return (
+                          <pagenote-color-button/>
+                      )
+                  }
+
                   return(
                     <pagenote-color-button
                          data-pagenotecolor={item.bg}

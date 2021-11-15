@@ -10,7 +10,9 @@ function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
     const rootElement = getPagenoteRoot();
 
-    const colors = options.brushes.map((brush)=>{return brush.bg})
+    const colors = options.brushes.filter(function (item) {
+        return item && item.bg;
+    }).map((brush)=>{return brush.bg})
     toggleLightMenu(false,null,null,colors);
 
     // side-bar

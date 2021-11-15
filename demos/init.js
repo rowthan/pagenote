@@ -86,12 +86,14 @@ window.initPagenote = function () {
                 label:'一级画笔', // 说明
                 level:1, // 暂不支持
             },
+            null,
             {
                 bg:'#FCB900',
                 shortcut:'y',
                 label:'一级画笔',
                 level:1,
             },
+            null,
             {
                 bg: '#7BDCB5',
             },
@@ -103,12 +105,6 @@ window.initPagenote = function () {
                 shortcut:'b',
                 label:'一级画笔',
                 level:1,
-            },
-            {
-                bg: '#5a0e38',
-            },
-            {
-                bg: '#6b4dea',
             }
         ],
         showBarTimeout: 0, // 延迟功能时间 单位毫秒
