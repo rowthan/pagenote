@@ -1,1 +1,0 @@
-{"version":3,"file":"copy_to_clipboard.js","sourceRoot":"","sources":["../../src/common/pagenote-addons/copy_to_clipboard.ts"],"names":[],"mappings":";;AAAA,IAAM,iBAAiB,GAAG;IACtB,IAAI,EAAC,0wBAA0wB;IAC/wB,EAAE,EAAC,MAAM;IACT,IAAI,EAAC,QAAQ;IACb,WAAW,EAAE,mCAAmC;IAChD,KAAK,EAAE,MAAM;IACb,aAAa;IACb,QAAQ,EAAC,EAAE;IACX,WAAW,EAAE,iQAML;CACX,CAAA;AAED,kBAAe,iBAAiB,CAAC"}
