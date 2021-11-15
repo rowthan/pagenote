@@ -20,7 +20,7 @@ var send_to_flomo = {
         }
     ],
     scene: 'text',
-    description: "选中一段文本后，将数据发送到 Flomo 平台。注意：flomo 会员才支持。",
+    description: "将选中内容发送到 Flomo 平台。注意：flomo 会员才支持。",
     defaultSetting: {
         apiLink: ''
     }

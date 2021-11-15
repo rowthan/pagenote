@@ -62,7 +62,7 @@ var search = {
                 }]
         }
     ],
-    description: '选中一段文本后，点击此按钮打开搜索引擎，如 百度、翻译等',
+    description: '点击使用搜索引擎搜索选中内容，如 百度、翻译等',
     scene: 'text',
     clickScript: "(function (API) {\n      var targetInfo = API.data.targetInfo || {};\n      var actionSetting = API.data.action.settings || {};\n      var URL = actionSetting.engine.replace(\"${keyword}\",targetInfo.text);\n      if(actionSetting.new_tab==='0'){\n         API.methods.popupwindow(URL,'pagenote \u5E26\u4F60\u641C\u7D22')\n      } else {\n         window.open(URL)\n      }\n    })(API)",
     defaultSetting: {

@@ -15,7 +15,7 @@ var send_to_email = {
     defaultSetting: {
         email: 'pagenote@126.com'
     },
-    description: "点击后新建一封邮件，邮件正文默认填充你选中的文本。"
+    description: "选中内容至邮件，邮件正文默认填充你选中的文本"
 };
 export default send_to_email;
 //# sourceMappingURL=send_to_email.js.map
