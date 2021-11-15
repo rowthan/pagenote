@@ -301,7 +301,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     const doHighlight = that.target && that.target.canHighlight===true;
                     // 获取画笔
                     const brush = that.options.brushes.find((colorItem)=>{
-                        return colorItem.shortcut && colorItem.shortcut.toLowerCase() === key;
+                        return colorItem && colorItem.shortcut && colorItem.shortcut.toLowerCase() === key;
                     });
                     if(doHighlight && brush){
                         that.record({
