@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "outDir": "./lib/common",
+        "outDir": "./es/",
+        "rootDir": "src",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "es6",
@@ -12,7 +13,7 @@
         "declaration": true
     },
     "include": [
-        "./src/common/**/**.ts"
+        "./src/common/**/*.ts"
     ],
     "exclude": ["node_modules", "**/*.spec.ts"]
 }
