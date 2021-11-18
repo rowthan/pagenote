@@ -42,6 +42,19 @@ interface PlainData {
     steps: Step[],
 }
 
+interface WebPage {
+    deleted: boolean,
+    key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
+    url: string, // 此条数据绑定的 URL
+    urls: string[], // 此条数据绑定的 URL 集合
+    lastSyncTime: number, // 云盘最后同步时间
+    mtimeMs: number, // 文件夹最后同步时间
+    createAt: number,
+    updateAt: number,
+    plainData: PlainData,
+}
+
 export type {
-    PlainData
+    PlainData,
+    WebPage,
 }
