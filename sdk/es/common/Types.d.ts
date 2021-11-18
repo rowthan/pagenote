@@ -38,4 +38,15 @@ interface PlainData {
     setting: any;
     steps: Step[];
 }
-export type { PlainData };
+interface WebPage {
+    deleted: boolean;
+    key: string;
+    url: string;
+    urls: string[];
+    lastSyncTime: number;
+    mtimeMs: number;
+    createAt: number;
+    updateAt: number;
+    plainData: PlainData;
+}
+export type { PlainData, WebPage, };
