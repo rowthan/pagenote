@@ -28,12 +28,12 @@ interface Step {
 }
 
 interface PlainData {
-    version: string,
     url: string,
-    title: string,
-    createAt: number,
-    description: string,
-    icon: string,
+    title?: string,
+    version?: string,
+    icon?: string,
+    createAt?: number,
+    description?: string,
     images: string[],
     categories: string[],
     lastModified: number,
@@ -52,6 +52,10 @@ interface WebPage {
     createAt: number,
     updateAt: number,
     plainData: PlainData,
+    icon: string,
+    title: string,
+    version: string,
+    description: string,
 }
 
 export type {
