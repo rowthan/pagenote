@@ -1,14 +1,19 @@
 import {WebPage} from "../Types";
 
+enum BackupVersion {
+    version1=1,
+    version=2
+}
+
 interface BackupData {
     pages: WebPage[],
-    version: number,
+    version: BackupVersion,
     extension_version: string,
     backup_at: number,
 }
 
 // 将webpage数据导出为字符串文本
-export const makeExportString = function (backupData:BackupData):string{
+const makeExportString = function (backupData:BackupData):string{
     const exportDataObject = {
         pages: backupData.pages,
         version: backupData.version || 2,
@@ -19,7 +24,8 @@ export const makeExportString = function (backupData:BackupData):string{
     return dataString;
 }
 
-export const resolveImportString = function (inputStr: string):BackupData {
+// 还原备份数据
+const resolveImportString = function (inputStr: string):BackupData {
     let datas
     try{
         datas = JSON.parse(decodeURIComponent(inputStr));
@@ -28,4 +34,11 @@ export const resolveImportString = function (inputStr: string):BackupData {
         alert('解析错误，请检查备份文件是否有损坏');
     }
     return datas;
+}
+
+export {
+    BackupData,
+    BackupVersion,
+    makeExportString,
+    resolveImportString,
 }
