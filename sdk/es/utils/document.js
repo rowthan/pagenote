@@ -269,10 +269,6 @@ function wrapRangeInMappedTextNode(dict, start, end, filterCb, eachCb) {
         return true;
     });
 }
-function getWebIcon() {
-    var iconEle = document.querySelector('link[rel~=icon]');
-    return iconEle ? iconEle.href : '';
-}
 function convertImgToBase64(url, width, height, callback, outputFormat) {
     var canvas = document.createElement('CANVAS');
     var ctx = canvas.getContext('2d');
@@ -392,5 +388,5 @@ function keepLastIndex(obj) {
         range.select();
     }
 }
-export { emptyChildren, gotoPosition, getScroll, highlightKeyword, getWebIcon, getViewPosition, moveable, writeTextToClipboard, captureElementImage, convertImgToBase64, showCamera, keepLastIndex };
+export { emptyChildren, gotoPosition, getScroll, highlightKeyword, getViewPosition, moveable, writeTextToClipboard, captureElementImage, convertImgToBase64, showCamera, keepLastIndex };
 //# sourceMappingURL=document.js.map

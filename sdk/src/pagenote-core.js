@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import {getWebIcon, captureElementImage, showCamera} from './utils/document'
+import { captureElementImage, showCamera} from './utils/document'
 import {decryptedData, encryptData, prepareSelectionTarget, throttle} from "./utils";
 import i18n from "./locale/i18n";
 import { BAR_STATUS } from "./const";
@@ -76,7 +76,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
     this.snapshots = [];
     this.categories = new Set();
     this.note='';
-    this.score=0; // 评分系统
     this.runindex = null;
     const runBarInfo = JSON.parse(JSON.stringify(this.options.barInfo));
     runBarInfo.status = runBarInfo.status || 'fold';
@@ -573,18 +572,10 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 }
             }
 
-            const titleEle = document.querySelector('title');
-            const descriptionEle = document.querySelector('meta[name=description]');
-            const now = new Date().getTime();
             const storeInfo={
                 steps:simpleSteps,
                 setting:{},
                 url: window.location.href,
-                lastModified: now,
-                createAt: this.plainData.createAt || now,
-                icon:getWebIcon(),
-                title: titleEle? titleEle.innerText.trim() :'',
-                description: descriptionEle? descriptionEle.content : '',
                 images: storeImages,
                 snapshots: this.snapshots,
                 version: 2,
@@ -707,7 +698,6 @@ PagenoteCore.prototype.CONSTANT = {
     SHARE_ERROR: 'e',
     SHARE_SUCCESS: 's',
 
-    STORE_KEYS_VERSION_2_VALIDATE:["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"],
 };
 
-PagenoteCore.prototype.version = "4.8.0-typescript";
+PagenoteCore.prototype.version = "5.3.11";

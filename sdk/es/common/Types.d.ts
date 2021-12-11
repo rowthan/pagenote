@@ -47,6 +47,7 @@ interface WebPage {
     mtimeMs: number;
     createAt: number;
     updateAt: number;
+    expiredAt: number;
     plainData: PlainData;
     icon: string;
     title: string;

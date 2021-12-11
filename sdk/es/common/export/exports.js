@@ -31,5 +31,6 @@ var actions = (_a = {},
         return axios(config);
     },
     _a);
+export { ACTION_NUM, };
 export default actions;
 //# sourceMappingURL=exports.js.map
