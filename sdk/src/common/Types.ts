@@ -51,6 +51,7 @@ interface WebPage {
     mtimeMs: number, // 文件夹最后同步时间
     createAt: number,
     updateAt: number,
+    expiredAt: number,
     plainData: PlainData,
     icon: string,
     title: string,

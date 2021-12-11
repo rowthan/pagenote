@@ -33,4 +33,8 @@ const actions = {
     }
 }
 
+export {
+    ACTION_NUM,
+}
+
 export default actions

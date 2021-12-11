@@ -293,11 +293,6 @@ function wrapRangeInMappedTextNode(dict, start, end, filterCb, eachCb) {
     });
 }
 
-function getWebIcon() {
-    const iconEle = document.querySelector('link[rel~=icon]');
-    return iconEle ? iconEle.href : '';
-}
-
 function convertImgToBase64(url,width,height, callback, outputFormat){
     var canvas = document.createElement('CANVAS');
     var ctx = canvas.getContext('2d');
@@ -450,7 +445,6 @@ export {
     gotoPosition,
     getScroll,
     highlightKeyword,
-    getWebIcon,
     getViewPosition,
     moveable,
     writeTextToClipboard,

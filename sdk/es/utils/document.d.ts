@@ -5,7 +5,6 @@ export function getScroll(): {
     y: number;
 };
 export function highlightKeyword(wid: any, element: any, text: any, hightlight: any, color: string, blackNodes: any[], callback: any): void;
-export function getWebIcon(): any;
 export function getViewPosition(elem: any): {
     top: any;
     left: any;
