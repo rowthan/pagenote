@@ -29,17 +29,19 @@ interface Step {
 
 interface PlainData {
     url: string,
+    images: string[],
+    categories: string[],
+    snapshots: string[],
+    setting: any,
+    steps: Step[],
+
+    // TODO 废弃 SDK 不处理
     title?: string,
     version?: string,
     icon?: string,
     createAt?: number,
     description?: string,
-    images: string[],
-    categories: string[],
-    lastModified: number,
-    snapshots: string[],
-    setting: any,
-    steps: Step[],
+    lastModified?: number,
 }
 
 interface WebPage {
