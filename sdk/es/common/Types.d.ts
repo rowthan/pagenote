@@ -38,20 +38,46 @@ interface PlainData {
     description?: string;
     lastModified?: number;
 }
-interface WebPage {
-    deleted: boolean;
+declare type WebPageIds = {
     key: string;
     url: string;
     urls: string[];
-    lastSyncTime: number;
-    mtimeMs: number;
+};
+declare type WebPageTimes = {
     createAt: number;
     updateAt: number;
-    expiredAt: number;
-    plainData: PlainData;
+    lastSyncTime?: number;
+    mtimeMs?: number;
+    expiredAt?: number;
+};
+declare type WebPageSiteInfo = {
+    deleted: boolean;
     icon: string;
     title: string;
     version: string;
     description: string;
+};
+declare type WebPageDatas = {
+    plainData: PlainData;
+};
+declare type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo;
+declare type UpdateProps<T, Key extends keyof T> = {
+    [key in Key]?: T[key];
+};
+declare type AllowUpdateKeys = keyof WebPageDatas | keyof WebPageSiteInfo | 'url' | 'urls';
+interface IWebPage {
+    data: WebPage;
+    readonly initHash: string;
+    isValid(): boolean;
+    setData(webPage: UpdateProps<WebPage, AllowUpdateKeys>): void;
+    createDataHash(): string;
 }
-export type { PlainData, WebPage, };
+declare class WebPageItem implements IWebPage {
+    data: WebPage;
+    readonly initHash: string;
+    constructor(webPage: WebPage);
+    setData(webPage: WebPage): void;
+    isValid(): boolean;
+    createDataHash(): string;
+}
+export type { PlainData, WebPage, WebPageItem, };
