@@ -67,17 +67,18 @@ declare type UpdateProps<T, Key extends keyof T> = {
 declare type AllowUpdateKeys = keyof WebPageDatas | keyof WebPageSiteInfo | 'url' | 'urls';
 interface IWebPage {
     data: WebPage;
-    readonly initHash: string;
+    lastHash: string;
     isValid(): boolean;
-    setData(webPage: UpdateProps<WebPage, AllowUpdateKeys>): void;
+    setData(webPage: UpdateProps<WebPage, AllowUpdateKeys>): boolean;
     createDataHash(): string;
 }
 declare class WebPageItem implements IWebPage {
     data: WebPage;
-    readonly initHash: string;
+    lastHash: string;
     constructor(webPage: WebPage);
-    setData(webPage: WebPage): void;
+    setData(webPage: WebPage): boolean;
     isValid(): boolean;
     createDataHash(): string;
 }
-export type { PlainData, WebPage, WebPageItem, };
+export type { PlainData, WebPage, };
+export { WebPageItem };

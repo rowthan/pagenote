@@ -79,11 +79,13 @@ type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | 'url' | 'u
 
 interface IWebPage{
     data: WebPage,
-    readonly initHash: string
+    lastHash: string
     isValid():boolean, // 数据有效性校验，判断该数据是否有效
-    setData(webPage:UpdateProps<WebPage, AllowUpdateKeys>):void,
+    setData(webPage:UpdateProps<WebPage, AllowUpdateKeys>):boolean,
     createDataHash():string,
 }
+
+const EMPTY_HASH = 'empty'
 
 class WebPageItem implements IWebPage{
     // createAt: number;
@@ -101,15 +103,26 @@ class WebPageItem implements IWebPage{
     // urls: string[];
     // version: string;
 
-    data: WebPage;
-    readonly initHash: string;
+    data: WebPage = {
+        createAt: 0,
+        deleted: false,
+        description: "",
+        icon: "",
+        key: "",
+        plainData: undefined,
+        title: "",
+        updateAt: 0,
+        url: "",
+        urls: [],
+        version: ""
+    };
+    lastHash: string = EMPTY_HASH;
 
     constructor(webPage:WebPage) {
         this.setData(webPage);
-        this.initHash = this.createDataHash();
     }
 
-    setData(webPage: WebPage){
+    setData(webPage: WebPage):boolean{
         for(let i in webPage){
             // @ts-ignore
             if(webPage[i]!==undefined){
@@ -118,14 +131,21 @@ class WebPageItem implements IWebPage{
             }
             this.data.updateAt = Date.now();
         }
+        const currentHash = this.createDataHash();
+        const changed = currentHash !== this.lastHash
+        this.lastHash = currentHash;
+        return changed
     }
 
     isValid() {
-        const {plainData,expiredAt} = this.data;
-        return expiredAt > Date.now() && plainData.steps.length > 0 && plainData.snapshots.length > 0
+        const {plainData} = this.data;
+        return plainData?.steps.length > 0 || plainData?.snapshots.length > 0
     }
 
     createDataHash(){
+        if(!this.isValid()){
+            return EMPTY_HASH
+        }
         const data = this.data;
         const string = JSON.stringify({
             version: data.version,
@@ -142,5 +162,8 @@ class WebPageItem implements IWebPage{
 export type {
     PlainData,
     WebPage,
-    WebPageItem,
+}
+
+export {
+    WebPageItem
 }
