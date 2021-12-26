@@ -10,10 +10,38 @@ var LightStatus;
     LightStatus[LightStatus["half_light"] = 1] = "half_light";
     LightStatus[LightStatus["light"] = 2] = "light";
 })(LightStatus || (LightStatus = {}));
+var EMPTY_HASH = 'empty';
 var WebPageItem = /** @class */ (function () {
     function WebPageItem(webPage) {
+        // createAt: number;
+        // deleted: boolean;
+        // description: string;
+        // expiredAt: number;
+        // icon: string;
+        // key: string;
+        // lastSyncTime: number;
+        // mtimeMs: number;
+        // plainData: PlainData;
+        // title: string;
+        // updateAt: number;
+        // url: string;
+        // urls: string[];
+        // version: string;
+        this.data = {
+            createAt: 0,
+            deleted: false,
+            description: "",
+            icon: "",
+            key: "",
+            plainData: undefined,
+            title: "",
+            updateAt: 0,
+            url: "",
+            urls: [],
+            version: ""
+        };
+        this.lastHash = EMPTY_HASH;
         this.setData(webPage);
-        this.initHash = this.createDataHash();
     }
     WebPageItem.prototype.setData = function (webPage) {
         for (var i in webPage) {
@@ -24,12 +52,19 @@ var WebPageItem = /** @class */ (function () {
             }
             this.data.updateAt = Date.now();
         }
+        var currentHash = this.createDataHash();
+        var changed = currentHash !== this.lastHash;
+        this.lastHash = currentHash;
+        return changed;
     };
     WebPageItem.prototype.isValid = function () {
-        var _a = this.data, plainData = _a.plainData, expiredAt = _a.expiredAt;
-        return expiredAt > Date.now() && plainData.steps.length > 0 && plainData.snapshots.length > 0;
+        var plainData = this.data.plainData;
+        return (plainData === null || plainData === void 0 ? void 0 : plainData.steps.length) > 0 || (plainData === null || plainData === void 0 ? void 0 : plainData.snapshots.length) > 0;
     };
     WebPageItem.prototype.createDataHash = function () {
+        if (!this.isValid()) {
+            return EMPTY_HASH;
+        }
         var data = this.data;
         var string = JSON.stringify({
             version: data.version,
@@ -43,4 +78,5 @@ var WebPageItem = /** @class */ (function () {
     };
     return WebPageItem;
 }());
+export { WebPageItem };
 //# sourceMappingURL=Types.js.map
