@@ -14,6 +14,7 @@ import console from "./utils/console";
 
 //增加开关 是否开启
 export default function PagenoteCore(id, options={}){ // TODO 支持载入语言包
+    console.log(options)
     console.option.showLog = options.debug;
     this.id = id || "pagenote-container";
     this.options =  Object.assign({
@@ -140,7 +141,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                     setting = dataObject.setting || {};
                 }
                 this.snapshots = Array.isArray(dataObject.snapshots) ? dataObject.snapshots : [];
-                this.categories = new Set(dataObject.categories||[dataObject.category]);
+                this.categories = new Set(dataObject.categories);
                 this.note = dataObject.note;
             }catch (e) {
                 console.error('解析step异常',e,initData);
@@ -404,7 +405,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         this.target = {};
         this.makelink((result)=>{
             if(!result){
-                alert(i18n.t('save_failed'));
+                alert('保存失败了');
                 this.recordedSteps.splice(-1,1);
                 console.error('记录失败');
                 this.status = constant.RECORDFAIL;
@@ -575,7 +576,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             const storeInfo={
                 steps:simpleSteps,
                 setting:{},
-                url: window.location.href,
                 images: storeImages,
                 snapshots: this.snapshots,
                 version: 2,
@@ -618,7 +618,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
             callback(storeData);
         }catch(e){
             this.status = constant.SYNCED_ERROR
-            console.error(e)
+            console.error('保存异常',e)
             callback()
         }
     },1000);
