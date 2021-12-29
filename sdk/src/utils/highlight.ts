@@ -1,6 +1,53 @@
 
+/**包裹img标签*/
+interface WrappedImage extends HTMLImageElement {
+    _originNode: HTMLImageElement,
+}
+
+/**节点字典*/
+interface Dict {
+    nodes:{
+        node: Node,
+        start: number,
+        end: number
+    }[],
+    value: string,
+}
+
+/** 高亮一个元素内的关键词，return {match:2,light:1,lights:[elements]} */
+interface LightElement extends HTMLElement{
+    dataset:{
+        highlight: '1' | '0'
+    }
+}
+
+/**包裹文本节点方法*/
+interface WarpTagFun {
+    (text:string):LightElement
+}
+
+interface ElementFilter {
+    (text:string,node:Node):boolean
+}
+
+const defaultWrapperFun = function (text){
+    const light = document.createElement('light') as LightElement;
+    light.dataset.highlight='1';
+    light.style.color = 'red';
+    light.textContent = text;
+    return light;
+} as WarpTagFun;
+
+/**高亮结果*/
+interface HighlightResult {
+    match: number,
+    lightsElement: LightElement[],
+}
+
+
+
 // 按字符串逐字高亮
-function wrapMatchesAcrossElements(dict,regex, ignoreGroups, warpTagFun,filter, eachCb, endCb) {
+function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:WarpTagFun,filter:ElementFilter, eachCb, endCb) {
     const matchIdxDef = ignoreGroups+1;
 
     (function checkMatch(dict,matchIdx){
@@ -79,10 +126,13 @@ function wrapMatchesAcrossElements(dict,regex, ignoreGroups, warpTagFun,filter, 
     }
 }
 
-function wrapImages(htmlNode,imageSrc) {
+/**
+ * 包裹 img 标签
+ * */
+function wrapImages(htmlNode,imageSrc):WrappedImage{
     const target = htmlNode.querySelector(`img[src="${imageSrc}"]`);
     if(target){
-        const warppedImg = document.createElement('light-img');
+        const warppedImg = document.createElement('light-img') as WrappedImage;
         warppedImg.appendChild(target.cloneNode());
         target.parentElement.replaceChild(warppedImg,target);
         warppedImg._originNode = target
@@ -90,8 +140,9 @@ function wrapImages(htmlNode,imageSrc) {
     }
 }
 
-// 拆分一个 element，得到元素的文本节点集合，最小元素单位，element 整个文本字符串
-function getTextNodes(element) {
+
+/** 获取元素的文本节点集合，最小元素单位，element 整个文本字符串 <div>文字 <span>内容</span></div> => {value: "文字 内容",nodes:[{node:"文字",start:0,end:2}]} */
+function getTextNodes(element:HTMLElement):Dict {
     let nodes = [];
     const filter = {
         acceptNode: function (node) {
@@ -99,7 +150,7 @@ function getTextNodes(element) {
             return condition ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
         }
     };
-    const iter = document.createNodeIterator(element, NodeFilter.SHOW_TEXT, filter, false);
+    const iter = document.createNodeIterator(element, NodeFilter.SHOW_TEXT, filter);
     let tempNote;
     let val = '';
     while (tempNote = iter.nextNode()) {
@@ -109,14 +160,14 @@ function getTextNodes(element) {
             end: (val += tempNote.textContent).length
         })
     }
-    const dict = {
+    const dict:Dict = {
         nodes: nodes,
         value: val,
     };
     return dict;
 }
 
-// 处理关键词转义
+/**转义正则关键词*/
 function formatKeyword(keyword){
     if(!keyword){
         return "\\s*"
@@ -124,25 +175,14 @@ function formatKeyword(keyword){
     return keyword.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/[\s]+/gmi, '[\\s]*');
 }
 
-// 高亮一个元素内的关键词，return {match:2,light:1,lights:[elements]}
-const highlightKeywordInElement = function (element,keywords,pre='',next='',deep=20,warpTagFun,blackNodes=[]){
-    // 返回结果
+
+/**在HTML element中高亮关键词*/
+const highlightKeywordInElement = function (element:HTMLElement,keywords:string,pre='',next='',deep=20,warpTagFun:WarpTagFun=defaultWrapperFun,blackNodes=[]):HighlightResult{
     const result = {
         match: 0,
         lightsElement: [],
     }
-    if(!element || !keywords){
-        return result;
-    }
 
-    // 包装方法，可自定义
-    warpTagFun = warpTagFun || function (text){
-        const light = document.createElement('light');
-        light.dataset.highlight='1';
-        light.style.color = 'red';
-        light.textContent = text;
-        return light;
-    };
     const dict = getTextNodes(element);
     const handler = (kw,pre='',suffix='') => {
         const formatKw = formatKeyword(kw);
@@ -157,8 +197,12 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
             const isBlack = (blackNodes || []).some((block)=>{
                 return block && block.contains(node);
             });
+            console.log(node,node.nodeType)
             const parent = node.nodeType===3 ? node.parentNode : node;
+            // const parent = node.parentNode;
+            // @ts-ignore
             let hasLighted = !!parent.dataset.highlight;
+            // @ts-ignore
             return !isBlack && !hasLighted && node.tagName!=='LIGHT';
         }, element => {
             result.match ++;
@@ -167,13 +211,13 @@ const highlightKeywordInElement = function (element,keywords,pre='',next='',deep
         });
     };
     handler(keywords,pre,next);
-    if(result.match===0){
-        handler(keywords)
-    }
+    // if(result.match===0){
+    //     handler(keywords)
+    // }
     return result;
 };
 
-// 移除高亮、还原
+/**移除高亮、还原HTML节点*/
 const removeElementHighlight = function (query){
     let element;
     if(typeof query==='string'){

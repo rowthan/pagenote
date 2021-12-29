@@ -42,10 +42,19 @@ function loadScript(src:string,globalKey?:string,callback?:Function):void {
     }
 }
 
+function appendScriptsToBody(scripts:string[]):void {
+    scripts.forEach(function (scriptSrc:string) {
+        const script = document.createElement('script');
+        script.src = scriptSrc;
+        document.body.appendChild(script);
+    });
+}
+
 export {
     getWebIcon,
     getWebTitle,
     getWebDescription,
     contentToFile,
     loadScript,
+    appendScriptsToBody,
 }
