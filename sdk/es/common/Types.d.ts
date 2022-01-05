@@ -31,6 +31,7 @@ interface PlainData {
     snapshots: string[];
     setting: any;
     steps: Step[];
+    note?: string;
     title?: string;
     version?: string;
     icon?: string;
@@ -80,5 +81,5 @@ declare class WebPageItem implements IWebPage {
     isValid(): boolean;
     createDataHash(): string;
 }
-export type { PlainData, WebPage, };
+export type { PlainData, WebPage, Step, };
 export { WebPageItem };

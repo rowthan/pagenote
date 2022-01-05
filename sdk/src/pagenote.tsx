@@ -5,9 +5,12 @@ import ActionBars from "./action/ActionBars";
 import {debounce, getPagenoteRoot} from './utils';
 import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'
+import {IOption} from "./types/Option";
+import React from "preact/compat";
 import {setLoaded} from "./common/pagenote-utils/share-pagenote";
 
-function PageNote(id,options={}){
+function PageNote(id:string,options:IOption){
+    // @ts-ignore
     const pagenoteCore = new PagenoteCore(id,options);
     const rootElement = getPagenoteRoot();
 
@@ -23,8 +26,8 @@ function PageNote(id,options={}){
     render(<AsideBar pagenote={pagenoteCore} /> , sidebar);
 
     // action-bar
-    let actionBar = null;
-    pagenoteCore.addListener(debounce(function (status,before) {
+    let actionBar: HTMLElement = null;
+    pagenoteCore.addListener(debounce(function (status: any, before: any) {
         if(status===before && status!==pagenoteCore.CONSTANT.WAITING){
             return;
         }
@@ -48,6 +51,11 @@ function PageNote(id,options={}){
 
     setLoaded()
     return pagenoteCore;
+}
+
+
+declare global {
+    interface Window { PageNote: any; }
 }
 
 window.PageNote = PageNote;

@@ -36,6 +36,7 @@ interface PlainData {
     snapshots: string[],
     setting: any,
     steps: Step[],
+    note?: string,
 
     // TODO 废弃 SDK 不处理
     title?: string,
@@ -162,6 +163,7 @@ class WebPageItem implements IWebPage{
 export type {
     PlainData,
     WebPage,
+    Step,
 }
 
 export {

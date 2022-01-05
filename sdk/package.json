@@ -27,8 +27,11 @@
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.12.7",
     "@babel/runtime": "^7.10.2",
+    "@types/blueimp-md5": "^2.18.0",
     "@types/html-webpack-plugin": "^3.2.5",
+    "@types/lodash": "^4.14.178",
     "@types/md5": "^2.3.1",
+    "@types/mustache": "^4.1.2",
     "@types/react": "^17.0.38",
     "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.7.0",
@@ -56,6 +59,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",
     "draggable": "^4.2.0",

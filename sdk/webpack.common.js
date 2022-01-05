@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const profile = require('./package');
 
 module.exports = {
-  entry: './src/pagenote.js',
+  entry: './src/pagenote.tsx',
   output: {
     path: path.resolve(__dirname, 'dist/'+profile.version),
     filename: 'pagenote.js',
