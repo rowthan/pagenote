@@ -4,6 +4,11 @@ interface IBrush {
     label: string;
     level: number;
 }
+interface FunctionColor {
+    eventid: string;
+    onclick: Function;
+    shortcut?: string;
+}
 interface IOption {
     debug: boolean;
     dura: number;
@@ -21,7 +26,7 @@ interface IOption {
     };
     showIconAnimation: boolean;
     onShare: Function;
-    functionColors: any[];
+    functionColors: FunctionColor[];
     sideBarActions: any[];
     categories: string[];
     showBarTimeout: number;

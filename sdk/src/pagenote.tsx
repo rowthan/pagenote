@@ -56,6 +56,9 @@ function PageNote(id:string,options:IOption){
 
 declare global {
     interface Window { PageNote: any; }
+    interface ProxyConstructor {
+        new <TSource extends object, TTarget extends object>(target: TSource, handler: ProxyHandler<TSource>): TTarget;
+    }
 }
 
 window.PageNote = PageNote;

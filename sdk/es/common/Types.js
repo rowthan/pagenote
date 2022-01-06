@@ -3,12 +3,16 @@ var AnnotationStatus;
 (function (AnnotationStatus) {
     AnnotationStatus[AnnotationStatus["fixed"] = 1] = "fixed";
     AnnotationStatus[AnnotationStatus["un_fixed"] = 0] = "un_fixed";
+    AnnotationStatus[AnnotationStatus["SHOW"] = 2] = "SHOW";
+    AnnotationStatus[AnnotationStatus["HIDE"] = 0] = "HIDE";
 })(AnnotationStatus || (AnnotationStatus = {}));
 var LightStatus;
 (function (LightStatus) {
     LightStatus[LightStatus["un_light"] = 0] = "un_light";
     LightStatus[LightStatus["half_light"] = 1] = "half_light";
     LightStatus[LightStatus["light"] = 2] = "light";
+    LightStatus[LightStatus["LIGHT"] = 2] = "LIGHT";
+    LightStatus[LightStatus["UN_LIGHT"] = 0] = "UN_LIGHT";
 })(LightStatus || (LightStatus = {}));
 var EMPTY_HASH = 'empty';
 var WebPageItem = /** @class */ (function () {
@@ -78,5 +82,5 @@ var WebPageItem = /** @class */ (function () {
     };
     return WebPageItem;
 }());
-export { WebPageItem };
+export { WebPageItem, LightStatus, AnnotationStatus };
 //# sourceMappingURL=Types.js.map

@@ -1,8 +1,9 @@
 import {highlightKeywordInElement, LightElement, removeElementHighlight, wrapImages} from "../utils/highlight";
 import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
-import {getPagenoteRoot, whats} from "../utils/index";
-import {AnnotationStatus, LightStatus} from "./const";
+import {getPagenoteRoot, whats} from "../utils";
+import {AnnotationStatus, LightStatus,} from '../common/Types'
+
 
 const options = {
 

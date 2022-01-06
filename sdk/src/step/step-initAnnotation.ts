@@ -1,8 +1,8 @@
 import renderAnnotationMenu from "../documents/annotationMenus";
 import {emptyChildren, keepLastIndex} from "../utils/document";
-import {AnnotationStatus, LightStatus} from "./const";
+import {AnnotationStatus,} from '../common/Types'
 import {wrapperAnnotationAttr} from "../utils/light";
-import {throttle, debounce, getPagenoteRoot} from "../utils/index";
+import {throttle} from "../utils";
 // @ts-ignore
 import Draggable from 'draggable';
 

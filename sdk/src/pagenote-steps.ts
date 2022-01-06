@@ -1,18 +1,16 @@
 // TODO step 继承 Steps
-import Step from "./pagenote-step";
+import IStep from "./pagenote-step";
 
 interface StepOption {
     saveDatas: Function
 }
 
-class Steps extends Array{
+class Steps extends Array<IStep>{
     option: StepOption
-    lastFocus: string
 
     constructor(option:StepOption) {
         super();
         this.option = option
-        this.lastFocus = ''
     }
 
     removeStep(lightId:string){
@@ -30,10 +28,20 @@ class Steps extends Array{
         this.option.saveDatas();
     }
 
-    add(item:Step) {
-        item.options.save = this.option.saveDatas
+    add(item:IStep) {
         item.init();
-        this.push(item);
+        item.options.save = this.save;
+        item.options.remove = this.removeStep;
+        item.options.getIndex = function (lightId:string) {
+            let index = -1;
+            for(let i=0; i<this.length; i++){
+                if(this[i].data.lightId===lightId){
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
     };
 }
 
@@ -64,7 +72,7 @@ class Steps extends Array{
 //         item.init();
 //         this.push(item);
 //     }else{
-//         console.error('非法类型',item,item.prototype,item.__proto__,Step.constructor);
+//         console.error('非法类型',item,item.prototype,item.__proto__,IStep.constructor);
 //     }
 // };
 

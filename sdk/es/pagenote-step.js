@@ -1,28 +1,37 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import md5 from "blueimp-md5";
 import { getScroll, writeTextToClipboard } from "./utils/document";
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
-import { AnnotationStatus, LightStatus, STORE_KEYS_VERSION_2_VALIDATE } from "./step/const";
 import initKeywordTags from "./step/step-initKeywordTags";
 import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
 import connectToKeywordTag from './step/step-connectToKeywordTag';
 import notification from "./utils/notification";
+import { AnnotationStatus, LightStatus, } from './common/Types';
 var editorModal = new modal();
-var Step = /** @class */ (function () {
-    function Step(info, options, callback) {
-        var _this = this;
+// interface InitSuccessCallback {
+//   ():
+// }
+var IStep = /** @class */ (function () {
+    function IStep(initData, options, callback) {
         this.options = options;
         this.listeners = {
             data: {},
             runtime: {},
         };
         // 初始化需要持久化存储的数据
-        var data = {
-            lightStatus: LightStatus.LIGHT,
-            annotationStatus: AnnotationStatus.SHOW,
-            lightId: md5(info.id + info.text),
-        };
+        var data = __assign(__assign({}, initData), { lightId: md5(initData.id + initData.text) });
         var that = this;
         this.data = new Proxy(data, {
             set: function (target, key, value) {
@@ -42,17 +51,16 @@ var Step = /** @class */ (function () {
                 return true;
             }
         });
-        STORE_KEYS_VERSION_2_VALIDATE.forEach(function (key) {
-            _this.data[key] = info[key];
-            if (key === 'lightStatus') {
-                _this.data[key] = info[key] === undefined ? (info['isActive'] ? LightStatus.LIGHT : LightStatus.UN_LIGHT) : info[key];
-            }
-            else if (key === 'annotationStatus') {
-                if (info[key] === undefined) {
-                    _this.data.annotationStatus = _this.data.lightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE;
-                }
-            }
-        });
+        // this.STORE_KEYS_VERSION_2_VALIDATE.forEach((key)=>{
+        //   this.data[key] = initData[key];
+        //   if(key==='lightStatus'){
+        //     this.data[key] = initData[key] === undefined ? (initData['isActive']?LightStatus.light:LightStatus.un_light) : initData[key];
+        //   } else if(key==='annotationStatus'){
+        //     if(initData[key]===undefined){
+        //       this.data.annotationStatus = this.data.lightStatus === LightStatus.light ? AnnotationStatus.SHOW : AnnotationStatus.un_fixed;
+        //     }
+        //   }
+        // });
         // 初始化运行时产生的数据，不需要持久化存储
         var runtime = {
             warn: '',
@@ -69,7 +77,7 @@ var Step = /** @class */ (function () {
         };
         var listenShortcut = function (e) {
             var key = e.key;
-            if (Step.lastFocus !== that.data.lightId) {
+            if (IStep.lastFocus !== that.data.lightId) {
                 return;
             }
             if (key === 'Escape') {
@@ -152,8 +160,7 @@ var Step = /** @class */ (function () {
                     typeof fun === 'function' && fun(target, key, value);
                 }
                 if (['lighting', 'isFocusTag', 'isFocusAnnotation', 'editing'].includes(key)) {
-                    // @ts-ignore
-                    that.steps.lastFocus = that.data.lightId;
+                    IStep.lastFocus = that.data.lightId;
                     if (isFocus) {
                         // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
                         document.addEventListener('keyup', listenShortcut, { capture: true });
@@ -166,32 +173,30 @@ var Step = /** @class */ (function () {
                 return true;
             }
         });
-        typeof callback === 'function' && callback(this);
-    }
-    Step.prototype.init = function () {
         this.initKeywordTags();
         this.initAnnotation();
-    };
-    Step.prototype.initKeywordTags = function () {
+        typeof callback === 'function' && callback(this);
+    }
+    IStep.prototype.initKeywordTags = function () {
         initKeywordTags.call(this);
     };
-    Step.prototype.initAnnotation = function () {
+    IStep.prototype.initAnnotation = function () {
         initAnnotation.call(this);
     };
-    Step.prototype.gotoView = function () {
+    IStep.prototype.gotoView = function () {
         stepGotoView.call(this);
     };
-    Step.prototype.lighting = function () {
+    IStep.prototype.lighting = function () {
         var _this = this;
         this.runtime.lighting = 'light';
         setTimeout(function () {
             _this.runtime.lighting = '';
         }, 2000);
     };
-    Step.prototype.connectToKeywordTag = function () {
+    IStep.prototype.connectToKeywordTag = function () {
         connectToKeywordTag.call(this);
     };
-    Step.prototype.changeStatus = function (cnt) {
+    IStep.prototype.changeStatus = function (cnt) {
         var finalStatus = LightStatus.UN_LIGHT;
         if (cnt !== 0) {
             finalStatus = this.data.lightStatus + cnt;
@@ -205,17 +210,16 @@ var Step = /** @class */ (function () {
         this.data.annotationStatus = finalStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE;
         this.data.lightStatus = finalStatus;
     };
-    Step.prototype.delete = function () {
+    IStep.prototype.delete = function () {
         this.runtime.relatedNode.forEach(function (element) {
             element.remove();
         });
         this.runtime.relatedAnnotationNode.remove();
-        // @ts-ignore
-        this.steps.removeStep(this.data.lightId);
+        this.options.remove(this.data.lightId);
         toggleLightMenu(false);
         editorModal.destroy();
     };
-    Step.prototype.copyToClipboard = function (copyAll, position) {
+    IStep.prototype.copyToClipboard = function (copyAll, position) {
         var _this = this;
         if (copyAll === void 0) { copyAll = false; }
         var value = copyAll ? (this.data.text + '\n' + this.data.tip) : this.data.text;
@@ -229,49 +233,16 @@ var Step = /** @class */ (function () {
             });
         });
     };
-    Step.prototype.addListener = function (fun, isRuntime, funId) {
+    IStep.prototype.addListener = function (fun, isRuntime, funId) {
         if (isRuntime === void 0) { isRuntime = false; }
         if (funId === void 0) { funId = 'default-change-fun'; }
         var runtimeKey = isRuntime ? 'runtime' : 'data';
         this.listeners[runtimeKey][funId] = fun;
     };
-    Step.prototype.getCurrentIndex = function () {
-        var _a, _b;
-        var index = -1;
-        // @ts-ignore
-        for (var i = 0; i < this.steps.length; i++) {
-            // @ts-ignore
-            if (((_b = (_a = this.steps[i]) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.lightId) === this.data.lightId) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    };
-    Step.prototype.openEditor = function (show) {
+    IStep.prototype.openEditor = function (show) {
         this.runtime.editing = show;
     };
-    Step.prototype.getNear = function (loop) {
-        if (loop === void 0) { loop = false; }
-        var current = this.getCurrentIndex();
-        if (current === -1) {
-            return [];
-        }
-        // @ts-ignore
-        var pre = this.steps[current - 1], next = this.steps[current + 1];
-        if (loop) {
-            if (current === 0) {
-                // @ts-ignore
-                pre = this.steps[this.steps.length - 1];
-                // @ts-ignore
-            }
-            else if (current === this.steps.length - 1) {
-                next = 0;
-            }
-        }
-        return [pre, next];
-    };
-    return Step;
+    return IStep;
 }());
-export default Step;
+export default IStep;
 //# sourceMappingURL=pagenote-step.js.map

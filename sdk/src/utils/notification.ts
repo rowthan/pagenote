@@ -36,3 +36,7 @@ export default function notification(showMessage: Message) {
         },duration);
     }
 }
+
+export type {
+    Message
+}

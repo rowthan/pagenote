@@ -1,8 +1,8 @@
 import renderAnnotationMenu from "../documents/annotationMenus";
 import { emptyChildren, keepLastIndex } from "../utils/document";
-import { AnnotationStatus } from "./const";
+import { AnnotationStatus, } from '../common/Types';
 import { wrapperAnnotationAttr } from "../utils/light";
-import { throttle } from "../utils/index";
+import { throttle } from "../utils";
 // @ts-ignore
 import Draggable from 'draggable';
 function initAnnotation() {

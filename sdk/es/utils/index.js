@@ -24,7 +24,7 @@ function getRootOffset() {
 var prepareSelectionTarget = function (enableMarkImg, positions) {
     var selection = document.getSelection();
     if (selection.rangeCount === 0) {
-        return;
+        return null;
     }
     // // pagenote 状态监测
     // const isWaiting = this.status === constant.WAITING && selectedText === this.target.text;
@@ -40,7 +40,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     }
     var noParentElement = !parentElement || !parentElement.tagName;
     if (noParentElement) {
-        return;
+        return null;
     }
     function checkInPagenoteElement(element) {
         if (element && element.tagName) {
@@ -58,7 +58,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
         }
     }
     if (checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode)) {
-        return;
+        return null;
     }
     // 是否可编辑区
     var canHighlight = true;
@@ -96,7 +96,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     }
     var selectedText = selection.toString().trim(); // 跨标签高亮
     if (!(selectedText || markImages.length)) {
-        return;
+        return null;
     }
     // TODO 双击情况下 ，before 计算会存在问题
     var before = range0.startContainer.textContent.substr(0, range0.startOffset);
@@ -116,7 +116,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     var selectionRects = selection.getRangeAt(0).getClientRects();
     var relativeRect = selectionRects[selectionRects.length - 1];
     if (!relativeRect) {
-        return;
+        return null;
     }
     // 鼠标起始位置
     var startPosition = positions[0];
@@ -157,7 +157,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
         suffix: after,
         text: selectedText,
         tip: '',
-        time: new Date().getTime(),
+        time: Date.now(),
         id: whatsEl.wid,
         isActive: false,
         bg: '',

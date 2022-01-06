@@ -1,30 +1,44 @@
 declare enum AnnotationStatus {
     fixed = 1,
-    un_fixed = 0
+    un_fixed = 0,
+    SHOW = 2,
+    HIDE = 0
 }
 declare enum LightStatus {
     un_light = 0,
     half_light = 1,
-    light = 2
+    light = 2,
+    LIGHT = 2,
+    UN_LIGHT = 0
 }
-interface Step {
-    bg: string;
-    id: string;
-    isActive: string;
-    offsetX: number;
-    offsetY: number;
-    parentW: number;
+declare type Step = {
     x: number;
     y: number;
-    time: string;
-    pre: string;
-    tip: string;
-    suffix: string;
-    text: string;
-    annotationStatus: AnnotationStatus;
+    id: string;
+    level?: number;
+    bg: string;
+    text?: string;
+    pre?: string;
+    suffix?: string;
+    tip?: string;
+    isActive: boolean;
+    offsetX?: number;
+    offsetY?: number;
+    parentW?: number;
+    lightId?: string;
+    images?: any[];
     lightStatus: LightStatus;
-}
-interface PlainData {
+    annotationStatus: AnnotationStatus;
+    lightBg?: string;
+    daskBg?: string;
+    isFocusTag?: boolean;
+    time?: number;
+};
+declare type Position = {
+    x: number;
+    y: number;
+};
+declare type PlainData = {
     url: string;
     images: string[];
     categories: string[];
@@ -38,7 +52,7 @@ interface PlainData {
     createAt?: number;
     description?: string;
     lastModified?: number;
-}
+};
 declare type WebPageIds = {
     key: string;
     url: string;
@@ -81,5 +95,5 @@ declare class WebPageItem implements IWebPage {
     isValid(): boolean;
     createDataHash(): string;
 }
-export type { PlainData, WebPage, Step, };
-export { WebPageItem };
+export type { PlainData, WebPage, Step, Position, };
+export { WebPageItem, LightStatus, AnnotationStatus };

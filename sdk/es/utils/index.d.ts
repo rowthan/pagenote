@@ -36,8 +36,8 @@ export function prepareSelectionTarget(enableMarkImg: any, positions: any): {
         src: any;
         alt: any;
     }[];
-    annotationStatus: AnnotationStatus;
-    lightStatus: LightStatus;
+    annotationStatus: any;
+    lightStatus: any;
 };
 export const isMobile: boolean;
 export const whats: any;
@@ -47,5 +47,3 @@ export function getRootOffset(): {
     top: number;
     scrollHeight: number;
 };
-import { AnnotationStatus } from "../step/const";
-import { LightStatus } from "../step/const";

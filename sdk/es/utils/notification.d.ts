@@ -10,4 +10,4 @@ interface Message {
     e?: any;
 }
 export default function notification(showMessage: Message): void;
-export {};
+export type { Message };

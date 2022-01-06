@@ -10,8 +10,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 import { highlightKeywordInElement, removeElementHighlight, wrapImages } from "../utils/highlight";
 import { wrapperLightAttr } from "../utils/light";
 import toggleLightMenu from "../light-menu";
-import { getPagenoteRoot, whats } from "../utils/index";
-import { AnnotationStatus, LightStatus } from "./const";
+import { getPagenoteRoot, whats } from "../utils";
+import { AnnotationStatus, LightStatus, } from '../common/Types';
 var options = {};
 var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (item) {

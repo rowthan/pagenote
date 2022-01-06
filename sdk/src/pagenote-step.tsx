@@ -2,20 +2,24 @@ import md5 from "blueimp-md5";
 import {getScroll, getViewPosition, keepLastIndex, writeTextToClipboard} from "./utils/document";
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
-import {AnnotationStatus, LightStatus, StepProps, STORE_KEYS_VERSION_2_VALIDATE} from "./step/const";
 import initKeywordTags from "./step/step-initKeywordTags";
 import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
 import connectToKeywordTag from './step/step-connectToKeywordTag';
 import notification from "./utils/notification";
-import Steps from "./pagenote-steps";
+import {Step,AnnotationStatus, LightStatus,} from './common/Types'
+import {pick} from "lodash";
 
 const editorModal = new modal();
 
 interface StepOptions{
   colors: string[],
   renderAnnotation: any,
+  remove: Function
   save: Function
+  getIndex: {
+    (id:string):number
+  }
 }
 
 type StepRuntime = {
@@ -32,17 +36,23 @@ type StepRuntime = {
   lighting: '' | 'light', // 是否需要高亮提醒
 }
 
-class Step{
+// interface InitSuccessCallback {
+//   ():
+// }
+
+class IStep {
+  static lastFocus: string
+
   options: StepOptions
   listeners:{
     data: Record<string, Function>,
     runtime: Record<string, Function>
   }
-  data:any
+  data: Step
   runtime: StepRuntime
-  static lastFocus: string
 
-  constructor(info: StepProps,options: StepOptions,callback?:Function) {
+
+  constructor(initData: Step,options: StepOptions,callback:(step:IStep)=>void) {
     this.options = options;
     this.listeners = {
       data: {},
@@ -51,9 +61,8 @@ class Step{
 
     // 初始化需要持久化存储的数据
     const data = {
-      lightStatus: LightStatus.LIGHT,
-      annotationStatus: AnnotationStatus.SHOW,
-      lightId : md5(info.id+info.text),
+      ...initData,
+      lightId : md5(initData.id+initData.text),
     };
     const that = this;
     this.data = new Proxy(data, {
@@ -73,16 +82,16 @@ class Step{
         return true;
       }
     });
-    STORE_KEYS_VERSION_2_VALIDATE.forEach((key: string)=>{
-      this.data[key] = info[key];
-      if(key==='lightStatus'){
-        this.data[key] = info[key] === undefined ? (info['isActive']?LightStatus.LIGHT:LightStatus.UN_LIGHT) : info[key];
-      } else if(key==='annotationStatus'){
-        if(info[key]===undefined){
-          this.data.annotationStatus = this.data.lightStatus === LightStatus.LIGHT ? AnnotationStatus.SHOW : AnnotationStatus.HIDE;
-        }
-      }
-    });
+    // this.STORE_KEYS_VERSION_2_VALIDATE.forEach((key)=>{
+    //   this.data[key] = initData[key];
+    //   if(key==='lightStatus'){
+    //     this.data[key] = initData[key] === undefined ? (initData['isActive']?LightStatus.light:LightStatus.un_light) : initData[key];
+    //   } else if(key==='annotationStatus'){
+    //     if(initData[key]===undefined){
+    //       this.data.annotationStatus = this.data.lightStatus === LightStatus.light ? AnnotationStatus.SHOW : AnnotationStatus.un_fixed;
+    //     }
+    //   }
+    // });
 
     // 初始化运行时产生的数据，不需要持久化存储
     const runtime: StepRuntime ={
@@ -100,7 +109,7 @@ class Step{
     }
     const listenShortcut = function (e: { key: any; stopPropagation: () => void; }) {
       const key = e.key;
-      if(Step.lastFocus !== that.data.lightId){
+      if(IStep.lastFocus !== that.data.lightId){
         return;
       }
       if(key==='Escape'){
@@ -184,8 +193,7 @@ class Step{
         }
 
         if(['lighting','isFocusTag','isFocusAnnotation','editing'].includes(key)){
-          // @ts-ignore
-          that.steps.lastFocus = that.data.lightId;
+          IStep.lastFocus = that.data.lightId;
           if(isFocus){
             // console.log('add listener',target.isFocusAnnotation,target.isFocusTag)
             document.addEventListener('keyup',listenShortcut,{capture:true})
@@ -199,13 +207,11 @@ class Step{
       }
     });
 
+    this.initKeywordTags();
+    this.initAnnotation();
     typeof callback === 'function' && callback(this)
   }
 
-  init(){
-    this.initKeywordTags();
-    this.initAnnotation();
-  }
 
   initKeywordTags(){
     initKeywordTags.call(this)
@@ -251,8 +257,7 @@ class Step{
       element.remove();
     });
     this.runtime.relatedAnnotationNode.remove();
-    // @ts-ignore
-    this.steps.removeStep(this.data.lightId);
+    this.options.remove(this.data.lightId);
     toggleLightMenu(false);
     editorModal.destroy();
   }
@@ -275,45 +280,11 @@ class Step{
     this.listeners[runtimeKey][funId] = fun;
   }
 
-  getCurrentIndex() {
-    let index = -1;
-    // @ts-ignore
-    for(let i=0; i<this.steps.length; i++){
-      // @ts-ignore
-      if(this.steps[i]?.data?.lightId===this.data.lightId){
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
   openEditor(show:boolean){
     this.runtime.editing = show;
-  }
-
-  getNear(loop=false) {
-    const current = this.getCurrentIndex();
-    if(current===-1){
-      return []
-    }
-    // @ts-ignore
-    let pre = this.steps[current - 1],next = this.steps[current + 1];
-
-    if(loop){
-      if(current===0){
-        // @ts-ignore
-        pre = this.steps[this.steps.length-1]
-        // @ts-ignore
-      } else if(current===this.steps.length-1){
-        next = 0
-      }
-    }
-
-    return [pre,next];
   }
 }
 
 
 
-export default Step;
+export default IStep;

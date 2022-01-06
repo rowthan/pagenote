@@ -1,9 +1,13 @@
 /// <reference types="node" />
-import { StepProps } from "./step/const";
+import { Step } from './common/Types';
 interface StepOptions {
     colors: string[];
     renderAnnotation: any;
+    remove: Function;
     save: Function;
+    getIndex: {
+        (id: string): number;
+    };
 }
 declare type StepRuntime = {
     warn: string;
@@ -21,17 +25,16 @@ declare type StepRuntime = {
     editing: boolean;
     lighting: '' | 'light';
 };
-declare class Step {
+declare class IStep {
+    static lastFocus: string;
     options: StepOptions;
     listeners: {
         data: Record<string, Function>;
         runtime: Record<string, Function>;
     };
-    data: any;
+    data: Step;
     runtime: StepRuntime;
-    static lastFocus: string;
-    constructor(info: StepProps, options: StepOptions, callback?: Function);
-    init(): void;
+    constructor(initData: Step, options: StepOptions, callback: (step: IStep) => void);
     initKeywordTags(): void;
     initAnnotation(): void;
     gotoView(): void;
@@ -44,8 +47,6 @@ declare class Step {
         y: string;
     }): void;
     addListener(fun: Function, isRuntime?: boolean, funId?: string): void;
-    getCurrentIndex(): number;
     openEditor(show: boolean): void;
-    getNear(loop?: boolean): any[];
 }
-export default Step;
+export default IStep;
