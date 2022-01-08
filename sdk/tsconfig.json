@@ -13,7 +13,10 @@
         "declaration": true
     },
     "include": [
-        "./src/common/**/*.ts"
+        "./src/**/*.ts"
     ],
-    "exclude": ["node_modules", "**/*.spec.ts"]
+    "exclude": [
+        "node_modules/**/*.ts",
+        "**/*.spec.ts"
+    ]
 }

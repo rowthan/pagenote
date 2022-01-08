@@ -7,7 +7,7 @@ interface WrappedImage extends HTMLImageElement {
 /**节点字典*/
 interface Dict {
     nodes:{
-        node: Node,
+        node: Text,
         start: number,
         end: number
     }[],
@@ -17,7 +17,9 @@ interface Dict {
 /** 高亮一个元素内的关键词，return {match:2,light:1,lights:[elements]} */
 interface LightElement extends HTMLElement{
     dataset:{
-        highlight: '1' | '0'
+        highlight?: string
+        lightindex?: string
+        type?: 'img' | undefined
     }
 }
 
@@ -47,7 +49,7 @@ interface HighlightResult {
 
 
 // 按字符串逐字高亮
-function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:WarpTagFun,filter:ElementFilter, eachCb, endCb) {
+function wrapMatchesAcrossElements(dict:Dict,regex:RegExp, ignoreGroups:number, warpTagFun:WarpTagFun,filter:ElementFilter, eachCb:(node:HTMLElement)=>void, endCb:()=>void) {
     const matchIdxDef = ignoreGroups+1;
 
     (function checkMatch(dict,matchIdx){
@@ -63,7 +65,7 @@ function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:War
             const end = start + tempMatch[matchIdx].length;
 
             // 对待高亮关键词字符串，进行包裹处理 标签处理
-            wrapRangeInMappedTextNode(dict, start, end, node => {
+            wrapRangeInMappedTextNode(dict, start, end, (node: Node) => {
                 return filter(tempMatch[matchIdx], node);
             }, (node, lastIndex) => {
                 regex.lastIndex = lastIndex; // 重置上次匹配结果
@@ -77,7 +79,7 @@ function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:War
     endCb();
 
     // 循环处理每一个文本节点
-    function wrapRangeInMappedTextNode(dict, start, end, filter, eachCb) {
+    function wrapRangeInMappedTextNode(dict:Dict, start:number, end:number, filter:(node:Node)=>boolean, eachCb:(node:HTMLElement,start:number)=>void) {
         // 给为for break 方式跳出
         dict.nodes.every((n, i) => {
             // 下一个节点
@@ -105,7 +107,7 @@ function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:War
                     }
                 });
                 end -= e;
-                eachCb(n.node.previousSibling, n.start);
+                eachCb(<HTMLElement>n.node.previousSibling, n.start);
                 if (end > n.end) {
                     start = n.end;
                 } else {
@@ -117,7 +119,7 @@ function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:War
     }
 
     // 文本节点包裹处理
-    function wrapRangeInTextNode(node,start,end) {
+    function wrapRangeInTextNode(node:Text,start:number,end:number) {
         const startNode = node.splitText(start)
         const rest = startNode.splitText(end - start);
         const replaced = warpTagFun(startNode.textContent);
@@ -129,10 +131,10 @@ function wrapMatchesAcrossElements(dict:Dict,regex, ignoreGroups, warpTagFun:War
 /**
  * 包裹 img 标签
  * */
-function wrapImages(htmlNode,imageSrc):WrappedImage{
-    const target = htmlNode.querySelector(`img[src="${imageSrc}"]`);
+function wrapImages(htmlNode:HTMLElement,imageSrc:string):WrappedImage{
+    const target = <HTMLImageElement>htmlNode.querySelector(`img[src="${imageSrc}"]`);
     if(target){
-        const warppedImg = document.createElement('light-img') as WrappedImage;
+        const warppedImg: WrappedImage = document.createElement('light-img') as WrappedImage;
         warppedImg.appendChild(target.cloneNode());
         target.parentElement.replaceChild(warppedImg,target);
         warppedImg._originNode = target
@@ -145,17 +147,17 @@ function wrapImages(htmlNode,imageSrc):WrappedImage{
 function getTextNodes(element:HTMLElement):Dict {
     let nodes = [];
     const filter = {
-        acceptNode: function (node) {
+        acceptNode: function (node:Node) {
             const condition = node.nodeType === 3;
             return condition ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
         }
     };
     const iter = document.createNodeIterator(element, NodeFilter.SHOW_TEXT, filter);
-    let tempNote;
+    let tempNote:Node;
     let val = '';
     while (tempNote = iter.nextNode()) {
         nodes.push({
-            node: tempNote,
+            node: tempNote as Text,
             start: val.length,
             end: (val += tempNote.textContent).length
         })
@@ -168,7 +170,7 @@ function getTextNodes(element:HTMLElement):Dict {
 }
 
 /**转义正则关键词*/
-function formatKeyword(keyword){
+function formatKeyword(keyword:string){
     if(!keyword){
         return "\\s*"
     }
@@ -177,14 +179,14 @@ function formatKeyword(keyword){
 
 
 /**在HTML element中高亮关键词*/
-const highlightKeywordInElement = function (element:HTMLElement,keywords:string,pre='',next='',deep=20,warpTagFun:WarpTagFun=defaultWrapperFun,blackNodes=[]):HighlightResult{
-    const result = {
+const highlightKeywordInElement = function (element:HTMLElement,keywords:string,pre='',next='',deep=20,warpTagFun:WarpTagFun=defaultWrapperFun,blackNodes:any[]=[]):HighlightResult{
+    const result:HighlightResult = {
         match: 0,
         lightsElement: [],
     }
 
     const dict = getTextNodes(element);
-    const handler = (kw,pre='',suffix='') => {
+    const handler = (kw:string,pre='',suffix='') => {
         const formatKw = formatKeyword(kw);
         const formatPre = formatKeyword(pre.trim());
         const formatSuffix = formatKeyword(suffix.trim());
@@ -207,7 +209,7 @@ const highlightKeywordInElement = function (element:HTMLElement,keywords:string,
         }, element => {
             result.match ++;
             result.lightsElement.push(element);
-        }, (res) => {
+        }, () => {
         });
     };
     handler(keywords,pre,next);
@@ -217,28 +219,37 @@ const highlightKeywordInElement = function (element:HTMLElement,keywords:string,
     return result;
 };
 
+declare const ele : HTMLElement | WrappedImage;
+function isWrappedImg(ele: HTMLElement|WrappedImage): ele is WrappedImage{
+    return '_originNode' in ele;
+}
+
 /**移除高亮、还原HTML节点*/
-const removeElementHighlight = function (query){
-    let element;
+const removeElementHighlight = function (query:string|WrappedImage){
+    let element:HTMLElement;
     if(typeof query==='string'){
         element = document.querySelector(query);
     }else if(query instanceof HTMLElement){
         element = query;
     }
+
     if(!element){
         return
     }
 
-    if(element._originNode){
+    if(isWrappedImg(element)){
         element.parentNode.replaceChild(element._originNode,element);
     }else {
-        const result = [].find.call(element.childNodes,((node)=>{
+        const result = [].find.call(element.childNodes,((node: Node)=>{
             return node.nodeType === 3 || node.nodeName==='#text'
         }));
         element.outerHTML = result?result.textContent : element.textContent;
     }
 }
 
+export type {
+    LightElement
+}
 export {
     wrapImages,
     highlightKeywordInElement,
