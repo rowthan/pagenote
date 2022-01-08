@@ -50,6 +50,25 @@ function appendScriptsToBody(scripts:string[]):void {
     });
 }
 
+function onVisibilityChange(callback:Function) {
+    // 设置隐藏属性和改变可见属性的事件的名称
+    let visibilityChange;
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+        visibilityChange = "visibilitychange";
+    } else { // @ts-ignore
+        if (typeof document['msHidden'] !== "undefined") {
+                visibilityChange = "msvisibilitychange";
+        } else { // @ts-ignore
+            if (typeof document['webkitHidden'] !== "undefined") {
+                visibilityChange = "webkitvisibilitychange";
+            }
+        }
+    }
+    document.addEventListener(visibilityChange,function(){
+        callback(document.hidden)
+    });
+}
+
 export {
     getWebIcon,
     getWebTitle,
@@ -57,4 +76,5 @@ export {
     contentToFile,
     loadScript,
     appendScriptsToBody,
+    onVisibilityChange,
 }

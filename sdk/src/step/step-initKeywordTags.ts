@@ -1,4 +1,4 @@
-import {highlightKeywordInElement, removeElementHighlight, wrapImages} from "../utils/highlight";
+import {highlightKeywordInElement, LightElement, removeElementHighlight, wrapImages} from "../utils/highlight";
 import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {getPagenoteRoot, whats} from "../utils/index";
@@ -105,22 +105,14 @@ function initKeywordTags(){
 
         // 查找文字、高亮元素
         let index = 0;
-        const result = highlightKeywordInElement(target,text||'',pre||'',suffix||'',null,function(text: string, children: { parentNode: { tagName: string; }; cloneNode: () => any; }){
-            const lightElement = document.createElement('light');
+        const result = highlightKeywordInElement(target,text||'',pre||'',suffix||'',null,function(text){
+            const lightElement: LightElement = document.createElement('light');
             lightElement.dataset.highlight = lightId;
             lightElement.dataset.lightindex = String(index);
             index++
 
             if(text){
                 lightElement.textContent = text;
-            }
-            if(children){
-                // 已高亮过不再高亮
-                if(children && children.parentNode.tagName==='LIGHT'){
-                    return children;
-                }
-                lightElement.dataset.type='img'
-                lightElement.appendChild(children.cloneNode());
             }
             return lightElement;
         },[getPagenoteRoot()]);

@@ -5,6 +5,7 @@ import ActionBars from "./action/ActionBars";
 import {debounce, getPagenoteRoot} from './utils';
 import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'
+import {setLoaded} from "./common/pagenote-utils/share-pagenote";
 
 function PageNote(id,options={}){
     const pagenoteCore = new PagenoteCore(id,options);
@@ -45,6 +46,7 @@ function PageNote(id,options={}){
         rootElement.appendChild(stepBar);
     }
 
+    setLoaded()
     return pagenoteCore;
 }
 

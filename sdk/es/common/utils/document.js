@@ -38,5 +38,32 @@ function loadScript(src, globalKey, callback) {
         script["onload"] = callback || function () { };
     }
 }
-export { getWebIcon, getWebTitle, getWebDescription, contentToFile, loadScript, };
+function appendScriptsToBody(scripts) {
+    scripts.forEach(function (scriptSrc) {
+        var script = document.createElement('script');
+        script.src = scriptSrc;
+        document.body.appendChild(script);
+    });
+}
+function onVisibilityChange(callback) {
+    // 设置隐藏属性和改变可见属性的事件的名称
+    var visibilityChange;
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+        visibilityChange = "visibilitychange";
+    }
+    else { // @ts-ignore
+        if (typeof document['msHidden'] !== "undefined") {
+            visibilityChange = "msvisibilitychange";
+        }
+        else { // @ts-ignore
+            if (typeof document['webkitHidden'] !== "undefined") {
+                visibilityChange = "webkitvisibilitychange";
+            }
+        }
+    }
+    document.addEventListener(visibilityChange, function () {
+        callback(document.hidden);
+    });
+}
+export { getWebIcon, getWebTitle, getWebDescription, contentToFile, loadScript, appendScriptsToBody, onVisibilityChange, };
 //# sourceMappingURL=document.js.map
