@@ -1,5 +1,5 @@
 import whatsPure from "whats-element/pure";
-import {AnnotationStatus, LightStatus} from "../step/const";
+import {AnnotationStatus, LightStatus} from "../common/Types";
 import {getScroll} from "./document";
 import console from "./console";
 const whats = new whatsPure();

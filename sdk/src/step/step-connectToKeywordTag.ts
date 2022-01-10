@@ -1,4 +1,4 @@
-import {getRootOffset, whats} from "../utils/index";
+import {getRootOffset, whats} from "../utils";
 import {gotoPosition} from "../utils/document";
 
 const connectToKeywordTag = function (ignoreScroll=false) {

@@ -144,6 +144,9 @@ window.initPagenote = function () {
         },
         debug: true,
         enableMarkImg: true,
+        onDataChanged: function (data) {
+            localStorage.setItem('page_demo',JSON.stringify(data))
+        }
     });
 
 
@@ -152,14 +155,5 @@ window.initPagenote = function () {
     const data = localStorage.getItem('page_demo');
     const initData = data ? JSON.parse(data) : null;
     pagenote.init(initData); // 初始化开始工作
-
-    pagenote.addListener(function (status) {
-        if(status===pagenote.CONSTANT.SYNCED){
-            // 数据变化回调，将数据发送到服务器端，在这里处理
-            console.log('数据发生的变化',pagenote.plainData)
-            localStorage.setItem('page_demo',JSON.stringify(pagenote.plainData))
-        }
-    })
-
 }
 

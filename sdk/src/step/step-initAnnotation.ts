@@ -5,13 +5,10 @@ import {wrapperAnnotationAttr} from "../utils/light";
 import {throttle} from "../utils";
 // @ts-ignore
 import Draggable from 'draggable';
+import IStep from "../pagenote-step";
 
 function initAnnotation() {
-    const step = this;
-    const renderMethod = step.options.renderAnnotation;
-    if(renderMethod && typeof renderMethod!=="function"){
-        return;
-    }
+    const step: IStep = this;
 
     const {bg,x,y,tip,lightId,text} = step.data;
     const element = document.createElement('pagenote-annotation');// 根容器
@@ -25,12 +22,11 @@ function initAnnotation() {
     const actionArray = document.createElement('pagenote-annotation-menus')
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
 
-    const appends = renderMethod(step.data,step);
 
     renderAnnotationMenu(actionArray,{
         light:step,
         colors: step.options.colors,
-        moreActions: appends[1] || [],
+        moreActions: [],
     })
 
     header.appendChild(actionArray);
@@ -72,10 +68,6 @@ function initAnnotation() {
 
     function renderContent() {
         emptyChildren(customContent);
-        const appends = renderMethod(step.data,step);
-        if (appends[0]){
-            customContent.appendChild(appends[0]);
-        }
     }
 
     renderContent();
@@ -111,7 +103,7 @@ function initAnnotation() {
     // @ts-ignore
     const drag = new Draggable (element, options).set(x,y);
 
-    const container = document.querySelector('pagenote-annotations');
+    const container = step.runtime.relatedNode[0];
     container.appendChild(element);
 
     element.remove = function () {

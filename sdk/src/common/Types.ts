@@ -24,7 +24,7 @@ type Step = {
     text?: string, // 标记的文本内容
     pre? : string, // 标记的文本内容 上文信息
     suffix?: string, // 标记的文本内容 下文信息
-    tip?: string, // 标记的笔记（用户输入）
+    tip: string, // 标记的笔记（用户输入）
     isActive: boolean, // 是否为激活状态
     offsetX?: number, // 批注与高亮元素的相对偏移量
     offsetY?: number, // 批注与高亮元素的相对偏移量

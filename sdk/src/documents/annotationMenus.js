@@ -1,4 +1,5 @@
 import {Fragment, h, render} from 'preact';
+import root from 'react-shadow';
 import Tip from "../component/tip/Tip";
 import i18n from "../locale/i18n";
 import MoreIcon from '../assets/images/more.svg'
@@ -11,7 +12,7 @@ import './annotationMenu.scss'
 import {useState} from "preact/hooks";
 import {writeTextToClipboard} from "../utils/document";
 import Colors from "../component/Colors";
-import {AnnotationStatus, LightStatus} from "../step/const";
+import {AnnotationStatus, LightStatus} from "../common/Types";
 
 
 function LightActionBar({step,colors}) {
@@ -99,25 +100,27 @@ export default function renderAnnotationMenu(rootElement,setting) {
     }
 
     render(
-        <pagenote-menu>
-            <LightActionBar step={light} colors={colors}/>
-            {
-                moreActions.length>0 &&
-                <Popover message={
-                    <pagenote-block>{
-                        moreActions.map((item)=>(
-                            <pagenote-block
-                                data-role="more-action-item"
-                                onClick={generateOnclick(item.onclick)}>{item.text}</pagenote-block>
-                        ))
-                    }</pagenote-block>
-                } inner={true} placement='rightBottom' trigger='hover'
-                >
-                    <pagenote-icon inner={true} aria-controls="more-icon">
-                        <MoreIcon fill='#999'/>
-                    </pagenote-icon>
-                </Popover>
-            }
-        </pagenote-menu>
+        <root.div>
+            <pagenote-menu>
+                <LightActionBar step={light} colors={colors}/>
+                {
+                    moreActions.length>0 &&
+                    <Popover message={
+                        <pagenote-block>{
+                            moreActions.map((item)=>(
+                                <pagenote-block
+                                    data-role="more-action-item"
+                                    onClick={generateOnclick(item.onclick)}>{item.text}</pagenote-block>
+                            ))
+                        }</pagenote-block>
+                    } inner={true} placement='rightBottom' trigger='hover'
+                    >
+                        <pagenote-icon inner={true} aria-controls="more-icon">
+                            <MoreIcon fill='#999'/>
+                        </pagenote-icon>
+                    </Popover>
+                }
+            </pagenote-menu>
+        </root.div>
         ,rootElement)
 }

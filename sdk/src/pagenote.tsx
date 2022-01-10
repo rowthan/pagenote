@@ -20,17 +20,14 @@ function PageNote(id:string,options:IOption){
     toggleLightMenu(false,null,null,colors);
 
     // side-bar
-    const sidebar = document.createElement('pagenote-bar');
-    sidebar.dataset.pagenote='sidebar';
-    rootElement.appendChild(sidebar);
-    render(<AsideBar pagenote={pagenoteCore} /> , sidebar);
+    // const sidebar = document.createElement('pagenote-bar');
+    // sidebar.dataset.pagenote='sidebar';
+    // rootElement.appendChild(sidebar);
+    // render(<AsideBar pagenote={pagenoteCore} /> , sidebar);
 
     // action-bar
     let actionBar: HTMLElement = null;
     pagenoteCore.addListener(debounce(function (status: any, before: any) {
-        if(status===before && status!==pagenoteCore.CONSTANT.WAITING){
-            return;
-        }
         const showButton = (pagenoteCore.target && (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT));
         if(showButton) {
             actionBar = actionBar || document.createElement('pagenote-action');

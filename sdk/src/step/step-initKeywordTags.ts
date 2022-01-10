@@ -3,6 +3,7 @@ import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {getPagenoteRoot, whats} from "../utils";
 import {AnnotationStatus, LightStatus,} from '../common/Types'
+import IStep from "../pagenote-step";
 
 
 const options = {
@@ -19,7 +20,7 @@ const io = new IntersectionObserver(function (entries) {
 }, options)
 
 function initKeywordTags(){
-    const step = this;
+    const step:IStep = this;
 
     step.addListener(function (target:any,key:string,value:any) {
         if(key==='relatedNode'){
@@ -53,14 +54,14 @@ function initKeywordTags(){
 
                 lightElement.ondblclick = function(e:Event){
                     e.stopPropagation();
-                    step.openEditor();
+                    step.openEditor(true);
                 }
 
                 lightElement.onmouseenter = ()=> {
                     clearTimeout(step.runtime.focusTimer);
                     // 如果没有标记内容，则自动贴紧
                     if(!step.data.tip){
-                        step.connectToKeywordTag(true);
+                        step.connectToKeywordTag();
                     }
                     // 鼠标经过后0.5s标记为 isFocusTag
                     step.runtime.focusTimer = setTimeout(()=>{

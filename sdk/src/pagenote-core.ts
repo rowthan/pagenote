@@ -19,8 +19,10 @@ type RuntimePlainData = Omit<PlainData,'steps'> & {
     steps: IStep[]
 }
 
+const DEBOUNCE_TIME = 20;
+
 class PagenoteCore {
-    static readonly version="5.3.11"
+    static readonly version="6.0.0.alpha"
     readonly CONSTANT = {
         ID:"pagenote",
         UN_INIT: -1,
@@ -53,18 +55,19 @@ class PagenoteCore {
         SHARE_ERROR: 'e',
         SHARE_SUCCESS: 's',
     }
-    options: IOption
-    id: string;
-    status: number;
-    plainData: RuntimePlainData
-    target: Step
+    options: IOption= null
+    id: string='';
+    status: number = null;
+    plainData: RuntimePlainData = {categories: [], images: [], setting: undefined, snapshots: [], steps: [], url: ""}
+    target: Step = null
     _runtime:{
-        startPosition: Position,
-        lastPosition: Position
-        lastEvent: Event
-        lastKeydownTime: number
-    }
-    _listeners:Function[]
+        startPosition?: Position,
+        lastPosition?: Position
+        lastEvent?: Event
+        lastKeydownTime?: number
+        isPressing?: boolean
+    } = {}
+    _listeners:Function[] = []
 
     constructor(id:string, options:IOption) {
         console.option.showLog = options.debug;
@@ -72,14 +75,10 @@ class PagenoteCore {
         this.options =  merge(getDefaultOption(),options) as IOption;
         this.status = this.CONSTANT.UN_INIT;
 
-        const colors = this.options.brushes.map((brush: IBrush)=>{
+        const colors = this.options.brushes.filter(function (item) {
+            return item && item.bg
+        }).map((brush: IBrush)=>{
             return brush.bg;
-        })
-
-        this.options.brushes.forEach(function (brush) {
-            if(brush.shortcut){
-
-            }
         })
     }
 
@@ -111,18 +110,27 @@ class PagenoteCore {
         if(check!==true){
             return
         }
-        const newStep = new IStep(info,{
+
+        new IStep(info,{
             colors: [],
-            getIndex: this.getStepIndex,
-            remove: this.removeStep,
-            renderAnnotation: undefined,
-            save: this.save
+            getIndex: this.getStepIndex.bind(this),
+            remove: this.removeStep.bind(this),
+            triggerChanged:  ()=> {
+                const data:PlainData = {
+                    ...this.plainData,
+                    steps: this.plainData.steps.map((item)=>{
+                        return item.toJSON()
+                    })
+                }
+                this.options.onDataChanged(data)
+            }
         }, (step)=> {
             step.runtime.isFocusTag = true;
             setTimeout(function () {
                 step.runtime.isFocusTag = false;
-            },2000)
-            this.plainData.steps.push(newStep)
+            },1000)
+
+            this.plainData.steps.push(step)
 
             this.plainData.steps = this.plainData.steps.sort((a,b)=>{
                 const aPos = a.runtime.relatedNodePosition;
@@ -133,18 +141,23 @@ class PagenoteCore {
 
             window.getSelection().removeAllRanges();
             this.target = null;
-            callback && callback(newStep)
+            callback && callback(step)
         });
     }
 
     // start
     addKeyDownListener(){
         const downEvent = isMoble?'touchstart' :'mousedown';
-        const onDown = debounce((e)=>{
+        const onDown =  (e:MouseEvent)=>{
+            console.log('down')
+            this._runtime.isPressing = true;
             this._runtime.lastEvent = e;
-            this._runtime.startPosition = e
+            this._runtime.startPosition = {
+                x: e.x,
+                y: e.y
+            }
             this._runtime.lastKeydownTime = Date.now()
-        },10)
+        }
         document.addEventListener(downEvent,onDown,{capture:true})
     }
 
@@ -152,33 +165,33 @@ class PagenoteCore {
     addMoveListener(){
         const downEvent = isMoble?'touchmove' :'mousemove';
         const onMouseMove = debounce((e)=> {
-            this._runtime.lastPosition = e;
-        },60)
+            if(this._runtime.isPressing){
+                console.log('move')
+                this._runtime.lastPosition = e;
+            }
+        },DEBOUNCE_TIME)
         document.addEventListener(downEvent, onMouseMove,{capture:true})
     }
 
     // select
     addSelectionListener(){
-        let lastActionTime = 0;
         const selectionChange = throttle(()=>{
-            lastActionTime = new Date().getTime();
-            this.target = prepareSelectionTarget(this.options.enableMarkImg, [this._runtime.startPosition,this._runtime.lastPosition])
-            if(this.target===null){
-                this.hideActionBar();
-            }else{
-                this.showActionBar();
-            }
-        },200)
+            console.log('selection change')
+            this.computeTarget()
+        },DEBOUNCE_TIME)
 
         document.addEventListener('selectionchange',selectionChange,{capture:true});
     }
 
     // end
     addKeyUpListener(){
-        const downEvent = isMoble?'touchstart' :'mousedown';
+        const downEvent = isMoble?'touchend' :'mouseup';
         const that = this;
         const onUp = function (e:Event) {
+            console.log('up')
             that._runtime.lastEvent = e;
+            that._runtime.isPressing = false;
+            that.computeTarget()
         }
         document.addEventListener(downEvent,onUp,{capture:true})
     }
@@ -226,12 +239,32 @@ class PagenoteCore {
         this._listeners.push(fun)
     }
 
+    computeTarget(){
+        if(this._runtime.isPressing===true){
+            return
+        }
+        this.target = prepareSelectionTarget(this.options.enableMarkImg, [this._runtime.startPosition,this._runtime.lastPosition])
+        if(this.target===null){
+            this.hideActionBar();
+        }else{
+            this.showActionBar();
+        }
+    }
+
     showActionBar () {
+        const before = this.status;
         this.status = this.CONSTANT.WAITING;
+        this._listeners.forEach( (fn)=> {
+            fn(this.status,before)
+        })
     }
 
     hideActionBar() {
+        const before = this.status;
         this.status = this.CONSTANT.PAUSE
+        this._listeners.forEach( (fn)=> {
+            fn(this.status,before)
+        })
     }
 
     getStepIndex(lightId:string):number{
@@ -255,11 +288,6 @@ class PagenoteCore {
                 break;
             }
         }
-        this.save();
-    }
-
-    save(){
-
     }
 
     notification(message: Message){

@@ -36,6 +36,7 @@ interface IOption {
     keyupTimeout: number
     autoTag: boolean
     renderAnnotation: Function
+    onDataChanged?: Function
 }
 
 export type {

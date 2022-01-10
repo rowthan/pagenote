@@ -14,9 +14,9 @@ const editorModal = new modal();
 
 interface StepOptions{
   colors: string[],
-  renderAnnotation: any,
+  // renderAnnotation: any,
   remove: Function
-  save: Function
+  triggerChanged: Function
   getIndex: {
     (id:string):number
   }
@@ -33,7 +33,7 @@ type StepRuntime = {
   focusTimer: NodeJS.Timer,
   annotationDrag: any,
   editing: boolean,
-  lighting: '' | 'light', // 是否需要高亮提醒
+  lighting: '' | 'light' | 'annotation', // 是否需要高亮提醒
 }
 
 // interface InitSuccessCallback {
@@ -68,30 +68,20 @@ class IStep {
     this.data = new Proxy(data, {
       set(target:Record<string, any>,key:string,value){
         if(target[key]===value){
-          return false;
+          return true;
         }
         Reflect.set(target, key, value);
         for(let i in that.listeners.data){
           const fun = that.listeners.data[i];
           typeof fun === 'function'  && fun(target,key,value);
         }
-        const saveFun = that?.options?.save;
+        const saveFun = that?.options?.triggerChanged;
         if(saveFun){
           saveFun(data);
         }
         return true;
       }
     });
-    // this.STORE_KEYS_VERSION_2_VALIDATE.forEach((key)=>{
-    //   this.data[key] = initData[key];
-    //   if(key==='lightStatus'){
-    //     this.data[key] = initData[key] === undefined ? (initData['isActive']?LightStatus.light:LightStatus.un_light) : initData[key];
-    //   } else if(key==='annotationStatus'){
-    //     if(initData[key]===undefined){
-    //       this.data.annotationStatus = this.data.lightStatus === LightStatus.light ? AnnotationStatus.SHOW : AnnotationStatus.un_fixed;
-    //     }
-    //   }
-    // });
 
     // 初始化运行时产生的数据，不需要持久化存储
     const runtime: StepRuntime ={
@@ -182,7 +172,7 @@ class IStep {
       set(target:StepRuntime,key:keyof StepRuntime,value:any){
         // TODO 数组无法监听到 relatedNode
         if(target[key]===value){
-          return false;
+          return true;
         }
         Reflect.set(target, key, value);
         const isFocus = target.isFocusTag || target.isFocusAnnotation || target.editing;
@@ -282,6 +272,10 @@ class IStep {
 
   openEditor(show:boolean){
     this.runtime.editing = show;
+  }
+
+  toJSON(): Step{
+    return JSON.parse(JSON.stringify(this.data));
   }
 }
 

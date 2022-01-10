@@ -72,6 +72,7 @@
     "preact": "^10.4.6",
     "rc-tooltip": "5.1.1",
     "react-contenteditable": "^3.3.5",
+    "react-shadow": "^19.0.2",
     "react-useportal": "^1.0.14",
     "toastr": "^2.1.4",
     "whats-element": "^2.4.4"

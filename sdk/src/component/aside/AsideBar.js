@@ -8,7 +8,7 @@ import sideStyle from './aside.scss';
 import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
 import Tags from "./Tags";
-import {LightStatus} from "../../step/const";
+import {LightStatus} from "@/common/Types";
 import ExpandIcon from '@/assets/images/expand.svg';
 
 let lastTop = -1;
