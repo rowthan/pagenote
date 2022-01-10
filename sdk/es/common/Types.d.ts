@@ -78,7 +78,7 @@ declare class WebPageItem implements IWebPage {
     constructor(webPage: WebPage);
     setData(webPage: WebPage): boolean;
     isValid(): boolean;
-    createDataHash(): string;
+    createDataHash(): any;
 }
 export type { PlainData, WebPage, };
 export { WebPageItem };

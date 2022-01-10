@@ -1,4 +1,5 @@
 import {WebPage} from "../Types";
+// @ts-ignore
 import mustache from 'mustache';
 
 /**

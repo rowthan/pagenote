@@ -1,4 +1,4 @@
-import md5 from 'md5';
+const md5 = require('md5');
 
 enum AnnotationStatus {
     fixed=1,

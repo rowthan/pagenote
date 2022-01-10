@@ -1,4 +1,4 @@
-import md5 from 'md5';
+var md5 = require('md5');
 var AnnotationStatus;
 (function (AnnotationStatus) {
     AnnotationStatus[AnnotationStatus["fixed"] = 1] = "fixed";

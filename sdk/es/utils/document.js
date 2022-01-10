@@ -22,9 +22,9 @@ function wrapRangeInTextNode(node, start, end, color, id) {
     highlightEl.dataset.highlight = id;
     highlightEl.style.backgroundColor = color;
     var _a = convertColor(color), textColor = _a.textColor, rgb = _a.rgb;
-    var bottomColor = "rgb(" + (rgb[0] - 30) + "," + (rgb[1] - 30) + "," + (rgb[2] - 30) + ")";
-    var bgColor = "rgba(" + rgb.toString() + ",1)";
-    highlightEl.style = "--bgcolor:" + bgColor + ";--color:" + textColor + ";--bgbottomcolor:" + bottomColor;
+    var bottomColor = "rgb(".concat((rgb[0] - 30), ",").concat((rgb[1] - 30), ",").concat((rgb[2] - 30), ")");
+    var bgColor = "rgba(".concat(rgb.toString(), ",1)");
+    highlightEl.style = "--bgcolor:".concat(bgColor, ";--color:").concat(textColor, ";--bgbottomcolor:").concat(bottomColor);
     highlightEl.textContent = startNode.textContent;
     if (color === 'rgba(1,1,1,0.5)') {
         highlightEl.dataset.mask = '1';
@@ -61,7 +61,7 @@ var highlightElement = function (node, keyword, color) {
     var id = md5(wid + text);
     // 如果是还原 则不进行之后操作
     if (!hightlight) {
-        var highlightElements = element.querySelectorAll("light[data-highlight='" + id + "']");
+        var highlightElements = element.querySelectorAll("light[data-highlight='".concat(id, "']"));
         //还原高亮，即便是高亮 也要先还原高亮
         for (var i = 0; i < highlightElements.length; i++) {
             var ele = highlightElements[i];
@@ -356,7 +356,7 @@ function captureElementImage(target) {
 var showCamera = function (snapshot) {
     var camera = document.createElement('pagenote-camera');
     var tip = '个快照';
-    camera.innerHTML = "<div class='pagenote-camera-container'>\n                                  <div class='camera-top'>\n                                    <div class='zoom'></div>\n                                    <div class='mode-changer'></div>\n                                    <div class='sides'></div>\n                                    <div class='range-finder'></div>\n                                    <div class='focus'></div>\n                                    <div class='red'></div>\n                                    <div class='view-finder'></div>\n                                    <div class='flash'>\n                                      <div class='light'></div>\n                                    </div>\n                                  </div>\n                                  <div class='camera-mid'>\n                                    <div class='sensor'></div>\n                                    <div class='lens'></div> \n                                    <div class=\"tip\"><div>\u5DF2\u62CD\u7167\u5B8C\u6210\u5E76\u4FDD\u5B58\uFF0C\u4F60\u53EF\u4EE5\u5728\u7BA1\u7406\u9875\u8FDB\u884C\u67E5\u770B\u3001\u7F16\u8F91\u3002</div><button><a target=\"_blank\" href=\"https://pagenote.cn/me\">\u524D\u5F80\u67E5\u770B" + tip + "</a></button><button id=\"close-camera\">\u5173\u95ED\u6444\u50CF\u673A<span id=\"count-down\">8s</span></button></div>\n                                  </div>\n                                  <div class='camera-bottom'></div>\n                                  <div class=\"camera-picture\"><img src=" + snapshot + " alt=\"\"></div>\n                                </div>";
+    camera.innerHTML = "<div class='pagenote-camera-container'>\n                                  <div class='camera-top'>\n                                    <div class='zoom'></div>\n                                    <div class='mode-changer'></div>\n                                    <div class='sides'></div>\n                                    <div class='range-finder'></div>\n                                    <div class='focus'></div>\n                                    <div class='red'></div>\n                                    <div class='view-finder'></div>\n                                    <div class='flash'>\n                                      <div class='light'></div>\n                                    </div>\n                                  </div>\n                                  <div class='camera-mid'>\n                                    <div class='sensor'></div>\n                                    <div class='lens'></div> \n                                    <div class=\"tip\"><div>\u5DF2\u62CD\u7167\u5B8C\u6210\u5E76\u4FDD\u5B58\uFF0C\u4F60\u53EF\u4EE5\u5728\u7BA1\u7406\u9875\u8FDB\u884C\u67E5\u770B\u3001\u7F16\u8F91\u3002</div><button><a target=\"_blank\" href=\"https://pagenote.cn/me\">\u524D\u5F80\u67E5\u770B".concat(tip, "</a></button><button id=\"close-camera\">\u5173\u95ED\u6444\u50CF\u673A<span id=\"count-down\">8s</span></button></div>\n                                  </div>\n                                  <div class='camera-bottom'></div>\n                                  <div class=\"camera-picture\"><img src=").concat(snapshot, " alt=\"\"></div>\n                                </div>");
     document.body.appendChild(camera);
     var time = 8;
     var timer = setInterval(function () {

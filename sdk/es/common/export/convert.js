@@ -1,3 +1,4 @@
+// @ts-ignore
 import mustache from 'mustache';
 /**
 * 数据转换方法，最基础的导出为其他文本格式

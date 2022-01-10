@@ -52,5 +52,100 @@ function convertColor(color) {
         textColor: Y >= 180 ? '#000000' : '#ffffff'
     };
 }
-export { stringToColor, convertColor, };
+/**
+ * input: 255 ff  op
+ * output: 255 255  throw Error
+ * */
+var getColorInt = function (input) {
+    if (input === '') {
+        return;
+    }
+    if (typeof input === "number") {
+        if (isValidColorInt(input)) {
+            return input;
+        }
+    }
+    else { // 16进制
+        var intValue = parseInt(input);
+        var parsedNumber = null;
+        if (isNaN(intValue)) {
+            if (!isValidColorHexUnit(input)) {
+                throw Error("not valid hex unit: ".concat(input));
+            }
+            var number = parseInt(input, 16);
+            if (isValidColorInt(number)) {
+                parsedNumber = number;
+            }
+        }
+        else if (isValidColorInt(intValue)) {
+            parsedNumber = intValue;
+        }
+        if (parsedNumber === null) {
+            throw Error("not a valid value in range [0-255] or [00-ff] ".concat(input));
+        }
+        return parsedNumber;
+    }
+    throw Error("not valid color value [".concat(typeof input, "] ").concat(input));
+};
+var isValidColorInt = function (value) {
+    return value >= 0 && value <= 255 && value % 1 === 0;
+};
+var isValidColorHexUnit = function (value) {
+    return /^[0-9a-fA-F]{2}$/.test(value);
+};
+/**
+ * input: rgb(255,255,255) ,rgba(255,255,255,1) ffffff
+ * output: #ffffff #ffffffff #ffffff
+ * */
+function formatToHex(anyColorString) {
+    if (anyColorString === void 0) { anyColorString = 'rgb(244,244,244)'; }
+    function resolveRGBA(input) {
+        var rgb = input.match(/\((.*)\)/)[1].split(',');
+        var r = getColorInt(rgb[0]);
+        var g = getColorInt(rgb[1]);
+        var b = getColorInt(rgb[2]);
+        var a = rgb[3];
+        var hex = "#".concat(r.toString(16)).concat(g.toString(16)).concat(b.toString(16));
+        var alpha = '';
+        if (a !== undefined) {
+            var alphaPercent = parseFloat(a);
+            if (typeof alphaPercent === 'number' && alphaPercent >= 0) {
+                alphaPercent = Math.min(alphaPercent, 1);
+                alpha = (alphaPercent * 255).toString(16);
+            }
+        }
+        return hex + alpha;
+    }
+    function resolveHex(input) {
+        var hexString = input.replace('#', '');
+        var r = hexString.substring(0, 2);
+        var g = hexString.substring(2, 4);
+        var b = hexString.substring(4, 6);
+        var a = hexString.substring(6, 8);
+        var r_number = getColorInt(r);
+        var g_number = getColorInt(g);
+        var b_number = getColorInt(b);
+        if (!isValidColorInt(r_number) || !isValidColorInt(g_number) || !isValidColorInt(b_number)) {
+            throw Error('not a valid hex string ' + input);
+        }
+        var a_number = a ? getColorInt(a) : 1;
+        var hex = "#".concat(r).concat(g).concat(b);
+        var alpha = a_number <= 1 ? a : '';
+        return hex + alpha;
+    }
+    try {
+        var result = '';
+        if (anyColorString.includes('rgb')) {
+            result = resolveRGBA(anyColorString);
+        }
+        else {
+            result = resolveHex(anyColorString);
+        }
+        return result.toUpperCase();
+    }
+    catch (e) {
+        return '';
+    }
+}
+export { stringToColor, convertColor, formatToHex, };
 //# sourceMappingURL=color.js.map

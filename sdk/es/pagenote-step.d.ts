@@ -3,7 +3,7 @@ interface StepOptions {
     colors: Array;
     renderAnnotation: any;
 }
-declare const Step: (info: StepProps, options: StepOptions, callback?: any) => void;
+declare const Step: (info: StepProps, options: StepOptions, callback?: function) => void;
 declare function Steps(option: any): void;
 declare namespace Steps {
     var prototype: any[];

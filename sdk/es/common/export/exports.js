@@ -1,6 +1,7 @@
 var _a;
 import { writeTextToClipboard } from "../../utils/document";
 // TODO ,提出单独包，避免 pagenote sdk 引入不必要依赖
+// @ts-ignore
 import axios from 'axios';
 /**
  * 将数据导出为其他载体形式，如导出为文件、发出 http 请求

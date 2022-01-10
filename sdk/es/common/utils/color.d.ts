@@ -7,4 +7,9 @@ declare function convertColor(color?: string): {
     rgb: [number, number, number];
     textColor: string;
 };
-export { stringToColor, convertColor, };
+/**
+ * input: rgb(255,255,255) ,rgba(255,255,255,1) ffffff
+ * output: #ffffff #ffffffff #ffffff
+ * */
+declare function formatToHex(anyColorString?: string): string;
+export { stringToColor, convertColor, formatToHex, };
