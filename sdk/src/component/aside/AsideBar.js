@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'react';
 import BigPicture from "bigpicture";
 import { BAR_STATUS } from '@/const';
 import {moveable} from "@/utils/document";

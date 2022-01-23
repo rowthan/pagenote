@@ -37,30 +37,20 @@ var IStep = /** @class */ (function () {
             set: function (target, key, value) {
                 var _a;
                 if (target[key] === value) {
-                    return false;
+                    return true;
                 }
                 Reflect.set(target, key, value);
                 for (var i in that.listeners.data) {
                     var fun = that.listeners.data[i];
                     typeof fun === 'function' && fun(target, key, value);
                 }
-                var saveFun = (_a = that === null || that === void 0 ? void 0 : that.options) === null || _a === void 0 ? void 0 : _a.save;
+                var saveFun = (_a = that === null || that === void 0 ? void 0 : that.options) === null || _a === void 0 ? void 0 : _a.triggerChanged;
                 if (saveFun) {
                     saveFun(data);
                 }
                 return true;
             }
         });
-        // this.STORE_KEYS_VERSION_2_VALIDATE.forEach((key)=>{
-        //   this.data[key] = initData[key];
-        //   if(key==='lightStatus'){
-        //     this.data[key] = initData[key] === undefined ? (initData['isActive']?LightStatus.light:LightStatus.un_light) : initData[key];
-        //   } else if(key==='annotationStatus'){
-        //     if(initData[key]===undefined){
-        //       this.data.annotationStatus = this.data.lightStatus === LightStatus.light ? AnnotationStatus.SHOW : AnnotationStatus.un_fixed;
-        //     }
-        //   }
-        // });
         // 初始化运行时产生的数据，不需要持久化存储
         var runtime = {
             warn: '',
@@ -150,7 +140,7 @@ var IStep = /** @class */ (function () {
             set: function (target, key, value) {
                 // TODO 数组无法监听到 relatedNode
                 if (target[key] === value) {
-                    return false;
+                    return true;
                 }
                 Reflect.set(target, key, value);
                 var isFocus = target.isFocusTag || target.isFocusAnnotation || target.editing;
@@ -241,6 +231,9 @@ var IStep = /** @class */ (function () {
     };
     IStep.prototype.openEditor = function (show) {
         this.runtime.editing = show;
+    };
+    IStep.prototype.toJSON = function () {
+        return JSON.parse(JSON.stringify(this.data));
     };
     return IStep;
 }());

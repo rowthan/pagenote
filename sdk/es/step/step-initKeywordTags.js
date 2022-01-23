@@ -55,13 +55,13 @@ function initKeywordTags() {
                 };
                 lightElement.ondblclick = function (e) {
                     e.stopPropagation();
-                    step.openEditor();
+                    step.openEditor(true);
                 };
                 lightElement.onmouseenter = function () {
                     clearTimeout(step.runtime.focusTimer);
                     // 如果没有标记内容，则自动贴紧
                     if (!step.data.tip) {
-                        step.connectToKeywordTag(true);
+                        step.connectToKeywordTag();
                     }
                     // 鼠标经过后0.5s标记为 isFocusTag
                     step.runtime.focusTimer = setTimeout(function () {

@@ -1,12 +1,13 @@
+// @ts-nocheck
 import PagenoteCore from './pagenote-core'
-import { h, render } from 'preact';
+import ReactDOM from "react-dom";
 import AsideBar from "./component/aside/AsideBar";
 import ActionBars from "./action/ActionBars";
 import {debounce, getPagenoteRoot} from './utils';
 import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'
 import {IOption} from "./types/Option";
-import React from "preact/compat";
+import React from "react";
 import {setLoaded} from "./common/pagenote-utils/share-pagenote";
 
 function PageNote(id:string,options:IOption){
@@ -32,7 +33,7 @@ function PageNote(id:string,options:IOption){
         if(showButton) {
             actionBar = actionBar || document.createElement('pagenote-action');
             actionBar.dataset.pagenote = 'action';
-            render(<ActionBars pagenote={pagenoteCore} />, actionBar);
+            ReactDOM.render(<ActionBars pagenote={pagenoteCore} />, actionBar);
             rootElement.appendChild(actionBar);
         } else {
             actionBar && actionBar.remove();

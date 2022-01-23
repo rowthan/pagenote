@@ -1,0 +1,42 @@
+.light{
+  position: relative;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  // TODO 使用 box-shadow 替代 background
+  background-image: linear-gradient(to top, rgba(255,222,93,1) 2px, rgba(255,222,93,0.84) 2px);
+  background-image: linear-gradient(to top, var(--bgcolor) 2px, var(--bgcolor) 2px);
+  background-size: 100% 2px;
+  // border-bottom: 2px solid  rgba(255,222,93,1);
+  // border-bottom: 2px solid var(--bgbottomcolor);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  transition: background-size 0.5s ease-out;
+  box-sizing: border-box;
+  //border-radius: 2px;
+  &:hover{
+    z-index: 1;
+    //opacity: 0.85;
+  }
+  &[data-lighting='light']{
+    // TODO 取消对 display的修改
+    display: inline-block;
+    animation: headShake 0.3s ease-in-out;;
+  }
+  &[data-active='1']{
+    background-size: 100% calc(2em);
+    -webkit-text-fill-color: var(--color);
+    &[data-mask='1']{
+      transition: background-size 0.06s ease-out;
+      filter: blur(2px);
+    }
+
+    //&[data-type='img']{
+    //  outline: 1px solid var(--bgcolor);
+    //}
+  }
+  &[data-active='2']{
+    -webkit-text-fill-color: var(--color);
+    background-size: 100% calc(1em*2);
+    // border-bottom: none;
+  }
+}

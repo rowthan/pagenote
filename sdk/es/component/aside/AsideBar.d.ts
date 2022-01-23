@@ -1,5 +1,5 @@
 export default AsideBar;
-declare class AsideBar extends Component<any, any> {
+declare class AsideBar extends Component<any, any, any> {
     constructor(props: any);
     pagenote: any;
     toggleAllLight(): void;
@@ -18,4 +18,4 @@ declare class AsideBar extends Component<any, any> {
     capture: () => void;
     setLastFocus: (info: any) => void;
 }
-import { Component } from "preact";
+import { Component } from "react";

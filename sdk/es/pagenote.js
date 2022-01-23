@@ -1,11 +1,11 @@
+// @ts-nocheck
 import PagenoteCore from './pagenote-core';
-import { render } from 'preact';
-import AsideBar from "./component/aside/AsideBar";
+import ReactDOM from "react-dom";
 import ActionBars from "./action/ActionBars";
 import { debounce, getPagenoteRoot } from './utils';
 import './component/light/annotation.scss';
 import toggleLightMenu from './light-menu';
-import React from "preact/compat";
+import React from "react";
 import { setLoaded } from "./common/pagenote-utils/share-pagenote";
 function PageNote(id, options) {
     // @ts-ignore
@@ -16,21 +16,18 @@ function PageNote(id, options) {
     }).map(function (brush) { return brush.bg; });
     toggleLightMenu(false, null, null, colors);
     // side-bar
-    var sidebar = document.createElement('pagenote-bar');
-    sidebar.dataset.pagenote = 'sidebar';
-    rootElement.appendChild(sidebar);
-    render(React.createElement(AsideBar, { pagenote: pagenoteCore }), sidebar);
+    // const sidebar = document.createElement('pagenote-bar');
+    // sidebar.dataset.pagenote='sidebar';
+    // rootElement.appendChild(sidebar);
+    // render(<AsideBar pagenote={pagenoteCore} /> , sidebar);
     // action-bar
     var actionBar = null;
     pagenoteCore.addListener(debounce(function (status, before) {
-        if (status === before && status !== pagenoteCore.CONSTANT.WAITING) {
-            return;
-        }
         var showButton = (pagenoteCore.target && (status === pagenoteCore.CONSTANT.WAITING || status === pagenoteCore.CONSTANT.PLAYANDWAIT));
         if (showButton) {
             actionBar = actionBar || document.createElement('pagenote-action');
             actionBar.dataset.pagenote = 'action';
-            render(React.createElement(ActionBars, { pagenote: pagenoteCore }), actionBar);
+            ReactDOM.render(React.createElement(ActionBars, { pagenote: pagenoteCore }), actionBar);
             rootElement.appendChild(actionBar);
         }
         else {

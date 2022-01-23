@@ -1,4 +1,4 @@
-import {whats} from "../utils/index";
+import {whats} from "../utils";
 import {gotoPosition} from "../utils/document";
 
 function stepGotoView(callback=function(){}){

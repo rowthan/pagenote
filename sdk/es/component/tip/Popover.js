@@ -20,9 +20,9 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import { createRef } from 'preact';
+import { createRef } from 'react';
 import ToolTip from "rc-tooltip";
-import './popover.less';
+// import './popover.less'
 export default function Popover(_a) {
     var message = _a.message, children = _a.children, _b = _a.inner, inner = _b === void 0 ? false : _b, props = __rest(_a, ["message", "children", "inner"]);
     var ref = createRef();

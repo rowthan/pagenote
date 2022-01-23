@@ -20,8 +20,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 import Modali, { useModali } from 'modali';
 import { DraggableAreasGroup } from 'react-draggable-tags';
-import { useEffect, useRef, useState } from "preact/hooks";
-import './tags.less';
+import { useEffect, useRef, useState } from "react";
+// import './tags.less'
 var group = new DraggableAreasGroup();
 var DraggableArea1 = group.addArea();
 var App = function (_a) {

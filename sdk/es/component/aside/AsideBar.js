@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { Component } from 'preact';
+import { Component } from 'react';
 import BigPicture from "bigpicture";
 import { BAR_STATUS } from '@/const';
 import { moveable } from "@/utils/document";
@@ -23,7 +23,7 @@ import sideStyle from './aside.scss';
 import Tip from "../tip/Tip";
 import LightActionBar from "@/component/LightActionBar";
 import Tags from "./Tags";
-import { LightStatus } from "../../step/const";
+import { LightStatus } from "@/common/Types";
 import ExpandIcon from '@/assets/images/expand.svg';
 var lastTop = -1;
 var pagenote = null;

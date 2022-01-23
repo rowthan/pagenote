@@ -20,7 +20,7 @@ declare type Step = {
     text?: string;
     pre?: string;
     suffix?: string;
-    tip?: string;
+    tip: string;
     isActive: boolean;
     offsetX?: number;
     offsetY?: number;

@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from "react";
-import {h, Component, Fragment} from 'preact';
+import {h, Component, Fragment} from 'react';
 import usePortal from "react-useportal";
 
 export const useModal = ({ onOpen, onClose, background, ...config } = {}) => {

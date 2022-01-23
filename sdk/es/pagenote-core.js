@@ -21,6 +21,7 @@ import console from "./utils/console";
 import { getDefaultOption } from "./utils/format";
 import merge from 'lodash/merge';
 import { isMoble } from "./utils/device";
+var DEBOUNCE_TIME = 20;
 var PagenoteCore = /** @class */ (function () {
     function PagenoteCore(id, options) {
         this.CONSTANT = {
@@ -52,17 +53,22 @@ var PagenoteCore = /** @class */ (function () {
             SHARE_ERROR: 'e',
             SHARE_SUCCESS: 's',
         };
+        this.options = null;
+        this.id = '';
+        this.status = null;
+        this.plainData = { categories: [], images: [], setting: undefined, snapshots: [], steps: [], url: "" };
+        this.target = null;
+        this._runtime = {};
+        this._listeners = [];
         this.i18n = __assign({}, i18n);
         console.option.showLog = options.debug;
         this.id = id || "pagenote-container";
         this.options = merge(getDefaultOption(), options);
         this.status = this.CONSTANT.UN_INIT;
-        var colors = this.options.brushes.map(function (brush) {
+        var colors = this.options.brushes.filter(function (item) {
+            return item && item.bg;
+        }).map(function (brush) {
             return brush.bg;
-        });
-        this.options.brushes.forEach(function (brush) {
-            if (brush.shortcut) {
-            }
         });
     }
     PagenoteCore.prototype.init = function (initData) {
@@ -71,9 +77,11 @@ var PagenoteCore = /** @class */ (function () {
             step.delete();
         });
         this.plainData = __assign(__assign({}, initData), { steps: [] });
-        initData.steps.forEach(function (item) {
-            _this.record(item);
-        });
+        if (initData && initData.steps) {
+            initData.steps.forEach(function (item) {
+                _this.record(item);
+            });
+        }
         this.addKeyDownListener();
         this.addKeyUpListener();
         this.addMoveListener();
@@ -89,18 +97,22 @@ var PagenoteCore = /** @class */ (function () {
         if (check !== true) {
             return;
         }
-        var newStep = new IStep(info, {
+        new IStep(info, {
             colors: [],
-            getIndex: this.getStepIndex,
-            remove: this.removeStep,
-            renderAnnotation: undefined,
-            save: this.save
+            getIndex: this.getStepIndex.bind(this),
+            remove: this.removeStep.bind(this),
+            triggerChanged: function () {
+                var data = __assign(__assign({}, _this.plainData), { steps: _this.plainData.steps.map(function (item) {
+                        return item.toJSON();
+                    }) });
+                _this.options.onDataChanged(data);
+            }
         }, function (step) {
             step.runtime.isFocusTag = true;
             setTimeout(function () {
                 step.runtime.isFocusTag = false;
-            }, 2000);
-            _this.plainData.steps.push(newStep);
+            }, 1000);
+            _this.plainData.steps.push(step);
             _this.plainData.steps = _this.plainData.steps.sort(function (a, b) {
                 var aPos = a.runtime.relatedNodePosition;
                 var bPos = b.runtime.relatedNodePosition;
@@ -109,18 +121,23 @@ var PagenoteCore = /** @class */ (function () {
             });
             window.getSelection().removeAllRanges();
             _this.target = null;
-            callback && callback(newStep);
+            callback && callback(step);
         });
     };
     // start
     PagenoteCore.prototype.addKeyDownListener = function () {
         var _this = this;
         var downEvent = isMoble ? 'touchstart' : 'mousedown';
-        var onDown = debounce(function (e) {
+        var onDown = function (e) {
+            console.log('down');
+            _this._runtime.isPressing = true;
             _this._runtime.lastEvent = e;
-            _this._runtime.startPosition = e;
+            _this._runtime.startPosition = {
+                x: e.x,
+                y: e.y
+            };
             _this._runtime.lastKeydownTime = Date.now();
-        }, 10);
+        };
         document.addEventListener(downEvent, onDown, { capture: true });
     };
     // move
@@ -128,32 +145,37 @@ var PagenoteCore = /** @class */ (function () {
         var _this = this;
         var downEvent = isMoble ? 'touchmove' : 'mousemove';
         var onMouseMove = debounce(function (e) {
-            _this._runtime.lastPosition = e;
-        }, 60);
+            if (_this._runtime.isPressing) {
+                console.log('move');
+                _this._runtime.lastPosition = {
+                    x: e.x,
+                    y: e.y,
+                };
+            }
+        }, DEBOUNCE_TIME);
         document.addEventListener(downEvent, onMouseMove, { capture: true });
     };
     // select
     PagenoteCore.prototype.addSelectionListener = function () {
-        var _this = this;
-        var lastActionTime = 0;
         var selectionChange = throttle(function () {
-            lastActionTime = new Date().getTime();
-            _this.target = prepareSelectionTarget(_this.options.enableMarkImg, [_this._runtime.startPosition, _this._runtime.lastPosition]);
-            if (_this.target === null) {
-                _this.hideActionBar();
-            }
-            else {
-                _this.showActionBar();
-            }
-        }, 200);
+            console.log('selection change');
+            // this.computeTarget()
+        }, DEBOUNCE_TIME);
         document.addEventListener('selectionchange', selectionChange, { capture: true });
     };
     // end
     PagenoteCore.prototype.addKeyUpListener = function () {
-        var downEvent = isMoble ? 'touchstart' : 'mousedown';
+        var downEvent = isMoble ? 'touchend' : 'mouseup';
         var that = this;
         var onUp = function (e) {
+            console.log('up', e);
             that._runtime.lastEvent = e;
+            that._runtime.isPressing = false;
+            that._runtime.lastPosition = {
+                x: e.x,
+                y: e.y,
+            };
+            that.computeTarget();
         };
         document.addEventListener(downEvent, onUp, { capture: true });
     };
@@ -199,11 +221,33 @@ var PagenoteCore = /** @class */ (function () {
     PagenoteCore.prototype.addListener = function (fun) {
         this._listeners.push(fun);
     };
+    PagenoteCore.prototype.computeTarget = function () {
+        if (this._runtime.isPressing === true) {
+            return;
+        }
+        this.target = prepareSelectionTarget(this.options.enableMarkImg, [this._runtime.startPosition, this._runtime.lastPosition]);
+        if (this.target === null) {
+            this.hideActionBar();
+        }
+        else {
+            this.showActionBar();
+        }
+    };
     PagenoteCore.prototype.showActionBar = function () {
+        var _this = this;
+        var before = this.status;
         this.status = this.CONSTANT.WAITING;
+        this._listeners.forEach(function (fn) {
+            fn(_this.status, before);
+        });
     };
     PagenoteCore.prototype.hideActionBar = function () {
+        var _this = this;
+        var before = this.status;
         this.status = this.CONSTANT.PAUSE;
+        this._listeners.forEach(function (fn) {
+            fn(_this.status, before);
+        });
     };
     PagenoteCore.prototype.getStepIndex = function (lightId) {
         var index = -1;
@@ -225,9 +269,6 @@ var PagenoteCore = /** @class */ (function () {
                 break;
             }
         }
-        this.save();
-    };
-    PagenoteCore.prototype.save = function () {
     };
     PagenoteCore.prototype.notification = function (message) {
         notification(message);
@@ -244,7 +285,7 @@ var PagenoteCore = /** @class */ (function () {
     PagenoteCore.prototype.exportData = function (template, data) {
         return dataToString(data || this.plainData, template);
     };
-    PagenoteCore.version = "5.3.11";
+    PagenoteCore.version = "6.0.0.alpha";
     return PagenoteCore;
 }());
 export default PagenoteCore;

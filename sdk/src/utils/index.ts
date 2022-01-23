@@ -1,7 +1,8 @@
+// @ts-nocheck
 import whatsPure from "whats-element/pure";
-import {AnnotationStatus, LightStatus} from "../common/Types";
+import {AnnotationStatus, LightStatus, Target} from "../common/Types";
 import {getScroll} from "./document";
-import console from "./console";
+// import console from "./console";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
@@ -27,28 +28,22 @@ function getRootOffset() {
     };
 }
 
-const prepareSelectionTarget = function (enableMarkImg,positions) {
+const prepareSelectionTarget = function (enableMarkImg,positions): Target {
     const selection = document.getSelection();
     if(selection.rangeCount===0){
+        // console.log('无选区')
         return null;
     }
 
-
-    // // pagenote 状态监测
-    // const isWaiting = this.status === constant.WAITING && selectedText === this.target.text;
-    // const isDestroy = this.status === this.CONSTANT.DESTROY;
-    // if(isWaiting || isDestroy || selection.rangeCount===0){ // 避免重复计算\无选区
-    //     return;
-    // }
-
     // 选区父节点是否存在
     const range0 = selection.getRangeAt(0);
-    let parentElement = selection.anchorNode?range0.commonAncestorContainer:null;
+    let parentElement = selection.anchorNode ? range0.commonAncestorContainer : null;
     if(parentElement && parentElement.nodeType===3){ // 如果父节点为文本节点，则需要再寻一级父节点
         parentElement = parentElement.parentNode;
     }
     const noParentElement = !parentElement || !parentElement.tagName;
     if(noParentElement){
+        console.log('无父节点')
         return null;
     }
 
@@ -66,7 +61,9 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         }
     }
 
+    // 选区 黑名单检测
     if(checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode) ){
+        console.log('黑名单')
         return null;
     }
 
@@ -76,31 +73,29 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         canHighlight = false;
     }
 
-    // TODO 监测是否有图片、视频等其他资源
+    // 监测是否有图片资源
     const markImages = [];
     const selectedElementContent = range0.cloneContents();
-    if(enableMarkImg){
-        const children = selectedElementContent.children;
-        for(let i=0; i< children.length; i++){
-            const item = children[i];
-            if(item.tagName==='IMG'){
-                // 找到对应的图片节点
-                const id = `img[src="${item.src}"]`;
-                const elements = parentElement.querySelectorAll(id);
-                for(let j=0; j<elements.length; j++){
-                    const element = elements[j];
-                    if(selection.containsNode(element)){
-                        const imgId = whats.getUniqueId(element).wid;
-                        const imgUrl = element.src;
-                        markImages.push({
-                            id: imgId,
-                            src: imgUrl,
-                            alt: element.alt,
-                            // pre: element.previousSibling?.textContent,
-                            // suffix: element.nextSibling?.textContent,
-                        })
-                        break;
-                    }
+    const children = selectedElementContent.children;
+    for(let i=0; i< children.length; i++){
+        const item = children[i];
+        if(item.tagName==='IMG'){
+            // 找到对应的图片节点
+            const id = `img[src="${item.src}"]`;
+            const elements = parentElement.querySelectorAll(id);
+            for(let j=0; j<elements.length; j++){
+                const element = elements[j];
+                if(selection.containsNode(element)){
+                    const imgId = whats.getUniqueId(element).wid;
+                    const imgUrl = element.src;
+                    markImages.push({
+                        id: imgId,
+                        src: imgUrl,
+                        alt: element.alt,
+                        // pre: element.previousSibling?.textContent,
+                        // suffix: element.nextSibling?.textContent,
+                    })
+                    break;
                 }
             }
         }
@@ -108,9 +103,11 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
 
     const selectedText = selection.toString().trim(); // 跨标签高亮
     if(!(selectedText || markImages.length)){
+        // console.log('无内容')
         return null
     }
 
+    /**上下文计算*/
     // TODO 双击情况下 ，before 计算会存在问题
     let before = range0.startContainer.textContent.substr(0,range0.startOffset);
     let after = range0.endContainer.textContent.substr(range0.endOffset,10);
@@ -131,6 +128,7 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     const selectionRects=selection.getRangeAt(0).getClientRects();
     let relativeRect=selectionRects[selectionRects.length-1];
     if(!relativeRect){
+        console.log('无选区节点')
         return null;
     }
 
@@ -140,17 +138,32 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     // 鼠标落点位置
     const endPosition = positions[1];
     // 正逆方向计算
-    let offsetRelative = 1;
+    let offsetRelative:number;
 
-    // 判断是正逆方向
-    const eOffsetX = endPosition.x - startPosition.x;
-    const eOffsetY = endPosition.y - startPosition.y;
-    if(eOffsetX * eOffsetY >= 0){
-        offsetRelative = eOffsetX >= 0 ? 1 : -1;
-    } else {
-        const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
-        offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // 判断是顺、反方向
+    let eOffsetX = endPosition.x - startPosition.x;
+    let eOffsetY = endPosition.y - startPosition.y;
+    // x,y 方向一致情况下，直接取值
+    if(Math.abs(eOffsetY)>14){
+        offsetRelative = eOffsetY > 1 ? 1: -1
+    }else{
+        offsetRelative = eOffsetX > 0 ? 1 : -1
     }
+    // if(eOffsetY * eOffsetX < 0){
+    //     offsetRelative = -1
+    // } else {
+    //     // 方向不一致的情况下，按照偏移量大计算
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // }
+    // console.log(startPosition,endPosition)
+    // offsetRelative = eOffsetX * eOffsetY < 0;
+    // if(eOffsetX * eOffsetY < 0){
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // } else {
+    //     offsetRelative = eOffsetX >= 0 ? 1 : -1;
+    // }
 
     // 根据正逆方向，选择用于计算位置的选区标准，如果是逆向，则取第一个选区
     if(offsetRelative===-1){
@@ -170,6 +183,16 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
 
     const rootOffset = getRootOffset();
     const ignoreOffsetY = cursorY - rootOffset.top;
+
+    let clientX,clientY;
+    if(offsetRelative===-1){
+        clientX = relativeRect.left - 30;
+        clientY = relativeRect.top - 30;
+    } else{
+        clientX = relativeRect.left + relativeRect.width;
+        clientY = relativeRect.top + relativeRect.height;
+    }
+
     const target = {
         x:cursorX - rootOffset.left,
         y: Math.min(ignoreOffsetY, scrollY+document.documentElement.scrollHeight - 60),
@@ -184,8 +207,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         isActive: false,
         bg: '',
         parentW: parseInt(parentElement.clientWidth),
-        // clientX: e.clientX,
-        // clientY: e.clientY,
+        clientX: clientX,
+        clientY: clientY,
         canHighlight: canHighlight,
         selectionElements: selectedElementContent,
         images: markImages,

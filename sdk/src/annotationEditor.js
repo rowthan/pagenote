@@ -1,4 +1,4 @@
-import { h, render,Component, Fragment} from 'preact';
+import {render} from 'react-dom';
 import ContentEditable from "react-contenteditable";
 import './assets/styles/editor.scss'
 

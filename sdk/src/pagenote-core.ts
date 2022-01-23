@@ -90,9 +90,11 @@ class PagenoteCore {
             ...initData,
             steps:[]
         }
-        initData.steps.forEach( (item)=> {
-            this.record(item)
-        })
+        if(initData && initData.steps){
+            initData.steps.forEach( (item)=> {
+                this.record(item)
+            })
+        }
 
 
         this.addKeyDownListener();
@@ -101,6 +103,8 @@ class PagenoteCore {
         this.addSelectionListener();
         this.addShortCutListener();
     }
+
+
 
     // record
     record(targetInfo: Partial<Step>,callback?:(step:IStep)=>void){
@@ -167,7 +171,10 @@ class PagenoteCore {
         const onMouseMove = debounce((e)=> {
             if(this._runtime.isPressing){
                 console.log('move')
-                this._runtime.lastPosition = e;
+                this._runtime.lastPosition = {
+                    x: e.x,
+                    y: e.y,
+                };
             }
         },DEBOUNCE_TIME)
         document.addEventListener(downEvent, onMouseMove,{capture:true})
@@ -177,7 +184,7 @@ class PagenoteCore {
     addSelectionListener(){
         const selectionChange = throttle(()=>{
             console.log('selection change')
-            this.computeTarget()
+            // this.computeTarget()
         },DEBOUNCE_TIME)
 
         document.addEventListener('selectionchange',selectionChange,{capture:true});
@@ -187,10 +194,14 @@ class PagenoteCore {
     addKeyUpListener(){
         const downEvent = isMoble?'touchend' :'mouseup';
         const that = this;
-        const onUp = function (e:Event) {
-            console.log('up')
+        const onUp = function (e:MouseEvent & KeyboardEvent) {
+            console.log('up',e)
             that._runtime.lastEvent = e;
             that._runtime.isPressing = false;
+            that._runtime.lastPosition = {
+                x: e.x,
+                y: e.y,
+            };
             that.computeTarget()
         }
         document.addEventListener(downEvent,onUp,{capture:true})

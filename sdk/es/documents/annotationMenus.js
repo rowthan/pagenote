@@ -1,17 +1,13 @@
-import { render } from 'preact';
+import React, { useState } from 'react';
 import Tip from "../component/tip/Tip";
 import i18n from "../locale/i18n";
-import MoreIcon from '../assets/images/more.svg';
 import CopyIcon from "../assets/images/copy.svg";
 import DeleteIcon from "../assets/images/delete.svg";
 import NoteIcon from '../assets/images/note.svg';
 import PinIcon from '../assets/images/pin.svg';
-import Popover from "../component/tip/Popover";
-import './annotationMenu.scss';
-import { useState } from "preact/hooks";
 import { writeTextToClipboard } from "../utils/document";
 import Colors from "../component/Colors";
-import { AnnotationStatus, LightStatus } from "../step/const";
+import { AnnotationStatus, LightStatus } from "../common/Types";
 function LightActionBar(_a) {
     var step = _a.step, colors = _a.colors;
     var data = step.data;
@@ -78,11 +74,32 @@ export default function renderAnnotationMenu(rootElement, setting) {
             };
         }
     }
-    render(React.createElement("pagenote-menu", null,
-        React.createElement(LightActionBar, { step: light, colors: colors }),
-        moreActions.length > 0 &&
-            React.createElement(Popover, { message: React.createElement("pagenote-block", null, moreActions.map(function (item) { return (React.createElement("pagenote-block", { "data-role": "more-action-item", onClick: generateOnclick(item.onclick) }, item.text)); })), inner: true, placement: 'rightBottom', trigger: 'hover' },
-                React.createElement("pagenote-icon", { inner: true, "aria-controls": "more-icon" },
-                    React.createElement(MoreIcon, { fill: '#999' })))), rootElement);
+    // ReactDom.render(
+    //     <div>
+    //         <root.div>
+    //             {/*<style type="text/css">{styles}</style>*/}
+    //             <pagenote-menu>
+    //                 <LightActionBar step={light} colors={colors}/>
+    //                 {
+    //                     moreActions.length>0 &&
+    //                     <Popover message={
+    //                         <pagenote-block>{
+    //                             moreActions.map((item)=>(
+    //                                 <pagenote-block
+    //                                     data-role="more-action-item"
+    //                                     onClick={generateOnclick(item.onclick)}>{item.text}</pagenote-block>
+    //                             ))
+    //                         }</pagenote-block>
+    //                     } inner={true} placement='rightBottom' trigger='hover'
+    //                     >
+    //                         <pagenote-icon inner={true} aria-controls="more-icon">
+    //                             <MoreIcon fill='#999'/>
+    //                         </pagenote-icon>
+    //                     </Popover>
+    //                 }
+    //             </pagenote-menu>
+    //         </root.div>
+    //     </div>
+    //     ,rootElement)
 }
 //# sourceMappingURL=annotationMenus.js.map

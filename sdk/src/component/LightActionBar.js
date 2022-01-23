@@ -1,10 +1,9 @@
-import {h} from 'preact';
 import Tip from "@/component/tip/Tip";
 import i18n from "@/locale/i18n";
 import CopyIcon from "@/assets/images/copy.svg";
 import DeleteIcon from "@/assets/images/delete.svg";
 import NoteIcon from '@/assets/images/note.svg';
-import {useState, useEffect, useCallback} from "preact/hooks";
+import {useState} from "react";
 import Colors from "@/component/Colors";
 import "@/component/light/light-node.scss";
 

@@ -1,21 +1,13 @@
-export function getParams(url: any): {
-    paramObj: {};
-    paramKeys: any[];
+import { AnnotationStatus } from "../common/Types";
+declare const whats: any;
+declare const isMobile: boolean;
+declare function getPagenoteRoot(): Element;
+declare function getRootOffset(): {
+    left: number;
+    top: number;
+    scrollHeight: number;
 };
-export function encryptData(string: any): string;
-export function decryptedData(data: any): {};
-export function throttle(fn: any, interval?: number): () => void;
-export function debounce(fn: any, interval?: number): () => void;
-export function convertColor(color?: string): "#000000" | {
-    rgb: number[];
-    textColor: string;
-    y: number;
-};
-export function computePosition(index: any, radio?: number): {
-    x: string;
-    y: string;
-};
-export function prepareSelectionTarget(enableMarkImg: any, positions: any): {
+declare const prepareSelectionTarget: (enableMarkImg: any, positions: any) => {
     x: number;
     y: number;
     offsetX: number;
@@ -36,14 +28,24 @@ export function prepareSelectionTarget(enableMarkImg: any, positions: any): {
         src: any;
         alt: any;
     }[];
-    annotationStatus: any;
+    annotationStatus: AnnotationStatus;
     lightStatus: any;
 };
-export const isMobile: boolean;
-export const whats: any;
-export function getPagenoteRoot(): Element;
-export function getRootOffset(): {
-    left: number;
-    top: number;
-    scrollHeight: number;
+declare function getParams(url: any): {
+    paramObj: {};
+    paramKeys: any[];
 };
+declare function encryptData(string: any): string;
+declare function decryptedData(data: any): {};
+declare function throttle(fn: any, interval?: number): () => void;
+declare function debounce(fn: any, interval?: number): () => void;
+declare function convertColor(color?: string): "#000000" | {
+    rgb: number[];
+    textColor: string;
+    y: number;
+};
+declare function computePosition(index: any, radio?: number): {
+    x: string;
+    y: string;
+};
+export { getParams, encryptData, decryptedData, throttle, debounce, convertColor, computePosition, prepareSelectionTarget, isMobile, whats, getPagenoteRoot, getRootOffset, };

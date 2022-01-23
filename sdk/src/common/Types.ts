@@ -15,6 +15,12 @@ enum LightStatus {
     UN_LIGHT=0
 }
 
+type Target = Step & {
+    clientX: number,
+    clientY: number,
+    bg: string
+}
+
 type Step = {
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
@@ -180,6 +186,7 @@ export type {
     WebPage,
     Step,
     Position,
+    Target,
 }
 
 export {

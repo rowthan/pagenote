@@ -2,9 +2,8 @@
 import { Step } from './common/Types';
 interface StepOptions {
     colors: string[];
-    renderAnnotation: any;
     remove: Function;
-    save: Function;
+    triggerChanged: Function;
     getIndex: {
         (id: string): number;
     };
@@ -23,7 +22,7 @@ declare type StepRuntime = {
     focusTimer: NodeJS.Timer;
     annotationDrag: any;
     editing: boolean;
-    lighting: '' | 'light';
+    lighting: '' | 'light' | 'annotation';
 };
 declare class IStep {
     static lastFocus: string;
@@ -48,5 +47,6 @@ declare class IStep {
     }): void;
     addListener(fun: Function, isRuntime?: boolean, funId?: string): void;
     openEditor(show: boolean): void;
+    toJSON(): Step;
 }
 export default IStep;

@@ -8,7 +8,7 @@ declare type RuntimePlainData = Omit<PlainData, 'steps'> & {
     steps: IStep[];
 };
 declare class PagenoteCore {
-    static readonly version = "5.3.11";
+    static readonly version = "6.0.0.alpha";
     readonly CONSTANT: {
         ID: string;
         UN_INIT: number;
@@ -44,10 +44,11 @@ declare class PagenoteCore {
     plainData: RuntimePlainData;
     target: Step;
     _runtime: {
-        startPosition: Position;
-        lastPosition: Position;
-        lastEvent: Event;
-        lastKeydownTime: number;
+        startPosition?: Position;
+        lastPosition?: Position;
+        lastEvent?: Event;
+        lastKeydownTime?: number;
+        isPressing?: boolean;
     };
     _listeners: Function[];
     constructor(id: string, options: IOption);
@@ -59,11 +60,11 @@ declare class PagenoteCore {
     addKeyUpListener(): void;
     addShortCutListener(): void;
     addListener(fun: Function): void;
+    computeTarget(): void;
     showActionBar(): void;
     hideActionBar(): void;
     getStepIndex(lightId: string): number;
     removeStep(lightId: string): void;
-    save(): void;
     notification(message: Message): void;
     updateSetting(setting: IOption): void;
     decodeData(data: any): {};

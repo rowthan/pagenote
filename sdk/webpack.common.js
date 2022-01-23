@@ -15,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.svg$/,
-        use: ['preact-svg-loader'],
+        use: ['react-svg-loader'],
       },
       { test: /\.tsx?$/, loader: "ts-loader" },
       {
@@ -29,8 +29,8 @@ module.exports = {
               [
                 "@babel/plugin-transform-react-jsx",
                 {
-                "pragma": "h",
-                "pragmaFrag": "Fragment",
+                // "pragma": "h",
+                // "pragmaFrag": "Fragment",
             }]]
           },
         }
@@ -49,7 +49,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        use: [MiniCssExtractPlugin.loader,{
+        use: ['to-string-loader',{
           loader: 'css-loader',
           options: {
             modules: false,
@@ -93,11 +93,9 @@ module.exports = {
       chunkFilename: "[id].css"
     })
   ],
-  "resolve": {
+  resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
-    "alias": {
-      "react": "preact/compat",
-      "react-dom": "preact/compat",
+    alias: {
       '@': require('path').resolve(__dirname, 'src')
       // Must be below test-utils
     },

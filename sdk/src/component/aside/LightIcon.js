@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import './lightIcon.scss'
 export default function LightIcon({colors,run}) {
   const length = colors.length;

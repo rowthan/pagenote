@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import "./light/light-node.scss";
 import ColorIcon from "../assets/images/color.svg";
 

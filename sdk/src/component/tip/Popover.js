@@ -1,6 +1,6 @@
-import {h,createRef} from 'preact';
+import {createRef} from 'react';
 import ToolTip from "rc-tooltip";
-import './popover.less'
+// import './popover.less'
 
 export default function Popover({message,children,inner=false,...props}) {
   const ref = createRef();

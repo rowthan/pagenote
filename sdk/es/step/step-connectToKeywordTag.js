@@ -1,4 +1,4 @@
-import { getRootOffset, whats } from "../utils/index";
+import { getRootOffset, whats } from "../utils";
 import { gotoPosition } from "../utils/document";
 var connectToKeywordTag = function (ignoreScroll) {
     if (ignoreScroll === void 0) { ignoreScroll = false; }

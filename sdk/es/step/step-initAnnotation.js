@@ -7,10 +7,6 @@ import { throttle } from "../utils";
 import Draggable from 'draggable';
 function initAnnotation() {
     var step = this;
-    var renderMethod = step.options.renderAnnotation;
-    if (renderMethod && typeof renderMethod !== "function") {
-        return;
-    }
     var _a = step.data, bg = _a.bg, x = _a.x, y = _a.y, tip = _a.tip, lightId = _a.lightId, text = _a.text;
     var element = document.createElement('pagenote-annotation'); // 根容器
     element.dataset.lightid = lightId;
@@ -21,11 +17,10 @@ function initAnnotation() {
     };
     var actionArray = document.createElement('pagenote-annotation-menus');
     // actionArray.innerHTML = `<pagenote-block aria-controls="light-ref">${text}</pagenote-block>`
-    var appends = renderMethod(step.data, step);
     renderAnnotationMenu(actionArray, {
         light: step,
         colors: step.options.colors,
-        moreActions: appends[1] || [],
+        moreActions: [],
     });
     header.appendChild(actionArray);
     var ref = document.createElement('pagenote-annotation-ref');
@@ -61,10 +56,6 @@ function initAnnotation() {
     customInner.appendChild(customContent);
     function renderContent() {
         emptyChildren(customContent);
-        var appends = renderMethod(step.data, step);
-        if (appends[0]) {
-            customContent.appendChild(appends[0]);
-        }
     }
     renderContent();
     element.appendChild(customInner);
@@ -95,7 +86,7 @@ function initAnnotation() {
     };
     // @ts-ignore
     var drag = new Draggable(element, options).set(x, y);
-    var container = document.querySelector('pagenote-annotations');
+    var container = step.runtime.relatedNode[0];
     container.appendChild(element);
     element.remove = function () {
         element.parentNode.removeChild(element);

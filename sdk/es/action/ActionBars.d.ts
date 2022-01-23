@@ -1,3 +1,12 @@
-export default function ActionBars({ pagenote }: {
-    pagenote: any;
-}): JSX.Element;
+/// <reference types="react" />
+import { Position, Step } from "../common/Types";
+import { IBrush } from "../types/Option";
+interface Props {
+    position: Position;
+    brushes: IBrush[];
+    showButton: boolean;
+    target: Step;
+    recordNew: (data: any) => void;
+}
+export default function ActionBars({ position, brushes, showButton, target, recordNew }: Props): JSX.Element;
+export {};

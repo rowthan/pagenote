@@ -1,5 +1,6 @@
+// @ts-nocheck
 import whatsPure from "whats-element/pure";
-import { AnnotationStatus, LightStatus } from "../step/const";
+import { AnnotationStatus, LightStatus } from "../common/Types";
 import { getScroll } from "./document";
 var whats = new whatsPure();
 var isMobile = ('ontouchstart' in window) || window.innerWidth < 600;
