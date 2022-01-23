@@ -3,6 +3,7 @@ import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {getPagenoteRoot, whats} from "../utils/index";
 import {AnnotationStatus, LightStatus} from "./const";
+import {LightType} from "../common/Types";
 
 const options = {
 
@@ -95,7 +96,7 @@ function initKeywordTags(){
     step.addListener(onDataChange,false)
     step.addListener(onDataChange,true)
 
-    const {bg,id,text,pre,suffix,lightId,lightStatus,images=[]} = step.data;
+    const {bg,id,text,pre,suffix,lightId,lightStatus,lightType=0,images=[]} = step.data;
 
     function highlightElement(target: HTMLElement) {
         // 元素内的所有内容都被高亮时 直接高亮元素，不再使用 highlight 正则匹配
@@ -106,7 +107,8 @@ function initKeywordTags(){
         // 查找文字、高亮元素
         let index = 0;
         const result = highlightKeywordInElement(target,text||'',pre||'',suffix||'',null,function(text){
-            const lightElement: LightElement = document.createElement('light');
+            const tag = lightType || LightType.normal;
+            const lightElement: LightElement = document.createElement(tag);
             lightElement.dataset.highlight = lightId;
             lightElement.dataset.lightindex = String(index);
             index++

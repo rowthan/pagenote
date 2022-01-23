@@ -85,6 +85,7 @@ window.initPagenote = function () {
                 shortcut:'p', // 快捷键，可选
                 label:'一级画笔', // 说明
                 level:1, // 暂不支持
+                defaultStatus: 0,
             },
             null,
             {
@@ -92,10 +93,12 @@ window.initPagenote = function () {
                 shortcut:'y',
                 label:'一级画笔',
                 level:1,
+                lightType: 'del',
             },
             null,
             {
                 bg: '#7BDCB5',
+                defaultStatus: 2,
             },
             {
                 bg: '#8ED1FC',

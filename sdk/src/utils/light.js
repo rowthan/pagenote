@@ -11,7 +11,11 @@ export function wrapperLightAttr(lightElement,{bg,lightStatus,tip},appendEl,runt
     lightElement.dataset.active = [1,2,3].includes(lightStatus) ? `${lightStatus}` : (lightStatus ? '1' : '0');
     lightElement.dataset.note = !!tip ? '1' : '0'
     lightElement.dataset.lighting = runtime.lighting //? '1' : ''
-    lightElement.style=`--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor};background-image: linear-gradient(0deg,${bgColor} 2em,${bgColor} 0);`;
+    let variable = `--bgcolor:${bgColor};--color:${textColor};--bgbottomcolor:${bottomColor};`;
+    if(lightElement.tagName.toUpperCase()==='LIGHT'){
+        variable += `background-image: linear-gradient(0deg,${bgColor} 2em,${bgColor} 0);`
+    }
+    lightElement.style=variable
 
     if(appendEl){
         if(tip){

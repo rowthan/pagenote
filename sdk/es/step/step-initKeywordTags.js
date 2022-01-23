@@ -12,6 +12,7 @@ import { wrapperLightAttr } from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import { getPagenoteRoot, whats } from "../utils/index";
 import { AnnotationStatus, LightStatus } from "./const";
+import { LightType } from "../common/Types";
 var options = {};
 var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (item) {
@@ -95,7 +96,7 @@ function initKeywordTags() {
     };
     step.addListener(onDataChange, false);
     step.addListener(onDataChange, true);
-    var _a = step.data, bg = _a.bg, id = _a.id, text = _a.text, pre = _a.pre, suffix = _a.suffix, lightId = _a.lightId, lightStatus = _a.lightStatus, _b = _a.images, images = _b === void 0 ? [] : _b;
+    var _a = step.data, bg = _a.bg, id = _a.id, text = _a.text, pre = _a.pre, suffix = _a.suffix, lightId = _a.lightId, lightStatus = _a.lightStatus, _b = _a.lightType, lightType = _b === void 0 ? 0 : _b, _c = _a.images, images = _c === void 0 ? [] : _c;
     function highlightElement(target) {
         // 元素内的所有内容都被高亮时 直接高亮元素，不再使用 highlight 正则匹配
         // if(target.innerText.trim() === text){
@@ -104,7 +105,8 @@ function initKeywordTags() {
         // 查找文字、高亮元素
         var index = 0;
         var result = highlightKeywordInElement(target, text || '', pre || '', suffix || '', null, function (text) {
-            var lightElement = document.createElement('light');
+            var tag = lightType || LightType.normal;
+            var lightElement = document.createElement(tag);
             lightElement.dataset.highlight = lightId;
             lightElement.dataset.lightindex = String(index);
             index++;

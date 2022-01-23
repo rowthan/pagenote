@@ -4,7 +4,7 @@ var LOADED_KEY = 'pagenote';
 var BLOCK_PAGES = /\.pagenote\.html$/;
 // 检测在当前网页是否屏蔽了 pagenote
 var checkBlocked = function () {
-    var isBlocked = !!document.querySelector("*[data-".concat(BLOCK_KEY, "]"));
+    var isBlocked = !!document.querySelector("*[data-" + BLOCK_KEY + "]");
     var isBlockPage = BLOCK_PAGES.test(window.location.href);
     return isBlocked || isBlockPage;
 };

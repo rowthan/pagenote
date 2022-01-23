@@ -28,8 +28,8 @@ const Step = function (info: StepProps,options: StepOptions,callback?:function) 
 
   // 初始化需要持久化存储的数据
   const data = {
-    lightStatus: LightStatus.LIGHT,
-    annotationStatus: AnnotationStatus.SHOW,
+    lightStatus: info.lightStatus === undefined ? LightStatus.LIGHT : info.lightStatus,
+    annotationStatus: info.annotationStatus === undefined ? AnnotationStatus.SHOW : info.annotationStatus,
     lightId : md5(info.id+info.text),
   };
   const that = this;

@@ -10,5 +10,5 @@ export var AnnotationStatus;
     AnnotationStatus[AnnotationStatus["SHOW"] = 1] = "SHOW";
 })(AnnotationStatus || (AnnotationStatus = {}));
 // 删减字段，需要 插件同步修改
-export var STORE_KEYS_VERSION_2_VALIDATE = ["x", "y", "id", "text", "tip", "bg", "time", "isActive", "offsetX", "offsetY", "parentW", "pre", "suffix", "images", "level", "lightStatus", "annotationStatus"];
+export var STORE_KEYS_VERSION_2_VALIDATE = ["x", "y", "id", "text", "tip", "bg", "time", "isActive", "offsetX", "offsetY", "parentW", "pre", "suffix", "images", "level", "lightStatus", "annotationStatus", "lightType"];
 //# sourceMappingURL=const.js.map

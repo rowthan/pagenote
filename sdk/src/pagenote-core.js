@@ -28,6 +28,8 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 shortcut:'p',
                 label:'',
                 level:1,
+                lightType: 0,
+                defaultStatus: 1,
             },{
                 bg:'#ffbea9',
                 shortcut:'n',
@@ -304,10 +306,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                         return colorItem && colorItem.shortcut && colorItem.shortcut.toLowerCase() === key;
                     });
                     if(doHighlight && brush){
-                        that.record({
-                            bg: brush.bg,
-                            level: brush.level, // TODO 支持 level 级别参数
-                        },false);
+                        that.record(brush,false);
                     } else if(typeof extensionActions[key] === 'function'){ // 扩展插件快捷键
                         extensionActions[key](e,that.target);
                     }
@@ -377,6 +376,9 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
 
     // success: true,faild:false 增加参数 排序方式，按时间、按网页位置（默认)
     this.record = function(info={},showComment){
+        if(info.defaultStatus!==undefined){
+            info.lightStatus = info.defaultStatus
+        }
         info = Object.assign(this.target,info);
         this.status = constant.RECORDING;
         if(typeof options.beforeRecord === 'function' && options.beforeRecord()===false){

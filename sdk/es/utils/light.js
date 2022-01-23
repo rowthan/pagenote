@@ -5,12 +5,16 @@ export function wrapperLightAttr(lightElement, _a, appendEl, runtime) {
         return;
     }
     var _b = convertColor(bg), textColor = _b.textColor, rgb = _b.rgb;
-    var bottomColor = "rgb(".concat((rgb[0] - 30), ",").concat((rgb[1] - 30), ",").concat((rgb[2] - 30), ")");
-    var bgColor = "rgba(".concat(rgb.toString(), ",1)");
-    lightElement.dataset.active = [1, 2, 3].includes(lightStatus) ? "".concat(lightStatus) : (lightStatus ? '1' : '0');
+    var bottomColor = "rgb(" + (rgb[0] - 30) + "," + (rgb[1] - 30) + "," + (rgb[2] - 30) + ")";
+    var bgColor = "rgba(" + rgb.toString() + ",1)";
+    lightElement.dataset.active = [1, 2, 3].includes(lightStatus) ? "" + lightStatus : (lightStatus ? '1' : '0');
     lightElement.dataset.note = !!tip ? '1' : '0';
     lightElement.dataset.lighting = runtime.lighting; //? '1' : ''
-    lightElement.style = "--bgcolor:".concat(bgColor, ";--color:").concat(textColor, ";--bgbottomcolor:").concat(bottomColor, ";background-image: linear-gradient(0deg,").concat(bgColor, " 2em,").concat(bgColor, " 0);");
+    var variable = "--bgcolor:" + bgColor + ";--color:" + textColor + ";--bgbottomcolor:" + bottomColor + ";";
+    if (lightElement.tagName.toUpperCase() === 'LIGHT') {
+        variable += "background-image: linear-gradient(0deg," + bgColor + " 2em," + bgColor + " 0);";
+    }
+    lightElement.style = variable;
     if (appendEl) {
         if (tip) {
             lightElement.appendChild(appendEl);
@@ -24,7 +28,7 @@ export function wrapperAnnotationAttr(element, color, show, tip, focus, lighting
     if (focus === void 0) { focus = ''; }
     element.dataset.visiable = show ? '1' : '0';
     element.dataset.tip = !!tip ? '1' : '0';
-    element.style = "--color:".concat(color);
+    element.style = "--color:" + color;
     element.dataset.focus = focus;
     element.dataset.lighting = lighting; //? '1': '0'
 }

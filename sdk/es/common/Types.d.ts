@@ -7,7 +7,12 @@ declare enum LightStatus {
     half_light = 1,
     light = 2
 }
+declare enum LightType {
+    normal = "light",
+    lineThrough = "del"
+}
 interface Step {
+    lightType: LightType;
     bg: string;
     id: string;
     isActive: string;
@@ -81,4 +86,4 @@ declare class WebPageItem implements IWebPage {
     createDataHash(): any;
 }
 export type { PlainData, WebPage, };
-export { WebPageItem };
+export { WebPageItem, LightType, LightStatus };

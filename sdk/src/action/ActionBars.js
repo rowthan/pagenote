@@ -15,11 +15,8 @@ export default function ActionBars ({pagenote}) {
 
   const canHighlight = pagenote.target && pagenote.target.canHighlight;
 
-  function recordNew(item,level) {
-    pagenote.record({
-      bg:item.bg,
-      level: level || item.level,
-    });
+  function recordNew(item) {
+    pagenote.record(item);
   }
 
   const showAnimation = pagenote.options.showIconAnimation;

@@ -5,7 +5,7 @@ export default function notification(showMessage) {
     ele.dataset.type = type;
     if (color) {
         // @ts-ignore
-        ele.style = "--color: ".concat(color);
+        ele.style = "--color: " + color;
     }
     ele.innerHTML = message;
     ele.style.left = position.x || ((_a = e === null || e === void 0 ? void 0 : e.target) === null || _a === void 0 ? void 0 : _a.clientX) || window.innerWidth / 2 + 'px';

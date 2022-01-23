@@ -10,6 +10,11 @@ var LightStatus;
     LightStatus[LightStatus["half_light"] = 1] = "half_light";
     LightStatus[LightStatus["light"] = 2] = "light";
 })(LightStatus || (LightStatus = {}));
+var LightType;
+(function (LightType) {
+    LightType["normal"] = "light";
+    LightType["lineThrough"] = "del";
+})(LightType || (LightType = {}));
 var EMPTY_HASH = 'empty';
 var WebPageItem = /** @class */ (function () {
     function WebPageItem(webPage) {
@@ -78,5 +83,5 @@ var WebPageItem = /** @class */ (function () {
     };
     return WebPageItem;
 }());
-export { WebPageItem };
+export { WebPageItem, LightType, LightStatus };
 //# sourceMappingURL=Types.js.map
