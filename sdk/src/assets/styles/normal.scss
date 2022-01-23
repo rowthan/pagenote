@@ -136,6 +136,11 @@ light[data-highlight]{
   }
 }
 
+del[data-highlight]{
+  text-decoration-color: var(--bgcolor);
+  text-decoration-style: wavy;
+}
+
 pagenote-notification{
   display: inline-block;
   position: fixed;

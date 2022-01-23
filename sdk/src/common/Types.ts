@@ -11,7 +11,13 @@ enum LightStatus {
     light=2,
 }
 
+enum LightType {
+    normal = 'light',
+    lineThrough= 'del'
+}
+
 interface Step {
+    lightType:LightType,
     bg: string,
     id: string,
     isActive: string,
@@ -165,5 +171,7 @@ export type {
 }
 
 export {
-    WebPageItem
+    WebPageItem,
+    LightType,
+    LightStatus
 }

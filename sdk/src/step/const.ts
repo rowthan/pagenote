@@ -33,4 +33,4 @@ export enum AnnotationStatus {
     SHOW=1,
 }
 // 删减字段，需要 插件同步修改
-export const STORE_KEYS_VERSION_2_VALIDATE = ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus"]
+export const STORE_KEYS_VERSION_2_VALIDATE = ["x","y","id","text","tip","bg","time","isActive","offsetX","offsetY","parentW","pre","suffix","images","level","lightStatus","annotationStatus","lightType"]
