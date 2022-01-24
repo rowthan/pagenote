@@ -18,35 +18,9 @@ var LightType;
 var EMPTY_HASH = 'empty';
 var WebPageItem = /** @class */ (function () {
     function WebPageItem(webPage) {
-        // createAt: number;
-        // deleted: boolean;
-        // description: string;
-        // expiredAt: number;
-        // icon: string;
-        // key: string;
-        // lastSyncTime: number;
-        // mtimeMs: number;
-        // plainData: PlainData;
-        // title: string;
-        // updateAt: number;
-        // url: string;
-        // urls: string[];
-        // version: string;
-        this.data = {
-            createAt: 0,
-            deleted: false,
-            description: "",
-            icon: "",
-            key: "",
-            plainData: undefined,
-            title: "",
-            updateAt: 0,
-            url: "",
-            urls: [],
-            version: ""
-        };
         this.lastHash = EMPTY_HASH;
-        this.setData(webPage);
+        this.data = webPage;
+        this.lastHash = this.createDataHash();
     }
     WebPageItem.prototype.setData = function (webPage) {
         for (var i in webPage) {

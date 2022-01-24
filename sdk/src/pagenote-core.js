@@ -379,7 +379,7 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         if(info.defaultStatus!==undefined){
             info.lightStatus = info.defaultStatus
         }
-        info = Object.assign(this.target,info);
+        info = Object.assign(this.target||{},info);
         this.status = constant.RECORDING;
         if(typeof options.beforeRecord === 'function' && options.beforeRecord()===false){
             return;

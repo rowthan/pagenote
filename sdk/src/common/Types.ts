@@ -109,23 +109,12 @@ class WebPageItem implements IWebPage{
     // urls: string[];
     // version: string;
 
-    data: WebPage = {
-        createAt: 0,
-        deleted: false,
-        description: "",
-        icon: "",
-        key: "",
-        plainData: undefined,
-        title: "",
-        updateAt: 0,
-        url: "",
-        urls: [],
-        version: ""
-    };
+    data: WebPage;
     lastHash: string = EMPTY_HASH;
 
     constructor(webPage:WebPage) {
-        this.setData(webPage);
+        this.data = webPage;
+        this.lastHash = this.createDataHash();
     }
 
     setData(webPage: WebPage):boolean{
