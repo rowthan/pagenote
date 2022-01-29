@@ -9,7 +9,7 @@ import notification, {Message} from "./utils/notification";
 import console from "./utils/console";
 import {IBrush, IOption} from "./types/Option";
 import {getDefaultOption} from "./utils/format";
-import {PlainData, Step, Position} from "./common/Types";
+import {PlainData, Step, Position} from "../../shared/src/@types/Types";
 import merge from 'lodash/merge'
 import {isMoble} from "./utils/device";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的

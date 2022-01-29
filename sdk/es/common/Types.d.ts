@@ -89,6 +89,7 @@ interface IWebPage {
     data: WebPage;
     lastHash: string;
     isValid(): boolean;
+    isEmpty(): boolean;
     setData(webPage: UpdateProps<WebPage, AllowUpdateKeys>): boolean;
     createDataHash(): string;
 }
@@ -98,6 +99,7 @@ declare class WebPageItem implements IWebPage {
     constructor(webPage: WebPage);
     setData(webPage: WebPage): boolean;
     isValid(): boolean;
+    isEmpty(): boolean;
     createDataHash(): string;
 }
 export type { PlainData, WebPage, Step, Position, Target, };

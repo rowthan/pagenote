@@ -1,8 +1,7 @@
-import {WebPage} from "../sdk/src/common/Types";
+import {BackupData, WebPage} from "./@types/Types";
 import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import {BackupData} from '../sdk/src/common/utils/data'
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>

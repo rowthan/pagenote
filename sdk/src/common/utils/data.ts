@@ -1,18 +1,6 @@
-import {WebPage} from "../Types";
-
-enum BackupVersion {
-    version1=1,
-    version=2
-}
-
-interface BackupData {
-    pages: WebPage[],
-    version: BackupVersion,
-    extension_version: string,
-    backup_at: number,
-}
-
 // 将webpage数据导出为字符串文本
+import {BackupData} from "../../../es/common/utils/data";
+
 const makeExportString = function (backupData:BackupData):string{
     const exportDataObject = {
         pages: backupData.pages,
@@ -37,8 +25,6 @@ const resolveImportString = function (inputStr: string):BackupData {
 }
 
 export {
-    BackupData,
-    BackupVersion,
     makeExportString,
     resolveImportString,
 }

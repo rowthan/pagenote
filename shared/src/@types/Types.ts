@@ -1,4 +1,8 @@
-import md5 from 'md5';
+
+enum BackupVersion {
+    version1 = 1,
+    version = 2
+}
 
 enum AnnotationStatus {
     fixed=1,
@@ -96,89 +100,13 @@ type WebPageDatas = {
 
 type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo;
 
-type UpdateProps<T,Key extends keyof T> = {[key in Key]?: T[key]}
 type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | 'url' | 'urls'
 
-interface IWebPage{
-    data: WebPage,
-    lastHash: string
-    isValid():boolean, // 数据有效性校验，判断该数据是否有效
-    setData(webPage:UpdateProps<WebPage, AllowUpdateKeys>):boolean,
-    createDataHash():string,
-}
-
-const EMPTY_HASH = 'empty'
-
-class WebPageItem implements IWebPage{
-    // createAt: number;
-    // deleted: boolean;
-    // description: string;
-    // expiredAt: number;
-    // icon: string;
-    // key: string;
-    // lastSyncTime: number;
-    // mtimeMs: number;
-    // plainData: PlainData;
-    // title: string;
-    // updateAt: number;
-    // url: string;
-    // urls: string[];
-    // version: string;
-
-    data: WebPage = {
-        createAt: 0,
-        deleted: false,
-        description: "",
-        icon: "",
-        key: "",
-        plainData: undefined,
-        title: "",
-        updateAt: 0,
-        url: "",
-        urls: [],
-        version: ""
-    };
-    lastHash: string = EMPTY_HASH;
-
-    constructor(webPage:WebPage) {
-        this.setData(webPage);
-    }
-
-    setData(webPage: WebPage):boolean{
-        for(let i in webPage){
-            // @ts-ignore
-            if(webPage[i]!==undefined){
-                // @ts-ignore
-                this.data[i] = webPage[i]
-            }
-            this.data.updateAt = Date.now();
-        }
-        const currentHash = this.createDataHash();
-        const changed = currentHash !== this.lastHash
-        this.lastHash = currentHash;
-        return changed
-    }
-
-    isValid() {
-        const {plainData} = this.data;
-        return plainData?.steps.length > 0 || plainData?.snapshots.length > 0
-    }
-
-    createDataHash(){
-        if(!this.isValid()){
-            return EMPTY_HASH
-        }
-        const data = this.data;
-        const string = JSON.stringify({
-            version: data.version,
-            deleted: data.deleted,
-            plainData: data.plainData,
-            description: data.description,
-            icon: data.icon,
-            urls: data.urls,
-        })
-        return md5(string)
-    }
+interface BackupData {
+    pages: WebPage[],
+    version: BackupVersion,
+    extension_version: string,
+    backup_at: number,
 }
 
 export type {
@@ -187,10 +115,12 @@ export type {
     Step,
     Position,
     Target,
+    AllowUpdateKeys,
+    BackupData
 }
 
 export {
-    WebPageItem,
     LightStatus,
-    AnnotationStatus
+    AnnotationStatus,
+    BackupVersion
 }

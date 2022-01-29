@@ -12,7 +12,7 @@ import Popover from "../component/tip/Popover";
 import styles from './annotationMenu.scss'
 import {writeTextToClipboard} from "../utils/document";
 import Colors from "../component/Colors";
-import {AnnotationStatus, LightStatus} from "../common/Types";
+import {AnnotationStatus, LightStatus} from "../../../shared/src/@types/Types";
 
 
 function LightActionBar({step,colors}) {

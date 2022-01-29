@@ -1,9 +1,10 @@
 {
-  "name": "pagenote",
-  "version": "6.0.0.alpha",
   "description": "highlight and annotation the webpage",
-  "main": "sdk",
-  "module": "es",
+  "scripts": {
+    "build-sdk": "cd sdk && npm run build",
+    "publish-sdk": "cd sdk && npm publish",
+    "publish-shared": "cd shared && npm publish"
+  },
   "keywords": [
     "highlight",
     "mark",

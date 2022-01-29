@@ -7,6 +7,8 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "declaration": true,
+        "rootDir": "src",
+        "outDir": "lib",
         "lib": [
             "dom",
             "es5",

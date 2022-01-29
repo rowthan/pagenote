@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Step} from "../common/Types";
+import {Step} from "../../../shared/src/@types/Types";
 import {highlightKeywordInElement, LightElement} from "../utils/highlight";
 import {getPagenoteRoot, whats} from "../utils";
 import md5 from "md5";

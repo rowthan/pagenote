@@ -1,13 +1,19 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.0.0",
+  "version": "1.0.2-c",
   "description": "",
-  "main": "index.js",
-  "dependencies": {},
+  "main": "lib/",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/chrome": "0.0.177"
+  },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json",
+    "publish-npm": "npm publish --access public"
   },
+  "type": "module",
+  "files": ["lib"],
   "author": "",
   "license": "ISC"
 }

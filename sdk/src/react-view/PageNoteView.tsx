@@ -1,4 +1,4 @@
-import {PlainData, Position, Step, Target} from "../common/Types";
+import {PlainData, Position, Step, Target} from "../../../shared/src/@types/Types";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import ReactDom from "react-dom";
 import ActionBars from "../action/ActionBars";
@@ -147,7 +147,7 @@ function PageNoteView({plainData,onChange}:Props) {
     },[data])
 
     useEffect(function () {
-        
+
     })
 
 
@@ -158,7 +158,7 @@ function PageNoteView({plainData,onChange}:Props) {
         }
         setRuntime(newRuntime)
     },[runtime])
-    
+
     function recordNew(info: {bg: string}) {
         console.log('record new',target)
         const steps = data.steps;

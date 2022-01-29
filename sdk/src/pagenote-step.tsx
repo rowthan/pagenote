@@ -7,7 +7,7 @@ import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
 import connectToKeywordTag from './step/step-connectToKeywordTag';
 import notification from "./utils/notification";
-import {Step,AnnotationStatus, LightStatus,} from './common/Types'
+import {Step,AnnotationStatus, LightStatus,} from '../../shared/src/@types/Types'
 import {pick} from "lodash";
 
 const editorModal = new modal();

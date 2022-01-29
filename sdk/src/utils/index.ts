@@ -1,6 +1,6 @@
 // @ts-nocheck
 import whatsPure from "whats-element/pure";
-import {AnnotationStatus, LightStatus, Target} from "../common/Types";
+import {AnnotationStatus, LightStatus, Target} from "../../../shared/src/@types/Types";
 import {getScroll} from "./document";
 // import console from "./console";
 const whats = new whatsPure();

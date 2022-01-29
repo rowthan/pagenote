@@ -36,24 +36,27 @@ module.exports = {
         }
       },
       {
-      test: /\.scss$/,
-      use: [MiniCssExtractPlugin.loader,{
-          loader: 'css-loader',
-          options: {
-              modules: false,
-              localIdentName: '[hash:base64:3]'
-          }
-        },{
-          loader: "sass-loader"
-        }]
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader,{
+            loader: 'css-loader',
+            options: {
+                modules: {
+                  localIdentName: "[hash:base64:5]",
+                },
+                // localIdentName: '[hash]'
+            }
+          },{
+            loader: "sass-loader"
+          }]
       },
       {
         test: /\.less$/,
         use: ['to-string-loader',{
           loader: 'css-loader',
           options: {
-            modules: false,
-            localIdentName: '[hash:base64:3]'
+            modules: {
+              localIdentName: "[hash:base64:5]",
+            },
           }
         },{
           loader: "less-loader"
@@ -64,8 +67,9 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader,{
           loader: 'css-loader',
           options: {
-            modules: false,
-            localIdentName: '[hash:base64:3]'
+            modules: {
+              localIdentName: "[hash:base64:5]",
+            },
           }
         }]
       },
@@ -77,22 +81,26 @@ module.exports = {
       },
     ]
   },
-  // optimization: {
-  //   minimizer: [
-  //     new OptimizeCSSAssetsPlugin({
-  //       assetNameRegExp: /\.css$/g,
-  //       cssProcessor: require('cssnano'),
-  //       cssProcessorOptions: {discardComments:{removeAll: true}},
-  //       canPrint: true
-  //     })
-  //   ]
-  // },
+  optimization: {
+    // minimizer: [
+    //   new OptimizeCSSAssetsPlugin({
+    //     assetNameRegExp: /\.css$/g,
+    //     cssProcessor: require('cssnano'),
+    //     cssProcessorOptions: {discardComments:{removeAll: true}},
+    //     canPrint: true
+    //   })
+    // ]
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: "pagenote.css",
       chunkFilename: "[id].css"
     })
   ],
+  externals:{
+    'react':'React',
+    'react-dom': 'ReactDOM',
+  },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
     alias: {

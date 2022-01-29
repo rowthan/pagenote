@@ -1,4 +1,4 @@
-import {WebPage} from "../Types";
+import {WebPage} from "../../../../shared/src/@types/Types";
 import mustache from 'mustache';
 
 /**

@@ -1,11 +1,11 @@
 {
   "name": "@pagenote/sdk",
-  "version": "5.4.7",
+  "version": "6.0.0-alpha",
   "description": "highlight and annotation the webpage",
   "main": "lib/pagenote.js",
   "module": "es",
   "scripts": {
-    "build": "webpack --config webpack.prod.js && npm run tsc",
+    "build": "webpack --config webpack.prod.js",
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json"
@@ -103,6 +103,7 @@
     "react-svg-loader": "^3.0.3",
     "react-useportal": "^1.0.14",
     "toastr": "^2.1.4",
+    "webpack-bundle-analyzer": "^4.5.0",
     "whats-element": "^2.4.4"
   }
 }

@@ -2,7 +2,7 @@ import {highlightKeywordInElement, LightElement, removeElementHighlight, wrapIma
 import {wrapperLightAttr} from "../utils/light";
 import toggleLightMenu from "../light-menu";
 import {getPagenoteRoot, whats} from "../utils";
-import {AnnotationStatus, LightStatus,} from '../common/Types'
+import {AnnotationStatus, LightStatus,} from '../../../shared/src/@types/Types'
 import IStep from "../pagenote-step";
 
 
