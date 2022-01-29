@@ -1,5 +1,5 @@
 import { throttle, convertColor} from "./index";
-import md5 from "blueimp-md5";
+import md5 from "md5";
 import html2canvas from "html2canvas";
 import Canvas2Image from "./canvas2image";
 

@@ -11,6 +11,11 @@ declare enum LightStatus {
     LIGHT = 2,
     UN_LIGHT = 0
 }
+declare type Target = Step & {
+    clientX: number;
+    clientY: number;
+    bg: string;
+};
 declare type Step = {
     x: number;
     y: number;
@@ -95,5 +100,5 @@ declare class WebPageItem implements IWebPage {
     isValid(): boolean;
     createDataHash(): string;
 }
-export type { PlainData, WebPage, Step, Position, };
+export type { PlainData, WebPage, Step, Position, Target, };
 export { WebPageItem, LightStatus, AnnotationStatus };

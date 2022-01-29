@@ -6,7 +6,9 @@ interface Props {
     brushes: IBrush[];
     showButton: boolean;
     target: Step;
-    recordNew: (data: any) => void;
+    recordNew: (data: {
+        bg: string;
+    }) => void;
 }
 export default function ActionBars({ position, brushes, showButton, target, recordNew }: Props): JSX.Element;
 export {};

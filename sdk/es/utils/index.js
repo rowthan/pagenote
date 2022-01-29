@@ -2,6 +2,7 @@
 import whatsPure from "whats-element/pure";
 import { AnnotationStatus, LightStatus } from "../common/Types";
 import { getScroll } from "./document";
+// import console from "./console";
 var whats = new whatsPure();
 var isMobile = ('ontouchstart' in window) || window.innerWidth < 600;
 function getPagenoteRoot() {
@@ -25,14 +26,9 @@ function getRootOffset() {
 var prepareSelectionTarget = function (enableMarkImg, positions) {
     var selection = document.getSelection();
     if (selection.rangeCount === 0) {
+        // console.log('无选区')
         return null;
     }
-    // // pagenote 状态监测
-    // const isWaiting = this.status === constant.WAITING && selectedText === this.target.text;
-    // const isDestroy = this.status === this.CONSTANT.DESTROY;
-    // if(isWaiting || isDestroy || selection.rangeCount===0){ // 避免重复计算\无选区
-    //     return;
-    // }
     // 选区父节点是否存在
     var range0 = selection.getRangeAt(0);
     var parentElement = selection.anchorNode ? range0.commonAncestorContainer : null;
@@ -41,6 +37,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     }
     var noParentElement = !parentElement || !parentElement.tagName;
     if (noParentElement) {
+        console.log('无父节点');
         return null;
     }
     function checkInPagenoteElement(element) {
@@ -58,7 +55,9 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
             return false;
         }
     }
+    // 选区 黑名单检测
     if (checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode)) {
+        console.log('黑名单');
         return null;
     }
     // 是否可编辑区
@@ -66,39 +65,39 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     if (!parentElement || parentElement.contentEditable === 'true') {
         canHighlight = false;
     }
-    // TODO 监测是否有图片、视频等其他资源
+    // 监测是否有图片资源
     var markImages = [];
     var selectedElementContent = range0.cloneContents();
-    if (enableMarkImg) {
-        var children = selectedElementContent.children;
-        for (var i = 0; i < children.length; i++) {
-            var item = children[i];
-            if (item.tagName === 'IMG') {
-                // 找到对应的图片节点
-                var id = "img[src=\"" + item.src + "\"]";
-                var elements = parentElement.querySelectorAll(id);
-                for (var j = 0; j < elements.length; j++) {
-                    var element = elements[j];
-                    if (selection.containsNode(element)) {
-                        var imgId = whats.getUniqueId(element).wid;
-                        var imgUrl = element.src;
-                        markImages.push({
-                            id: imgId,
-                            src: imgUrl,
-                            alt: element.alt,
-                            // pre: element.previousSibling?.textContent,
-                            // suffix: element.nextSibling?.textContent,
-                        });
-                        break;
-                    }
+    var children = selectedElementContent.children;
+    for (var i = 0; i < children.length; i++) {
+        var item = children[i];
+        if (item.tagName === 'IMG') {
+            // 找到对应的图片节点
+            var id = "img[src=\"".concat(item.src, "\"]");
+            var elements = parentElement.querySelectorAll(id);
+            for (var j = 0; j < elements.length; j++) {
+                var element = elements[j];
+                if (selection.containsNode(element)) {
+                    var imgId = whats.getUniqueId(element).wid;
+                    var imgUrl = element.src;
+                    markImages.push({
+                        id: imgId,
+                        src: imgUrl,
+                        alt: element.alt,
+                        // pre: element.previousSibling?.textContent,
+                        // suffix: element.nextSibling?.textContent,
+                    });
+                    break;
                 }
             }
         }
     }
     var selectedText = selection.toString().trim(); // 跨标签高亮
     if (!(selectedText || markImages.length)) {
+        // console.log('无内容')
         return null;
     }
+    /**上下文计算*/
     // TODO 双击情况下 ，before 计算会存在问题
     var before = range0.startContainer.textContent.substr(0, range0.startOffset);
     var after = range0.endContainer.textContent.substr(range0.endOffset, 10);
@@ -117,6 +116,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     var selectionRects = selection.getRangeAt(0).getClientRects();
     var relativeRect = selectionRects[selectionRects.length - 1];
     if (!relativeRect) {
+        console.log('无选区节点');
         return null;
     }
     // 鼠标起始位置
@@ -124,17 +124,32 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     // 鼠标落点位置
     var endPosition = positions[1];
     // 正逆方向计算
-    var offsetRelative = 1;
-    // 判断是正逆方向
+    var offsetRelative;
+    // 判断是顺、反方向
     var eOffsetX = endPosition.x - startPosition.x;
     var eOffsetY = endPosition.y - startPosition.y;
-    if (eOffsetX * eOffsetY >= 0) {
-        offsetRelative = eOffsetX >= 0 ? 1 : -1;
+    // x,y 方向一致情况下，直接取值
+    if (Math.abs(eOffsetY) > 14) {
+        offsetRelative = eOffsetY > 1 ? 1 : -1;
     }
     else {
-        var relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >= 0 ? eOffsetX : eOffsetY;
-        offsetRelative = relativeDirection >= 0 ? 1 : -1;
+        offsetRelative = eOffsetX > 0 ? 1 : -1;
     }
+    // if(eOffsetY * eOffsetX < 0){
+    //     offsetRelative = -1
+    // } else {
+    //     // 方向不一致的情况下，按照偏移量大计算
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // }
+    // console.log(startPosition,endPosition)
+    // offsetRelative = eOffsetX * eOffsetY < 0;
+    // if(eOffsetX * eOffsetY < 0){
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // } else {
+    //     offsetRelative = eOffsetX >= 0 ? 1 : -1;
+    // }
     // 根据正逆方向，选择用于计算位置的选区标准，如果是逆向，则取第一个选区
     if (offsetRelative === -1) {
         relativeRect = selectionRects[0];
@@ -149,6 +164,15 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
     var cursorY = parseInt(y);
     var rootOffset = getRootOffset();
     var ignoreOffsetY = cursorY - rootOffset.top;
+    var clientX, clientY;
+    if (offsetRelative === -1) {
+        clientX = relativeRect.left - 30;
+        clientY = relativeRect.top - 30;
+    }
+    else {
+        clientX = relativeRect.left + relativeRect.width;
+        clientY = relativeRect.top + relativeRect.height;
+    }
     var target = {
         x: cursorX - rootOffset.left,
         y: Math.min(ignoreOffsetY, scrollY + document.documentElement.scrollHeight - 60),
@@ -163,8 +187,8 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
         isActive: false,
         bg: '',
         parentW: parseInt(parentElement.clientWidth),
-        // clientX: e.clientX,
-        // clientY: e.clientY,
+        clientX: clientX,
+        clientY: clientY,
         canHighlight: canHighlight,
         selectionElements: selectedElementContent,
         images: markImages,

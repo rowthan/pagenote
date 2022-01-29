@@ -9,7 +9,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import md5 from "blueimp-md5";
+import md5 from "md5";
 import { getScroll, writeTextToClipboard } from "./utils/document";
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
@@ -87,8 +87,8 @@ var IStep = /** @class */ (function () {
                         offset += relatedNote.offsetHeight * -1;
                     }
                     that.copyToClipboard(false, {
-                        x: "" + (that.data.x - scroll_1.x),
-                        y: "" + (that.data.y - scroll_1.y + offset),
+                        x: "".concat(that.data.x - scroll_1.x),
+                        y: "".concat(that.data.y - scroll_1.y + offset),
                     });
                     break;
                 case 'm':
@@ -129,7 +129,7 @@ var IStep = /** @class */ (function () {
                     if (Number.isInteger(index) && index >= 0) {
                         notification({
                             duration: 1000,
-                            message: "\u53EA\u6709" + options.colors.length + "\u53EA\u753B\u7B14\uFF0C\u65E0\u6CD5\u4F7F\u7528\u7B2C" + key + "\u53EA",
+                            message: "\u53EA\u6709".concat(options.colors.length, "\u53EA\u753B\u7B14\uFF0C\u65E0\u6CD5\u4F7F\u7528\u7B2C").concat(key, "\u53EA"),
                             type: 'error'
                         });
                     }
@@ -216,7 +216,7 @@ var IStep = /** @class */ (function () {
         writeTextToClipboard(value).then(function (r) {
             notification({
                 type: "success",
-                message: "\u5DF2\u590D\u5236\u3010" + value + "\u3011",
+                message: "\u5DF2\u590D\u5236\u3010".concat(value, "\u3011"),
                 color: _this.data.bg,
                 duration: 3000,
                 position: position

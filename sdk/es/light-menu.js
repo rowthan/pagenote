@@ -22,7 +22,7 @@ var toggleLightMenu = (function () {
                 top = pos.top;
                 left = pos.left;
             }
-            return React.createElement("pagenote-block", { onClick: function (e) { e.stopPropagation(); }, style: "position:absolute; z-index:999999;top:" + top + "px;left:" + left + "px;\n                    " },
+            return React.createElement("pagenote-block", { onClick: function (e) { e.stopPropagation(); }, style: "position:absolute; z-index:999999;top:".concat(top, "px;left:").concat(left, "px;\n                    ") },
                 React.createElement(LightActionBar, { step: light, colors: colors }));
         }
         toggleLightBar = function (show, light, position) {

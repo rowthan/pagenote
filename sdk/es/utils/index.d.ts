@@ -1,4 +1,4 @@
-import { AnnotationStatus } from "../common/Types";
+import { Target } from "../common/Types";
 declare const whats: any;
 declare const isMobile: boolean;
 declare function getPagenoteRoot(): Element;
@@ -7,30 +7,7 @@ declare function getRootOffset(): {
     top: number;
     scrollHeight: number;
 };
-declare const prepareSelectionTarget: (enableMarkImg: any, positions: any) => {
-    x: number;
-    y: number;
-    offsetX: number;
-    offsetY: number;
-    pre: string;
-    suffix: string;
-    text: string;
-    tip: string;
-    time: number;
-    id: any;
-    isActive: boolean;
-    bg: string;
-    parentW: number;
-    canHighlight: boolean;
-    selectionElements: DocumentFragment;
-    images: {
-        id: any;
-        src: any;
-        alt: any;
-    }[];
-    annotationStatus: AnnotationStatus;
-    lightStatus: any;
-};
+declare const prepareSelectionTarget: (enableMarkImg: any, positions: any) => Target;
 declare function getParams(url: any): {
     paramObj: {};
     paramKeys: any[];

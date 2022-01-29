@@ -1,0 +1,15 @@
+{
+  "name": "pagenote",
+  "version": "6.0.0.alpha",
+  "description": "highlight and annotation the webpage",
+  "main": "sdk",
+  "module": "es",
+  "keywords": [
+    "highlight",
+    "mark",
+    "website",
+    "share",
+    "guide"
+  ],
+  "author": "rowthan"
+}

@@ -6,7 +6,7 @@ const profile = require('./package');
 module.exports = {
   entry: './src/pagenote.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist/'+profile.version),
+    path: path.resolve(__dirname, 'lib/'+profile.version),
     filename: 'pagenote.js',
     libraryTarget: 'umd'
   },
@@ -77,16 +77,16 @@ module.exports = {
       },
     ]
   },
-  optimization: {
-    minimizer: [
-      new OptimizeCSSAssetsPlugin({
-        assetNameRegExp: /\.css$/g,
-        cssProcessor: require('cssnano'),
-        cssProcessorOptions: {discardComments:{removeAll: true}},
-        canPrint: true
-      })
-    ]
-  },
+  // optimization: {
+  //   minimizer: [
+  //     new OptimizeCSSAssetsPlugin({
+  //       assetNameRegExp: /\.css$/g,
+  //       cssProcessor: require('cssnano'),
+  //       cssProcessorOptions: {discardComments:{removeAll: true}},
+  //       canPrint: true
+  //     })
+  //   ]
+  // },
   plugins: [
     new MiniCssExtractPlugin({
       filename: "pagenote.css",

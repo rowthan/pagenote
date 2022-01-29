@@ -1,4 +1,4 @@
-import md5 from "blueimp-md5";
+import md5 from "md5";
 import {getScroll, getViewPosition, keepLastIndex, writeTextToClipboard} from "./utils/document";
 import toggleLightMenu from "./light-menu";
 import modal from "./utils/modal";
