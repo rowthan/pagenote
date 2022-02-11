@@ -83,6 +83,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@pagenote/shared": "^1.0.2-c",
     "axios": "^0.24.0",
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",

@@ -4,7 +4,7 @@ import Highlight from '@/assets/images/highlight.svg';
 import root from 'react-shadow';
 // @ts-ignore
 import styles from './action-bar.less';
-import {Position, Step} from "../../../shared/src/@types/Types";
+import {Position, Step} from "@pagenote/shared/lib/@types/Types";
 import {IBrush} from "../types/Option";
 import React, {Fragment, useEffect, useMemo, useRef} from "react";
 

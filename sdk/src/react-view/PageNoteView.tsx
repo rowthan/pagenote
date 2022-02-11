@@ -1,4 +1,4 @@
-import {PlainData, Position, Step, Target} from "../../../shared/src/@types/Types";
+import {PlainData, Position, Step, Target} from "@pagenote/shared/lib/@types/Types";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import ReactDom from "react-dom";
 import ActionBars from "../action/ActionBars";
@@ -10,7 +10,6 @@ import {prepareSelectionTarget} from "../utils";
 import {IOption} from "../types/Option";
 import root from 'react-shadow';
 import Lights from "./Lights";
-import {$on,} from './emit'
 
 interface Props {
     plainData?: PlainData,

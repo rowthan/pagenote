@@ -1,4 +1,4 @@
-import {Step} from "../../../shared/src/@types/Types";
+import {Step} from "@pagenote/shared/lib/@types/Types";
 import {Fragment} from "react";
 import React from "react";
 import LightItem from "./LightItem";

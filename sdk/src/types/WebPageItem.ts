@@ -1,5 +1,5 @@
 const md5 = require('md5')
-import {AllowUpdateKeys, WebPage} from "../../../shared/src/@types/Types";
+import {AllowUpdateKeys, WebPage} from "@pagenote/shared/lib/@types/Types";
 
 type UpdateProps<T,Key extends keyof T> = {[key in Key]?: T[key]}
 

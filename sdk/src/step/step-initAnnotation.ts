@@ -1,6 +1,6 @@
 import renderAnnotationMenu from "../documents/annotationMenus";
 import {emptyChildren, keepLastIndex} from "../utils/document";
-import {AnnotationStatus,} from '../../../shared/src/@types/Types'
+import {AnnotationStatus,} from '@pagenote/shared/lib/@types/Types'
 import {wrapperAnnotationAttr} from "../utils/light";
 import {throttle} from "../utils";
 // @ts-ignore
