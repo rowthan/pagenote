@@ -13,7 +13,9 @@
     "publish-npm": "npm publish --access public"
   },
   "type": "module",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "author": "",
   "license": "ISC"
 }
