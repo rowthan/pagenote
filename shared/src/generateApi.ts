@@ -5,7 +5,7 @@ import {
     browserAction,
     action,
     localdir
-} from "./api";
+} from "./extApi";
 
 
 const notSupportYet = function () {
