@@ -3,13 +3,14 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import ReactDom from "react-dom";
 import ActionBars from "../action/ActionBars";
 import {isMoble} from "../utils/device";
-// import console from "../utils/console";
 import debounce from "lodash/debounce";
 import throttle from 'lodash/throttle';
+import noop from 'lodash/noop'
 import {prepareSelectionTarget} from "../utils";
 import {IOption} from "../types/Option";
 import root from 'react-shadow';
 import Lights from "./Lights";
+import {WebPageItem} from "../types/WebPageItem";
 
 interface Props {
     plainData?: PlainData,
@@ -37,8 +38,7 @@ interface Runtime {
 
 const DEBOUNCE_TIME = 100;
 
-
-function PageNoteView({plainData,onChange}:Props) {
+function PageNoteView({plainData,onChange=noop}:Props) {
     const option = {
         brushes: [
             {
@@ -58,7 +58,14 @@ function PageNoteView({plainData,onChange}:Props) {
             },
         ]
     }
-    const [data,setData] = useState(plainData);
+    const [data,setData] = useState<PlainData>(function () {
+        if(plainData){
+            return plainData
+        }else{
+            const webPage = new WebPageItem();
+            return webPage.data.plainData
+        }
+    });
     const [runtime,setRuntime] = useState(function () {
         return {
             startPosition: {},

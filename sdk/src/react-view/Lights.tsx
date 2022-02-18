@@ -12,7 +12,7 @@ export default function Lights({lights,remove}:Props){
         <Fragment>
             {
                 lights.map((item,index)=>(
-                    <div key={item.id}>
+                    <div key={item.id+index}>
                         <LightItem light={item} remove={()=>{remove(index)}}/>
                     </div>
                 ))

@@ -15,28 +15,20 @@ interface IWebPage{
 const EMPTY_HASH = 'empty'
 
 class WebPageItem implements IWebPage {
-    // createAt: number;
-    // deleted: boolean;
-    // description: string;
-    // expiredAt: number;
-    // icon: string;
-    // key: string;
-    // lastSyncTime: number;
-    // mtimeMs: number;
-    // plainData: PlainData;
-    // title: string;
-    // updateAt: number;
-    // url: string;
-    // urls: string[];
-    // version: string;
-
     data: WebPage = {
         createAt: 0,
         deleted: false,
         description: "",
         icon: "",
         key: "",
-        plainData: undefined,
+        plainData: {
+            url: '',
+            images: [],
+            categories: [],
+            snapshots: [],
+            setting: {},
+            steps: [],
+        },
         title: "",
         updateAt: 0,
         url: "",
@@ -45,8 +37,10 @@ class WebPageItem implements IWebPage {
     };
     lastHash: string = EMPTY_HASH;
 
-    constructor(webPage: WebPage) {
-        this.setData(webPage);
+    constructor(webPage?: WebPage) {
+        if(webPage){
+            this.setData(webPage);
+        }
     }
 
     setData(webPage: WebPage): boolean {

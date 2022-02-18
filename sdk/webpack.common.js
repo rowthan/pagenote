@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const profile = require('./package');
 
 module.exports = {
-  entry: './src/pagenote.tsx',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'lib/'+profile.version),
     filename: 'pagenote.js',
@@ -53,11 +53,11 @@ module.exports = {
         test: /\.less$/,
         use: ['to-string-loader',{
           loader: 'css-loader',
-          options: {
-            modules: {
-              localIdentName: "[hash:base64:5]",
-            },
-          }
+          // options: {
+          //   modules: {
+          //     localIdentName: "[hash:base64:5]",
+          //   },
+          // }
         },{
           loader: "less-loader"
         }]
@@ -98,8 +98,8 @@ module.exports = {
     })
   ],
   externals:{
-    'react':'React',
-    'react-dom': 'ReactDOM',
+    // 'react':'React',
+    // 'react-dom': 'ReactDOM',
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],

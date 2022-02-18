@@ -1,6 +1,4 @@
-import "../../demos/init"
-
-import PageNote from '../src/react-view/PageNote';
+import PageNote from './react-view/PageNote';
 
 const data = localStorage.getItem('p_data');
 
@@ -10,8 +8,8 @@ try{
 }catch (e) {
 
 }
-const pagenote = new PageNote(plainData,function (data) {
+const pagenote = new PageNote(function (data) {
     localStorage.setItem('p_data',JSON.stringify(data))
 });
-pagenote.init();
+pagenote.init(plainData);
 

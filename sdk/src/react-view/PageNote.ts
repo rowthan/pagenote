@@ -7,9 +7,10 @@ export default class PageNote {
         this.onchange = onchange;
     }
 
-
-
-    init(){
+    init(data?:PlainData){
+        if(data){
+            this.data = data;
+        }
         render(this.data,this.onchange)
     }
 }

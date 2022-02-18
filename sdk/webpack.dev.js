@@ -9,12 +9,12 @@ const templateFile = process.env.devFile || 'dev.html'
 
 
 module.exports = merge(common, {
-  entry: './dev/index.js',
+  entry: './src/index.js',
   mode:"development",
   devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'dev.js',
+    filename: 'pagenote.dev.js',
     libraryTarget: 'umd'
   },
   devServer: {
@@ -26,6 +26,6 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       template: `./dev/${templateFile}`,
     }),
-    new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin()
   ]
 });
