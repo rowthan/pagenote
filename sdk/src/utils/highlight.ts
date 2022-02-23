@@ -21,7 +21,8 @@ interface LightElement extends HTMLElement{
         highlight?: string
         lightindex?: string
         type?: 'img' | undefined
-    }
+    },
+    _originText?:string
 }
 
 /**包裹文本节点方法*/

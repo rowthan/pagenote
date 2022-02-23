@@ -111,6 +111,7 @@ function initKeywordTags(){
             const lightElement: LightElement = document.createElement('light');
             lightElement.dataset.highlight = lightId;
             lightElement.dataset.lightindex = String(index);
+            lightElement._originText = text;
             index++
 
             if(text){

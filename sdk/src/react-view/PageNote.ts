@@ -17,9 +17,10 @@ export default class PageNote {
         }
     }
 
-
-
-    init(){
+    init(data?:PlainData){
+        if(data){
+            this.data = data;
+        }
         render(this.data,this.onchange)
     }
 }
