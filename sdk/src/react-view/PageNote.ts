@@ -4,7 +4,17 @@ export default class PageNote {
     data: PlainData
     onchange: (data:PlainData)=>void
     constructor(onchange:(data:PlainData)=>void) {
-        this.onchange = onchange;
+        this.onchange = onchange || function () {
+            
+        };
+        this.data = {
+            categories: [],
+            images: [],
+            setting: undefined,
+            snapshots: [],
+            steps: [],
+            url: ""
+        }
     }
 
 

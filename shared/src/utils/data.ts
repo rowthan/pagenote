@@ -1,5 +1,5 @@
 // 将webpage数据导出为字符串文本
-import {BackupData} from "@pagenote/shared/lib/@types/Types";
+import {BackupData} from "../@types/Types";
 
 const makeExportString = function (backupData:BackupData):string{
     const exportDataObject = {

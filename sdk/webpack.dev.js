@@ -2,7 +2,6 @@ const path = require('path');
 const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const templateFile = process.env.devFile || 'dev.html'
 
@@ -26,6 +25,5 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       template: `./dev/${templateFile}`,
     }),
-    new BundleAnalyzerPlugin()
   ]
 });
