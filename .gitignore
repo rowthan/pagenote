@@ -76,3 +76,4 @@ dist/pagenote.js.LICENSE.txt
 .idea/modules.xml
 .idea/pagenote.iml
 .idea/vcs.xml
+/web/out/
