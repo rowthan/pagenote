@@ -1,10 +1,11 @@
 import ToolTip from "rc-tooltip";
 import styles from './tip.less'
 import root from 'react-shadow';
+import {Fragment} from "react";
 
 export default function Tip({message,children,inner=false,placement='top'}) {
   return(
-      <div>
+      <Fragment>
           <style type="text/css">{styles}</style>
           <ToolTip destroyTooltipOnHide={{ keepParent: false }}
                    align={{
@@ -19,6 +20,6 @@ export default function Tip({message,children,inner=false,placement='top'}) {
                    offsetX={10} overlay={<span>{message}</span>}>
               {children}
           </ToolTip>
-      </div>
+      </Fragment>
   )
 }

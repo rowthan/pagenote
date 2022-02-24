@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "preexport": "npm run build",
-    "export": "next export",
+    "export": "next export -o ../docs",
     "lint": "next lint"
   },
   "dependencies": {

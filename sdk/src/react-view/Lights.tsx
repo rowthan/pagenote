@@ -6,15 +6,14 @@ import LightItem from "./LightItem";
 interface Props {
     lights: Step[],
     remove: (index: number)=>void,
+    save:()=>void,
 }
-export default function Lights({lights,remove}:Props){
+export default function Lights({lights,remove,save}:Props){
     return (
         <Fragment>
             {
                 lights.map((item,index)=>(
-                    <div key={item.id+index}>
-                        <LightItem light={item} remove={()=>{remove(index)}}/>
-                    </div>
+                    <LightItem key={index} save={save} light={item} remove={()=>{remove(index)}}/>
                 ))
             }
         </Fragment>

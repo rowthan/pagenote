@@ -8,9 +8,11 @@ import throttle from 'lodash/throttle';
 import noop from 'lodash/noop'
 import {prepareSelectionTarget} from "../utils";
 import {IOption} from "../types/Option";
+import './pagenote.global.scss'
 import root from 'react-shadow';
 import Lights from "./Lights";
 import {WebPageItem} from "../types/WebPageItem";
+import SelectionUtil from "../utils/selectionUtil";
 
 interface Props {
     plainData?: PlainData,
@@ -46,16 +48,7 @@ function PageNoteView({plainData,onChange=noop}:Props) {
             },
             {
                 bg:'#999999',shortcut:'', label:'', level:1
-            },
-            {
-                bg:'#55cdff',shortcut:'', label:'', level:1
-            },
-            {
-                bg:'#693131',shortcut:'', label:'', level:1
-            },
-            {
-                bg:'#4accff',shortcut:'', label:'', level:1
-            },
+            }
         ]
     }
     const [data,setData] = useState<PlainData>(function () {
@@ -177,6 +170,7 @@ function PageNoteView({plainData,onChange=noop}:Props) {
             steps: steps,
         })
         setTarget(null);
+        SelectionUtil.removeAllRanges()
     }
 
     function remove(index:number) {
@@ -188,6 +182,13 @@ function PageNoteView({plainData,onChange=noop}:Props) {
         })
     }
 
+    function save() {
+        setData({
+            ...data,
+            ...data.steps
+        })
+    }
+
 
     const position = {
         x: target?.clientX,
@@ -196,7 +197,7 @@ function PageNoteView({plainData,onChange=noop}:Props) {
     return(
         <root.aside ref={rootAside}>
             <ActionBars position={position} showButton={true}  brushes={option.brushes} recordNew={recordNew} target={target}/>
-            <Lights lights={data.steps} remove={remove} />
+            <Lights lights={data.steps} remove={remove} save={save} />
         </root.aside>
     )
 }

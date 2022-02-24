@@ -7,6 +7,7 @@ import {throttle} from "../utils";
 import Draggable from 'draggable';
 import IStep from "../pagenote-step";
 
+
 function initAnnotation() {
     const step: IStep = this;
 

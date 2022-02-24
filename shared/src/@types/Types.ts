@@ -36,6 +36,8 @@ type Step = {
     suffix?: string, // 标记的文本内容 下文信息
     tip: string, // 标记的笔记（用户输入）
     isActive: boolean, // 是否为激活状态
+    clientX?: number,
+    clientY?: number,
     offsetX?: number, // 批注与高亮元素的相对偏移量
     offsetY?: number, // 批注与高亮元素的相对偏移量
     parentW?: number, // 高亮元素父节点宽度

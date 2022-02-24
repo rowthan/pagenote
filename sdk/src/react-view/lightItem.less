@@ -1,42 +1,115 @@
-.light{
-  position: relative;
-  font-size: inherit !important;
-  font-family: inherit !important;
-  // TODO 使用 box-shadow 替代 background
-  background-image: linear-gradient(to top, rgba(255,222,93,1) 2px, rgba(255,222,93,0.84) 2px);
-  background-image: linear-gradient(to top, var(--bgcolor) 2px, var(--bgcolor) 2px);
-  background-size: 100% 2px;
-  // border-bottom: 2px solid  rgba(255,222,93,1);
-  // border-bottom: 2px solid var(--bgbottomcolor);
-  background-repeat: no-repeat;
-  background-position: bottom;
-  transition: background-size 0.5s ease-out;
-  box-sizing: border-box;
-  //border-radius: 2px;
-  &:hover{
-    z-index: 1;
-    //opacity: 0.85;
-  }
-  &[data-lighting='light']{
-    // TODO 取消对 display的修改
-    display: inline-block;
-    animation: headShake 0.3s ease-in-out;;
-  }
-  &[data-active='1']{
-    background-size: 100% calc(2em);
-    -webkit-text-fill-color: var(--color);
-    &[data-mask='1']{
-      transition: background-size 0.06s ease-out;
-      filter: blur(2px);
+@header-height: 28px;
+aside{
+  position: fixed;
+  top: 0;//calc(50% + 10px);
+  left: 0;
+  user-select:none;
+  text-align: left;
+  &.annotation{
+    z-index: 9;
+    display: block;
+    width: 250px;
+    box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 4px;
+    //transition-property: opacity, transform, min-width;
+    //transition-duration: 0.5s;
+    //transition-timing-function: ease-in-out;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    &:before{
+      content: "";
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: var(--bgcolor);
+      border-radius: 4px 4px 0px 0px;
     }
-
-    //&[data-type='img']{
-    //  outline: 1px solid var(--bgcolor);
-    //}
   }
-  &[data-active='2']{
-    -webkit-text-fill-color: var(--color);
-    background-size: 100% calc(1em*2);
-    // border-bottom: none;
+
+  &:hover{
+    .menus{
+      margin-bottom: @header-height + 1px;
+    }
+    .ref{
+      transform: translateY(@header-height);
+    }
+  }
+
+  .header{
+    position: relative;
+    display: block;
+    line-height: @header-height;
+    .menus,.ref{
+      height: @header-height;
+      transition-property: margin-bottom, transform;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-in-out;
+    }
+    .menus{
+      //display: flex;
+      //justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
+      cursor: move;
+      padding: 2px;
+      &:hover{
+        background: rgb(247, 246, 246);
+      }
+    }
+    .ref{
+      display: block;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      font-size: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--bgcolor);
+      background: rgb(255, 255, 255);
+      overflow: hidden;
+      padding: 0px 8px;
+    }
+  }
+  .editor{
+    max-width: 350px;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: rgb(102, 102, 102);
+    white-space: break-spaces;
+    word-break: break-word;
+    padding: 8px;
+  }
+}
+
+.pagenote-icon{
+  cursor: pointer;
+  display: inline-block;
+  margin: 2px;
+  padding: 2px;
+  background: #fff;
+  box-sizing: border-box;
+
+  width: 20px;
+  height: 20px;
+  box-shadow: none;
+  border-radius: 6px;
+
+  &:hover{
+    opacity: 1;
+    box-shadow: 0 1px 3px 1px rgba(60,64,67,.15), 0 1px 2px 0 rgba(60,64,67,.3);
+  }
+  svg{
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+  &[data-size="small"]{
+    width: 16px;
+    height: 16px;
+    svg{
+      width: 12px;
+      height: 12px;
+    }
   }
 }

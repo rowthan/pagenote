@@ -1,9 +1,9 @@
 import PageNote from './react-view/PageNote';
 
-const data = localStorage.getItem('p_data');
 
 let plainData;
 try{
+    const data = localStorage.getItem('p_data');
     plainData = JSON.parse(data);
 }catch (e) {
 
