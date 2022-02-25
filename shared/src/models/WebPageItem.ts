@@ -1,5 +1,5 @@
-const md5 = require('md5')
-import {AllowUpdateKeys, WebPage} from "@pagenote/shared/lib/@types/Types";
+import md5 from 'md5'
+import {AllowUpdateKeys, DataVersion, WebPage} from "../@types/Types";
 
 type UpdateProps<T,Key extends keyof T> = {[key in Key]?: T[key]}
 
@@ -33,7 +33,7 @@ class WebPageItem implements IWebPage {
         updateAt: 0,
         url: "",
         urls: [],
-        version: ""
+        version: DataVersion.version3,
     };
     lastHash: string = EMPTY_HASH;
 
@@ -50,10 +50,12 @@ class WebPageItem implements IWebPage {
                 // @ts-ignore
                 this.data[i] = webPage[i]
             }
-            this.data.updateAt = Date.now();
         }
         const currentHash = this.createDataHash();
         const changed = currentHash !== this.lastHash
+        if(changed){
+            this.data.updateAt = Date.now();
+        }
         this.lastHash = currentHash;
         return changed
     }
@@ -99,6 +101,27 @@ class WebPageItem implements IWebPage {
                 }
             }
         }
+
+
+        try{
+            const idKey = this.data.key || this.data.url;
+            if(!idKey){
+                return false;
+            }
+            const {plainData} = this.data;
+            if(!plainData.steps){
+                return false;
+            }
+            if(plainData.steps && plainData.steps[0]){
+                const {bg} = plainData.steps[0];
+                if(!bg){
+                    return false
+                }
+            }
+        }catch (e) {
+            return false
+        }
+
         return true;
     }
 

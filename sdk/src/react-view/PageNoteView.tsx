@@ -11,7 +11,7 @@ import {IOption} from "../types/Option";
 import './pagenote.global.scss'
 import root from 'react-shadow';
 import Lights from "./Lights";
-import {WebPageItem} from "../types/WebPageItem";
+import {WebPageItem} from "@pagenote/shared/lib/models/WebPageItem";
 import SelectionUtil from "../utils/selectionUtil";
 
 interface Props {

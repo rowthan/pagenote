@@ -81,18 +81,30 @@ type WebPageIds = {
 }
 
 type WebPageTimes = {
+    // 数据真实的创建、最后更新时间
     createAt: number,
     updateAt: number,
-    lastSyncTime?: number, // 云盘最后同步时间
-    mtimeMs?: number, // 文件夹最后同步时间
+
+
+    mtimeMs?: number, // fileSystem 本地文件最后同步时间 待弃用
     expiredAt?: number, // 时效过期时间
+
+    /**webdav 信息，仅表示文档的相关信息，不能作为数据本身的更新标识 （如笔记是 2021年创建的，但是 2022 年才上传云盘，此时的 lastmod 是2022年）*/
+    lastmod?: string // Thu, 19 Nov 2020 08:08:11 GMT ，对应 webdav meta信息中的值
+    etag?: string, // 对应 webdav 文件的etag信息，用于比较一致性
+    lastSyncTime?: number, // 云盘最后同步时间
+    hash?: string,
+}
+
+enum DataVersion {
+    version3='3', // 携带有 lastmode etag 字段
 }
 
 type WebPageSiteInfo = {
     deleted: boolean,
     icon: string,
     title: string,
-    version: string,
+    version: DataVersion,
     description: string,
 }
 
@@ -124,5 +136,6 @@ export type {
 export {
     LightStatus,
     AnnotationStatus,
-    BackupVersion
+    BackupVersion,
+    DataVersion
 }

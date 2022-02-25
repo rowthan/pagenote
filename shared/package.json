@@ -1,13 +1,16 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.0.2-d",
+  "version": "1.0.2-h",
   "description": "",
   "main": "lib/",
   "dependencies": {
     "@types/axios": "^0.14.0",
-    "@types/chrome": "0.0.177"
+    "@types/chrome": "0.0.177",
+    "md5": "^2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/md5": "^2.3.2"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "publish-npm": "npm publish --access public"
