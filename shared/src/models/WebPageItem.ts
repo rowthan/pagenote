@@ -51,11 +51,9 @@ class WebPageItem implements IWebPage {
                 this.data[i] = webPage[i]
             }
         }
+        this.data.createAt = this.data.createAt || Date.now();
         const currentHash = this.createDataHash();
         const changed = currentHash !== this.lastHash
-        if(changed){
-            this.data.updateAt = Date.now();
-        }
         this.lastHash = currentHash;
         return changed
     }
