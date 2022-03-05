@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.0.4-c",
+  "version": "1.0.4-f",
   "description": "",
   "main": "lib/",
   "dependencies": {
@@ -16,8 +16,8 @@
     "build": "rm -rf lib && tsc -p tsconfig.json",
     "publish-npm": "npm publish --access public"
   },
-  "type": "module",
   "files": [
+    "index.js",
     "lib/**"
   ],
   "author": "",
