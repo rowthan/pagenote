@@ -1,11 +1,20 @@
-type Tasks = {
-    conflict: Record<string, TaskDetail>,
-    clientDownload: Record<string, TaskDetail>,
-    clientDelete: Record<string, TaskDetail>,
-    clientUpload: Record<string, TaskDetail>,
-    serverDelete: Record<string, TaskDetail>,
-}
 
+enum FILE_ACTION {
+    conflict=1,
+    clientDownload=2,
+    clientDelete=3,
+    clientUpload= 4,
+    serverDelete = 5,
+}
+enum TaskState {
+    pending='pending',
+    resolving='resolving',
+    networkError='networkError',
+    localDataError='localDataError',
+    success='success',
+    valid='valid', // 数据不合法
+    decodeError='decodeError' // 解密失败
+}
 type TaskDetail = {
     basename: string,
     key?: string,
@@ -16,16 +25,16 @@ type TaskDetail = {
     // cloudUpdateAt?: number,
     cloudEtag: string,
     cloudLastmod: string,
+    actionType: FILE_ACTION,
 }
 
-enum TaskState {
-    pending='pending',
-    resolving='resolving',
-    networkError='networkError',
-    localDataError='localDataError',
-    success='success',
-    valid='valid', // 数据不合法
-    decodeError='decodeError' // 解密失败
+type Tasks = {
+    [key in FILE_ACTION]: Record<string, TaskDetail>
+    // conflict: Record<string, TaskDetail>,
+    // clientDownload: Record<string, TaskDetail>,
+    // clientDelete: Record<string, TaskDetail>,
+    // clientUpload: Record<string, TaskDetail>,
+    // serverDelete: Record<string, TaskDetail>,
 }
 
 enum WebdavStatus {
@@ -38,9 +47,10 @@ enum WebdavStatus {
 export type {
     Tasks,
     TaskDetail,
-    WebdavStatus,
 }
 
 export {
-    TaskState
+    TaskState,
+    WebdavStatus,
+    FILE_ACTION,
 }
