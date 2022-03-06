@@ -40,9 +40,9 @@ type Tasks = {
 }
 
 enum WebdavStatus {
-    blocked=503, // 被禁用、可能频控限制了、流量不足了
+    blocked=503, // 被禁用、可能频控限制了
     unAuth= 401, // 无权限
-    tooFrequency = 403, // 请求太频繁被限制
+    TrafficRateExhausted = 403, // 流量不足了
     unknown=0,
     connected=1,
 }

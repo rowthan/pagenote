@@ -125,7 +125,7 @@ class WebPageItem implements IWebPage {
 
     isEmpty() {
         const {plainData} = this.data;
-        return !this.isValid() || plainData?.steps.length > 0 || plainData?.snapshots.length > 0
+        return !this.isValid() || (plainData?.steps.length === 0 && plainData?.snapshots.length === 0)
     }
 
     createDataHash() {
