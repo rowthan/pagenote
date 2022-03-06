@@ -1,5 +1,5 @@
 // 将webpage数据导出为字符串文本
-import {BackupData} from "../@types/Types";
+import {BackupData} from "../@types/data";
 
 const makeExportString = function (backupData:BackupData):string{
     const exportDataObject = {

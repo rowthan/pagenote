@@ -5,6 +5,8 @@ enum FILE_ACTION {
     clientDelete=3,
     clientUpload= 4,
     serverDelete = 5,
+    overrideUpload = 6, // 覆盖上传
+    overrideDownload = 7, // 覆盖下载
 }
 enum TaskState {
     pending='pending',

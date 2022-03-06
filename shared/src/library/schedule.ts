@@ -88,7 +88,7 @@ class Schedule{
     public status: SCHEDULE_STATUS
     public taskIdIndex:number;
     public taskFunMap: Record<string, Task> = {}
-    public nextTimer: number;
+    public nextTimer: NodeJS.Timeout;
     private pauseBefore: number // 在此时间前暂停执行
 
     constructor(frequency:FrequencyOption) {

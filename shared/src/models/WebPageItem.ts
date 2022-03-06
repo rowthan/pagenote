@@ -1,5 +1,5 @@
-import md5 from 'md5'
-import {AllowUpdateKeys, DataVersion, WebPage} from "../@types/Types";
+const md5 = require('md5')
+import {AllowUpdateKeys, DataVersion, WebPage} from "../@types/data";
 
 type UpdateProps<T,Key extends keyof T> = {[key in Key]?: T[key]}
 
