@@ -1,7 +1,9 @@
-import {BackupData, WebPage} from "./@types/Types";
+import {BackupData, WebPage} from "./@types/data";
 import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
+import { commonKeyValuePair } from "./@types/common";
+import { ActionTypes } from "./pagenote-actions";
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
@@ -112,6 +114,32 @@ export namespace setting{
 
     }
 
+    export enum SchemaType {
+        markdown='markdown',
+    }
+
+    export type ExportMethod = {
+        name?: string,
+        schema: string,
+        method: string,
+        schemaType: SchemaType,
+        api: string,
+    }
+
+
+    export type Action = {
+        id: string,
+        version?: string,
+        icon?: string,
+        name: string,
+        shortcut?: string,
+        clickUrl?: string,// 0.24 后待删除
+        clickScript?: string,
+        customSetting?: commonKeyValuePair[],
+        actionType?: ActionTypes,
+    }
+
+
     export type SDK_SETTING = innerSetting & {
         updateAt: number
         lastModified: number,
@@ -123,17 +151,13 @@ export namespace setting{
             keyupTimeout: number,
             removeAfterDays: number,
         },
-        sideGroup: any[],
-        actionGroup: any[],
+        actions: Action[],
         disableList: string[],
         controlC: boolean,
         debug: boolean,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
-        exportMethods?: Record<string, {
-            template: string,
-            method: string
-        }>
+        exportMethods?: ExportMethod[]
         sdkVersion: string,
         // 下划线开头的配置项，不会在各端同步，仅在本地有效
     }
