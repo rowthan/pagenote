@@ -8,7 +8,7 @@ import './component/light/annotation.scss'
 import toggleLightMenu from './light-menu'
 import {IOption} from "./types/Option";
 import React from "react";
-import {setLoaded} from "./common/pagenote-utils/share-pagenote";
+import {setLoaded} from "../../shared/src/pagenote-utils/share-pagenote";
 
 function PageNote(id:string,options:IOption){
     // @ts-ignore
