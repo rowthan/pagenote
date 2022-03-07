@@ -77,3 +77,4 @@ dist/pagenote.js.LICENSE.txt
 .idea/pagenote.iml
 .idea/vcs.xml
 /web/out/
+**/node_modules.nosync/*
