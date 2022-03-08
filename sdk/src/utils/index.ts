@@ -206,7 +206,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions): Target {
         id: whatsEl.wid,
         isActive: false,
         bg: '',
-        parentW: parseInt(parentElement.clientWidth),
+        parentW: parseInt(parentElement.clientWidth), // 二次查找
+        parentH: parentElement.clientHeight,
         clientX: clientX,
         clientY: clientY,
         canHighlight: canHighlight,
