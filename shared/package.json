@@ -1,11 +1,13 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.0.6-b",
+  "version": "1.0.6",
   "description": "",
   "main": "lib/",
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/chrome": "0.0.177",
+    "axios": "^0.26.0",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0"
   },
   "devDependencies": {

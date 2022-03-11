@@ -1,3 +1,21 @@
+enum AuthType {
+    Digest = "digest",
+    None = "none",
+    Password = "password",
+    Token = "token"
+}
+
+interface WebdavSetting {
+    accountAuthType: AuthType,
+    accountDirRoot: string,
+    accountName: string,
+    accountToken: string, // 对应 AuthType password/token
+    accountServer: string,
+    accountSecret?: string,
+    accountSwitch?: boolean,
+    accountRefreshToken?: string,
+    accountEtr?: string // 额外 json 格式数据
+}
 
 enum FILE_ACTION {
     conflict=1,
