@@ -4,6 +4,7 @@ import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} f
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import { commonKeyValuePair } from "./@types/common";
 import { ActionTypes } from "./pagenote-actions";
+import search from "./pagenote-actions/search";
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
@@ -110,8 +111,8 @@ export namespace setting{
     }
 
     // 插件内部的配置项，不在各端同步
-    type innerSetting ={
-
+    type Inner_Setting ={
+        _libra?: boolean, // 是否开启实验功能
     }
 
     export enum SchemaType {
@@ -139,8 +140,13 @@ export namespace setting{
         actionType?: ActionTypes,
     }
 
+    enum METHOD_NUM {
+        copy='COPY',
+        download= 'DOWNLOAD',
+    }
 
-    export type SDK_SETTING = innerSetting & {
+
+    export type SDK_SETTING = Inner_Setting & {
         updateAt: number
         lastModified: number,
         brushes: Brush[],
@@ -154,12 +160,76 @@ export namespace setting{
         actions: Action[],
         disableList: string[],
         controlC: boolean,
-        debug: boolean,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
-        exportMethods?: ExportMethod[]
         sdkVersion: string,
-        // 下划线开头的配置项，不会在各端同步，仅在本地有效
+        exportMethods?: ExportMethod[]
+    }
+
+
+    export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
+        const setting : SDK_SETTING = {
+            _libra: false,
+            actions: [{
+                id: "search",
+                version: "0.1.0",
+                icon: search.icon,
+                name: search.name,
+                clickUrl: "https://www.baidu.com/s?ie=utf-8&wd=${keyword}",
+                shortcut: '',
+                clickScript: "",
+                customSetting: [{
+                    key: '',
+                    value: ''
+                }],
+                actionType: ActionTypes.search,
+            }],
+            autoBackup: 3600 * 24 * 7,
+            brushes: [{
+                bg: "#bdb473",
+                label: "",
+                level: 1,
+                shortcut: ""
+            }],
+            commonSetting: {
+                keyupTimeout: 0,
+                maxRecord: 999,
+                removeAfterDays: 30,
+                showBarTimeout: 0
+            },
+            controlC: true,
+            copyAllowList: ["https://www.csdn.net/*"],
+            disableList: [
+                "https://mubu.com/*",
+                "https://notion.so/*",
+                "https://www.wolai.com/*",
+                "https://shimo.im/*",
+                "https://docs.qq.com/*",
+                "https://flomoapp.com/*"
+            ],
+            enableMarkImg: false,
+            exportMethods: [{
+                name: "导出Markdown至剪切板",
+                schema: `## [{{title}}]({{{url}}})
+{{#steps}}> * {{text}}
+
+{{#tip}}{{{tip}}}
+
+{{/tip}}{{/steps}}
+open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
+    `,
+                method: METHOD_NUM.copy,
+                schemaType: SchemaType.markdown,
+                api: "",
+            }],
+            lastModified: 0,
+            sdkVersion: "0.20.0",
+            updateAt: 0
+        }
+        return {
+            ...setting,
+            ...originSetting
+        }
     }
 
     export interface response{
