@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.0.7",
+  "version": "1.0.8-a",
   "description": "",
   "main": "lib/",
   "dependencies": {
@@ -12,8 +12,13 @@
   },
   "devDependencies": {
     "@types/md5": "^2.3.2",
+    "@types/mocha": "latest",
     "@types/node": "^17.0.21",
-    "typescript": "^4.5.5"
+    "mocha": "^9.2.1",
+    "typescript": "^4.5.5",
+    "assert": "^2.0.0",
+    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3"
   },
   "scripts": {
     "build": "rm -rf lib && tsc -p tsconfig.json",

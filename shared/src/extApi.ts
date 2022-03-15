@@ -113,6 +113,7 @@ export namespace setting{
     // 插件内部的配置项，不在各端同步
     type Inner_Setting ={
         _libra?: boolean, // 是否开启实验功能
+        _sync?: boolean, // 是否在各端之间同步设置
     }
 
     export enum SchemaType {
@@ -170,6 +171,7 @@ export namespace setting{
     export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
         const setting : SDK_SETTING = {
             _libra: false,
+            _sync: false,
             actions: [{
                 id: "search",
                 version: "0.1.0",

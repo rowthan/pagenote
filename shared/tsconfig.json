@@ -18,10 +18,10 @@
         ]
     },
     "include": [
-        "**/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules/**/*.ts",
-        "**/*.spec.ts"
+        "test/**/*.spec.ts"
     ]
 }
