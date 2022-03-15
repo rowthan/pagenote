@@ -105,9 +105,9 @@ export namespace setting{
     export const id = 'setting';
     export interface Brush {
         bg: string,
-        shortcut?: string,
-        label?: string,
-        level?: number
+        shortcut: string,
+        label: string,
+        level: number
     }
 
     // 插件内部的配置项，不在各端同步
@@ -121,24 +121,24 @@ export namespace setting{
     }
 
     export type ExportMethod = {
-        name?: string,
-        schema: string,
-        method: string,
+        name: string,
         schemaType: SchemaType,
         api: string,
+        schema: string,
+        method: string,
     }
 
 
     export type Action = {
         id: string,
-        version?: string,
-        icon?: string,
+        icon: string,
         name: string,
-        shortcut?: string,
-        clickUrl?: string,// 0.24 后待删除
-        clickScript?: string,
-        customSetting?: commonKeyValuePair[],
-        actionType?: ActionTypes,
+        shortcut: string,
+        clickUrl: string,// 0.24 后待删除
+        clickScript: string,
+        customSetting: commonKeyValuePair[],
+        version: string,
+        actionType: ActionTypes,
     }
 
     enum METHOD_NUM {
@@ -148,7 +148,6 @@ export namespace setting{
 
 
     export type SDK_SETTING = Inner_Setting & {
-        updateAt: number
         lastModified: number,
         brushes: Brush[],
         copyAllowList: string[],
@@ -164,14 +163,14 @@ export namespace setting{
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
         sdkVersion: string,
-        exportMethods?: ExportMethod[]
+        exportMethods: ExportMethod[]
     }
 
 
     export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
         const setting : SDK_SETTING = {
-            _libra: false,
-            _sync: false,
+            // _libra: false,
+            // _sync: false,
             actions: [{
                 id: "search",
                 version: "0.1.0",
@@ -226,7 +225,6 @@ open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
             }],
             lastModified: 0,
             sdkVersion: "0.20.0",
-            updateAt: 0
         }
         return {
             ...setting,

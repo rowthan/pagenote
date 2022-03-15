@@ -145,4 +145,27 @@ class WebPageItem implements IWebPage {
     }
 }
 
+const getDetailWebPage = function () {
+    const webpage: WebPage = {
+        createAt: 0,
+        deleted: false,
+        description: "",
+        etag: "",
+        expiredAt: 0,
+        hash: "",
+        icon: "",
+        key: "",
+        lastSyncTime: 0,
+        lastmod: "",
+        mtimeMs: 0,
+        plainData: undefined,
+        title: "",
+        updateAt: 0,
+        url: "",
+        urls: [],
+        version: undefined
+    }
+    return webpage
+}
+
 export {WebPageItem};
