@@ -3,10 +3,8 @@ import search from "./search";
 import send_to_email from "./send_to_email";
 import send_to_flomo from "./send_to_flomo";
 import copy from "./copy";
-import {setting} from "../extApi";
 import custom from "./custom";
-import {ActionTypes} from "./scripts/predefined";
-import Action = setting.Action;
+import {Action, ActionTypes} from "./@types";
 
 const defaultActionMap: Record<ActionTypes,ActionConfig> = {
     [ActionTypes.custom]: custom,

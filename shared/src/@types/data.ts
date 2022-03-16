@@ -1,3 +1,4 @@
+import {LightStatus} from "../pagenote-brush";
 
 enum BackupVersion {
     version1 = 1,
@@ -9,14 +10,6 @@ enum AnnotationStatus {
     un_fixed=0,
     SHOW=2,
     HIDE=0
-}
-
-enum LightStatus {
-    un_light=0,
-    half_light=1,
-    light=2,
-    LIGHT=2,
-    UN_LIGHT=0
 }
 
 type Target = Step & {
@@ -134,7 +127,6 @@ export type {
 }
 
 export {
-    LightStatus,
     AnnotationStatus,
     BackupVersion,
     DataVersion

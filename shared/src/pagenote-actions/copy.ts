@@ -1,7 +1,5 @@
 import {ActionConfig} from "./index";
-import {setting} from "../extApi";
-import ActionScene = setting.ActionScene;
-import {ActionTypes} from "./scripts/predefined";
+import {ActionScene, ActionTypes} from "./@types";
 
 const copy:ActionConfig = {
     actionType: ActionTypes.copyToClipboard,

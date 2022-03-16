@@ -2,9 +2,10 @@ import {BackupData, WebPage} from "./@types/data";
 import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import { commonKeyValuePair } from "./@types/common";
 import search from "./pagenote-actions/search";
-import {ActionTypes} from "./pagenote-actions/scripts/predefined";
+import {Action, ActionScene, ActionTypes} from "./pagenote-actions/@types";
+import {ExportMethod, METHOD_NUM, SchemaType} from "./pagenote-exports";
+import {Brush, LightStatus, LightType} from "./pagenote-brush";
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
@@ -104,73 +105,14 @@ export namespace lightpage{
 export namespace setting{
     export const id = 'setting';
 
-    export enum LightStatus {
-        un_light=0,
-        half_light=1,
-        full_light=2
-    }
-
-    export enum LightType {
-        highlight='light',
-        deleteLine='del',
-    }
-
-    export enum METHOD_NUM {
-        copy='COPY',
-        download= 'DOWNLOAD',
-    }
-
     export enum SDK_VERSION {
         ts_format='1'
-    }
-
-    export enum SchemaType {
-        markdown='markdown',
-    }
-
-    export enum ActionScene {
-        text='text',
-        image='image',
-        video='video',
-        block='block',
-        all='all'
-    }
-
-    export interface Brush {
-        bg: string,
-        shortcut: string,
-        label: string,
-        level: number,
-        color: string,
-        lightType: LightType,
-        defaultStatus: LightStatus
     }
 
     // 插件内部的配置项，不在各端同步
     type Inner_Setting ={
         _libra?: boolean, // 是否开启实验功能
         _sync?: boolean, // 是否在各端之间同步设置
-    }
-
-    export type ExportMethod = {
-        name: string,
-        schemaType: SchemaType,
-        api?: string,
-        schema: string,
-        method: string,
-    }
-
-    export type Action = {
-        icon: string,
-        name: string,
-        shortcut: string,
-        clickUrl?: string,// 0.24 后待删除
-        clickScript: string,
-        scriptType?: string,  // TODO 预定义脚本
-        customSetting: commonKeyValuePair[],
-        version: string,
-        actionType?: ActionTypes,
-        scene: ActionScene,
     }
 
     export type SDK_SETTING = Inner_Setting & {

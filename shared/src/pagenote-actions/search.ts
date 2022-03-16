@@ -1,11 +1,8 @@
 import {ActionConfig} from "./index";
-import {setting} from "../extApi";
-import ActionScene = setting.ActionScene;
-import {ActionTypes} from "./scripts/predefined";
+import {ActionScene, ActionTypes} from "./@types";
 
 const search:ActionConfig = {
     actionType: ActionTypes.search,
-    clickUrl: "",
     customSetting: [{
         key:"engine",
         value:"https://www.baidu.com/s?ie=utf-8&wd=${keyword}"
