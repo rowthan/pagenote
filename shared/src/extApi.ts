@@ -103,21 +103,45 @@ export namespace lightpage{
 
 export namespace setting{
     export const id = 'setting';
+
+    export enum LightStatus {
+        un_light=0,
+        half_light=1,
+        full_light=2
+    }
+
+    export enum LightType {
+        highlight='light',
+        deleteLine='del',
+    }
+
+    export enum METHOD_NUM {
+        copy='COPY',
+        download= 'DOWNLOAD',
+    }
+
+    export enum SDK_VERSION {
+        ts_format='1'
+    }
+
+    export enum SchemaType {
+        markdown='markdown',
+    }
+
     export interface Brush {
         bg: string,
         shortcut: string,
         label: string,
-        level: number
+        level: number,
+        color: string,
+        lightType: LightType,
+        defaultStatus: LightStatus
     }
 
     // 插件内部的配置项，不在各端同步
     type Inner_Setting ={
         _libra?: boolean, // 是否开启实验功能
         _sync?: boolean, // 是否在各端之间同步设置
-    }
-
-    export enum SchemaType {
-        markdown='markdown',
     }
 
     export type ExportMethod = {
@@ -127,7 +151,6 @@ export namespace setting{
         schema: string,
         method: string,
     }
-
 
     export type Action = {
         id: string,
@@ -140,12 +163,6 @@ export namespace setting{
         version: string,
         actionType: ActionTypes,
     }
-
-    enum METHOD_NUM {
-        copy='COPY',
-        download= 'DOWNLOAD',
-    }
-
 
     export type SDK_SETTING = Inner_Setting & {
         lastModified: number,
@@ -163,9 +180,24 @@ export namespace setting{
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
         sdkVersion: string,
-        exportMethods: ExportMethod[]
+        exportMethods: ExportMethod[],
+        version: SDK_VERSION.ts_format,
     }
 
+    export interface response{
+        // 获取用户可用配置
+        getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
+        // 同步云端设置
+        syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
+        // 本地设置存储
+        getSetting: IExtenstionMessageListener<void, SDK_SETTING>
+        //
+        saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
+        resetSetting: IExtenstionMessageListener<void,SDK_SETTING>
+        [key: string]: IExtenstionMessageListener<any, any>
+    }
+
+    export type request = ComputeRequestToBackground<response>
 
     export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
         const setting : SDK_SETTING = {
@@ -190,7 +222,10 @@ export namespace setting{
                 bg: "#bdb473",
                 label: "",
                 level: 1,
-                shortcut: ""
+                shortcut: "",
+                color: "",
+                lightType: LightType.highlight,
+                defaultStatus: LightStatus.full_light
             }],
             commonSetting: {
                 keyupTimeout: 0,
@@ -224,28 +259,14 @@ open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
                 api: "",
             }],
             lastModified: 0,
-            sdkVersion: "0.20.0",
+            sdkVersion: "0.20.14",
+            version: SDK_VERSION.ts_format,
         }
         return {
             ...setting,
             ...originSetting
         }
     }
-
-    export interface response{
-        // 获取用户可用配置
-        getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        // 同步云端设置
-        syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        // 本地设置存储
-        getSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        //
-        saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
-        resetSetting: IExtenstionMessageListener<void,SDK_SETTING>
-        [key: string]: IExtenstionMessageListener<any, any>
-    }
-
-    export type request = ComputeRequestToBackground<response>
 }
 
 export namespace browserAction{
