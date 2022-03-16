@@ -7,7 +7,7 @@
 <script lang="ts">
 import Vue, {PropType} from 'vue'
 import {Pagination} from "@pagenote/shared/lib/@types/database";
-import {WebPage} from "@pagenote/shared/lib/@types/Types";
+import {WebPage} from "@pagenote/shared/lib/@types/data";
 import bridgeApi from "../service/requestExt";
 
 type PropA = {}

@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {AnnotationStatus, Step} from "@pagenote/shared/lib/@types/Types";
+import {AnnotationStatus, Step} from "@pagenote/shared/lib/@types/data";
 import {highlightKeywordInElement, LightElement} from "../utils/highlight";
 import {whats} from "../utils";
 import md5 from "md5";

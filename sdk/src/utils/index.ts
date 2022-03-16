@@ -1,6 +1,6 @@
 // @ts-nocheck
 import whatsPure from "whats-element/pure";
-import {AnnotationStatus, LightStatus, Target} from "@pagenote/shared/lib/@types/Types";
+import {AnnotationStatus, LightStatus, Target} from "@pagenote/shared/lib/@types/data";
 import {getScroll} from "./document";
 // import console from "./console";
 const whats = new whatsPure();

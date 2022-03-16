@@ -7,7 +7,7 @@ import initAnnotation from "./step/step-initAnnotation";
 import stepGotoView from "./step/step-gotoView";
 import connectToKeywordTag from './step/step-connectToKeywordTag';
 import notification from "./utils/notification";
-import {Step,AnnotationStatus, LightStatus,} from '@pagenote/shared/lib/@types/Types'
+import {Step,AnnotationStatus, LightStatus,} from '@pagenote/shared/lib/@types/data'
 import {pick} from "lodash";
 
 

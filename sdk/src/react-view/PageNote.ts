@@ -1,5 +1,5 @@
 import {render} from "./PageNoteView";
-import {PlainData} from "@pagenote/shared/lib/@types/Types";
+import {PlainData} from "@pagenote/shared/lib/@types/data";
 export default class PageNote {
     data: PlainData
     onchange: (data:PlainData)=>void

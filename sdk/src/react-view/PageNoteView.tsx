@@ -1,4 +1,4 @@
-import {PlainData, Position, Step, Target} from "@pagenote/shared/lib/@types/Types";
+import {PlainData, Position, Step, Target} from "@pagenote/shared/lib/@types/data";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import ReactDom from "react-dom";
 import ActionBars from "../action/ActionBars";

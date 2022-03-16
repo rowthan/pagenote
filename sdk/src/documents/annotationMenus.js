@@ -12,7 +12,7 @@ import Popover from "../component/tip/Popover";
 import styles from './annotationMenu.scss'
 import {writeTextToClipboard} from "../utils/document";
 import Colors from "../component/Colors";
-import {AnnotationStatus, LightStatus} from "@pagenote/shared/lib/@types/Types";
+import {AnnotationStatus, LightStatus} from "@pagenote/shared/lib/@types/data";
 
 
 function LightActionBar({step,colors}) {

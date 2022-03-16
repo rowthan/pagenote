@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import api from '../api/index'
-import {WebPage} from "@pagenote/shared/lib/@types/Types";
+import {WebPage} from "@pagenote/shared/lib/@types/data";
 import {Pagination} from "@pagenote/shared/lib/@types/database";
 import { useRouter } from 'next/router'
 
