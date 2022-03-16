@@ -1,7 +1,23 @@
-const search = {
+import {ActionConfig} from "./index";
+import {setting} from "../extApi";
+import ActionScene = setting.ActionScene;
+import {ActionTypes} from "./scripts/predefined";
+
+const search:ActionConfig = {
+    actionType: ActionTypes.search,
+    clickUrl: "",
+    customSetting: [{
+        key:"engine",
+        value:"https://www.baidu.com/s?ie=utf-8&wd=${keyword}"
+    },{
+        key:"new_tab",
+        value:"0"
+    }],
+    shortcut: "",
+    version: "",
     icon:'<svg t="1622213082028" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3210" width="32" height="32"><path d="M884.01765791 884.01765791a73.93564003 73.93564003 0 0 1-104.56927271 0l-130.47985307-130.47985309a342.75238607 342.75238607 0 0 1-185.56742176 54.91100759 345.04770205 345.04770205 0 1 1 345.04770204-345.04770204 342.75238607 342.75238607 0 0 1-54.91100759 185.56742176l130.52399384 130.47985307a73.97978081 73.97978081 0 0 1-0.04414075 104.56927271zM463.40111037 216.9195494a246.48156196 246.48156196 0 1 0 0 492.9631229 246.48156196 246.48156196 0 0 0 0-492.9631229z" fill="#1296db" p-id="3211"></path></svg>',
     name:'选中搜索',
-    settings:[
+    formConfig:[
         {
             gridSize: 4,
             name:'engine',
@@ -28,7 +44,8 @@ const search = {
                     value:'https://www.douban.com/search?q=${keyword}',
                     label:'豆瓣搜索'
                 }
-            ]
+            ],
+            rules:[],
         },
         {
             gridSize: 4,
@@ -62,7 +79,7 @@ const search = {
         }
     ],
     description: '点击使用搜索引擎搜索选中内容，如 百度、翻译等',
-    scene: 'text',
+    scene: ActionScene.text,
     clickScript: `(function (API) {
       var targetInfo = API.data.targetInfo || {};
       var actionSetting = API.data.action.settings || {};
@@ -73,9 +90,5 @@ const search = {
          window.open(URL)
       }
     })(API)`,
-    defaultSetting:{
-        engine:"https://www.baidu.com/s?ie=utf-8&wd=${keyword}",
-        new_tab:"0",
-    }
 }
 export default search;

@@ -3,25 +3,18 @@ import search from "./search";
 import send_to_email from "./send_to_email";
 import send_to_flomo from "./send_to_flomo";
 import copy from "./copy";
-
-// 缺省提供的方法
-export enum ActionTypes{
-    // custom='custom', // 自行写入的脚本
-    // openLink='openLink',
-    // openLinkWithPopup='openLinkWithPopup',
-    copyToClipboard="copy",
-    send_to_flomo='send_to_flomo',
-    send_to_email='send_to_email',
-    search='search',
-    create_new_pagenote='create_new_pagenote'
-}
+import {setting} from "../extApi";
+import custom from "./custom";
+import {ActionTypes} from "./scripts/predefined";
+import Action = setting.Action;
 
 const defaultActionMap: Record<ActionTypes,ActionConfig> = {
+    [ActionTypes.custom]: custom,
     [ActionTypes.create_new_pagenote]: create_new_light,
     [ActionTypes.search]: search,
     [ActionTypes.send_to_email]: send_to_email,
     [ActionTypes.send_to_flomo]: send_to_flomo,
-    [ActionTypes.copyToClipboard]: copy,
+    [ActionTypes.copyToClipboard]: copy
 }
 
 export default defaultActionMap
@@ -34,23 +27,21 @@ export const sceneMap = {
     [ACTION_SCENE.text]: '选中文本时'
 }
 
-export interface ActionConfig{
-    version?: string,
-    icon: string,
-    name: string,
-    clickScript: string,
-    setting?: {
+export interface ActionConfig extends Action{
+    actionType: ActionTypes,
+
+    // 设置项字段
+    formConfig: {
         gridSize: number,
         name: string,
         label: string,
         type: string,
-        rules: {
+        data?: any,
+        rules?: {
             required?: boolean,
             pattern?: RegExp,
             message: string,
         }[]
     }[],
-    scene: string,
     description: string,
-    defaultSetting: Record<string,any>
 }

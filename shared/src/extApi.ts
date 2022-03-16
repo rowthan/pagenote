@@ -3,8 +3,8 @@ import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import { commonKeyValuePair } from "./@types/common";
-import { ActionTypes } from "./pagenote-actions";
 import search from "./pagenote-actions/search";
+import {ActionTypes} from "./pagenote-actions/scripts/predefined";
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
@@ -128,6 +128,14 @@ export namespace setting{
         markdown='markdown',
     }
 
+    export enum ActionScene {
+        text='text',
+        image='image',
+        video='video',
+        block='block',
+        all='all'
+    }
+
     export interface Brush {
         bg: string,
         shortcut: string,
@@ -147,21 +155,22 @@ export namespace setting{
     export type ExportMethod = {
         name: string,
         schemaType: SchemaType,
-        api: string,
+        api?: string,
         schema: string,
         method: string,
     }
 
     export type Action = {
-        id: string,
         icon: string,
         name: string,
         shortcut: string,
-        clickUrl: string,// 0.24 后待删除
+        clickUrl?: string,// 0.24 后待删除
         clickScript: string,
+        scriptType?: string,  // TODO 预定义脚本
         customSetting: commonKeyValuePair[],
         version: string,
-        actionType: ActionTypes,
+        actionType?: ActionTypes,
+        scene: ActionScene,
     }
 
     export type SDK_SETTING = Inner_Setting & {
@@ -204,7 +213,6 @@ export namespace setting{
             // _libra: false,
             // _sync: false,
             actions: [{
-                id: "search",
                 version: "0.1.0",
                 icon: search.icon,
                 name: search.name,
@@ -216,6 +224,7 @@ export namespace setting{
                     value: ''
                 }],
                 actionType: ActionTypes.search,
+                scene: ActionScene.text,
             }],
             autoBackup: 3600 * 24 * 7,
             brushes: [{
