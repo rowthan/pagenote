@@ -1,7 +1,8 @@
 import {commonKeyValuePair} from "../../@types/common";
+import {ICON} from "../../icons";
 
 // 注册缺省提供的方法
-export enum ActionTypes {
+export enum ACTION_TYPES {
     custom = 'custom', // 自行写入的脚本
     // openLink='openLink',
     // openLinkWithPopup='openLinkWithPopup',
@@ -12,7 +13,7 @@ export enum ActionTypes {
     create_new_pagenote = 'create_new_pagenote',
 }
 
-export enum ActionScene {
+export enum ACTION_SCENE {
     text='text',
     image='image',
     video='video',
@@ -20,15 +21,20 @@ export enum ActionScene {
     all='all'
 }
 
+export const ActionSceneLabelMap = {
+    [ACTION_SCENE.text] : '选中文本',
+    [ACTION_SCENE.image] : '选中图片',
+    [ACTION_SCENE.video] : '选中视频',
+    [ACTION_SCENE.block] : '圈选模块',
+    [ACTION_SCENE.all] : '所有',
+}
+
 export type Action = {
-    icon: string,
+    icon: ICON,
     name: string,
     shortcut: string,
-    clickUrl?: string,// 0.24 后待删除
-    clickScript: string,
-    scriptType?: string,  // TODO 预定义脚本
     customSetting: commonKeyValuePair[],
     version: string,
-    actionType?: ActionTypes,
-    scene: ActionScene,
+    actionType: ACTION_TYPES,
+    scene: ACTION_SCENE,
 }

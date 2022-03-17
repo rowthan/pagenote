@@ -1,17 +1,16 @@
+import {commonKeyValuePair} from "../@types/common";
+import {PredefinedSchema} from "./predefined";
 
 export enum METHOD_NUM {
     copy='COPY',
     download= 'DOWNLOAD',
+    api='API',
 }
 
-export enum SchemaType {
-    markdown='markdown',
-}
 
 export type ExportMethod = {
     name: string,
-    schemaType: SchemaType,
-    api?: string,
-    schema: string,
-    method: string,
+    schema: string | PredefinedSchema,
+    method: METHOD_NUM,
+    customSetting: commonKeyValuePair[]
 }

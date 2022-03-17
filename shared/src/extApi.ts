@@ -2,10 +2,12 @@ import {BackupData, WebPage} from "./@types/data";
 import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import search from "./pagenote-actions/search";
-import {Action, ActionScene, ActionTypes} from "./pagenote-actions/@types";
-import {ExportMethod, METHOD_NUM, SchemaType} from "./pagenote-exports";
+import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
+import {ExportMethod, METHOD_NUM} from "./pagenote-exports";
 import {Brush, LightStatus, LightType} from "./pagenote-brush";
+import {createInitAction} from "./pagenote-actions";
+import {PredefinedSchema} from "./pagenote-exports/predefined";
+
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
         (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
@@ -154,20 +156,7 @@ export namespace setting{
         const setting : SDK_SETTING = {
             // _libra: false,
             // _sync: false,
-            actions: [{
-                version: "0.1.0",
-                icon: search.icon,
-                name: search.name,
-                clickUrl: "https://www.baidu.com/s?ie=utf-8&wd=${keyword}",
-                shortcut: '',
-                clickScript: "",
-                customSetting: [{
-                    key: '',
-                    value: ''
-                }],
-                actionType: ActionTypes.search,
-                scene: ActionScene.text,
-            }],
+            actions: [createInitAction(ACTION_TYPES.search)],
             autoBackup: 3600 * 24 * 7,
             brushes: [{
                 bg: "#bdb473",
@@ -197,17 +186,12 @@ export namespace setting{
             enableMarkImg: false,
             exportMethods: [{
                 name: "导出Markdown至剪切板",
-                schema: `## [{{title}}]({{{url}}})
-{{#steps}}> * {{text}}
-
-{{#tip}}{{{tip}}}
-
-{{/tip}}{{/steps}}
-open in [pagenote.cn](https://pagenote.cn/webpage#/{{encodeUrl}})
-    `,
+                schema: PredefinedSchema.markdown,
                 method: METHOD_NUM.copy,
-                schemaType: SchemaType.markdown,
-                api: "",
+                customSetting: [{
+                    key: '_test',
+                    value: ''
+                }],
             }],
             lastModified: 0,
             sdkVersion: "0.20.14",

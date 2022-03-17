@@ -50,9 +50,9 @@ function appendScriptsToBody(scripts:string[]):void {
     });
 }
 
-function onVisibilityChange(callback:Function) {
+function onVisibilityChange(callback:(hidden:boolean)=>void):()=>void {
     // 设置隐藏属性和改变可见属性的事件的名称
-    let visibilityChange;
+    let visibilityChange = 'visibilitychange';
     if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
         visibilityChange = "visibilitychange";
     } else { // @ts-ignore
@@ -64,9 +64,13 @@ function onVisibilityChange(callback:Function) {
             }
         }
     }
-    document.addEventListener(visibilityChange,function(){
+    const listener = function(){
         callback(document.hidden)
-    });
+    }
+    document.addEventListener(visibilityChange,listener);
+    return function () {
+        document.removeEventListener(visibilityChange,listener)
+    }
 }
 
 export {
