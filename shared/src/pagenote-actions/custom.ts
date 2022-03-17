@@ -12,6 +12,7 @@ const customAction:ActionConfig = {
         clickScript: `(function(API,e,config){console.log(API);})(API,e,config);`,
         formConfig:[{
             gridSize: 12,
+            minRows: 12,
             name:'script',
             label: '脚本',
             type: 'textarea',

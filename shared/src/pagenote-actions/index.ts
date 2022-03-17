@@ -33,6 +33,7 @@ export interface ActionDefine {
         name: string,
         label: string,
         type: string,
+        minRows?: number,
         data?: any,
         rules?: {
             required?: boolean,
