@@ -9,15 +9,14 @@ const send_to_email:ActionConfig = {
         actionType: ACTION_TYPES.send_to_email,
         version: version,
         icon: PREDEFINED_ICON.email,
-        clickScript: `(function (API) {
-          var targetInfo = API.data.targetInfo || {};
-          var subject = encodeURIComponent("[PAGENOTE摘录]"+targetInfo.text);
-          var body = encodeURIComponent(targetInfo.pre+targetInfo.text+targetInfo.suffix+"----------来自"+API.data.href);
-          var mailTo = "mailto:"+API.data.action.settings.email+"?cc=pagenote@126.com&bcc=&subject="+subject+"&body="+body;
-          var a = document.createElement('a');
-          a.href=mailTo;
-          a.click();
-      })(API)`,
+        clickScript: function (e,target,API,params){
+            const subject = encodeURIComponent("[PAGENOTE摘录]"+target.text);
+            const body = encodeURIComponent(target.pre+target.text+target.suffix);
+            const mailTo = "mailto:"+params.email+"?cc=pagenote@126.com&bcc=&subject="+subject+"&body="+body;
+            const a = document.createElement('a');
+            a.href=mailTo;
+            a.click();
+        },
         formConfig:[
             {
                 gridSize: 12,

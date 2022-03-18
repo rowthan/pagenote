@@ -8,7 +8,9 @@ const create_new_light:ActionConfig = {
         name:'高亮选中文本',
         scenes: [ACTION_SCENE.text],
         icon: PREDEFINED_ICON.create_new_light,
-        clickScript: `(function(API){API.methods.createLight({bg:API.data.action.settings.bg});})(API);`,
+        clickScript: function (e,target,API,params){
+            API.methods.createLight({bg:params.bg});
+        },
         description:"画笔颜色太少了？使用此方式可以增添画笔。",
         formConfig:[{
             gridSize: 12,

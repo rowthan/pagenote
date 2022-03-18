@@ -2,14 +2,15 @@ import {ActionConfig} from "./index";
 import {ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {PREDEFINED_ICON} from "../icons";
 
-const version = '0.1.0'
 const customAction:ActionConfig = {
     define:{
         name:'自定义脚本',
         icon: PREDEFINED_ICON.custom,
-        version: version,
+        version: '0.1.0',
         scenes: [ACTION_SCENE.text],
-        clickScript: `(function(API,e,config){console.log(API);})(API,e,config);`,
+        clickScript: function (e,target,API,params){
+            eval(params.script)
+        },
         formConfig:[{
             gridSize: 12,
             minRows: 12,

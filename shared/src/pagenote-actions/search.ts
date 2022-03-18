@@ -71,16 +71,15 @@ const search:ActionConfig = {
             }
         ],
         description: '点击使用搜索引擎搜索选中内容，如 百度、翻译等',
-        clickScript: `(function (API) {
-          var targetInfo = API.data.targetInfo || {};
-          var actionSetting = API.data.action.settings || {};
-          var URL = actionSetting.engine.replace("\${keyword}",targetInfo.text);
-          if(actionSetting.new_tab==='0'){
-             API.methods.popupwindow(URL,'pagenote 带你搜索')
-          } else {
-             window.open(URL)
-          }
-        })(API)`,
+        clickScript:function (e,target,API,params) {
+            const keyword = encodeURIComponent(target.text);
+            const link = params.engine.replace('${keyword}',keyword);
+            if(params.new_tab==='1'){
+                window.open(link);
+            }else{
+                API.methods.popupwindow(link,'pagenote 带你搜索',800,500);
+            }
+        },
         scenes: [ACTION_SCENE.text]
     },
     initData:{
