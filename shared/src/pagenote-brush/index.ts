@@ -20,3 +20,15 @@ export interface Brush {
     lightType: LightType,
     defaultStatus: LightStatus
 }
+
+export function getDefaultBrush():Brush {
+    return{
+        bg: '#FFDE5D',
+        shortcut: '',
+        label: '标记',
+        level: 1,
+        color: '',
+        lightType: LightType.highlight,
+        defaultStatus: LightStatus.full_light
+    }
+}

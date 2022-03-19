@@ -1,6 +1,6 @@
 export type commonKeyValuePair = {
     key: string,
-    value: any,
+    value: string,
 }
 
 export function convertObjectToArray(input: Record<string, any>): commonKeyValuePair[] {

@@ -4,7 +4,7 @@ import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} f
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
 import {ExportMethod, METHOD_NUM} from "./pagenote-exports";
-import {Brush, LightStatus, LightType} from "./pagenote-brush";
+import {Brush, getDefaultBrush} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
 import {PredefinedSchema} from "./pagenote-exports/predefined";
 
@@ -132,9 +132,10 @@ export namespace setting{
         controlC: boolean,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
-        sdkVersion: string,
         exportMethods: ExportMethod[],
-        version: SDK_VERSION.ts_format,
+        dataVersion: SDK_VERSION.ts_format,
+        extVersion: string,
+        sdkVersion: string,
     }
 
     export interface response{
@@ -158,15 +159,7 @@ export namespace setting{
             // _sync: false,
             actions: [createInitAction(ACTION_TYPES.search)],
             autoBackup: 3600 * 24 * 7,
-            brushes: [{
-                bg: "#bdb473",
-                label: "",
-                level: 1,
-                shortcut: "",
-                color: "",
-                lightType: LightType.highlight,
-                defaultStatus: LightStatus.full_light
-            }],
+            brushes: [getDefaultBrush()],
             commonSetting: {
                 keyupTimeout: 0,
                 maxRecord: 999,
@@ -194,8 +187,9 @@ export namespace setting{
                 }],
             }],
             lastModified: 0,
-            sdkVersion: "0.20.14",
-            version: SDK_VERSION.ts_format,
+            sdkVersion: "0.20.15",
+            extVersion: '0.20.15',
+            dataVersion: SDK_VERSION.ts_format,
         }
         return {
             ...setting,
