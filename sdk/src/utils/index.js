@@ -1,7 +1,6 @@
 import whatsPure from "whats-element/pure";
 import {AnnotationStatus, LightStatus} from "../step/const";
 import {getScroll} from "./document";
-import console from "./console";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;

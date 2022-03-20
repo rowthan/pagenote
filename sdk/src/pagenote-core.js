@@ -8,14 +8,11 @@ import { dataToString } from "./utils/data";
 import './assets/styles/camera.scss'
 import './assets/iconfont/icon.css'
 import notification from "./utils/notification";
-import console from "./utils/console";
 //whats getTarget try catch  同时计算出多个 进行长度比较 取最优的
 //将所有常用量进行存储 此处是全局 避免和原本常亮冲突 放到 constant里面
 
 //增加开关 是否开启
 export default function PagenoteCore(id, options={}){ // TODO 支持载入语言包
-    console.log(options)
-    console.option.showLog = options.debug;
     this.id = id || "pagenote-container";
     this.options =  Object.assign({
         dura:100,
@@ -205,7 +202,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                 function checkShow(currentTime,callback) {
                     const timeGap = (currentTime || new Date().getTime()) - lastActionTime;
                     that.target = prepareSelectionTarget(that.options.enableMarkImg, [startPosition,lastPosition])
-                    console.log(that.target)
                     // 满足计算条件
                     const computeResult = !!that.target && timeGap>=timeout && isPressingMouse;
                     if(computeResult){
@@ -242,7 +238,6 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
                             //  message: '已复制选区至剪切板'
                             // });
                         }
-                        console.log('选区',text);
                     },2000)
                 },debounceTime)
                 const onMouseMove = debounce(function(e) {
