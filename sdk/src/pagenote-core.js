@@ -128,20 +128,11 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         let setting = {};
         if(initData){
             try {
-                let dataObject = {};
-                if(typeof initData === 'object' && initData.steps){
-                    dataObject = initData;
-                    simpleStep = initData.steps || [];
-                    setting = initData.setting || {};
-                }
-                else if(typeof initData === 'string'){
-                    dataObject = decryptedData(initData);
-                    simpleStep = dataObject.steps || [];
-                    setting = dataObject.setting || {};
-                }
-                this.snapshots = Array.isArray(dataObject.snapshots) ? dataObject.snapshots : [];
-                this.categories = new Set(dataObject.categories);
-                this.note = dataObject.note;
+                simpleStep = initData.steps || [];
+                setting = initData.setting || {};
+                this.snapshots = Array.isArray(initData.snapshots) ? initData.snapshots : [];
+                this.categories = new Set(initData.categories);
+                this.note = initData.note;
             }catch (e) {
                 console.error('解析step异常',e,initData);
             }
@@ -150,10 +141,12 @@ export default function PagenoteCore(id, options={}){ // TODO 支持载入语言
         this.recordedSteps.forEach((step)=>{
             step.delete();
         });
-        simpleStep.forEach((step)=>{
-            const newStep = new Step(step,StepOptions);
-            this.recordedSteps.add(newStep);
-        });
+        setTimeout(()=> {
+            simpleStep.forEach((step)=>{
+                const newStep = new Step(step,StepOptions);
+                this.recordedSteps.add(newStep);
+            });
+        },1000)
         // 修改当前设置项
         this.runningSetting = Object.assign(this.runningSetting,setting);
 

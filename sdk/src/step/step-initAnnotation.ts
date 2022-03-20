@@ -115,7 +115,7 @@ function initAnnotation() {
     container.appendChild(element);
 
     element.remove = function () {
-        element.parentNode.removeChild(element);
+        element?.parentNode?.removeChild(element);
     }
 
     this.runtime.relatedAnnotationNode = element;
