@@ -98,7 +98,8 @@ function initAnnotation() {
     var container = document.querySelector('pagenote-annotations');
     container.appendChild(element);
     element.remove = function () {
-        element.parentNode.removeChild(element);
+        var _a;
+        (_a = element === null || element === void 0 ? void 0 : element.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(element);
     };
     this.runtime.relatedAnnotationNode = element;
     this.runtime.annotationDrag = drag;

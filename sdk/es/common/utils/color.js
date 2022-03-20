@@ -70,7 +70,7 @@ var getColorInt = function (input) {
         var parsedNumber = null;
         if (isNaN(intValue)) {
             if (!isValidColorHexUnit(input)) {
-                throw Error("not valid hex unit: " + input);
+                throw Error("not valid hex unit: ".concat(input));
             }
             var number = parseInt(input, 16);
             if (isValidColorInt(number)) {
@@ -81,11 +81,11 @@ var getColorInt = function (input) {
             parsedNumber = intValue;
         }
         if (parsedNumber === null) {
-            throw Error("not a valid value in range [0-255] or [00-ff] " + input);
+            throw Error("not a valid value in range [0-255] or [00-ff] ".concat(input));
         }
         return parsedNumber;
     }
-    throw Error("not valid color value [" + typeof input + "] " + input);
+    throw Error("not valid color value [".concat(typeof input, "] ").concat(input));
 };
 var isValidColorInt = function (value) {
     return value >= 0 && value <= 255 && value % 1 === 0;
@@ -105,7 +105,7 @@ function formatToHex(anyColorString) {
         var g = getColorInt(rgb[1]);
         var b = getColorInt(rgb[2]);
         var a = rgb[3];
-        var hex = "#" + r.toString(16) + g.toString(16) + b.toString(16);
+        var hex = "#".concat(r.toString(16)).concat(g.toString(16)).concat(b.toString(16));
         var alpha = '';
         if (a !== undefined) {
             var alphaPercent = parseFloat(a);
@@ -129,7 +129,7 @@ function formatToHex(anyColorString) {
             throw Error('not a valid hex string ' + input);
         }
         var a_number = a ? getColorInt(a) : 1;
-        var hex = "#" + r + g + b;
+        var hex = "#".concat(r).concat(g).concat(b);
         var alpha = a_number <= 1 ? a : '';
         return hex + alpha;
     }

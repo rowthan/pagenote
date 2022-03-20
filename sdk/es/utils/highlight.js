@@ -81,7 +81,7 @@ function wrapMatchesAcrossElements(dict, regex, ignoreGroups, warpTagFun, filter
  * 包裹 img 标签
  * */
 function wrapImages(htmlNode, imageSrc) {
-    var target = htmlNode.querySelector("img[src=\"" + imageSrc + "\"]");
+    var target = htmlNode.querySelector("img[src=\"".concat(imageSrc, "\"]"));
     if (target) {
         var warppedImg = document.createElement('light-img');
         warppedImg.appendChild(target.cloneNode());
@@ -141,7 +141,7 @@ var highlightKeywordInElement = function (element, keywords, pre, next, deep, wa
         var formatPre = formatKeyword(pre.trim());
         var formatSuffix = formatKeyword(suffix.trim());
         var hasSuffix = !!suffix;
-        var checkStr = "(" + formatPre + "\\s*)(" + formatKw + ")\\s*" + (hasSuffix ? "(" + formatSuffix + ")" : '');
+        var checkStr = "(".concat(formatPre, "\\s*)(").concat(formatKw, ")\\s*").concat(hasSuffix ? "(".concat(formatSuffix, ")") : '');
         var regex = new RegExp(checkStr, 'gmi');
         wrapMatchesAcrossElements(dict, regex, 1, warpTagFun, function (term, node) {
             var isBlack = (blackNodes || []).some(function (block) {

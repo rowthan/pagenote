@@ -74,7 +74,7 @@ var prepareSelectionTarget = function (enableMarkImg, positions) {
             var item = children[i];
             if (item.tagName === 'IMG') {
                 // 找到对应的图片节点
-                var id = "img[src=\"" + item.src + "\"]";
+                var id = "img[src=\"".concat(item.src, "\"]");
                 var elements = parentElement.querySelectorAll(id);
                 for (var j = 0; j < elements.length; j++) {
                     var element = elements[j];
