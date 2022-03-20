@@ -39,12 +39,14 @@ export default function ActionBars ({pagenote}) {
             canHighlight &&
             <pagenote-colors-container>
               {
-                brushes.map((item, index) => {
+                brushes.filter(function(brush){
+                    return brush && !!brush.bg
+                }).map((item, index) => {
                   const radios = 30;
                   const {x:offsetX,y:offsetY} = (isMobile || index===0) ? {
                     x: (index) * - 40,
                     y: 0,
-                  } : computePosition(index-1,radios);
+                  } : computePosition(index,radios);
 
                   if(!item){
                       return (
