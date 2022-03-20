@@ -1,5 +1,9 @@
 import colors from "vuetify/lib/util/colors";
 export default {
+  server: {
+    port: 8000, // default: 3000
+    host: '0.0.0.0' // default: localhost,
+  },
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -50,18 +54,28 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    // publicPath: './',
+    extractCSS: true,
+  },
+  // buildDir: '../docs',
+  generate: {
+    dir: '../docs'
   },
   vuetify: {
-    theme: {
-      light: {
-        primary: colors.purple,
-        secondary: colors.grey.darken1,
-        accent: colors.shades.black,
-        error: colors.red.accent3,
-      },
-      dark: {
-        primary: colors.blue.lighten3,
-      },
-    }
+    theme:{
+      // disable: true,
+      dark: false,
+    },
+    // themes: {
+    //   light: {
+    //     primary: colors.purple,
+    //     secondary: colors.grey.darken1,
+    //     accent: colors.shades.black,
+    //     error: colors.red.accent3,
+    //   },
+    //   dark: {
+    //     primary: colors.blue.lighten3,
+    //   },
+    // },
   },
 }

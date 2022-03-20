@@ -1,10 +1,10 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="inspire" :dark="$vuetify.theme.dark"
+         :light="!$vuetify.theme.dark">
     <v-navigation-drawer
       v-model="drawer"
       app
       class="pt-4"
-      color=""
       mini-variant
     >
       <div v-for="n in pages" :key="n.name">
@@ -46,10 +46,12 @@
 </template>
 
 <script>
+
+const DRAW_STATE_KEY = '_draw_state_'
 export default {
   data () {
     return {
-      drawer: true,
+      drawer: null,
       pages:[
         // {
         //   name: 'webpages',
@@ -65,7 +67,13 @@ export default {
     }
   },
   mounted() {
-    this.$vuetify.theme.dark = false
+    // this.$vuetify.theme.dark = false
+    // this.drawer = localStorage.getItem(DRAW_STATE_KEY) === '1' ? true : null
+  },
+  watch: {
+    drawer(newValue, oldValue) {
+      // localStorage.setItem(DRAW_STATE_KEY,newValue ? '1' : '0')
+    }
   },
   computed: {
     path() {

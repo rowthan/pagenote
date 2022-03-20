@@ -4,7 +4,6 @@
       <v-toolbar
         flat
         color="primary"
-        dark
       >
         <v-toolbar-title>User Profile</v-toolbar-title>
       </v-toolbar>
@@ -183,7 +182,8 @@ export default Vue.extend({
         schemaType: SchemaType.markdown,
         method: 'COPY',
         schema:''
-      }
+      },
+
     }
   },
   computed:{
