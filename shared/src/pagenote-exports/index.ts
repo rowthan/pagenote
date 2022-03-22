@@ -8,9 +8,21 @@ export enum METHOD_NUM {
 }
 
 
-export type ExportMethod = {
+export type ConvertMethod = {
     name: string,
-    schema: string | PredefinedSchema,
+    template: string | PredefinedSchema,
     method: METHOD_NUM,
     customSetting: commonKeyValuePair[]
+}
+
+export const getDefaultConvertMethod = function(): ConvertMethod{
+    return {
+        name: "导出Markdown至剪切板",
+        template: PredefinedSchema.markdown,
+        method: METHOD_NUM.copy,
+        customSetting: [{
+            key: '_test',
+            value: ''
+        }],
+    }
 }

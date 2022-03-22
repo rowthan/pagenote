@@ -3,7 +3,7 @@ import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
-import {ExportMethod, METHOD_NUM} from "./pagenote-exports";
+import {ConvertMethod, getDefaultConvertMethod, METHOD_NUM} from "./pagenote-exports";
 import {Brush, getDefaultBrush} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
 import {PredefinedSchema} from "./pagenote-exports/predefined";
@@ -132,7 +132,7 @@ export namespace setting{
         controlC: boolean,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
-        exportMethods: ExportMethod[],
+        convertMethods: ConvertMethod[],
         dataVersion: SDK_VERSION.ts_format,
         extVersion: string,
         sdkVersion: string,
@@ -177,15 +177,7 @@ export namespace setting{
                 "https://flomoapp.com/*"
             ],
             enableMarkImg: false,
-            exportMethods: [{
-                name: "导出Markdown至剪切板",
-                schema: PredefinedSchema.markdown,
-                method: METHOD_NUM.copy,
-                customSetting: [{
-                    key: '_test',
-                    value: ''
-                }],
-            }],
+            convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
             sdkVersion: "0.20.15",
             extVersion: '0.20.15',
