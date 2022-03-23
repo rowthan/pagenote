@@ -73,6 +73,7 @@ extenstion/dist/scripts
 *.origin.zip
 dist/pagenote.js.LICENSE.txt
 
-.idea/modules.xml
-.idea/pagenote.iml
-.idea/vcs.xml
+.idea
+docs
+/web/out/
+**/node_modules.nosync/*
