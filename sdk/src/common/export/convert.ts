@@ -1,4 +1,4 @@
-import {WebPage} from "../Types";
+import {WebPage} from "@pagenote/shared/lib/@types/data";
 import mustache from 'mustache';
 
 /**
