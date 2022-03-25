@@ -1,14 +1,20 @@
-$ACTIVE_SCALE: 0.8;
+@ACTIVE_SCALE: 0.8;
 
-pagenote-colors-container{
+.pagenote-action-container{
+  position: fixed;
+  z-index: 2147483648;
+  userSelect: none;
+  textAlign: left
+}
+.pagenote-colors-container{
   display: block;
   position: relative;
-  &:hover pagenote-color-button:not(:first-child){
-    transform: translate(0,0) scale($ACTIVE_SCALE)!important;
+  &:hover .pagenote-color-button:not(:first-child){
+    transform: translate(0,0) scale(@ACTIVE_SCALE)!important;
     opacity: 1;
   }
 }
-pagenote-color-button{
+.pagenote-color-button{
   display: block;
   width: 30px;
   height: 30px;
@@ -22,7 +28,7 @@ pagenote-color-button{
   background-position: center !important;
   background-repeat: no-repeat !important;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: all 0.05s ease-out;
   box-sizing: border-box;
   text-align: center;
   line-height: 24px;
@@ -47,60 +53,58 @@ pagenote-color-button{
   }
 }
 
-pagenote-addons{
+.pagenote-addons{
   display: flex;
   position: absolute;
   top:0;
   left:38px;
 }
 
-pagenote-plugin-group{
+.pagenote-plugin-group{
   display: block;
-  pagenote-action-button, pagenote-empty-action-button{
-    cursor: pointer;
-    display: block;
-    width: 30px !important;
-    height: 30px !important;
-    border-radius: 50%;
-    transform: scale($ACTIVE_SCALE);
-    animation: plugInZoomIn 0.8s ease-in-out forwards;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #fff;
-    background-size: contain;
-    border: 1px solid #eae8e8;
-    box-shadow: 0px 0px 1px 0px #f5f5f5;
-    //overflow: hidden;
-    transition: all 0.3s ease-in-out;
-    &:hover{
-      transform: scale(1) !important;
-    }
-    margin-bottom: 6px;
-  }
-  pagenote-empty-action-button{
-    user-select: none;
-    user-drag: none;
-    opacity: 0;
-  }
-  //pagenote-action-button:not(:first-child){
-  //  margin-top: 6px;
-  //}
   &:hover{
     z-index: 1;
   }
 }
 
-@keyframes :global(colorShow) {
+.pagenote-action-button, .pagenote-empty-action-button{
+  cursor: pointer;
+  display: block;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50%;
+  transform: scale(@ACTIVE_SCALE);
+  animation: plugInZoomIn 0.8s ease-in-out forwards;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-size: contain;
+  border: 1px solid #eae8e8;
+  box-shadow: 0px 0px 1px 0px #f5f5f5;
+  //overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  &:hover{
+    transform: scale(1) !important;
+  }
+  margin-bottom: 6px;
+}
+.pagenote-empty-action-button{
+  user-select: none;
+  user-drag: none;
+  opacity: 0;
+}
+
+@keyframes colorShow {
   0%{
     transform: translate(0,0) scale(0.41) !important;
     opacity: 0;
   }
   10%{
-    transform: translate(0,0) scale($ACTIVE_SCALE);
+    transform: translate(0,0) scale(@ACTIVE_SCALE);
     opacity: 1;
   }
   80%{
-    transform: translate(0,0) scale($ACTIVE_SCALE);
+    transform: translate(0,0) scale(@ACTIVE_SCALE);
     opacity: 1;
   }
   100%{
@@ -113,6 +117,6 @@ pagenote-plugin-group{
     transform: scale(0);
   }
   100%{
-    transform: scale($ACTIVE_SCALE);
+    transform: scale(@ACTIVE_SCALE);
   }
 }

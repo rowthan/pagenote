@@ -1,0 +1,16 @@
+{
+  "description": "highlight and annotation the webpage",
+  "scripts": {
+    "build-sdk": "cd sdk && npm run build",
+    "publish-sdk": "cd sdk && npm publish",
+    "publish-shared": "cd shared && npm publish"
+  },
+  "keywords": [
+    "highlight",
+    "mark",
+    "website",
+    "share",
+    "guide"
+  ],
+  "author": "rowthan"
+}

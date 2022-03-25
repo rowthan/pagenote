@@ -1,22 +1,25 @@
-import {h} from 'preact';
 import ToolTip from "rc-tooltip";
-import './tip.less'
+import styles from './tip.less'
+import root from 'react-shadow';
+import {Fragment} from "react";
 
 export default function Tip({message,children,inner=false,placement='top'}) {
   return(
-    <ToolTip destroyTooltipOnHide={{ keepParent: false }}
-
-             align={{
-               offset: [0, 0],
-             }}
-             overlayStyle={{zIndex:9999999}}
-             placement={placement}
-             trigger={['hover']}
-             getTooltipContainer={function (a) {
-                 return inner ? a.parentNode : document.body;
-             }}
-             offsetX={10} overlay={<span>{message}</span>}>
-      {children}
-    </ToolTip>
+      <Fragment>
+          <style type="text/css">{styles}</style>
+          <ToolTip destroyTooltipOnHide={{ keepParent: false }}
+                   align={{
+                       offset: [0, 0],
+                   }}
+                   overlayStyle={{zIndex:9999999}}
+                   placement={placement}
+                   trigger={['hover']}
+                   getTooltipContainer={function (a) {
+                       return inner ? a.parentNode : document.body;
+                   }}
+                   offsetX={10} overlay={<span>{message}</span>}>
+              {children}
+          </ToolTip>
+      </Fragment>
   )
 }

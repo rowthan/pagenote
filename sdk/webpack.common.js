@@ -4,18 +4,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const profile = require('./package');
 
 module.exports = {
-  entry: './src/pagenote.js',
-  output: {
-    path: path.resolve(__dirname, 'dist/'+profile.version),
-    filename: 'pagenote.js',
-    libraryTarget: 'umd'
-  },
   //loader: resolve the files except javascript
   module: {
     rules: [
       {
         test: /\.svg$/,
-        use: ['preact-svg-loader'],
+        use: ['react-svg-loader'],
       },
       { test: /\.tsx?$/, loader: "ts-loader" },
       {
@@ -29,32 +23,35 @@ module.exports = {
               [
                 "@babel/plugin-transform-react-jsx",
                 {
-                "pragma": "h",
-                "pragmaFrag": "Fragment",
+                // "pragma": "h",
+                // "pragmaFrag": "Fragment",
             }]]
           },
         }
       },
       {
-      test: /\.scss$/,
-      use: [MiniCssExtractPlugin.loader,{
-          loader: 'css-loader',
-          options: {
-              modules: false,
-              localIdentName: '[hash:base64:3]'
-          }
-        },{
-          loader: "sass-loader"
-        }]
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader,{
+            loader: 'css-loader',
+            options: {
+                // modules: {
+                //   localIdentName: "[hash:base64:5]",
+                // },
+                // localIdentName: '[hash]'
+            }
+          },{
+            loader: "sass-loader"
+          }]
       },
       {
         test: /\.less$/,
-        use: [MiniCssExtractPlugin.loader,{
+        use: ['to-string-loader',{
           loader: 'css-loader',
-          options: {
-            modules: false,
-            localIdentName: '[hash:base64:3]'
-          }
+          // options: {
+          //   modules: {
+          //     localIdentName: "[hash:base64:5]",
+          //   },
+          // }
         },{
           loader: "less-loader"
         }]
@@ -64,8 +61,9 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader,{
           loader: 'css-loader',
           options: {
-            modules: false,
-            localIdentName: '[hash:base64:3]'
+            modules: {
+              localIdentName: "[hash:base64:5]",
+            },
           }
         }]
       },
@@ -78,14 +76,14 @@ module.exports = {
     ]
   },
   optimization: {
-    minimizer: [
-      new OptimizeCSSAssetsPlugin({
-        assetNameRegExp: /\.css$/g,
-        cssProcessor: require('cssnano'),
-        cssProcessorOptions: {discardComments:{removeAll: true}},
-        canPrint: true
-      })
-    ]
+    // minimizer: [
+    //   new OptimizeCSSAssetsPlugin({
+    //     assetNameRegExp: /\.css$/g,
+    //     cssProcessor: require('cssnano'),
+    //     cssProcessorOptions: {discardComments:{removeAll: true}},
+    //     canPrint: true
+    //   })
+    // ]
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -93,12 +91,15 @@ module.exports = {
       chunkFilename: "[id].css"
     })
   ],
-  "resolve": {
+  externals:{
+    // 'react':'React',
+    // 'react-dom': 'ReactDOM',
+  },
+  resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
-    "alias": {
-      "react": "preact/compat",
-      "react-dom": "preact/compat",
-      '@': require('path').resolve(__dirname, 'src')
+    alias: {
+      '@': require('path').resolve(__dirname, 'src'),
+      // '@pagenote': require('path').resolve(__dirname, '../shared'),
       // Must be below test-utils
     },
   }

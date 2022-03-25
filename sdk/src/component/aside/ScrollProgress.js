@@ -1,6 +1,5 @@
-import {h, render, Component, Fragment} from 'preact';
 import './scroll-progress.scss';
-import {useEffect, useState} from "preact/hooks";
+import {useEffect, useState} from "react";
 import {throttle} from "../../utils";
 import {getScroll} from "../../utils/document";
 import i18n from "../../locale/i18n";

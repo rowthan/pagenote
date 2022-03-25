@@ -1,4 +1,3 @@
-import {h} from 'preact';
 import Popover from '../tip/Popover';
 import './LightRefAnotation.scss'
 import ImageIcon from '../../assets/images/image.svg'

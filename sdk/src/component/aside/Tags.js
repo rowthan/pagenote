@@ -1,8 +1,7 @@
-import {h, Component, Fragment} from 'preact';
 import Modali, { useModali } from 'modali';
 import {DraggableAreasGroup} from 'react-draggable-tags';
-import {useEffect, useRef, useState} from "preact/hooks";
-import './tags.less'
+import {useEffect, useRef, useState} from "react";
+// import './tags.less'
 
 const group = new DraggableAreasGroup();
 const DraggableArea1 = group.addArea();

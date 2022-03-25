@@ -1,7 +1,9 @@
+// @ts-ignore
 import whatsPure from "whats-element/pure";
-import {AnnotationStatus, LightStatus} from "../step/const";
+import {AnnotationStatus, Target} from "@pagenote/shared/lib/@types/data";
 import {getScroll} from "./document";
-import console from "./console";
+import { LightStatus } from "@pagenote/shared/lib/pagenote-brush";
+// import console from "./console";
 const whats = new whatsPure();
 
 const isMobile = ('ontouchstart' in window) || window.innerWidth<600;
@@ -27,38 +29,37 @@ function getRootOffset() {
     };
 }
 
-const prepareSelectionTarget = function (enableMarkImg,positions) {
+const prepareSelectionTarget = function (enableMarkImg:boolean,positions:[{x:number,y:number},{x:number,y:number}]): Target {
     const selection = document.getSelection();
     if(selection.rangeCount===0){
-        return;
+        // console.log('无选区')
+        return null;
     }
-
-
-    // // pagenote 状态监测
-    // const isWaiting = this.status === constant.WAITING && selectedText === this.target.text;
-    // const isDestroy = this.status === this.CONSTANT.DESTROY;
-    // if(isWaiting || isDestroy || selection.rangeCount===0){ // 避免重复计算\无选区
-    //     return;
-    // }
 
     // 选区父节点是否存在
     const range0 = selection.getRangeAt(0);
-    let parentElement = selection.anchorNode?range0.commonAncestorContainer:null;
+    // @ts-ignore
+    let parentElement: HTMLElement = selection.anchorNode ? range0.commonAncestorContainer : null;
     if(parentElement && parentElement.nodeType===3){ // 如果父节点为文本节点，则需要再寻一级父节点
+        // @ts-ignore
         parentElement = parentElement.parentNode;
     }
     const noParentElement = !parentElement || !parentElement.tagName;
     if(noParentElement){
-        return;
+        console.log('无父节点')
+        return null;
     }
 
-    function checkInPagenoteElement(element) {
+    function checkInPagenoteElement(element:Node):boolean {
+        // @ts-ignore
         if(element && element.tagName){
+            // @ts-ignore
             const tagName = element.tagName.toLowerCase();
             const isPagenote = ['light'].includes(tagName) || tagName.indexOf('pagenote')>-1;
             if(isPagenote){
                 return true
             } else if(element.parentNode){
+                // @ts-ignore
                 return checkInPagenoteElement(element.parentNode);
             }
         } else {
@@ -66,8 +67,10 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         }
     }
 
+    // 选区 黑名单检测
     if(checkInPagenoteElement(parentElement) || checkInPagenoteElement(selection.anchorNode) || checkInPagenoteElement(selection.focusNode) ){
-        return;
+        console.log('黑名单')
+        return null;
     }
 
     // 是否可编辑区
@@ -76,31 +79,32 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         canHighlight = false;
     }
 
-    // TODO 监测是否有图片、视频等其他资源
+    // 监测是否有图片资源
     const markImages = [];
     const selectedElementContent = range0.cloneContents();
-    if(enableMarkImg){
-        const children = selectedElementContent.children;
-        for(let i=0; i< children.length; i++){
-            const item = children[i];
-            if(item.tagName==='IMG'){
-                // 找到对应的图片节点
-                const id = `img[src="${item.src}"]`;
-                const elements = parentElement.querySelectorAll(id);
-                for(let j=0; j<elements.length; j++){
-                    const element = elements[j];
-                    if(selection.containsNode(element)){
-                        const imgId = whats.getUniqueId(element).wid;
-                        const imgUrl = element.src;
-                        markImages.push({
-                            id: imgId,
-                            src: imgUrl,
-                            alt: element.alt,
-                            // pre: element.previousSibling?.textContent,
-                            // suffix: element.nextSibling?.textContent,
-                        })
-                        break;
-                    }
+    const children: HTMLCollection = selectedElementContent.children;
+    for(let i=0; i< children.length; i++){
+        const item = children[i];
+        if(item.tagName==='IMG'){
+            // 找到对应的图片节点
+            // @ts-ignore
+            const id = `img[src="${item.src}"]`;
+            const elements = parentElement.querySelectorAll(id);
+            for(let j=0; j<elements.length; j++){
+                const element = elements[j];
+                if(selection.containsNode(element)){
+                    const imgId = whats.getUniqueId(element).wid;
+                    // @ts-ignore
+                    const imgUrl = element.src;
+                    markImages.push({
+                        id: imgId,
+                        src: imgUrl,
+                        // @ts-ignore
+                        alt: element.alt,
+                        // pre: element.previousSibling?.textContent,
+                        // suffix: element.nextSibling?.textContent,
+                    })
+                    break;
                 }
             }
         }
@@ -108,9 +112,11 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
 
     const selectedText = selection.toString().trim(); // 跨标签高亮
     if(!(selectedText || markImages.length)){
-        return
+        // console.log('无内容')
+        return null
     }
 
+    /**上下文计算*/
     // TODO 双击情况下 ，before 计算会存在问题
     let before = range0.startContainer.textContent.substr(0,range0.startOffset);
     let after = range0.endContainer.textContent.substr(range0.endOffset,10);
@@ -131,7 +137,8 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     const selectionRects=selection.getRangeAt(0).getClientRects();
     let relativeRect=selectionRects[selectionRects.length-1];
     if(!relativeRect){
-        return;
+        console.log('无选区节点')
+        return null;
     }
 
 
@@ -140,17 +147,32 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
     // 鼠标落点位置
     const endPosition = positions[1];
     // 正逆方向计算
-    let offsetRelative = 1;
+    let offsetRelative:number;
 
-    // 判断是正逆方向
-    const eOffsetX = endPosition.x - startPosition.x;
-    const eOffsetY = endPosition.y - startPosition.y;
-    if(eOffsetX * eOffsetY >= 0){
-        offsetRelative = eOffsetX >= 0 ? 1 : -1;
-    } else {
-        const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
-        offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // 判断是顺、反方向
+    let eOffsetX = endPosition.x - startPosition.x;
+    let eOffsetY = endPosition.y - startPosition.y;
+    // x,y 方向一致情况下，直接取值
+    if(Math.abs(eOffsetY)>14){
+        offsetRelative = eOffsetY > 1 ? 1: -1
+    }else{
+        offsetRelative = eOffsetX > 0 ? 1 : -1
     }
+    // if(eOffsetY * eOffsetX < 0){
+    //     offsetRelative = -1
+    // } else {
+    //     // 方向不一致的情况下，按照偏移量大计算
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // }
+    // console.log(startPosition,endPosition)
+    // offsetRelative = eOffsetX * eOffsetY < 0;
+    // if(eOffsetX * eOffsetY < 0){
+    //     const relativeDirection = Math.abs(eOffsetX) - Math.abs(eOffsetY) >=0 ? eOffsetX : eOffsetY;
+    //     offsetRelative = relativeDirection>=0 ? 1 : -1;
+    // } else {
+    //     offsetRelative = eOffsetX >= 0 ? 1 : -1;
+    // }
 
     // 根据正逆方向，选择用于计算位置的选区标准，如果是逆向，则取第一个选区
     if(offsetRelative===-1){
@@ -165,12 +187,22 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
 
 
     const whatsEl = whats.getUniqueId(parentElement);
-    const cursorX = parseInt(x);
-    const cursorY = parseInt(y);
+    const cursorX =x
+    const cursorY =y
 
     const rootOffset = getRootOffset();
     const ignoreOffsetY = cursorY - rootOffset.top;
-    const target = {
+
+    let clientX,clientY;
+    if(offsetRelative===-1){
+        clientX = relativeRect.left - 30;
+        clientY = relativeRect.top - 30;
+    } else{
+        clientX = relativeRect.left + relativeRect.width;
+        clientY = relativeRect.top + relativeRect.height;
+    }
+
+    const target: Target = {
         x:cursorX - rootOffset.left,
         y: Math.min(ignoreOffsetY, scrollY+document.documentElement.scrollHeight - 60),
         offsetX: 0.5,
@@ -179,29 +211,30 @@ const prepareSelectionTarget = function (enableMarkImg,positions) {
         suffix:after,
         text:selectedText,
         tip:'', // 提供支持纯文本的取值方式
-        time: new Date().getTime(),
+        time: Date.now(),
         id: whatsEl.wid,
         isActive: false,
         bg: '',
-        parentW: parseInt(parentElement.clientWidth),
-        // clientX: e.clientX,
-        // clientY: e.clientY,
-        canHighlight: canHighlight,
-        selectionElements: selectedElementContent,
+        parentW: parentElement.clientWidth, // 二次查找
+        // parentH: parentElement.clientHeight,
+        clientX: clientX,
+        clientY: clientY,
+        // canHighlight: canHighlight,
+        // selectionElements: selectedElementContent,
         images: markImages,
         annotationStatus: AnnotationStatus.HIDE,
-        lightStatus: LightStatus.HALF
+        lightStatus: LightStatus.half_light
     };
 
     return target
 }
 
 // http://bai.com?a=1&b=2  output [a,b],{a:1,b:1}
-function getParams(url) {
+function getParams(url:string) {
     const urlSearch = url || window.location.href;
     const paramStr = (urlSearch.match(/\?(.*)/)||[])[1];
-    const paramObj = {};
-    const paramKeys = [];
+    const paramObj: Record<string, any> = {};
+    const paramKeys:any[] = [];
     if (!paramStr) {
         return {
             paramObj,
@@ -222,11 +255,11 @@ function getParams(url) {
 }
 
 // TODO 优化精简字符串长度
-function encryptData(string) {
+function encryptData(string:string) {
     return btoa(encodeURI(JSON.stringify(string)))
 }
 
-function decryptedData(data) {
+function decryptedData(data:string) {
     let result = {};
     try {
         result = JSON.parse(decodeURI(atob(data)));
@@ -236,45 +269,23 @@ function decryptedData(data) {
     return result;
 }
 
-function throttle(fn, interval = 300) {
-    let canRun = true;
-    return function () {
-        if (!canRun) return;
-        canRun = false;
-        setTimeout(() => {
-            fn.apply(this, arguments);
-            canRun = true;
-        }, interval);
-    };
-}
-
-function debounce(fn, interval = 300) {
-    let timeout = null;
-    return function () {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            fn.apply(this, arguments);
-        }, interval);
-    };
-}
-
 // rgba(12,323,456) #123222
 function convertColor(color='') {
     if(!color){
         return '#000000';
     }
-    let rgb = [];
+    let rgb:[number,number,number,number?] = [0,0,0];
     let rate = 1;
     if(color.indexOf('rgb')>-1){
-        rgb = color.match(/\((.*)\)/)[1].split(',');
-        rgb = [parseInt(rgb[0]),parseInt(rgb[1]),parseInt(rgb[2])];
+        const rgbstring = color.match(/\((.*)\)/)[1].split(',');
+        rgb = [parseInt(rgbstring[0]),parseInt(rgbstring[1]),parseInt(rgbstring[2])];
         if(rgb[3]!==undefined){
             rate = rgb[3];
         }
     }else{
         color = color.replace('#','');
-        rgb = [color.substr(0,2),color.substr(2,2),color.substr(4,2),1]
-        rgb = [parseInt(rgb[0],16),parseInt(rgb[1],16),parseInt(rgb[2],16)];
+        const rgbstring = [color.substr(0,2).toString(),color.substr(2,2).toString(),color.substr(4,2).toString(),1]
+        rgb = [parseInt(<string>rgbstring[0],16),parseInt(<string>rgbstring[1],16),parseInt(<string>rgbstring[2],16)];
     }
     const r = rgb[0];
     const g = rgb[1];
@@ -289,12 +300,12 @@ function convertColor(color='') {
 
 
 
-function computePosition(index,radio=30) {
+function computePosition(index:number,radio=30) {
     const p = 45//360/(colors.length-1);// 角度
     const hudu = ((2 * Math.PI / 360) * p ) * index;
     const offsetHudu = -45 * ( 2 * Math.PI / 360);
-    const x =  Number.parseFloat(radio * Math.sin(hudu + offsetHudu)).toFixed(3);
-    const y = Number.parseFloat(radio * Math.cos(hudu + offsetHudu)).toFixed(3);
+    const x =  (radio * Math.sin(hudu + offsetHudu)).toFixed(3);
+    const y = (radio * Math.cos(hudu + offsetHudu)).toFixed(3);
     return {
         x:x,
         y:y,
@@ -305,8 +316,6 @@ export {
     getParams,
     encryptData,
     decryptedData,
-    throttle,
-    debounce,
     convertColor,
     computePosition,
     prepareSelectionTarget,

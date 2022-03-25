@@ -1,7 +1,7 @@
-import { throttle, convertColor} from "./index";
-import md5 from "blueimp-md5";
-import html2canvas from "html2canvas";
-import Canvas2Image from "./canvas2image";
+import { convertColor} from "./index";
+import md5 from "md5";
+// import html2canvas from "html2canvas";
+// import Canvas2Image from "./canvas2image";
 
 const IS_TOUCH = 'ontouchstart' in window,
  getXY = IS_TOUCH
@@ -365,19 +365,20 @@ function writeTextToClipboard(text) {
 
 function captureElementImage(target) {
     return new Promise((resolve,reject)=>{
-        html2canvas(target,{
-            useCORS: true,
-            ignoreElements: function (element) {
-                const isPagenote = element.tagName.toLowerCase().indexOf('pagenote')>-1;
-                const unVisiable = getComputedStyle(element).opacity<=0;
-                return isPagenote || unVisiable;
-            }
-        }).then((canvas)=>{
-            const result = Canvas2Image.convertToImage(canvas,target.offsetWidth,target.scrollHeight).src;
-            resolve(result);
-        }).catch((e)=>{
-            reject(e);
-        })
+        return Promise.reject('not supoort yet')
+        // html2canvas(target,{
+        //     useCORS: true,
+        //     ignoreElements: function (element) {
+        //         const isPagenote = element.tagName.toLowerCase().indexOf('pagenote')>-1;
+        //         const unVisiable = getComputedStyle(element).opacity<=0;
+        //         return isPagenote || unVisiable;
+        //     }
+        // }).then((canvas)=>{
+        //     const result = Canvas2Image.convertToImage(canvas,target.offsetWidth,target.scrollHeight).src;
+        //     resolve(result);
+        // }).catch((e)=>{
+        //     reject(e);
+        // })
     });
 }
 

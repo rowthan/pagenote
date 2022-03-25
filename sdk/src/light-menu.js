@@ -1,4 +1,4 @@
-import {h,render} from 'preact';
+import {render} from 'react-dom';
 import {getScroll} from "./utils/document";
 import LightActionBar from "./component/LightActionBar";
 

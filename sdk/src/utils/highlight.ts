@@ -17,10 +17,12 @@ interface Dict {
 /** 高亮一个元素内的关键词，return {match:2,light:1,lights:[elements]} */
 interface LightElement extends HTMLElement{
     dataset:{
+        lightid?: string;
         highlight?: string
         lightindex?: string
         type?: 'img' | undefined
-    }
+    },
+    _originText?:string
 }
 
 /**包裹文本节点方法*/

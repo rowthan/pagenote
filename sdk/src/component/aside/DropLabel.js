@@ -1,5 +1,4 @@
-import { h } from 'preact';
-import { useState,useRef } from 'preact/hooks';
+import { useState,useRef } from 'react';
 import i18n from '../../locale/i18n'
 import Popover from '../tip/Popover'
 import Tag from '../../assets/images/tag2.svg'
