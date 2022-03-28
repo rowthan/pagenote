@@ -133,7 +133,7 @@ export namespace setting{
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
         convertMethods: ConvertMethod[],
-        dataVersion: SDK_VERSION.ts_format,
+        dataVersion: SDK_VERSION,
         extVersion: string,
         sdkVersion: string,
     }
