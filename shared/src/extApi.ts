@@ -3,10 +3,10 @@ import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
-import {ConvertMethod, getDefaultConvertMethod, METHOD_NUM} from "./pagenote-exports";
+import {ConvertMethod, getDefaultConvertMethod, METHOD_NUM} from "./pagenote-convert";
 import {Brush, getDefaultBrush} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
-import {PredefinedSchema} from "./pagenote-exports/predefined";
+import {PredefinedSchema} from "./pagenote-convert/predefined";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
