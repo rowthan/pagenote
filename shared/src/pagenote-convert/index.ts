@@ -1,4 +1,4 @@
-import mustache from 'mustache';
+const mustache = require('mustache');
 import {commonKeyValuePair} from "../@types/common";
 import { WebPage } from "../@types/data";
 import {PredefinedSchema, predefinedSchemaMap} from "./predefined";
