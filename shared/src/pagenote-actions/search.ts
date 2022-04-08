@@ -2,7 +2,7 @@ import {ActionConfig} from "./index";
 import {ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {PREDEFINED_ICON} from "../icons";
 
-const version = '0.1.0'
+const version = '0.1.1'
 const search:ActionConfig = {
     define:{
         name:'选中搜索',
@@ -18,24 +18,28 @@ const search:ActionConfig = {
                 data:[
                     {
                         value:'https://www.baidu.com/s?ie=utf-8&wd=${keyword}',
-                        label:'百度搜索'
+                        label:'搜索~百度'
                     },
                     {
-                        value:'https://search.bilibili.com/all?keyword=${keyword}',
-                        label:'哔哩哔哩搜索'
-                    },
-                    {
-                        value:'https://www.toutiao.com/search/?keyword=${keyword}',
-                        label:'头条搜索'
-                    },
-                    {
-                        value:'https://translate.google.cn/?sl=auto&tl=auto&text=${keyword}',
-                        label:'Google翻译'
+                        value:'https://www.google.com.hk/search?q=${keyword}',
+                        label:'搜索~Google'
                     },
                     {
                         value:'https://www.douban.com/search?q=${keyword}',
-                        label:'豆瓣搜索'
-                    }
+                        label:'搜索~豆瓣'
+                    },
+                    {
+                        value:'https://search.bilibili.com/all?keyword=${keyword}',
+                        label:'搜索~哔哩哔哩'
+                    },
+                    {
+                        value:'https://www.toutiao.com/search/?keyword=${keyword}',
+                        label:'搜索~今日头条'
+                    },
+                    {
+                        value:'https://translate.google.cn/?sl=auto&tl=auto&text=${keyword}',
+                        label:'翻译~Google'
+                    },
                 ],
                 rules:[],
             },
