@@ -1,5 +1,5 @@
 const md5 = require('md5')
-import {AllowUpdateKeys, DataVersion, WebPage} from "../@types/data";
+import {AllowUpdateKeys, DataVersion, PAGE_TYPES, WebPage} from "../@types/data";
 
 type UpdateProps<T,Key extends keyof T> = {[key in Key]?: T[key]}
 
@@ -16,6 +16,7 @@ const EMPTY_HASH = 'empty'
 
 class WebPageItem implements IWebPage {
     data: WebPage = {
+        pageType: PAGE_TYPES.http,
         createAt: 0,
         deleted: false,
         description: "",
@@ -33,7 +34,7 @@ class WebPageItem implements IWebPage {
         updateAt: 0,
         url: "",
         urls: [],
-        version: DataVersion.version3,
+        version: DataVersion.version3
     };
     lastHash: string = EMPTY_HASH;
 
@@ -128,7 +129,7 @@ class WebPageItem implements IWebPage {
         return !this.isValid() || (plainData?.steps.length === 0 && plainData?.snapshots.length === 0)
     }
 
-    createDataHash() {
+    createDataHash():string {
         if (!this.isValid()) {
             return EMPTY_HASH
         }
@@ -141,12 +142,13 @@ class WebPageItem implements IWebPage {
             icon: data.icon,
             urls: data.urls,
         })
-        return md5(string)
+        return md5(string).toString()
     }
 }
 
 const getDetailWebPage = function () {
     const webpage: WebPage = {
+        pageType: PAGE_TYPES.http,
         createAt: 0,
         deleted: false,
         description: "",

@@ -21,35 +21,42 @@ function getExpiredKey(key:string) {
     return `__c_${key}__expired`
 }
 
-const getCacheInstance = function <T>(key:string,type:CACHE_TYPE=CACHE_TYPE.localstorage,duration:number=3600 * 1000 * 24 * 30) {
-    let Api:Storage = localStorage;
-    switch (type){
-        case CACHE_TYPE.sessionStorage:
-            Api = sessionStorage;
-            break;
-        default:
-            Api = localStorage;
+const getCacheInstance = function <T>(key:string,defaultValue:T,type:CACHE_TYPE=CACHE_TYPE.localstorage,duration:number=3600 * 1000 * 24 * 30) {
+    function getApi():Storage {
+        let Api:Storage = window.localStorage;
+        switch (type){
+            case CACHE_TYPE.sessionStorage:
+                Api = window.sessionStorage;
+                break;
+            default:
+                Api = window.localStorage;
+        }
+        return Api
     }
 
     return{
         set: function (value:T) {
             try{
-                Api.setItem(getCacheKey(key),JSON.stringify(value));
+                getApi().setItem(getCacheKey(key),JSON.stringify(value));
                 if(duration){
-                    Api.setItem(getExpiredKey(key),JSON.stringify(Date.now() + duration));
+                    getApi().setItem(getExpiredKey(key),JSON.stringify(Date.now() + duration));
                 }
             }catch (e) {
                 
             }
         },
         get: function ():T {
-            const expiredAtStr = Api.getItem(getExpiredKey(key));
+            const expiredAtStr = getApi().getItem(getExpiredKey(key));
             const expiredAt = parseValue<number>(expiredAtStr);
             if(duration && expiredAt && expiredAt < Date.now()){
-                return
+                return undefined
             }
-            const str = Api.getItem(getCacheKey(key));
-            return parseValue(str);
+            const str = getApi().getItem(getCacheKey(key));
+            let value:T = parseValue(str);
+            if(value===undefined){
+                value = defaultValue
+            }
+            return value;
         }
     }
 }
