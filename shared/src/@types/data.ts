@@ -42,6 +42,8 @@ type Step = {
     daskBg?: string, // 将废弃
     isFocusTag?: boolean,
     time?: number,
+    createAt?: number, // 创建时间
+    updateAt?: number, // 修改时间
 }
 
 type Position = {
@@ -67,10 +69,15 @@ type PlainData = {
     lastModified?: number,
 }
 
+export enum PAGE_TYPES {
+    file= 'file',
+    http= 'http'
+}
 type WebPageIds = {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
     url: string, // 此条数据绑定的 URL
     urls: string[], // 此条数据绑定的 URL 集合
+    pageType: PAGE_TYPES
 }
 
 type WebPageTimes = {
