@@ -139,7 +139,7 @@ class SessionStorageBridge implements Communication<any>{
         this.proxy = proxy
     }
 
-    requestMessage(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<any>> {
+    requestMessage<RESPONSE>(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<RESPONSE>> {
         let resolveFun: (arg0: BaseMessageResponse<any>)=> void;
         const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve)=>{
             resolveFun = resolve;
