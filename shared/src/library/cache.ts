@@ -21,7 +21,14 @@ function getExpiredKey(key:string) {
     return `__c_${key}__expired`
 }
 
-const getCacheInstance = function <T>(key:string,defaultValue:T,type:CACHE_TYPE=CACHE_TYPE.localstorage,duration:number=3600 * 1000 * 24 * 30) {
+interface Option {
+    type?:CACHE_TYPE,
+    duration?:number,
+    defaultValue?: any
+}
+
+const getCacheInstance = function <T>(key:string,option: Option = {}) {
+    const {type = CACHE_TYPE.localstorage, duration=3600 * 1000 * 24 * 30} = option
     function getApi():Storage {
         let Api:Storage = window.localStorage;
         switch (type){
@@ -45,7 +52,7 @@ const getCacheInstance = function <T>(key:string,defaultValue:T,type:CACHE_TYPE=
                 
             }
         },
-        get: function ():T {
+        get: function (defaultValue?:T):T {
             const expiredAtStr = getApi().getItem(getExpiredKey(key));
             const expiredAt = parseValue<number>(expiredAtStr);
             if(duration && expiredAt && expiredAt < Date.now()){
