@@ -94,6 +94,10 @@ type WebPageTimes = {
     etag?: string, // 对应 webdav 文件的etag信息，用于比较一致性
     lastSyncTime?: number, // 云盘最后同步时间
     hash?: string,
+
+    filename?: string, // 自定义导出文件名
+
+    commits?: {hash:string,time: number, did: string}[], // 版本号记录。每次同步都生成一次hash, 生成类似 git commit 记录，用于跟踪版本合并、冲突解决
 }
 
 enum DataVersion {

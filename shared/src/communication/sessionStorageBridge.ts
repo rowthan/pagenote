@@ -24,6 +24,7 @@ interface IMessageProxy extends IBaseMessageProxy<any, SessionSender,any>{}
 
 interface BridgeOption extends CommunicationOption{
     listenKey: string
+    listenBridges?: number // 监听通道数 TODO 避免占用同一个key值，可以多路并发
 }
 
 const EVENT_NAME = 'storage';
@@ -75,6 +76,7 @@ class SessionStorageBridge implements Communication<any>{
             let requestData: BaseMessageRequest;
             try{
                 let dataString:string=''
+                // TODO 支持 key 正则、避免使用单一通道值， listenBridges
                 if(event.key===listenKey && event.newValue){
                     dataString = event.newValue
                 } else{
