@@ -1,5 +1,5 @@
 import {BackupData, WebPage} from "./@types/data";
-import {Find, Pagination, Query} from "./@types/database";
+import {Find, Pagination, Projection, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
@@ -47,12 +47,13 @@ export namespace boxroom {
     export type Keys ={
         id: string,
         createAt: number,
+        createAtDay: string,
         from: string,
         boxType: string
     }
 
     export type response = {
-        get: IExtenstionMessageListener<Find,BoxItem[]>,
+        get: IExtenstionMessageListener<Find<Keys>,BoxItem[]>,
         save: IExtenstionMessageListener<Partial<BoxItem>,BoxItem>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
@@ -80,10 +81,12 @@ export namespace lightpage{
         category: string,
         createAt: number,
         updateAt: number,
-        updateAtTime: number,
         expiredAt: number,
         updateAtDay: string,
         createAtDay: string,
+        basename: string,
+        lastmod: string,
+        etag: string
     }
 
 
@@ -93,9 +96,9 @@ export namespace lightpage{
         removeLightPage: IExtenstionMessageListener<{key:string}, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
-        getLightPages: IExtenstionMessageListener<Find, {pages:WebPage[],pagination:Pagination}>,
-        getLightPageDetail: IExtenstionMessageListener<Query, WebPage | null>,
-        groupPages: IExtenstionMessageListener<any, any>,
+        getLightPages: IExtenstionMessageListener<Find<Keys>, {pages:WebPage[],pagination:Pagination}>,
+        getLightPageDetail: IExtenstionMessageListener<Query<Keys>, WebPage | null>,
+        groupPages: IExtenstionMessageListener<{groupBy: keyof Keys, query?: Query<Keys> }, any>,
         // 导出pages
         exportPages: IExtenstionMessageListener<void, BackupData>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败

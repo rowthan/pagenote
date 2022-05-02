@@ -1,4 +1,4 @@
-import {debounce} from 'lodash'
+import debounce from 'lodash/debounce'
 type HistoryStateChangeType = 'pushState' | 'replaceState'
 
 const _historyWrap = function(type:HistoryStateChangeType) {
@@ -7,6 +7,7 @@ const _historyWrap = function(type:HistoryStateChangeType) {
     //@ts-ignore
     window.history._wrapped = true;
     return function() {
+        // @ts-ignore
         const rv = orig.apply(this, arguments);
         // @ts-ignore
         e.arguments = arguments;

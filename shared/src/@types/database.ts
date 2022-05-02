@@ -1,17 +1,15 @@
-export interface Find {
-    query?: Query, // 搜索过滤条件
-    sort?: { // 排序
-        [key:string]: 1|-1
-    },
+export interface Find<Index> {
+    query?: Query<Index>, // 搜索过滤条件
+    sort?: Record<keyof Index, 1|0>,
     limit: number, // 分页数
     skip?: number, // 游标
-    projection?: {[key:string]: 1|0}, // 字段过滤
+    projection?: Projection<Index>, // 字段过滤
     ignoreDetail?: boolean // 是否忽略详情，一般用于 list 列表时候，不需要查看详情
 }
 
-export interface Query {
-    [key:string]:any
-}
+export type Projection<Index> = Record<keyof Index, 1|0>
+
+export type Query<Index> = Record<keyof Index | '_keywords', any>
 
 export type Pagination ={
     total: number,
