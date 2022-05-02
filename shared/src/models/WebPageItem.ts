@@ -62,7 +62,7 @@ class WebPageItem implements IWebPage {
     isValid() {
         // 已删除已过期
         if(this.data.deleted){
-            if(this.data.expiredAt < Date.now()){
+            if(this.data.expiredAt && this.data.expiredAt < Date.now()){
                 return false
             }
         }
