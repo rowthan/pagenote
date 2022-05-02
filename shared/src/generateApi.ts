@@ -6,6 +6,8 @@ import {
     action,
     localdir
 } from "./extApi";
+import SessionStorageBridge from "./communication/sessionStorageBridge";
+import Message2 from "./communication/ExtenstionBridge";
 
 
 const notSupportYet = function () {
@@ -16,7 +18,33 @@ const notSupportYet = function () {
     })
 }
 
-const makeSendTo = function (wrapperFun: (method: string, targetId: string) => any) {
+let bridge:any;
+const defaultWrapper = function (method:string,targetId:string) {
+    return function (request:any) {
+        // bridge 运行时初始化，
+        if(!bridge){
+            const clientId = 'page_bridge'
+            // 优先使用 extension runtime message
+            if(chrome && chrome.runtime){
+                bridge = new Message2(clientId,{
+                    asServer: true,
+                    isBackground: false,
+                    timeout: 5000
+                })
+            }else{
+                bridge = new SessionStorageBridge(clientId,{
+                    asServer: true,
+                    listenKey: "pagenote-message",
+                    timeout: 8000,
+                })
+            }
+        }
+
+        return bridge.requestMessage(method,request)
+    }
+}
+
+const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
         exportPages: wrapperFun('exportPages',lightpage.id),
@@ -78,4 +106,4 @@ const makeSendTo = function (wrapperFun: (method: string, targetId: string) => a
     }
 }
 
-export default makeSendTo
+export default generateApi
