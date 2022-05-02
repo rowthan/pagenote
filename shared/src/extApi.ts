@@ -78,21 +78,23 @@ export namespace lightpage{
         title: string,
         categories: string[],
         category: string,
-        createAt: string,
-        updateAt: string,
+        createAt: number,
+        updateAt: number,
         updateAtTime: number,
         expiredAt: number,
+        updateAtDay: string,
+        createAtDay: string,
     }
 
 
     // 服务端可接受的请求API
     export type response = {
-        saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage>,
+        saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage|null>,
         removeLightPage: IExtenstionMessageListener<{key:string}, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
         getLightPages: IExtenstionMessageListener<Find, {pages:WebPage[],pagination:Pagination}>,
-        getLightPageDetail: IExtenstionMessageListener<Query, WebPage>,
+        getLightPageDetail: IExtenstionMessageListener<Query, WebPage | null>,
         groupPages: IExtenstionMessageListener<any, any>,
         // 导出pages
         exportPages: IExtenstionMessageListener<void, BackupData>
@@ -141,8 +143,8 @@ export namespace setting{
     export interface response{
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        // 同步云端设置
-        syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
+        // // 同步云端设置
+        // syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // 本地设置存储
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
         //
@@ -179,7 +181,7 @@ export namespace setting{
             enableMarkImg: false,
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
-            sdkVersion: "0.20.15",
+            sdkVersion: "5.5.3",
             extVersion: '0.20.15',
             dataVersion: SDK_VERSION.ts_format,
         }
