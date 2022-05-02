@@ -1,9 +1,11 @@
-
+import {debounce} from 'lodash'
 type HistoryStateChangeType = 'pushState' | 'replaceState'
 
 const _historyWrap = function(type:HistoryStateChangeType) {
-    const orig = history[type];
+    const orig = window.history[type];
     const e = new Event(type);
+    //@ts-ignore
+    window.history._wrapped = true;
     return function() {
         const rv = orig.apply(this, arguments);
         // @ts-ignore
@@ -12,8 +14,12 @@ const _historyWrap = function(type:HistoryStateChangeType) {
         return rv;
     };
 };
-history.pushState = _historyWrap('pushState');
-history.replaceState = _historyWrap('replaceState');
+
+// @ts-ignore 防止多次修改
+if(window.history._wrapped!==true){
+    history.pushState = _historyWrap('pushState');
+    history.replaceState = _historyWrap('replaceState');
+}
 
 
 enum URLchangeTypes {
@@ -35,15 +41,12 @@ const defaultOptions = {
  * */
 export default function addUrlChangeListener(fun:Function,options:Options=defaultOptions):void {
     let timer: NodeJS.Timeout;
-    const listen = function () {
+    const listen = function (e:Event|HashChangeEvent|MouseEvent|PopStateEvent) {
         clearTimeout(timer);
-        const arg = arguments;
         timer = setTimeout(function () {
-            // @ts-ignore
-            fun(...arg)
+            fun(e)
         },10)
     }
-    console.log('监听',options)
 
     if(options.listenTypes.includes(URLchangeTypes.hash)){
         window.addEventListener('hashchange',listen);
@@ -57,11 +60,11 @@ export default function addUrlChangeListener(fun:Function,options:Options=defaul
 
     if(options.listenTypes.includes(URLchangeTypes.document)){
         let lastTimeUrl = window.location.href;
-        document.addEventListener('click',function () {
+        document.addEventListener('click',debounce(function (e:MouseEvent) {
             if(lastTimeUrl !== window.location.href) {
                 lastTimeUrl = window.location.href;
-                listen()
+                listen(e)
             }
-        },{capture:true});
+        },100),{capture:true}); // 100ms 后判断URL变更，click 当下 URL可能还未变化
     }
 }
