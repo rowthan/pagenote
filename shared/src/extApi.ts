@@ -86,7 +86,8 @@ export namespace lightpage{
         createAtDay: string,
         basename: string,
         lastmod: string,
-        etag: string
+        etag: string,
+        lightCnt: number, // 高亮个数
     }
 
 
@@ -96,7 +97,7 @@ export namespace lightpage{
         removeLightPage: IExtenstionMessageListener<{key:string}, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
-        getLightPages: IExtenstionMessageListener<Find<Keys>, {pages:WebPage[],pagination:Pagination}>,
+        getLightPages: IExtenstionMessageListener<Find<Keys>, {pages:WebPage[]|Keys[],pagination:Pagination}>,
         getLightPageDetail: IExtenstionMessageListener<Query<Keys>, WebPage | null>,
         groupPages: IExtenstionMessageListener<{groupBy: keyof Keys, query?: Query<Keys> }, any>,
         // 导出pages
@@ -246,6 +247,7 @@ export namespace action{
         usage: IExtenstionMessageListener<void, { storageSize: number }>
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
+        [key: string]: IExtenstionMessageListener<any, any>
     }
 
     export type request = ComputeRequestToBackground<response>
