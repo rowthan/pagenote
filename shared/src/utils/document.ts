@@ -50,6 +50,7 @@ function appendScriptsToBody(scripts:string[]):void {
     });
 }
 
+// 页面可见发生变化
 function onVisibilityChange(callback:(hidden:boolean)=>void):()=>void {
     // 设置隐藏属性和改变可见属性的事件的名称
     let visibilityChange = 'visibilitychange';
@@ -73,6 +74,23 @@ function onVisibilityChange(callback:(hidden:boolean)=>void):()=>void {
     }
 }
 
+// 元素可见发生变化
+function onElementViewChange(element:Element,option:IntersectionObserverInit={threshold:[0,0.5,1]},callback:(ratio:number,visible:boolean)=>void){
+    if(!element){
+        return;
+    }
+    const io = new IntersectionObserver(function(entries) {
+        const ratio = entries[0].intersectionRatio;
+        const thisTimeShow = ratio > 0;
+        callback(ratio,thisTimeShow);
+    },option);
+    io.observe(element);
+
+    return function () {
+        io.disconnect();
+    }
+}
+
 export {
     getWebIcon,
     getWebTitle,
@@ -81,4 +99,5 @@ export {
     loadScript,
     appendScriptsToBody,
     onVisibilityChange,
+    onElementViewChange,
 }

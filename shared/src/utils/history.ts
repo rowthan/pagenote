@@ -1,4 +1,3 @@
-import debounce from 'lodash/debounce'
 type HistoryStateChangeType = 'pushState' | 'replaceState'
 
 const _historyWrap = function(type:HistoryStateChangeType) {
@@ -30,11 +29,13 @@ enum URLchangeTypes {
 }
 type ListenType = URLchangeTypes
 type Options = {
-    listenTypes: ListenType[]
+    listenTypes: ListenType[],
+    clickTimeout: number
 }
 
 const defaultOptions = {
-    listenTypes:[URLchangeTypes.hash,URLchangeTypes.history,URLchangeTypes.document]
+    listenTypes:[URLchangeTypes.hash,URLchangeTypes.history,URLchangeTypes.document],
+    clickTimeout: 100,
 }
 /**
  * 监听页面 URL 发生变更
@@ -61,11 +62,13 @@ export default function addUrlChangeListener(fun:Function,options:Options=defaul
 
     if(options.listenTypes.includes(URLchangeTypes.document)){
         let lastTimeUrl = window.location.href;
-        document.addEventListener('click',debounce(function (e:MouseEvent) {
-            if(lastTimeUrl !== window.location.href) {
-                lastTimeUrl = window.location.href;
-                listen(e)
-            }
-        },100),{capture:true}); // 100ms 后判断URL变更，click 当下 URL可能还未变化
+        document.addEventListener('click',function (e:MouseEvent) {
+            setTimeout(function () {
+                if(lastTimeUrl !== window.location.href) {
+                    lastTimeUrl = window.location.href;
+                    listen(e)
+                }
+            },options.clickTimeout)
+        },{capture:true}); // 100ms 后判断URL变更，click 当下 URL可能还未变化
     }
 }
