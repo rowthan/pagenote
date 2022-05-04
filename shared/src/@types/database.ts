@@ -1,6 +1,6 @@
 export interface Find<Index> {
     query?: Query<Index>, // 搜索过滤条件
-    sort?: Record<keyof Index, 1|-1>,
+    sort?: Sort<Index>,
     limit: number, // 分页数
     skip?: number, // 游标
     projection?: Projection<Index>, // 字段过滤
@@ -8,6 +8,8 @@ export interface Find<Index> {
 }
 
 export type Projection<Index> = Partial<Record<keyof Index, 1|0>> & {[key:string]:1|0}
+
+export type Sort<Index> = Partial<Record<keyof Index, 1|-1>>
 
 export type Query<Index> = Partial<Record<keyof Index | '_keywords', any>>
 
