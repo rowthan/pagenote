@@ -44,6 +44,8 @@ type Step = {
     time?: number,
     createAt?: number, // 创建时间
     updateAt?: number, // 修改时间
+    score?: number, // 此条笔记重要评分
+    originContext?: string, // 原始上下文
 }
 
 type Position = {
@@ -94,6 +96,7 @@ type WebPageTimes = {
     etag?: string, // 对应 webdav 文件的etag信息，用于比较一致性
     lastSyncTime?: number, // 云盘最后同步时间
     hash?: string,
+    visitedAt?: number, // 最后访问时间
 
     filename?: string, // hash + 自定义导出文件名
 
@@ -107,18 +110,37 @@ enum DataVersion {
 type WebPageSiteInfo = {
     deleted: boolean,
     icon: string,
-    title: string,
+    title: string, // 网站标题
     version: DataVersion,
-    description: string,
+    description: string, // 网站描述
+    customTitle?: string, // 自定义标题
+}
+
+// 链路信息，记录各个网站之间的联系
+type RouteInfo = {
+    sessionId?: string
+}
+
+enum MetaResourceType {
+    image='image',
+    html='html',
+}
+
+type MetaResource = {
+    url: string, // 可访问的URL 地址，
+    type: MetaResourceType
+    data?: string, // 原始数据
+    createAt?: number, // 资源创建时间
 }
 
 type WebPageDatas = {
     plainData: PlainData,
+    snapshots?: Omit<MetaResource, 'data'>[],
 }
 
-type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo;
+type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
 
-type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | 'url' | 'urls'
+type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
 interface BackupData {
     pages: WebPage[],
