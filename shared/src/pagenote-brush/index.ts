@@ -19,6 +19,7 @@ export interface Brush {
     color: string,
     lightType: LightType,
     defaultStatus: LightStatus
+    score?: number // 权重分数，
 }
 
 export function getDefaultBrush():Brush {
