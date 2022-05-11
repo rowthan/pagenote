@@ -8,6 +8,7 @@ import {Action, ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {ICON} from "../icons";
 import {Target} from "../@types/data";
 import axios from "./axios";
+import {AxiosStatic} from "axios";
 
 const defaultActionMap: Record<ACTION_TYPES,ActionConfig> = {
     [ACTION_TYPES.custom]: custom,
@@ -34,12 +35,7 @@ export interface ActionAPI {
         // toast提示
         notification: (tip:{message: string,})=>void,
         // 发送网络请求
-        axios: (request:{
-            method:string,
-            url: string,
-            data?: any,
-            params?: any,
-        })=>Promise<any>,
+        axios: AxiosStatic,
         // 弹窗
         popupwindow: (url:string, title:string, w?:number, h?:number)=>void,
         // 弹窗对数据进行二次编辑数据
