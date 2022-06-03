@@ -6,29 +6,37 @@ enum BackupVersion {
 }
 
 enum AnnotationStatus {
-    fixed=1,
-    un_fixed=0,
+    // fixed=1,
+    // un_fixed=0,
     SHOW=2,
-    HIDE=0
+    HIDE=0,
 }
 
 type Target = Step & {
     clientX: number,
     clientY: number,
-    bg: string
+}
+
+enum AnnotationShowType {
+    float=1, // 浮动
+    inject=2 // 嵌入式
 }
 
 type Step = {
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
     id: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
-    level?: number, // 高亮层级
+    tip: string, // 标记的笔记（用户输入）
     bg: string, // 标记背景色
+    isActive: boolean, // 是否为激活状态
+    lightStatus: LightStatus // 高亮状态
+    annotationStatus: AnnotationStatus,
+    annotationShowType: AnnotationShowType,
+    lightType?: LinkStyle, // 画笔类型，删除线、高亮
+    level?: number, // 高亮层级
     text?: string, // 标记的文本内容
     pre? : string, // 标记的文本内容 上文信息
     suffix?: string, // 标记的文本内容 下文信息
-    tip: string, // 标记的笔记（用户输入）
-    isActive: boolean, // 是否为激活状态
     clientX?: number,
     clientY?: number,
     offsetX?: number, // 批注与高亮元素的相对偏移量
@@ -36,8 +44,6 @@ type Step = {
     parentW?: number, // 高亮元素父节点宽度
     lightId?: string, // 每一条标记的唯一 hash id
     images?: any[], // 图片高亮，待支持
-    lightStatus: LightStatus
-    annotationStatus: AnnotationStatus,
     lightBg?: string, // 将废弃
     daskBg?: string, // 将废弃
     isFocusTag?: boolean,
@@ -54,21 +60,20 @@ type Position = {
 }
 
 type PlainData = {
-    url: string,
     images: string[],
     categories: string[],
     snapshots: string[],
     setting: any,
     steps: Step[],
-    note?: string,
 
     // TODO 废弃 SDK 不处理
+    note?: string,
+    url?: string,
     title?: string,
     version?: string,
     icon?: string,
     createAt?: number,
     description?: string,
-    lastModified?: number,
 }
 
 export enum PAGE_TYPES {
@@ -105,6 +110,7 @@ type WebPageTimes = {
 
 enum DataVersion {
     version3='3', // 携带有 lastmode etag 字段
+    version4='4', // 删除 plainData 中网页信息字段
 }
 
 type WebPageSiteInfo = {

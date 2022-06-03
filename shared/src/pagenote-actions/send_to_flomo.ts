@@ -51,7 +51,7 @@ const send_to_flomo:ActionConfig = {
                 }]
             }
         ],
-        description:"将选中内容发送到 Flomo 平台。不推荐使用当前卡槽，建议使用 「网络请求」以替换。",
+        description:"将选中内容发送到 Flomo 平台。",
         scenes: [ACTION_SCENE.text]
     },
     initData:{

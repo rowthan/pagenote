@@ -137,17 +137,18 @@ class Message2 implements Communication<any>{
       resolveFun = resolve;
     })
 
+    const timeout = header?.timeout || this.option.timeout;
     let timer = setTimeout(function () {
       resolveFun({
         success: false,
         error: {
-          reason: 'timeout',
+          reason: 'timeout after '+ timeout,
           request: request
         },
         data: null
       })
       console.warn('timeout',request)
-    },header?.timeout || this.option.timeout)
+    },timeout)
 
     const requestCallback = function (data: BaseMessageResponse<any>) {
       clearTimeout(timer)
