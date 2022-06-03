@@ -8,7 +8,8 @@ const BLOCK_PAGES = /\.pagenote\.html$/;
 const checkBlocked = function ():boolean {
   const isBlocked = !!document.querySelector(`*[data-${BLOCK_KEY}]`);
   const isBlockPage = BLOCK_PAGES.test(window.location.href);
-  return isBlocked || isBlockPage;
+  const isUserBlocked = window.location.href.indexOf(BLOCK_KEY) > -1;
+  return isBlocked || isBlockPage || isUserBlocked;
 }
 
 // 检测是否植入了 pagenote sdk

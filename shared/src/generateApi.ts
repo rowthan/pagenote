@@ -19,6 +19,7 @@ const notSupportYet = function () {
 }
 
 let bridge:any;
+const TIMEOUT = 8000;
 const defaultWrapper = function (method:string,targetId:string) {
     return function (request:any) {
         // bridge 运行时初始化，
@@ -29,13 +30,13 @@ const defaultWrapper = function (method:string,targetId:string) {
                 bridge = new Message2(clientId,{
                     asServer: true,
                     isBackground: false,
-                    timeout: 5000
+                    timeout: TIMEOUT
                 })
             }else{
                 bridge = new SessionStorageBridge(clientId,{
                     asServer: true,
                     listenKey: "pagenote-message",
-                    timeout: 8000,
+                    timeout: TIMEOUT,
                 })
             }
         }

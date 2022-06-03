@@ -49,7 +49,7 @@ const getCacheInstance = function <T>(key:string,option: Option = {}) {
                     getApi().setItem(getExpiredKey(key),JSON.stringify(Date.now() + duration));
                 }
             }catch (e) {
-                
+
             }
         },
         get: function (defaultValue?:T):T {
@@ -60,7 +60,7 @@ const getCacheInstance = function <T>(key:string,option: Option = {}) {
             }
             const str = getApi().getItem(getCacheKey(key));
             let value:T = parseValue(str);
-            if(value===undefined){
+            if(value===undefined || value===null){
                 value = defaultValue
             }
             return value;

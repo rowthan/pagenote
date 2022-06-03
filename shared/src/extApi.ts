@@ -4,7 +4,7 @@ import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} f
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
 import {ConvertMethod, getDefaultConvertMethod, METHOD_NUM} from "./pagenote-convert";
-import {Brush, getDefaultBrush} from "./pagenote-brush";
+import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
 import {PredefinedSchema} from "./pagenote-convert/predefined";
 
@@ -44,7 +44,7 @@ export namespace boxroom {
     }
 
     // 索引
-    export type Keys ={
+    export type BoxKeys ={
         id: string,
         createAt: number,
         createAtDay: string,
@@ -53,7 +53,7 @@ export namespace boxroom {
     }
 
     export type response = {
-        get: IExtenstionMessageListener<Find<Keys>,BoxItem[]>,
+        get: IExtenstionMessageListener<Find<BoxKeys>,BoxItem[]>,
         save: IExtenstionMessageListener<Partial<BoxItem>,BoxItem>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
@@ -67,7 +67,7 @@ export namespace lightpage{
     export const id = 'lightpage';
 
     // 索引字段
-    export type Keys = {
+    export type WebPageKeys = {
         key: string,
         deleted: boolean,
         domain: string,
@@ -88,6 +88,8 @@ export namespace lightpage{
         lastmod: string,
         etag: string,
         lightCnt: number, // 高亮个数
+        colors: string[],
+        score: string,
     }
 
 
@@ -97,11 +99,11 @@ export namespace lightpage{
         removeLightPage: IExtenstionMessageListener<{key:string}, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
-        getLightPages: IExtenstionMessageListener<Find<Keys>, {pages:WebPage[]|Keys[],pagination:Pagination}>,
-        getLightPageDetail: IExtenstionMessageListener<Query<Keys>, WebPage | null>,
-        groupPages: IExtenstionMessageListener<{groupBy: keyof Keys, query?: Query<Keys> }, any>,
+        getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, {pages:WebPage[]|WebPageKeys[],pagination:Pagination}>,
+        getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
+        groupPages: IExtenstionMessageListener<{groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
         // 导出pages
-        exportPages: IExtenstionMessageListener<void, BackupData>
+        exportPages: IExtenstionMessageListener<boolean, BackupData>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
         importPages: IExtenstionMessageListener<BackupData, number>,
         [key: string]: IExtenstionMessageListener<any, any>
@@ -142,6 +144,7 @@ export namespace setting{
         dataVersion: SDK_VERSION,
         extVersion: string,
         sdkVersion: string,
+        useRecommend: boolean
     }
 
     export interface response{
@@ -151,7 +154,6 @@ export namespace setting{
         // syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // 本地设置存储
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        //
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
         resetSetting: IExtenstionMessageListener<void,SDK_SETTING>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -160,12 +162,45 @@ export namespace setting{
     export type request = ComputeRequestToBackground<response>
 
     export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
+        const defaultBrushes = [{
+            bg: '#FFDE5D',
+            shortcut: '',
+            label: '标记',
+            level: 1,
+            color: '',
+            lightType: LightType.highlight,
+            defaultStatus: LightStatus.full_light
+        },{
+            bg: '#5dbead',
+            shortcut: '',
+            label: '删除线',
+            level: 1,
+            color: '',
+            lightType: LightType.deleteLine,
+            defaultStatus: LightStatus.un_light
+        },{
+            bg: '#4467a8',
+            shortcut: 'b',
+            label: '删除线',
+            level: 1,
+            color: '',
+            lightType: LightType.highlight,
+            defaultStatus: LightStatus.half_light
+        },{
+            bg: '#2a7544',
+            shortcut: '',
+            label: '绿色无快捷键',
+            level: 1,
+            color: '',
+            lightType: LightType.highlight,
+            defaultStatus: LightStatus.half_light
+        }]
         const setting : SDK_SETTING = {
             // _libra: false,
             // _sync: false,
             actions: [createInitAction(ACTION_TYPES.search)],
             autoBackup: 3600 * 24 * 7,
-            brushes: [getDefaultBrush()],
+            brushes: defaultBrushes,
             commonSetting: {
                 keyupTimeout: 0,
                 maxRecord: 999,
@@ -173,21 +208,15 @@ export namespace setting{
                 showBarTimeout: 0
             },
             controlC: true,
-            copyAllowList: ["https://www.csdn.net/*"],
-            disableList: [
-                "https://mubu.com/*",
-                "https://notion.so/*",
-                "https://www.wolai.com/*",
-                "https://shimo.im/*",
-                "https://docs.qq.com/*",
-                "https://flomoapp.com/*"
-            ],
+            copyAllowList: [],
+            disableList: [],
             enableMarkImg: false,
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
             sdkVersion: "5.5.3",
-            extVersion: '0.20.15',
+            extVersion: '0.20.22',
             dataVersion: SDK_VERSION.ts_format,
+            useRecommend: true
         }
         return {
             ...setting,
@@ -224,6 +253,7 @@ export namespace browserAction{
 }
 
 export namespace action{
+    import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
     export const id = 'action'
     export interface injectParams {
         tabId?: number
@@ -241,7 +271,7 @@ export namespace action{
         track: IExtenstionMessageListener<[category:string,eventAction:string,eventLabel:string,eventValue:number,page?:string], void>
         report: IExtenstionMessageListener<{ errorInfo: any }, void>
         axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse | null>
-        captureView: IExtenstionMessageListener<null, string>
+        captureView: IExtenstionMessageListener<CaptureVisibleTabOptions, string>
         copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
         injectToFrontPage: IExtenstionMessageListener<{url:string,isIframe:boolean}, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
@@ -284,7 +314,7 @@ export namespace user{
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
-        getUser: IExtenstionMessageListener<void, User>,
+        getUser: IExtenstionMessageListener<void, User|undefined>,
         setUserToken: IExtenstionMessageListener<string, string>
         getUserToken: IExtenstionMessageListener<void, string>
         [key:string]: IExtenstionMessageListener<any, any>
