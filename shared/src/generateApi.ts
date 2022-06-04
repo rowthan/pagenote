@@ -4,7 +4,8 @@ import {
     setting,
     browserAction,
     action,
-    localdir
+    localdir,
+    fileDB
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import Message2 from "./communication/ExtenstionBridge";
@@ -43,7 +44,7 @@ const defaultWrapper = function (method:string,targetId:string) {
 
         return bridge.requestMessage(method,request)
     }
-}
+};
 
 const generateApi = function (wrapperFun=defaultWrapper) {
 
@@ -97,6 +98,12 @@ const generateApi = function (wrapperFun=defaultWrapper) {
         requestPermission: wrapperFun('requestPermission',localdir.id),
     }
 
+    const fileDBApi: fileDB.request = {
+        removeFiles: wrapperFun('removeFiles',fileDB.id),
+        getFiles: wrapperFun('getFiles',fileDB.id),
+        saveFile: wrapperFun('saveFile',fileDB.id)
+    }
+
     return {
         lightpage: lightpageApi,
         boxroom: boxroomApi,
@@ -104,7 +111,8 @@ const generateApi = function (wrapperFun=defaultWrapper) {
         browserAction: browserActionApi,
         commonAction: actionApi,
         fileSystem: fileSystemApi,
+        fileDB: fileDBApi,
     }
-}
+};
 
 export default generateApi
