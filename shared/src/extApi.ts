@@ -89,7 +89,7 @@ export namespace lightpage{
         etag: string,
         lightCnt: number, // 高亮个数
         colors: string[],
-        score: string,
+        score: number,
     }
 
 
@@ -323,7 +323,6 @@ export namespace user{
     export type request = ComputeRequestToBackground<response>
 }
 
-
 export namespace localdir{
     export const id = 'localdir'
     export interface response {
@@ -333,6 +332,49 @@ export namespace localdir{
         [key:string]: IExtenstionMessageListener<any, any>
     }
 
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace fileDB{
+    export const id = 'fileDB'
+    type FileData = Blob | string | null
+    export enum SaveAsTypes {
+        'string'='string',
+        'blob' ='blob'
+    }
+
+    export enum ContentType {
+        png='image/png',
+        jpeg='image/jpeg',
+        html='text/html',
+        json='application/json',
+        javascript='application/javascript',
+        css='text/css',
+    }
+
+    export interface FileInfo {
+        originURI: string, // 资源原始URI地址
+        localURI: string, // 本地资源URI
+        domain: string, // 域名
+        data: FileData, // 数据
+        saveAs: SaveAsTypes // 本地资源存储类型
+        contentType: ContentType, // 文件类型
+        contentLength: number, // 资源size
+        createAt: number,
+        lastModified?: string,
+        ETag?: string,
+        [key:string]: any,
+    }
+
+    export interface response {
+        /**新建或更新*/
+        saveFile: IExtenstionMessageListener<{info:Omit<FileInfo, 'localURI'>,upsert: boolean},FileInfo>
+        /**查询资源*/
+        getFiles: IExtenstionMessageListener<Partial<FileInfo>,FileData[]>
+        /**删除资源*/
+        removeFiles: IExtenstionMessageListener<Partial<FileInfo>, { deleteCnt:number }>
+        [key:string]: IExtenstionMessageListener<any, any>
+    }
     export type request = ComputeRequestToBackground<response>
 }
 
