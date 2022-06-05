@@ -90,6 +90,7 @@ export namespace lightpage{
         lightCnt: number, // 高亮个数
         colors: string[],
         score: number,
+        thumb: string,
     }
 
 
@@ -347,19 +348,23 @@ export namespace fileDB{
         png='image/png',
         jpeg='image/jpeg',
         html='text/html',
+        text='text/plain',
+        css='text/css',
         json='application/json',
         javascript='application/javascript',
-        css='text/css',
+
     }
 
     export interface FileInfo {
-        originURI: string, // 资源原始URI地址
+        originURI: string, // 资源原始URI地址，如 img 本地持久化的原始URL
         localURI: string, // 本地资源URI
+        relatedUrl: string, // 资源产生地址
+        sourceTag: string, // 资源标签，用于过滤类型，如缩略图 thumb、snapshot、等。
         domain: string, // 域名
         data: FileData, // 数据
         saveAs: SaveAsTypes // 本地资源存储类型
         contentType: ContentType, // 文件类型
-        contentLength: number, // 资源size
+        contentLength?: number, // 资源size
         createAt: number,
         lastModified?: string,
         ETag?: string,
@@ -368,7 +373,7 @@ export namespace fileDB{
 
     export interface response {
         /**新建或更新*/
-        saveFile: IExtenstionMessageListener<{info:Omit<FileInfo, 'localURI'>,upsert: boolean},FileInfo>
+        saveFile: IExtenstionMessageListener<{info:FileInfo,upsert: boolean},FileInfo|undefined>
         /**查询资源*/
         getFiles: IExtenstionMessageListener<Partial<FileInfo>,FileData[]>
         /**删除资源*/

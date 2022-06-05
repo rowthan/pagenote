@@ -60,13 +60,14 @@ type Position = {
 }
 
 type PlainData = {
-    images: string[],
+
     categories: string[],
     snapshots: string[],
     setting: any,
     steps: Step[],
 
     // TODO 废弃 SDK 不处理
+    images?: string[],
     note?: string,
     url?: string,
     title?: string,
@@ -119,6 +120,8 @@ type WebPageSiteInfo = {
     title: string, // 网站标题
     version: DataVersion,
     description: string, // 网站描述
+    thumb: string, // 预览缩略图
+    tags?: string[],
     customTitle?: string, // 自定义标题
 }
 

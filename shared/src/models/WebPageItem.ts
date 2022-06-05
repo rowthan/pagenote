@@ -30,6 +30,7 @@ class WebPageItem implements IWebPage {
             setting: {},
             steps: [],
         },
+        thumb:"",
         title: "",
         updateAt: 0,
         url: "",
@@ -44,7 +45,7 @@ class WebPageItem implements IWebPage {
         }
     }
 
-    setData(webPage: WebPage): boolean {
+    setData(webPage: Partial<WebPage>): boolean {
         for (let i in webPage) {
             // @ts-ignore
             if (webPage[i] !== undefined) {
@@ -154,6 +155,7 @@ class WebPageItem implements IWebPage {
 
 const getDetailWebPage = function () {
     const webpage: WebPage = {
+        thumb: "",
         pageType: PAGE_TYPES.http,
         createAt: 0,
         deleted: false,
