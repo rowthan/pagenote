@@ -2,7 +2,8 @@ import {LightStatus} from "../pagenote-brush";
 
 enum BackupVersion {
     version1 = 1,
-    version = 2
+    version = 2,
+    version3 = 3, // 新增 HTML、files 文件
 }
 
 enum AnnotationStatus {
@@ -151,8 +152,47 @@ type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & Rout
 
 type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
+// 数据的存储形式，blob二进制文件或字符串文件
+export type FileData = Blob | string
+export enum SaveAsTypes {
+    'string'='string',
+    'blob' ='blob'
+}
+
+export enum ContentType {
+    png='image/png',
+    jpeg='image/jpeg',
+    html='text/html',
+    text='text/plain',
+    css='text/css',
+    json='application/json',
+    javascript='application/javascript',
+}
+
+type BaseFileInfo = {
+    localURI: string, // 本地资源URI
+    originURI: string, // 资源原始URI地址，如 img 本地持久化的原始URL
+
+    relatedUrl: string, // 资源产生地址
+    domain: string, // 域名
+
+    data: FileData, // 数据
+    createAt: number,
+}
+
+export type ResourceInfo = BaseFileInfo & {
+    sourceTag: string, // 资源标签，用于过滤类型，如缩略图 thumb、snapshot、等。
+    saveAs: SaveAsTypes // 本地资源存储类型
+    contentType: ContentType, // 文件类型
+    contentLength?: number, // 资源size
+    lastModified?: string,
+    ETag?: string,
+    [key:string]: any,
+}
+
 interface BackupData {
     pages: WebPage[],
+    resources: ResourceInfo[],
     version: BackupVersion,
     extension_version: string,
     backup_at: number,

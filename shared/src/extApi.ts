@@ -1,12 +1,11 @@
-import {BackupData, WebPage} from "./@types/data";
-import {Find, Pagination, Projection, Query} from "./@types/database";
+import {BackupData, FileData, ResourceInfo, WebPage} from "./@types/data";
+import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
-import {ConvertMethod, getDefaultConvertMethod, METHOD_NUM} from "./pagenote-convert";
+import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
 import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
-import {PredefinedSchema} from "./pagenote-convert/predefined";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs] : {
@@ -247,7 +246,7 @@ export namespace browserAction{
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace action{
+export namespace action {
     import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
     export const id = 'action'
     export interface injectParams {
@@ -332,46 +331,15 @@ export namespace localdir{
 
 export namespace fileDB{
     export const id = 'fileDB'
-    type FileData = Blob | string | null
-    export enum SaveAsTypes {
-        'string'='string',
-        'blob' ='blob'
-    }
-
-    export enum ContentType {
-        png='image/png',
-        jpeg='image/jpeg',
-        html='text/html',
-        text='text/plain',
-        css='text/css',
-        json='application/json',
-        javascript='application/javascript',
-
-    }
-
-    export interface FileInfo {
-        originURI: string, // 资源原始URI地址，如 img 本地持久化的原始URL
-        localURI: string, // 本地资源URI
-        relatedUrl: string, // 资源产生地址
-        sourceTag: string, // 资源标签，用于过滤类型，如缩略图 thumb、snapshot、等。
-        domain: string, // 域名
-        data: FileData, // 数据
-        saveAs: SaveAsTypes // 本地资源存储类型
-        contentType: ContentType, // 文件类型
-        contentLength?: number, // 资源size
-        createAt: number,
-        lastModified?: string,
-        ETag?: string,
-        [key:string]: any,
-    }
-
     export interface response {
         /**新建或更新*/
-        saveFile: IExtenstionMessageListener<{info:FileInfo,upsert: boolean},FileInfo|undefined>
+        saveFile: IExtenstionMessageListener<{info:ResourceInfo,upsert: boolean},ResourceInfo|undefined>
         /**查询资源*/
-        getFiles: IExtenstionMessageListener<Partial<FileInfo>,FileData[]>
+        getFile: IExtenstionMessageListener<Partial<ResourceInfo>,FileData>
+        /**查询资源（不含文件数据）*/
+        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>,Omit<FileData, 'data'>[]>
         /**删除资源*/
-        removeFiles: IExtenstionMessageListener<Partial<FileInfo>, { deleteCnt:number }>
+        removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt:number }>
         [key:string]: IExtenstionMessageListener<any, any>
     }
     export type request = ComputeRequestToBackground<response>
