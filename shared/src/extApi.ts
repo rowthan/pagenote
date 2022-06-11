@@ -163,43 +163,37 @@ export namespace setting{
     export type request = ComputeRequestToBackground<response>
 
     export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
-        const defaultBrushes = [{
-            bg: '#FFDE5D',
-            shortcut: '',
-            label: '标记',
-            level: 1,
-            color: '',
-            lightType: LightType.highlight,
-            defaultStatus: LightStatus.full_light
-        },{
-            bg: '#5dbead',
-            shortcut: '',
-            label: '删除线',
-            level: 1,
-            color: '',
-            lightType: LightType.deleteLine,
-            defaultStatus: LightStatus.un_light
-        },{
-            bg: '#4467a8',
-            shortcut: 'b',
-            label: '删除线',
-            level: 1,
-            color: '',
-            lightType: LightType.highlight,
-            defaultStatus: LightStatus.half_light
-        },{
-            bg: '#2a7544',
-            shortcut: '',
-            label: '绿色无快捷键',
-            level: 1,
-            color: '',
-            lightType: LightType.highlight,
-            defaultStatus: LightStatus.half_light
-        }]
+        const defaultBrushes = [
+            getDefaultBrush({
+                bg: '#FFFF83',
+            }),
+            getDefaultBrush({
+                bg: '#A6FFE9',
+                label: '删除线',
+                lightType: LightType.deleteLine,
+                defaultStatus: LightStatus.un_light
+            }),
+            getDefaultBrush({
+                bg: '#FFC7BA',
+                defaultStatus: LightStatus.full_light
+            }),
+            getDefaultBrush({
+                bg: '#B8EEFF',
+                defaultStatus: LightStatus.half_light
+            }),
+            getDefaultBrush({
+                bg: '#FFD0EF',
+                defaultStatus: LightStatus.half_light
+            }),
+            getDefaultBrush({
+                bg: '#D9C3FF',
+                defaultStatus: LightStatus.half_light
+            }),
+        ]
         const setting : SDK_SETTING = {
             // _libra: false,
             // _sync: false,
-            actions: [createInitAction(ACTION_TYPES.search)],
+            actions: [createInitAction(ACTION_TYPES.search),createInitAction(ACTION_TYPES.copyToClipboard),createInitAction(ACTION_TYPES.send_to_email)],
             autoBackup: 3600 * 24 * 7,
             brushes: defaultBrushes,
             commonSetting: {
@@ -215,7 +209,7 @@ export namespace setting{
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
             sdkVersion: "5.5.3",
-            extVersion: '0.20.22',
+            extVersion: '0.20.23',
             dataVersion: SDK_VERSION.ts_format,
             useRecommend: true
         }
