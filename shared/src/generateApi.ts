@@ -99,6 +99,7 @@ const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const fileDBApi: fileDB.request = {
+        getFile:  wrapperFun('getFile',fileDB.id),
         removeFiles: wrapperFun('removeFiles',fileDB.id),
         getFiles: wrapperFun('getFiles',fileDB.id),
         saveFile: wrapperFun('saveFile',fileDB.id)

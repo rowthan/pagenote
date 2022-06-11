@@ -10,10 +10,9 @@ const api = new PagenoteAxios({
 
 describe("Typescript usage suite", () => {
     it("should be able to execute a test", () => {
-        api.get(API.graphql.user.query.path,{}).then(function (result) {
+        api.get(API.graphql.user,{}).then(function (result) {
             console.log(result)
         })
     });
-
 });
 
