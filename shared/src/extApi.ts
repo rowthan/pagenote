@@ -188,6 +188,18 @@ export namespace setting{
                 bg: '#D9C3FF',
                 defaultStatus: LightStatus.half_light
             }),
+            getDefaultBrush({
+                bg: '#a64db4',
+                defaultStatus: LightStatus.half_light
+            }),
+            getDefaultBrush({
+                bg: '#195772',
+                defaultStatus: LightStatus.half_light
+            }),
+            getDefaultBrush({
+                bg: '#4467a8',
+                defaultStatus: LightStatus.half_light
+            }),
         ]
         const setting : SDK_SETTING = {
             // _libra: false,
