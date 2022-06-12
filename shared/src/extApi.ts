@@ -347,9 +347,9 @@ export namespace fileDB{
         /**新建或更新*/
         saveFile: IExtenstionMessageListener<{info:ResourceInfo,upsert: boolean},ResourceInfo|undefined>
         /**查询资源*/
-        getFile: IExtenstionMessageListener<Partial<ResourceInfo>,FileData>
+        getFile: IExtenstionMessageListener<Partial<ResourceInfo>,ResourceInfo|undefined>
         /**查询资源（不含文件数据）*/
-        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>,Omit<FileData, 'data'>[]>
+        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>,Omit<ResourceInfo, 'data'>[]>
         /**删除资源*/
         removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt:number }>
         [key:string]: IExtenstionMessageListener<any, any>
