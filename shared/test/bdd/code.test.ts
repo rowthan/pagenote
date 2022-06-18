@@ -1,4 +1,4 @@
-import {customMapCode} from "../src/utils/code";
+import {customMapCode} from "../../src/utils/code";
 import * as assert from "assert";
 
 

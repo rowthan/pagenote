@@ -94,7 +94,6 @@ type WebPageTimes = {
     createAt: number,
     updateAt: number,
 
-
     mtimeMs?: number, // fileSystem 本地文件最后同步时间 待弃用
     expiredAt?: number, // 时效过期时间
 
@@ -192,7 +191,7 @@ export type ResourceInfo = BaseFileInfo & {
 
 interface BackupData {
     pages: WebPage[],
-    resources: ResourceInfo[],
+    resources?: ResourceInfo[],
     version: BackupVersion,
     extension_version: string,
     backup_at: number,

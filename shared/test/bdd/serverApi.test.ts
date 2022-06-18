@@ -1,4 +1,4 @@
-import PagenoteAxios,{API} from '../src/serverApi'
+import PagenoteAxios,{API} from '../../src/serverApi'
 import { equal } from "assert";
 
 const api = new PagenoteAxios({
@@ -11,7 +11,7 @@ const api = new PagenoteAxios({
 describe("Typescript usage suite", () => {
     it("should be able to execute a test", () => {
         api.get(API.graphql.user,{}).then(function (result) {
-            console.log(result)
+            console.log(result.data)
         })
     });
 });
