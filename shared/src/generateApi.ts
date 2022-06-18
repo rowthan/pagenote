@@ -46,7 +46,7 @@ const defaultWrapper = function (method:string,targetId:string) {
     }
 };
 
-const generateApi = function (wrapperFun=defaultWrapper) {
+export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
         exportPages: wrapperFun('exportPages',lightpage.id),
@@ -116,4 +116,6 @@ const generateApi = function (wrapperFun=defaultWrapper) {
     }
 };
 
-export default generateApi
+const extApi = generateApi();
+
+export default extApi
