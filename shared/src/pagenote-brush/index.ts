@@ -1,4 +1,4 @@
-
+const Color = require('color');
 
 export enum LightStatus {
     un_light=0,
@@ -24,12 +24,25 @@ export interface Brush {
 }
 
 export function getDefaultBrush(brush: Partial<Brush>={}):Brush {
+    let bg = brush.bg || '#FFDE5D';
+    let color = brush.color;
+    try{
+        if(bg.length <=6 && bg[0]!=='#'){
+            bg = '#' + bg;
+        }
+        const colorObj = Color(bg)
+        bg = colorObj.hex();
+        color = color || (colorObj.isDark() ? '#FFFFFF' : '#000000');
+    }catch (e) {
+        console.error(e)
+    }
+
     return{
-        bg: brush.bg || '#FFDE5D',
+        bg: bg,
         shortcut: brush.shortcut || '',
         label: brush.label || '标记',
         level: brush.level || 1,
-        color: brush.color || '',
+        color: color,
         lightType: brush.lightType || LightType.highlight,
         defaultStatus: brush.defaultStatus || LightStatus.full_light
     }
