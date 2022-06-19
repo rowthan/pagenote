@@ -1,26 +1,28 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.3.15",
+  "version": "1.3.16",
   "description": "",
   "main": "lib/",
   "dependencies": {
     "axios": "^0.26.0",
+    "color": "^4.2.3",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mustache": "^4.2.0"
   },
   "devDependencies": {
+    "@types/chrome": "0.0.177",
+    "@types/color": "^3.0.3",
     "@types/md5": "^2.3.2",
     "@types/mocha": "^9.0.0",
     "@types/mustache": "^4.1.2",
     "@types/node": "^17.0.21",
+    "@types/wicg-file-system-access": "^2020.9.5",
     "assert": "^2.0.0",
     "mocha": "^9.2.2",
     "ts-node": "^9.1.1",
     "tslint": "^6.1.3",
-    "typescript": "^4.5.5",
-    "@types/wicg-file-system-access": "^2020.9.5",
-    "@types/chrome": "0.0.177"
+    "typescript": "^4.5.5"
   },
   "scripts": {
     "build": "rm -rf lib && tsc -p tsconfig.json",
