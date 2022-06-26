@@ -220,7 +220,7 @@ export namespace setting{
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
             sdkVersion: "5.5.3",
-            extVersion: '0.20.23',
+            extVersion: '0.20.24',
             dataVersion: SDK_VERSION.ts_format,
             useRecommend: true
         }
@@ -343,9 +343,11 @@ export namespace localdir{
 
 export namespace fileDB{
     export const id = 'fileDB'
+    export const FILE_RESOURCE_HOSTS = ['https://pagenote.cn','https://logike.cn']
+
     export interface response {
         /**新建或更新*/
-        saveFile: IExtenstionMessageListener<{info:ResourceInfo,upsert: boolean},ResourceInfo|undefined>
+        saveFile: IExtenstionMessageListener<{info: ResourceInfo,upsert: boolean},ResourceInfo|undefined>
         /**查询资源*/
         getFile: IExtenstionMessageListener<Partial<ResourceInfo>,ResourceInfo|undefined>
         /**查询资源（不含文件数据）*/
