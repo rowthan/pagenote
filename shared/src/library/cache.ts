@@ -28,7 +28,7 @@ interface Option {
 }
 
 const getCacheInstance = function <T>(key:string,option: Option = {}) {
-    const {type = CACHE_TYPE.localstorage, duration=3600 * 1000 * 24 * 30} = option
+    const {type = CACHE_TYPE.localstorage, duration=3600 * 1000 * 24 * 30} = option;
     function getApi():Storage {
         let Api:Storage = window.localStorage;
         switch (type){
@@ -48,6 +48,7 @@ const getCacheInstance = function <T>(key:string,option: Option = {}) {
                 if(duration){
                     getApi().setItem(getExpiredKey(key),JSON.stringify(Date.now() + duration));
                 }
+
             }catch (e) {
 
             }
@@ -64,6 +65,18 @@ const getCacheInstance = function <T>(key:string,option: Option = {}) {
                 value = defaultValue
             }
             return value;
+        },
+        subscribe(onchange:(newValue: T, oldValue: any)=>void): ()=>void{
+            const that = this;
+            const listener = function (e:StorageEvent) {
+                if(e.key === key){
+                    onchange(that.get(),e.oldValue)
+                }
+            }
+            window.addEventListener('storage', listener);
+            return function () {
+                window.removeEventListener('storage',listener)
+            }
         }
     }
 }

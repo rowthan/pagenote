@@ -21,7 +21,7 @@ const notSupportYet = function () {
 
 let bridge:any;
 const TIMEOUT = 8000;
-const defaultWrapper = function (method:string,targetId:string) {
+export const defaultWrapper = function (method:string,targetId:string) {
     return function (request:any) {
         // bridge 运行时初始化，
         if(!bridge){

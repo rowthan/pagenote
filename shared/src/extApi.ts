@@ -8,24 +8,24 @@ import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
-    [fun in keyof Funs] : {
-        (arg:Parameters<Funs[fun]>[0]):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+    [fun in keyof Funs]: {
+        (arg: Parameters<Funs[fun]>[0]): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
 type ComputeRequestToFront<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
-    [fun in keyof Funs] : {
-        (arg:Parameters<Funs[fun]>[0],tabId?:number):Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+    [fun in keyof Funs]: {
+        (arg: Parameters<Funs[fun]>[0], tabId?: number): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
 type ResponseType<T> = T extends BaseMessageResponse<infer R> ? R : T
-type ComputeServerResponse<Funs extends Record<string, IRequest<any,any>>> = {
-    [fun in keyof Funs]:IExtenstionMessageListener<Parameters<Funs[fun]>[0], ResponseType<ReturnType<Funs[fun]>>>
+type ComputeServerResponse<Funs extends Record<string, IRequest<any, any>>> = {
+    [fun in keyof Funs]: IExtenstionMessageListener<Parameters<Funs[fun]>[0], ResponseType<ReturnType<Funs[fun]>>>
 }
 
 interface IRequest<PARAMS, RESPONSE> {
-    (params:PARAMS):BaseMessageResponse<RESPONSE>
+    (params: PARAMS): BaseMessageResponse<RESPONSE>
 }
 
 export namespace boxroom {
@@ -43,7 +43,7 @@ export namespace boxroom {
     }
 
     // 索引
-    export type BoxKeys ={
+    export type BoxKeys = {
         id: string,
         createAt: number,
         createAtDay: string,
@@ -52,8 +52,8 @@ export namespace boxroom {
     }
 
     export type response = {
-        get: IExtenstionMessageListener<Find<BoxKeys>,BoxItem[]>,
-        save: IExtenstionMessageListener<Partial<BoxItem>,BoxItem>,
+        get: IExtenstionMessageListener<Find<BoxKeys>, BoxItem[]>,
+        save: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
         [key: string]: IExtenstionMessageListener<any, any>
@@ -62,7 +62,7 @@ export namespace boxroom {
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace lightpage{
+export namespace lightpage {
     export const id = 'lightpage';
 
     // 索引字段
@@ -76,6 +76,7 @@ export namespace lightpage{
         tip: string,
         context: string,
         title: string,
+        description: string;
         categories: string[],
         category: string,
         createAt: number,
@@ -95,13 +96,13 @@ export namespace lightpage{
 
     // 服务端可接受的请求API
     export type response = {
-        saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage|null>,
-        removeLightPage: IExtenstionMessageListener<{key:string}, number>,
+        saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage | null>,
+        removeLightPage: IExtenstionMessageListener<{ key: string }, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
-        getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, {pages:WebPage[]|WebPageKeys[],pagination:Pagination}>,
+        getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, { pages: WebPage[] | WebPageKeys[], pagination: Pagination }>,
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
-        groupPages: IExtenstionMessageListener<{groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
         // 导出pages
         exportPages: IExtenstionMessageListener<boolean, BackupData>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
@@ -112,15 +113,15 @@ export namespace lightpage{
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace setting{
+export namespace setting {
     export const id = 'setting';
 
     export enum SDK_VERSION {
-        ts_format='1'
+        ts_format = '1'
     }
 
     // 插件内部的配置项，不在各端同步
-    type Inner_Setting ={
+    type Inner_Setting = {
         _libra?: boolean, // 是否开启实验功能
         _sync?: boolean, // 是否在各端之间同步设置
     }
@@ -147,7 +148,7 @@ export namespace setting{
         useRecommend: boolean
     }
 
-    export interface response{
+    export interface response {
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // // 同步云端设置
@@ -155,13 +156,14 @@ export namespace setting{
         // 本地设置存储
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
-        resetSetting: IExtenstionMessageListener<void,SDK_SETTING>
+        resetSetting: IExtenstionMessageListener<void, SDK_SETTING>
+
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
     export type request = ComputeRequestToBackground<response>
 
-    export function getDefaultSdkSetting(originSetting:Partial<SDK_SETTING>={}):SDK_SETTING {
+    export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): SDK_SETTING {
         const defaultBrushes = [
             getDefaultBrush({
                 bg: '#FFFF83',
@@ -201,10 +203,10 @@ export namespace setting{
                 defaultStatus: LightStatus.half_light
             }),
         ]
-        const setting : SDK_SETTING = {
+        const setting: SDK_SETTING = {
             // _libra: false,
             // _sync: false,
-            actions: [createInitAction(ACTION_TYPES.search),createInitAction(ACTION_TYPES.copyToClipboard),createInitAction(ACTION_TYPES.send_to_email)],
+            actions: [createInitAction(ACTION_TYPES.search), createInitAction(ACTION_TYPES.copyToClipboard), createInitAction(ACTION_TYPES.send_to_email)],
             autoBackup: 3600 * 24 * 7,
             brushes: defaultBrushes,
             commonSetting: {
@@ -231,13 +233,15 @@ export namespace setting{
     }
 }
 
-export namespace browserAction{
-    export const id='browserAction'
+export namespace browserAction {
+    export const id = 'browserAction'
+
     // 浏览器图标样式描述
     export enum ActionImageType {
         enable = 'images/light-32.png',
         disable = 'images/light-disable.png',
     }
+
     export type BadgeProps = {
         icon?: string,
         text?: string,
@@ -246,12 +250,12 @@ export namespace browserAction{
         popup?: string,
     }
 
-    type ActionClickParams = { onclick: (tab:chrome.tabs.Tab)=>void,tabId?: number }
-    type DisplayParams = {info:Partial<BadgeProps>,tabId?: number}
+    type ActionClickParams = { onclick: (tab: chrome.tabs.Tab) => void, tabId?: number }
+    type DisplayParams = { info: Partial<BadgeProps>, tabId?: number }
 
     export type response = {
-        setBrowserActionDisplay: IExtenstionMessageListener<DisplayParams,BadgeProps>
-        setBrowserActionClick: IExtenstionMessageListener<ActionClickParams, BadgeProps|undefined>
+        setBrowserActionDisplay: IExtenstionMessageListener<DisplayParams, BadgeProps>
+        setBrowserActionClick: IExtenstionMessageListener<ActionClickParams, BadgeProps | undefined>
         getBrowserActionInfo: IExtenstionMessageListener<{ tabId?: number }, BadgeProps>
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -261,6 +265,7 @@ export namespace browserAction{
 export namespace action {
     import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
     export const id = 'action'
+
     export interface injectParams {
         tabId?: number
         scripts: string[],
@@ -274,12 +279,12 @@ export namespace action {
 
     export type response = {
         injectCodeToPage: IExtenstionMessageListener<injectParams, boolean>
-        track: IExtenstionMessageListener<[category:string,eventAction:string,eventLabel:string,eventValue:number,page?:string], void>
+        track: IExtenstionMessageListener<[category: string, eventAction: string, eventLabel: string, eventValue: number, page?: string], void>
         report: IExtenstionMessageListener<{ errorInfo: any }, void>
         axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse | null>
         captureView: IExtenstionMessageListener<CaptureVisibleTabOptions, string>
         copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
-        injectToFrontPage: IExtenstionMessageListener<{url:string,isIframe:boolean}, string>
+        injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
@@ -289,7 +294,7 @@ export namespace action {
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace user{
+export namespace user {
     export const id = 'user'
     export type WhoAmI = {
         origin: string,
@@ -320,58 +325,62 @@ export namespace user{
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
-        getUser: IExtenstionMessageListener<void, User|undefined>,
+        getUser: IExtenstionMessageListener<void, User | undefined>,
         setUserToken: IExtenstionMessageListener<string, string>
         getUserToken: IExtenstionMessageListener<void, string>
-        [key:string]: IExtenstionMessageListener<any, any>
+
+        [key: string]: IExtenstionMessageListener<any, any>
     }
 
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace localdir{
+export namespace localdir {
     export const id = 'localdir'
+
     export interface response {
         readPagesFrontDir: IExtenstionMessageListener<any, number>
         requestPermission: IExtenstionMessageListener<void, string>
 
-        [key:string]: IExtenstionMessageListener<any, any>
+        [key: string]: IExtenstionMessageListener<any, any>
     }
 
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace fileDB{
+export namespace fileDB {
     export const id = 'fileDB'
-    export const FILE_RESOURCE_HOSTS = ['https://pagenote.cn','https://logike.cn']
+    export const FILE_RESOURCE_HOSTS = ['https://pagenote.cn', 'https://logike.cn']
 
     export interface response {
         /**新建或更新*/
-        saveFile: IExtenstionMessageListener<{info: ResourceInfo,upsert: boolean},ResourceInfo|undefined>
+        saveFile: IExtenstionMessageListener<{ info: ResourceInfo, upsert: boolean }, ResourceInfo | undefined>
         /**查询资源*/
-        getFile: IExtenstionMessageListener<Partial<ResourceInfo>,ResourceInfo|undefined>
+        getFile: IExtenstionMessageListener<Partial<ResourceInfo>, (ResourceInfo & { data: string }) | undefined>
         /**查询资源（不含文件数据）*/
-        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>,Omit<ResourceInfo, 'data'>[]>
+        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>, Omit<ResourceInfo, 'data'>[]>
         /**删除资源*/
-        removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt:number }>
-        [key:string]: IExtenstionMessageListener<any, any>
+        removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt: number }>
+
+        [key: string]: IExtenstionMessageListener<any, any>
     }
+
     export type request = ComputeRequestToBackground<response>
 }
 
 
 // 前端页面作为服务端的请求集合
-export namespace frontApi{
+export namespace frontApi {
     export const id = 'front-server'
     export type response = {
-        onCaptureView: IExtenstionMessageListener<{ imageStr: string,isAuto?:boolean }, string>
+        onCaptureView: IExtenstionMessageListener<{ imageStr: string, isAuto?: boolean }, string>
         mark_image: IExtenstionMessageListener<chrome.contextMenus.OnClickData, string>
         record: IExtenstionMessageListener<chrome.contextMenus.OnClickData, number>
-        injectOriginScripts: IExtenstionMessageListener<{ scripts:string[] }, string>
+        injectOriginScripts: IExtenstionMessageListener<{ scripts: string[] }, string>
         toggleAllLight: IExtenstionMessageListener<void, boolean>
         togglePagenote: IExtenstionMessageListener<void, boolean>
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
-        fetchStatus: IExtenstionMessageListener<void, { connected: boolean,active: boolean }>
+        fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean }>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
