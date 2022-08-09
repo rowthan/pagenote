@@ -1,81 +1,98 @@
 enum CACHE_TYPE {
     localstorage = "localstorage",
     sessionStorage = 'sessionStorage',
+    // indexedDB = 'indexedDB',
 }
 
-function parseValue<T>(data:string):T{
+function parseValue<T>(data: string): T {
     let result;
-    try{
+    try {
         result = JSON.parse(data);
-    }catch (e) {
+    } catch (e) {
 
     }
     return result;
 }
 
-function getCacheKey(key:string) {
-    return `__c_${key}`
+function getCacheKey(key: string,prefix:string) {
+    return `${prefix}${key}`
 }
 
-function getExpiredKey(key:string) {
-    return `__c_${key}__expired`
+function getExpiredKey(key: string,prefix:string) {
+    return `${prefix}${key}__expired`
 }
 
-interface Option {
-    type?:CACHE_TYPE,
-    duration?:number,
-    defaultValue?: any
+interface Option<T> {
+    type?: CACHE_TYPE,
+    duration?: number,
+    defaultValue?: T,
+    prefix?: string
 }
 
-const getCacheInstance = function <T>(key:string,option: Option = {}) {
-    const {type = CACHE_TYPE.localstorage, duration=3600 * 1000 * 24 * 30} = option;
-    function getApi():Storage {
-        let Api:Storage = window.localStorage;
-        switch (type){
-            case CACHE_TYPE.sessionStorage:
-                Api = window.sessionStorage;
-                break;
-            default:
-                Api = window.localStorage;
-        }
-        return Api
+function selectApi(type: CACHE_TYPE): Storage {
+    let Api: Storage;
+    switch (type) {
+        case CACHE_TYPE.sessionStorage:
+            Api = window.sessionStorage;
+            break;
+        // case CACHE_TYPE.indexedDB:
+        //     // TODO
+        //     break
+        default:
+            Api = window.localStorage;
+    }
+    return Api
+}
+
+const getCacheInstance = function <T>(key: string, option: Option<T> = {}, api?: Storage) {
+    const {type = CACHE_TYPE.localstorage, duration = 3600 * 1000 * 24 * 30, prefix='__c_'} = option;
+
+    function getApi() {
+        return api || selectApi(type);
     }
 
-    return{
-        set: function (value:T) {
-            try{
-                getApi().setItem(getCacheKey(key),JSON.stringify(value));
-                if(duration){
-                    getApi().setItem(getExpiredKey(key),JSON.stringify(Date.now() + duration));
-                }
+    const expiredKey = getExpiredKey(key,prefix);
+    const cacheKey = getCacheKey(key,prefix);
 
-            }catch (e) {
+    return {
+        set: function (value: T) {
+            try {
+                if (duration) {
+                    getApi().setItem(expiredKey, JSON.stringify(Date.now() + duration));
+                } else {
+                    getApi().setItem(cacheKey, JSON.stringify(value));
+                }
+            } catch (e) {
 
             }
         },
-        get: function (defaultValue?:T):T {
-            const expiredAtStr = getApi().getItem(getExpiredKey(key));
+        get: function (defaultValue?: T): T {
+            const expiredAtStr = getApi().getItem(expiredKey);
             const expiredAt = parseValue<number>(expiredAtStr);
-            if(duration && expiredAt && expiredAt < Date.now()){
+            if (duration && expiredAt && expiredAt < Date.now()) {
                 return undefined
             }
-            const str = getApi().getItem(getCacheKey(key));
-            let value:T = parseValue(str);
-            if(value===undefined || value===null){
-                value = defaultValue
+            const str = getApi().getItem(cacheKey);
+            let value: T = parseValue(str);
+            if (value === undefined || value === null) {
+                value = defaultValue || option.defaultValue
             }
             return value;
         },
-        subscribe(onchange:(newValue: T, oldValue: any)=>void): ()=>void{
+        subscribe(onchange: (newValue: T, oldValue: any) => void): () => void {
             const that = this;
-            const listener = function (e:StorageEvent) {
-                if(e.key === key){
-                    onchange(that.get(),e.oldValue)
+            if (type === CACHE_TYPE.sessionStorage || type === CACHE_TYPE.localstorage) {
+                const listener = function (e: StorageEvent) {
+                    if (e.key === key) {
+                        onchange(that.get(), e.oldValue)
+                    }
                 }
-            }
-            window.addEventListener('storage', listener);
-            return function () {
-                window.removeEventListener('storage',listener)
+                window.addEventListener('storage', listener);
+                return function () {
+                    window.removeEventListener('storage', listener)
+                }
+            }else {
+                throw Error('un support subscribe')
             }
         }
     }
