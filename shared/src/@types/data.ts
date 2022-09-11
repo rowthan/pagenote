@@ -4,6 +4,7 @@ enum BackupVersion {
     version1 = 1,
     version = 2,
     version3 = 3, // 新增 HTML、files 文件
+    version4 = 4, // 不做 encode 处理
 }
 
 enum AnnotationStatus {
@@ -68,13 +69,21 @@ type PlainData = {
     steps: Step[],
 
     // TODO 废弃 SDK 不处理
+    // @deprecated
     images?: string[],
+    // @deprecated
     note?: string,
+    // @deprecated
     url?: string,
+    // @deprecated
     title?: string,
+    // @deprecated
     version?: string,
+    // @deprecated
     icon?: string,
+    // @deprecated
     createAt?: number,
+    // @deprecated
     description?: string,
 }
 
@@ -116,13 +125,17 @@ enum DataVersion {
 
 type WebPageSiteInfo = {
     deleted: boolean,
+    achieved: boolean,
     icon: string,
     title: string, // 网站标题
     version: DataVersion,
     description: string, // 网站描述
     thumb: string, // 预览缩略图
     tags?: string[],
+    directory?: string, // 存放路径
     customTitle?: string, // 自定义标题
+    /**sdk 的设置信息*/
+    sdkSetting?: any
 }
 
 // 链路信息，记录各个网站之间的联系
@@ -143,7 +156,7 @@ type MetaResource = {
 }
 
 type WebPageDatas = {
-    plainData: PlainData,
+    plainData?: PlainData,
     snapshots?: Omit<MetaResource, 'data'>[],
 }
 
@@ -192,9 +205,9 @@ export type ResourceInfo = BaseFileInfo & {
 interface BackupData {
     pages: WebPage[],
     resources?: ResourceInfo[],
-    version: BackupVersion,
-    extension_version: string,
-    backup_at: number,
+    version?: BackupVersion,
+    extension_version?: string,
+    backup_at?: number,
 }
 
 export type {

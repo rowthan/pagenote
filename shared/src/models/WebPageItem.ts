@@ -15,28 +15,7 @@ interface IWebPage{
 const EMPTY_HASH = 'empty'
 
 class WebPageItem implements IWebPage {
-    data: WebPage = {
-        pageType: PAGE_TYPES.http,
-        createAt: 0,
-        deleted: false,
-        description: "",
-        icon: "",
-        key: "",
-        plainData: {
-            url: '',
-            images: [],
-            categories: [],
-            snapshots: [],
-            setting: {},
-            steps: [],
-        },
-        thumb:"",
-        title: "",
-        updateAt: 0,
-        url: "",
-        urls: [],
-        version: DataVersion.version3
-    };
+    data: WebPage = getDetailWebPage();
     lastHash: string = EMPTY_HASH;
 
     constructor(webPage?: WebPage) {
@@ -53,6 +32,16 @@ class WebPageItem implements IWebPage {
                 this.data[i] = webPage[i]
             }
         }
+        // 数据兼容处理，将二级数据，迁移至一级
+        if(webPage.version !== DataVersion.version4){
+            this.data.version = DataVersion.version4;
+            this.data.key = this.data.key || webPage.key || webPage.url;
+            this.data.url = this.data.url || webPage.url || webPage.plainData.url;
+            this.data.customTitle = this.data.customTitle || webPage.customTitle || webPage.title || webPage.plainData.title;
+            this.data.description = this.data.description || webPage.description || webPage.plainData.description;
+            this.data.sdkSetting = this.data.sdkSetting || webPage.sdkSetting || webPage.plainData.setting;
+        }
+
         this.data.createAt = this.data.createAt || Date.now();
         const currentHash = this.createDataHash();
         const changed = currentHash !== this.lastHash
@@ -154,26 +143,43 @@ class WebPageItem implements IWebPage {
 }
 
 const getDetailWebPage = function () {
-    const webpage: WebPage = {
-        thumb: "",
+    const webpage: Required<WebPage> = {
+        achieved: false,
+        commits: [],
+        customTitle: "",
+        directory: "",
+        etag: "",
+        expiredAt: 0,
+        filename: "",
+        hash: "",
+        lastSyncTime: 0,
+        lastmod: "",
+        mtimeMs: 0,
+        sdkSetting: undefined,
+        sessionId: "",
+        snapshots: [],
+        tags: [],
+        visitedAt: 0,
         pageType: PAGE_TYPES.http,
         createAt: 0,
         deleted: false,
         description: "",
-        etag: "",
-        expiredAt: 0,
-        hash: "",
         icon: "",
         key: "",
-        lastSyncTime: 0,
-        lastmod: "",
-        mtimeMs: 0,
-        plainData: undefined,
+        plainData: {
+            url: '',
+            images: [],
+            categories: [],
+            snapshots: [],
+            setting: {},
+            steps: [],
+        },
+        thumb:"",
         title: "",
         updateAt: 0,
         url: "",
         urls: [],
-        version: undefined
+        version: DataVersion.version4
     }
     return webpage
 }
