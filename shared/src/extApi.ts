@@ -91,6 +91,8 @@ export namespace lightpage {
         colors: string[],
         score: number,
         thumb: string,
+        isEmpty: boolean,
+        directory: string // 存放目录
     }
 
 
@@ -311,7 +313,6 @@ export namespace user {
         isCN: boolean,
         isMac: boolean,
         isTest: boolean,
-        uuid: string, // UUID 可以开放接口由用户自行修改
         did: string, // 客户端的标识 did 不可变更
         supportSDK: string[],
     }
