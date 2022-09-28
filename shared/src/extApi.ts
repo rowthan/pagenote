@@ -106,9 +106,9 @@ export namespace lightpage {
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
         // 导出pages
-        exportPages: IExtenstionMessageListener<boolean, BackupData>
+        exportPages: IExtenstionMessageListener<boolean, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
-        importPages: IExtenstionMessageListener<BackupData, number>,
+        importPages: IExtenstionMessageListener<BackupData | string, number>,
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
