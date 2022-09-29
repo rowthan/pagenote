@@ -317,7 +317,7 @@ export namespace user {
         supportSDK: string[],
     }
 
-    interface User {
+    export interface User {
         profile: {
             pro: number,
             seed: number

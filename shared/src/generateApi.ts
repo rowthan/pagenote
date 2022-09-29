@@ -5,7 +5,8 @@ import {
     browserAction,
     action,
     localdir,
-    fileDB
+    fileDB,
+    user
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import Message2 from "./communication/ExtenstionBridge";
@@ -105,6 +106,13 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         saveFile: wrapperFun('saveFile',fileDB.id)
     }
 
+    const userApi: user.request = {
+        getUser: wrapperFun('getUser',user.id),
+        getUserToken: wrapperFun('getUserToken',user.id),
+        getWhoAmI: wrapperFun('getWhoAmI',user.id),
+        setUserToken: wrapperFun('setUserToken',user.id),
+    }
+
     return {
         lightpage: lightpageApi,
         boxroom: boxroomApi,
@@ -113,9 +121,10 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         commonAction: actionApi,
         fileSystem: fileSystemApi,
         fileDB: fileDBApi,
+        user: userApi,
     }
 };
 
-const extApi = generateApi();
+const api = generateApi();
 
-export default extApi
+export default api
