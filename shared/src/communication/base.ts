@@ -90,7 +90,7 @@ interface Communication<SENDER extends BaseMessageSender> {
 
     startListen():void
     stopListen():void
-    addListener(type:string,fun:IBaseMessageListener<any, BaseMessageSender, any>):this
+    addListener(type:string,fun:IBaseMessageListener<any, BaseMessageSender, any>):()=>void
     addProxy(proxy: IBaseMessageProxy<any, BaseMessageSender, any>): void
 
     requestMessage(type:string,data: any, header?: BaseMessageHeader,callback?:(data:BaseMessageResponse<any>)=>void):Promise<BaseMessageResponse<any>>

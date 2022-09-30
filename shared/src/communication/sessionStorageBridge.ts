@@ -18,24 +18,27 @@ type SessionSender = {
     header: SessionHeader
 }
 
-interface IMessageListener<R,T> extends IBaseMessageListener<R, SessionSender,T> {}
-interface IMessageProxy extends IBaseMessageProxy<any, SessionSender,any>{}
+interface IMessageListener<R, T> extends IBaseMessageListener<R, SessionSender, T> {
+}
+
+interface IMessageProxy extends IBaseMessageProxy<any, SessionSender, any> {
+}
 
 
-interface BridgeOption extends CommunicationOption{
+interface BridgeOption extends CommunicationOption {
     listenKey: string
     listenBridges?: number // 监听通道数 TODO 避免占用同一个key值，可以多路并发
 }
 
 const EVENT_NAME = 'storage';
 
-function triggerMessage(key:string,requestData:object) {
+function triggerMessage(key: string, requestData: object) {
     const dataString = JSON.stringify(requestData)
-    try{
+    try {
         // TODO 长信息过载，批量处理
-        window.sessionStorage.setItem(key,dataString);
-    }catch (e) {
-        console.warn('信息超载，可能通讯失败',e)
+        window.sessionStorage.setItem(key, dataString);
+    } catch (e) {
+        console.warn('信息超载，可能通讯失败', e)
     }
     const event = new Event(EVENT_NAME);
     // @ts-ignore
@@ -45,20 +48,20 @@ function triggerMessage(key:string,requestData:object) {
     window.dispatchEvent(event)
 }
 
-function clearMessage(key:string) {
-    window.sessionStorage.setItem(key,'');
+function clearMessage(key: string) {
+    window.sessionStorage.setItem(key, '');
 }
 
-class SessionStorageBridge implements Communication<any>{
+class SessionStorageBridge implements Communication<any> {
     clientId: string;
-    listeners: Record<string, IMessageListener<any,any>>;
+    listeners: Record<string, IMessageListener<any, any>>;
     option: BridgeOption;
     proxy: IMessageProxy = function () {
         return false
     };
     state = STATUS.UN_READY;
 
-    constructor(id:string,option: BridgeOption) {
+    constructor(id: string, option: BridgeOption) {
         this.clientId = id;
         this.option = option;
         this.listeners = {};
@@ -70,40 +73,40 @@ class SessionStorageBridge implements Communication<any>{
         throw new Error("Method not implemented.");
     }
 
-    startListen(){
+    startListen() {
         const that = this;
         const {listenKey} = this.option
-        const globalListen = function(event:StorageEvent){
+        const globalListen = function (event: StorageEvent) {
             let requestData: BaseMessageRequest;
-            try{
-                let dataString:string=''
+            try {
+                let dataString: string = ''
                 // TODO 支持 key 正则、避免使用单一通道值， listenBridges
-                if(event.key===listenKey && event.newValue){
+                if (event.key === listenKey && event.newValue) {
                     dataString = event.newValue
-                } else{
+                } else {
                     dataString = sessionStorage.getItem(listenKey) || '';
                 }
-                if(!dataString){
+                if (!dataString) {
                     return;
                 }
                 requestData = JSON.parse(dataString)
-            }catch (e) {
+            } catch (e) {
                 return;
             }
-            const {header,type,data} = requestData || {};
-            if(!header || !type){
+            const {header, type, data} = requestData || {};
+            if (!header || !type) {
                 return;
             }
-            // 目标对象校验
-            if((header.targetClientId && header.targetClientId !== that.clientId) || header.senderClientId === that.clientId){
+            // 请求来自自身，忽略
+            if (header.senderClientId === that.clientId) {
                 return;
             }
             // 请求类型 且 配置不作为服务器，则不接受请求
-            if(header.isResponse===false && that.option.asServer!==true){
+            if (header.isResponse === false && that.option.asServer !== true) {
                 return;
             }
 
-            const sendResponse = function (data:any) {
+            const sendResponse = function (data: any) {
                 const requestData: BaseMessageRequest = {
                     data: data,
                     header: {
@@ -115,27 +118,35 @@ class SessionStorageBridge implements Communication<any>{
                     },
                     type: type,
                 }
-                triggerMessage(that.option.listenKey,requestData);
+                triggerMessage(that.option.listenKey, requestData);
             }
             const sender: SessionSender = {
                 header: header
             }
             const functionId = header.funId || ''
             const resolveFun = that.listeners[functionId] || that.listeners[type]
-            if(resolveFun){
-                resolveFun(data,sender,sendResponse)
-                clearMessage(listenKey)
-            } else if(that.proxy){
-                that.proxy(requestData,sender,sendResponse);
+            if (resolveFun && typeof resolveFun === 'function') {
+                // 事件有明确目标源，校验当前是否为接收方
+                const canResolveThisEvent = !header.targetClientId || header.targetClientId === that.clientId
+                if (canResolveThisEvent) {
+                    resolveFun(data, sender, sendResponse)
+                    clearMessage(listenKey)
+                }
+            } else if (that.proxy) {
+                // 代理模式，可以接收处理所有请求，在内部自行判断是否为目标源
+                that.proxy(requestData, sender, sendResponse);
                 clearMessage(listenKey)
             }
         }
         window.addEventListener(EVENT_NAME, globalListen)
     }
 
-    addListener(type: string, listener: IMessageListener<any,any>): this {
+    addListener(type: string, listener: IMessageListener<any, any>) {
         this.listeners[type] = listener;
-        return this;
+        const that = this;
+        return function () {
+            delete that.listeners[type]
+        }
     }
 
     addProxy(proxy: IMessageProxy): void {
@@ -143,8 +154,8 @@ class SessionStorageBridge implements Communication<any>{
     }
 
     requestMessage<RESPONSE>(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<RESPONSE>> {
-        let resolveFun: (arg0: BaseMessageResponse<any>)=> void;
-        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve)=>{
+        let resolveFun: (arg0: BaseMessageResponse<any>) => void;
+        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve) => {
             resolveFun = resolve;
         })
 
@@ -156,11 +167,11 @@ class SessionStorageBridge implements Communication<any>{
                 error: 'timeout',
                 data: null,
             })
-        },header?.timeout || this.option.timeout)
+        }, header?.timeout || this.option.timeout)
 
         const that = this;
         /**注册单次发送message的响应监听*/
-        const onceFunIdListener: IMessageListener<any,any> = function (responseData: BaseMessageResponse<any>){
+        const onceFunIdListener: IMessageListener<any, any> = function (responseData: BaseMessageResponse<any>) {
             delete that.listeners[funId]; // 响应处理后，清空监听
             clearTimeout(timer)
             resolveFun(responseData)
@@ -182,7 +193,7 @@ class SessionStorageBridge implements Communication<any>{
         }
 
         const key = this.option.listenKey;
-        triggerMessage(key,requestData);
+        triggerMessage(key, requestData);
         return returnPromise;
     }
 
