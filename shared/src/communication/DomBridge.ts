@@ -142,9 +142,12 @@ export default class DomBridge implements Communication<any>{
         return returnPromise;
     };
 
-    addListener(funId: string, fun: IMessageListener): this {
+    addListener(funId: string, fun: IMessageListener) {
         this.listeners[funId] = fun;
-        return this;
+        const that = this;
+        return function () {
+            delete that.listeners[funId]
+        }
     };
 
     addProxy(fun:IMessageProxy) {

@@ -111,7 +111,10 @@ class Message2 implements Communication<any>{
   // 开始监听广播📢
   addListener(type:string,listener:IExtenstionMessageListener<any, any>){
     this.listeners[type] = listener;
-    return this;
+    const that = this;
+    return function () {
+      delete that.listeners[type]
+    }
   }
 
   // 添加全局代理，优先级小于 addListener
