@@ -108,7 +108,7 @@ export namespace lightpage {
         // 导出pages
         exportPages: IExtenstionMessageListener<void, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
-        importPages: IExtenstionMessageListener<BackupData | string | WebPage[], number>,
+        importPages: IExtenstionMessageListener<BackupData | string, number>,
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
