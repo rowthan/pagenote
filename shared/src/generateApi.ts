@@ -44,7 +44,9 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
             }
         }
 
-        return bridge.requestMessage(method,request)
+        return bridge.requestMessage(method,request,{
+            targetClientId: targetId
+        })
     }
 };
 
