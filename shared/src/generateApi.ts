@@ -64,10 +64,10 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const boxroomApi: boxroom.request = {
-        update: wrapperFun('update',setting.id),
-        get:wrapperFun('get',setting.id),
-        remove:wrapperFun('remove',setting.id),
-        save:wrapperFun('save',setting.id),
+        update: wrapperFun('update',boxroom.id),
+        get:wrapperFun('get',boxroom.id),
+        remove:wrapperFun('remove',boxroom.id),
+        save:wrapperFun('save',boxroom.id),
     }
 
     const settingApi: setting.request = {
@@ -80,8 +80,8 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const browserActionApi: browserAction.request ={
         setBrowserActionClick: notSupportYet,
-        setBrowserActionDisplay: wrapperFun('setBrowserActionDisplay',action.id),
-        getBrowserActionInfo: wrapperFun('getBrowserActionInfo',action.id),
+        setBrowserActionDisplay: wrapperFun('setBrowserActionDisplay',browserAction.id),
+        getBrowserActionInfo: wrapperFun('getBrowserActionInfo',browserAction.id),
     }
 
     const actionApi: action.request = {
