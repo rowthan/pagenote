@@ -32,9 +32,10 @@ const EVENT_NAME = 'storage';
 function triggerMessage(key:string,requestData:object) {
     const dataString = JSON.stringify(requestData)
     try{
+        // TODO 长信息过载，批量处理
         window.sessionStorage.setItem(key,dataString);
     }catch (e) {
-        console.warn('信息超载，可能通讯失败')
+        console.warn('信息超载，可能通讯失败',e)
     }
     const event = new Event(EVENT_NAME);
     // @ts-ignore

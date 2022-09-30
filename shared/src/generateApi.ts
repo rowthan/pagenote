@@ -22,23 +22,24 @@ const notSupportYet = function () {
 
 let bridge:any;
 const TIMEOUT = 8000;
-export const defaultWrapper = function (method:string,targetId:string) {
+export const defaultWrapper = function (method:string,targetId:string,clientId: string='page_api_client') {
     return function (request:any) {
         // bridge 运行时初始化，
         if(!bridge){
-            const clientId = 'page_bridge'
             // 优先使用 extension runtime message
             if(chrome && chrome.runtime){
                 bridge = new Message2(clientId,{
                     asServer: true,
                     isBackground: false,
-                    timeout: TIMEOUT
+                    timeout: TIMEOUT,
+                    targetClientId: targetId,
                 })
             }else{
                 bridge = new SessionStorageBridge(clientId,{
                     asServer: true,
                     listenKey: "pagenote-message",
                     timeout: TIMEOUT,
+                    targetClientId: targetId,
                 })
             }
         }
