@@ -106,9 +106,9 @@ export namespace lightpage {
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
         // 导出pages
-        exportPages: IExtenstionMessageListener<boolean, string>
+        exportPages: IExtenstionMessageListener<void, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
-        importPages: IExtenstionMessageListener<BackupData | string, number>,
+        importPages: IExtenstionMessageListener<BackupData | string | WebPage[], number>,
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -126,6 +126,8 @@ export namespace setting {
     type Inner_Setting = {
         _libra?: boolean, // 是否开启实验功能
         _sync?: boolean, // 是否在各端之间同步设置
+        _supportVersions?: string[], // 当前支持SDK的版本列表
+        _sdkVersion: string, // 当前使用的 SDK 版本
     }
 
     export type SDK_SETTING = Inner_Setting & {
@@ -146,7 +148,6 @@ export namespace setting {
         convertMethods: ConvertMethod[],
         dataVersion: SDK_VERSION,
         extVersion: string,
-        sdkVersion: string,
         useRecommend: boolean
     }
 
@@ -223,10 +224,10 @@ export namespace setting {
             enableMarkImg: false,
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
-            sdkVersion: "5.5.3",
             extVersion: '0.20.24',
             dataVersion: SDK_VERSION.ts_format,
-            useRecommend: true
+            useRecommend: true,
+            _sdkVersion: "5.5.3",
         }
         return {
             ...setting,
