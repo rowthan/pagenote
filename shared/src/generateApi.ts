@@ -22,12 +22,12 @@ const notSupportYet = function () {
 
 let bridge:any;
 const TIMEOUT = 8000;
-export const defaultWrapper = function (method:string,targetId:string,clientId: string='page_api_client') {
+export const defaultWrapper = function (method:string,targetId:string,clientId: string='default_api_client') {
     return function (request:any) {
         // bridge 运行时初始化，
         if(!bridge){
-            // 优先使用 extension runtime message
-            if(chrome && chrome.runtime){
+            // 优先使用 extension runtime message; Edge 普通网页也会有 chrome.runtime 对象、故还需要进一步判断 onMessage
+            if(chrome && chrome.runtime && chrome.runtime.onMessage){
                 bridge = new Message2(clientId,{
                     asServer: true,
                     isBackground: false,
@@ -110,6 +110,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const userApi: user.request = {
+        exchangeToken: wrapperFun('exchangeToken',user.id),
         getUser: wrapperFun('getUser',user.id),
         getUserToken: wrapperFun('getUserToken',user.id),
         getWhoAmI: wrapperFun('getWhoAmI',user.id),

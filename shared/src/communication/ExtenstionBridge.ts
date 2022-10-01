@@ -34,8 +34,7 @@ class Message2 implements Communication<any>{
 
   constructor(id:string,options?:ExtensionOption) {
     if(messengerMap[id]){
-      console.error(id,'已存在，不可创建')
-      throw Error('该ID已存在')
+      console.warn(id,'已存在'+id,'应注意避免ID重复，可能事件发送监听失败')
     }
     messengerMap[id] = true;
     this.option = options || {
