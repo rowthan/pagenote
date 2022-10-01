@@ -27,7 +27,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
         // bridge 运行时初始化，
         if(!bridge){
             // 优先使用 extension runtime message; Edge 普通网页也会有 chrome.runtime 对象、故还需要进一步判断 onMessage
-            if(chrome && chrome.runtime && chrome.runtime.onMessage){
+            if(globalThis && globalThis.chrome && chrome.runtime && chrome.runtime.onMessage){
                 bridge = new Message2(clientId,{
                     asServer: true,
                     isBackground: false,
