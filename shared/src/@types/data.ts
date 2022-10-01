@@ -54,6 +54,8 @@ type Step = {
     updateAt?: number, // 修改时间
     score?: number, // 此条笔记重要评分
     originContext?: string, // 原始上下文
+    deleted?: boolean // 删除标记
+    author?: string // 原始作者
 }
 
 type Position = {

@@ -328,8 +328,14 @@ export namespace user {
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<void, User | undefined>,
-        setUserToken: IExtenstionMessageListener<string, string>
-        getUserToken: IExtenstionMessageListener<void, string>
+
+        // 使用 exchangeToken
+        setUserToken?: IExtenstionMessageListener<string, string>
+        // 使用 exchangeToken
+        getUserToken?: IExtenstionMessageListener<void, string>
+
+        /**交换、获取token null 注销，string 赋值token（空字符串不赋值，仅获取）*/
+        exchangeToken: IExtenstionMessageListener<string|null, string>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
