@@ -147,7 +147,6 @@ export namespace setting {
         enableMarkImg: boolean,
         convertMethods: ConvertMethod[],
         dataVersion: SDK_VERSION,
-        extVersion: string,
         useRecommend: boolean
     }
 
@@ -224,7 +223,6 @@ export namespace setting {
             enableMarkImg: false,
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
-            extVersion: '0.20.24',
             dataVersion: SDK_VERSION.ts_format,
             useRecommend: true,
             _sdkVersion: "5.5.3",
