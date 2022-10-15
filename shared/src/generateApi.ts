@@ -53,6 +53,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        syncStat: wrapperFun('syncStat',lightpage.id),
         exportPages: wrapperFun('exportPages',lightpage.id),
         importPages: wrapperFun('importPages',lightpage.id),
         removeLightPages: wrapperFun('removeLightPages',lightpage.id),
@@ -60,14 +61,15 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         getLightPages: wrapperFun('getLightPages',lightpage.id),
         groupPages: wrapperFun('groupPages',lightpage.id),
         removeLightPage: wrapperFun('removeLightPage',lightpage.id),
-        saveLightPage: wrapperFun('saveLightPage',lightpage.id),
+        saveLightPage: wrapperFun('saveLightPage',lightpage.id)
     }
 
     const boxroomApi: boxroom.request = {
+        syncStat: wrapperFun('syncStat',boxroom.id),
         update: wrapperFun('update',boxroom.id),
         get:wrapperFun('get',boxroom.id),
         remove:wrapperFun('remove',boxroom.id),
-        save:wrapperFun('save',boxroom.id),
+        save:wrapperFun('save',boxroom.id)
     }
 
     const settingApi: setting.request = {

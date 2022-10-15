@@ -167,19 +167,22 @@ const getDetailWebPage = function () {
         icon: "",
         key: "",
         plainData: {
-            url: '',
             images: [],
             categories: [],
             snapshots: [],
             setting: {},
             steps: [],
         },
-        thumb:"",
+        thumb: "",
         title: "",
         updateAt: 0,
         url: "",
         urls: [],
-        version: DataVersion.version4
+        version: DataVersion.version4,
+        extVersion: "",
+        steps: [],
+        setting: undefined,
+        categories: []
     }
     return webpage
 }

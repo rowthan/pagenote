@@ -28,18 +28,27 @@ interface IRequest<PARAMS, RESPONSE> {
     (params: PARAMS): BaseMessageResponse<RESPONSE>
 }
 
+export type SyncStat = {
+    lastSyncAt: number; // 上次同步时间
+    connected: boolean; // 连通性检查
+    resolving: boolean; // 正在同步中
+    message?: string; // 备注信息
+}
+
 export namespace boxroom {
     export const id = 'boxroom'
     export type BoxItem = {
         id?: string, // 资源ID，非指定情况下md5值
         boxType?: string, // 资源类型
-        data?: {
-            text: string,
+        data?: { // TODO 删除
+            text?: string,
             type?: any,
         }, // 数据
         from?: string, // 来源
         createAt?: number, // 来源
         expiredAt?: number,
+        type?: string,
+        text?: string,
     }
 
     // 索引
@@ -56,6 +65,7 @@ export namespace boxroom {
         save: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
+        syncStat: IExtenstionMessageListener<void, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -109,6 +119,8 @@ export namespace lightpage {
         exportPages: IExtenstionMessageListener<void, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
         importPages: IExtenstionMessageListener<BackupData | string, number>,
+
+        syncStat: IExtenstionMessageListener<void, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -368,6 +380,17 @@ export namespace fileDB {
         /**删除资源*/
         removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt: number }>
 
+        [key: string]: IExtenstionMessageListener<any, any>
+    }
+
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace network {
+    export const id = 'network';
+    export interface response {
+        pagenote: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
+        axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
