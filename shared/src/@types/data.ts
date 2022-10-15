@@ -56,6 +56,8 @@ type Step = {
     originContext?: string, // 原始上下文
     deleted?: boolean // 删除标记
     author?: string // 原始作者
+    url?: string
+    pageKey?: string
 }
 
 type Position = {
@@ -65,16 +67,16 @@ type Position = {
 
 type PlainData = {
 
-    categories: string[],
-    snapshots: string[],
-    setting: any,
-    steps: Step[],
+    categories?: string[],
+    snapshots?: string[],
+    setting?: any,
+    steps?: Step[],
 
     // TODO 废弃 SDK 不处理
     // @deprecated
-    images?: string[],
+    // images?: string[],
     // @deprecated
-    note?: string,
+    // note?: string,
     // @deprecated
     url?: string,
     // @deprecated
@@ -82,11 +84,11 @@ type PlainData = {
     // @deprecated
     version?: string,
     // @deprecated
-    icon?: string,
+    // icon?: string,
     // @deprecated
     createAt?: number,
     // @deprecated
-    description?: string,
+    // description?: string,
 }
 
 export enum PAGE_TYPES {
@@ -158,8 +160,12 @@ type MetaResource = {
 }
 
 type WebPageDatas = {
+    extVersion?: string, // 使用的插件版本
     plainData?: PlainData,
     snapshots?: Omit<MetaResource, 'data'>[],
+    steps?: Step[],
+    setting?: any,
+    categories?: string[],
 }
 
 type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
