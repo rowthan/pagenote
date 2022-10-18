@@ -38,7 +38,7 @@ class WebPageItem implements IWebPage {
             this.data.key = this.data.key || webPage.key || webPage.url;
             this.data.url = this.data.url || webPage.url || webPage.plainData.url;
             this.data.customTitle = this.data.customTitle || webPage.customTitle || webPage.title || webPage.plainData.title;
-            this.data.description = this.data.description || webPage.description || webPage.plainData.description;
+            this.data.description = this.data.description || webPage.description;
             this.data.sdkSetting = this.data.sdkSetting || webPage.sdkSetting || webPage.plainData.setting;
         }
 
@@ -167,7 +167,6 @@ const getDetailWebPage = function () {
         icon: "",
         key: "",
         plainData: {
-            images: [],
             categories: [],
             snapshots: [],
             setting: {},

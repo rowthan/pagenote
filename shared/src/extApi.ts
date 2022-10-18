@@ -33,6 +33,8 @@ export type SyncStat = {
     connected: boolean; // 连通性检查
     resolving: boolean; // 正在同步中
     message?: string; // 备注信息
+    hasToken: boolean;
+    manageUrl: string;
 }
 
 export namespace boxroom {
@@ -65,7 +67,7 @@ export namespace boxroom {
         save: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
-        syncStat: IExtenstionMessageListener<void, SyncStat>
+        syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -120,7 +122,7 @@ export namespace lightpage {
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
         importPages: IExtenstionMessageListener<BackupData | string, number>,
 
-        syncStat: IExtenstionMessageListener<void, SyncStat>
+        syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -329,10 +331,16 @@ export namespace user {
     }
 
     export interface User {
-        profile: {
+        profile?: {
             pro: number,
-            seed: number
+            seed: number,
+            nickname?: string,
+            maskEmail?: string;
         },
+        verify?:{
+            exp?: number
+            iat?: number
+        }
     }
 
     export interface response {
