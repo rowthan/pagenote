@@ -36,8 +36,8 @@ class WebPageItem implements IWebPage {
         if(webPage.version !== DataVersion.version4){
             this.data.version = DataVersion.version4;
             this.data.key = this.data.key || webPage.key || webPage.url;
-            this.data.url = this.data.url || webPage.url || webPage.plainData.url;
-            this.data.customTitle = this.data.customTitle || webPage.customTitle || webPage.title || webPage.plainData.title;
+            this.data.url = this.data.url || webPage.url;
+            this.data.customTitle = this.data.customTitle || webPage.customTitle || webPage.title;
             this.data.description = this.data.description || webPage.description;
             this.data.sdkSetting = this.data.sdkSetting || webPage.sdkSetting || webPage.plainData.setting;
         }
@@ -144,6 +144,9 @@ class WebPageItem implements IWebPage {
 
 const getDetailWebPage = function () {
     const webpage: Required<WebPage> = {
+        deleteTag: 0,
+        domain: "",
+        path: "",
         achieved: false,
         commits: [],
         customTitle: "",
@@ -179,8 +182,6 @@ const getDetailWebPage = function () {
         urls: [],
         version: DataVersion.version4,
         extVersion: "",
-        steps: [],
-        setting: undefined,
         categories: []
     }
     return webpage
