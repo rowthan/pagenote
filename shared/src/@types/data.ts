@@ -1,4 +1,6 @@
 import {LightStatus} from "../pagenote-brush";
+import {boxroom} from "../extApi";
+import BoxItem = boxroom.BoxItem;
 
 enum BackupVersion {
     version1 = 1,
@@ -25,11 +27,18 @@ enum AnnotationShowType {
 }
 
 type Step = {
+    key?: string // 标记的全局唯一ID
+    wid?: string // whats-element id
+    session?: string,
+    did?: string,
+    deleteTag?: 1 | 0,
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
+    // TODO 使用 wid 全面替换 ID
     id: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
     tip: string, // 标记的笔记（用户输入）
-    bg: string, // 标记背景色
+    /**标记背景色，统一使用十六进制*/
+    bg: string,
     isActive: boolean, // 是否为激活状态
     lightStatus: LightStatus // 高亮状态
     annotationStatus: AnnotationStatus,
@@ -70,25 +79,7 @@ type PlainData = {
     categories?: string[],
     snapshots?: string[],
     setting?: any,
-    steps?: Step[],
-
-    // TODO 废弃 SDK 不处理
-    // @deprecated
-    // images?: string[],
-    // @deprecated
-    // note?: string,
-    // @deprecated
-    url?: string,
-    // @deprecated
-    title?: string,
-    // @deprecated
-    version?: string,
-    // @deprecated
-    // icon?: string,
-    // @deprecated
-    createAt?: number,
-    // @deprecated
-    // description?: string,
+    steps: Step[],
 }
 
 export enum PAGE_TYPES {
@@ -100,6 +91,7 @@ type WebPageIds = {
     url: string, // 此条数据绑定的 URL
     urls: string[], // 此条数据绑定的 URL 集合
     pageType: PAGE_TYPES
+    deleteTag: 1 | 0,
 }
 
 type WebPageTimes = {
@@ -140,6 +132,9 @@ type WebPageSiteInfo = {
     customTitle?: string, // 自定义标题
     /**sdk 的设置信息*/
     sdkSetting?: any
+
+    domain: string,
+    path: string, // 路由path
 }
 
 // 链路信息，记录各个网站之间的联系
@@ -163,8 +158,6 @@ type WebPageDatas = {
     extVersion?: string, // 使用的插件版本
     plainData?: PlainData,
     snapshots?: Omit<MetaResource, 'data'>[],
-    steps?: Step[],
-    setting?: any,
     categories?: string[],
 }
 
@@ -210,12 +203,23 @@ export type ResourceInfo = BaseFileInfo & {
     [key:string]: any,
 }
 
-interface BackupData {
-    pages: WebPage[],
+export enum BackupDataType {
+    pages= 'pages',
+    box='box',
+    resources='resources',
+}
+
+type BackupData = {
+    backupId: string
+    pages?: WebPage[],
+    box?: BoxItem[],
+    dataType: BackupDataType,
     resources?: ResourceInfo[],
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
+    size?: number,
+    remark?: string
 }
 
 export type {

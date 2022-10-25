@@ -87,6 +87,8 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        backup: wrapperFun('backup',action.id),
+        backupList: wrapperFun('backupList',action.id),
         report: wrapperFun('report',action.id),
         getMemoryRuntime: wrapperFun('getMemoryRuntime',action.id),
         setMemoryRuntime: wrapperFun('setMemoryRuntime',action.id),

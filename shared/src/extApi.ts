@@ -1,4 +1,4 @@
-import {BackupData, FileData, ResourceInfo, WebPage} from "./@types/data";
+import {BackupData, BackupDataType, FileData, ResourceInfo, WebPage} from "./@types/data";
 import {Find, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
@@ -35,6 +35,7 @@ export type SyncStat = {
     message?: string; // 备注信息
     hasToken: boolean;
     manageUrl: string;
+    icon?: string;
 }
 
 export namespace boxroom {
@@ -42,22 +43,21 @@ export namespace boxroom {
     export type BoxItem = {
         id?: string, // 资源ID，非指定情况下md5值
         boxType?: string, // 资源类型
-        data?: { // TODO 删除
-            text?: string,
-            type?: any,
-        }, // 数据
         from?: string, // 来源
         createAt?: number, // 来源
         expiredAt?: number,
         type?: string,
         text?: string,
+        did?: string
+        version?: string
+        icon?: string
+        domain?: string
     }
 
     // 索引
     export type BoxKeys = {
         id: string,
         createAt: number,
-        createAtDay: string,
         from: string,
         boxType: string
     }
@@ -296,13 +296,14 @@ export namespace action {
         injectCodeToPage: IExtenstionMessageListener<injectParams, boolean>
         track: IExtenstionMessageListener<[category: string, eventAction: string, eventLabel: string, eventValue: number, page?: string], void>
         report: IExtenstionMessageListener<{ errorInfo: any }, void>
-        axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse | null>
         captureView: IExtenstionMessageListener<CaptureVisibleTabOptions, string>
         copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
         injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
+        backup: IExtenstionMessageListener<{dataType: BackupDataType}, BackupData>
+        backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -343,6 +344,15 @@ export namespace user {
         }
     }
 
+    export interface Device {
+        did: string,
+        name?: string,
+        version: string,
+        platform: string,
+        browser: string,
+        registerAt?: Date,
+    }
+
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<void, User | undefined>,
@@ -352,8 +362,10 @@ export namespace user {
         // 使用 exchangeToken
         getUserToken?: IExtenstionMessageListener<void, string>
 
-        /**交换、获取token null 注销，string 赋值token（空字符串不赋值，仅获取）*/
-        exchangeToken: IExtenstionMessageListener<string|null, string>
+        // 当前设备信息
+        setDevice?: IExtenstionMessageListener<Partial<Device>, Device>
+        getDevice?: IExtenstionMessageListener<void, Device>
+        getDeviceList?: IExtenstionMessageListener<void, Device[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
