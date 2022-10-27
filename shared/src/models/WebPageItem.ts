@@ -144,7 +144,6 @@ class WebPageItem implements IWebPage {
 
 const getDetailWebPage = function () {
     const webpage: Required<WebPage> = {
-        deleteTag: 0,
         domain: "",
         path: "",
         achieved: false,

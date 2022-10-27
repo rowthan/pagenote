@@ -53,6 +53,10 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        addLight: wrapperFun('addLight',lightpage.id),
+        queryLights: wrapperFun('queryLights',lightpage.id),
+        removeLight: wrapperFun('removeLight',lightpage.id),
+        updateLight: wrapperFun('updateLight',lightpage.id),
         syncStat: wrapperFun('syncStat',lightpage.id),
         exportPages: wrapperFun('exportPages',lightpage.id),
         importPages: wrapperFun('importPages',lightpage.id),
@@ -87,6 +91,9 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        addScheduleTask: wrapperFun('addScheduleTask',action.id),
+        log: wrapperFun('log',action.id),
+        logs: wrapperFun('logs',action.id),
         backup: wrapperFun('backup',action.id),
         backupList: wrapperFun('backupList',action.id),
         report: wrapperFun('report',action.id),
@@ -114,11 +121,14 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const userApi: user.request = {
+        getDevice: wrapperFun('getDevice',user.id),
+        getDeviceList: wrapperFun('getDeviceList',user.id),
+        setDevice: wrapperFun('setDevice',user.id),
         exchangeToken: wrapperFun('exchangeToken',user.id),
         getUser: wrapperFun('getUser',user.id),
         getUserToken: wrapperFun('getUserToken',user.id),
         getWhoAmI: wrapperFun('getWhoAmI',user.id),
-        setUserToken: wrapperFun('setUserToken',user.id),
+        setUserToken: wrapperFun('setUserToken',user.id)
     }
 
     return {

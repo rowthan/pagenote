@@ -1,5 +1,5 @@
 import {BackupData, BackupDataType, FileData, ResourceInfo, WebPage} from "./@types/data";
-import {Find, Pagination, Query} from "./@types/database";
+import {Find, FindResponse, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
@@ -94,8 +94,6 @@ export namespace lightpage {
         createAt: number,
         updateAt: number,
         expiredAt: number,
-        updateAtDay: string,
-        createAtDay: string,
         basename: string,
         lastmod: string,
         etag: string,
@@ -121,6 +119,11 @@ export namespace lightpage {
         exportPages: IExtenstionMessageListener<void, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
         importPages: IExtenstionMessageListener<BackupData | string, number>,
+
+        addLight: IExtenstionMessageListener<any, any>;
+        removeLight: IExtenstionMessageListener<any, any>;
+        updateLight: IExtenstionMessageListener<any, any>;
+        queryLights: IExtenstionMessageListener<any, any>;
 
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -279,6 +282,7 @@ export namespace browserAction {
 
 export namespace action {
     import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
+    import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
     export const id = 'action'
 
     export interface injectParams {
@@ -292,6 +296,21 @@ export namespace action {
         text: string,
     }
 
+    export interface LogInfo<T=any> {
+        id?: string;
+        createAt: number,
+        level: string,
+        namespace: string,
+        stack: string,
+        meta?: T,
+        version: string
+    }
+
+    export type ScheduleTask = {
+        terminal: string
+        params: any
+    } & AlarmCreateInfo
+
     export type response = {
         injectCodeToPage: IExtenstionMessageListener<injectParams, boolean>
         track: IExtenstionMessageListener<[category: string, eventAction: string, eventLabel: string, eventValue: number, page?: string], void>
@@ -300,10 +319,17 @@ export namespace action {
         copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
         injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
+
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
+
         backup: IExtenstionMessageListener<{dataType: BackupDataType}, BackupData>
         backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
+
+        log: IExtenstionMessageListener<LogInfo, string>
+        logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<LogInfo>>
+
+        addScheduleTask: IExtenstionMessageListener<ScheduleTask, number>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -358,14 +384,14 @@ export namespace user {
         getUser: IExtenstionMessageListener<void, User | undefined>,
 
         // 使用 exchangeToken
-        setUserToken?: IExtenstionMessageListener<string, string>
+        setUserToken: IExtenstionMessageListener<string, string>
         // 使用 exchangeToken
-        getUserToken?: IExtenstionMessageListener<void, string>
+        getUserToken: IExtenstionMessageListener<void, string>
 
         // 当前设备信息
-        setDevice?: IExtenstionMessageListener<Partial<Device>, Device>
-        getDevice?: IExtenstionMessageListener<void, Device>
-        getDeviceList?: IExtenstionMessageListener<void, Device[]>
+        setDevice: IExtenstionMessageListener<Partial<Device>, Device>
+        getDevice: IExtenstionMessageListener<void, Device>
+        getDeviceList: IExtenstionMessageListener<void, Device[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
