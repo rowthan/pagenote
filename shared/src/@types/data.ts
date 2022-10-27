@@ -31,7 +31,6 @@ type Step = {
     wid?: string // whats-element id
     session?: string,
     did?: string,
-    deleteTag?: 1 | 0,
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
     // TODO 使用 wid 全面替换 ID
@@ -91,7 +90,6 @@ type WebPageIds = {
     url: string, // 此条数据绑定的 URL
     urls: string[], // 此条数据绑定的 URL 集合
     pageType: PAGE_TYPES
-    deleteTag: 1 | 0,
 }
 
 type WebPageTimes = {
@@ -207,11 +205,13 @@ export enum BackupDataType {
     pages= 'pages',
     box='box',
     resources='resources',
+    light='light'
 }
 
 type BackupData = {
     backupId: string
     pages?: WebPage[],
+    lights?: Step[],
     box?: BoxItem[],
     dataType: BackupDataType,
     resources?: ResourceInfo[],

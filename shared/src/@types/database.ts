@@ -2,9 +2,20 @@ export interface Find<Model> {
     query?: Query<Model>, // 搜索过滤条件
     sort?: Sort<Model>,
     limit: number, // 分页数
-    skip?: number, // 游标
+    skip?: number, // 游标 TODO 删除，使用
+    next_cursor?: number | string,
     projection?: Projection<Model>, // 字段过滤
+    // TODO 删除此字段
     ignoreDetail?: boolean // 是否忽略详情，一般用于 list 列表时候，不需要查看详情
+}
+
+export interface FindResponse<T> {
+    total: number
+    list: T[]
+    page?: number
+    limit?: number
+    has_more?: boolean
+    next_cursor?: number | string
 }
 
 export type Projection<Model> = Partial<Record<keyof Model, 1|0>> & {[key:string]:1|0}
