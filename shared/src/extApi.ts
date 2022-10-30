@@ -14,7 +14,7 @@ import {createInitAction} from "./pagenote-actions";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
-        (arg: Parameters<Funs[fun]>[0],header?: BaseMessageHeader): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+        (arg: Parameters<Funs[fun]>[0],header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
