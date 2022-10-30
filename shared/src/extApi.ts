@@ -1,6 +1,11 @@
 import {BackupData, BackupDataType, FileData, ResourceInfo, Step, WebPage} from "./@types/data";
 import {Find, FindResponse, Pagination, Query} from "./@types/database";
-import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
+import {
+    BaseMessageHeader,
+    BaseMessageResponse,
+    IBaseMessageListener,
+    IExtenstionMessageListener
+} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
 import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
@@ -9,7 +14,7 @@ import {createInitAction} from "./pagenote-actions";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
-        (arg: Parameters<Funs[fun]>[0]): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+        (arg: Parameters<Funs[fun]>[0],header?: BaseMessageHeader): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
