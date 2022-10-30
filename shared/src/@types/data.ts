@@ -31,6 +31,7 @@ type Step = {
     wid?: string // whats-element id
     session?: string,
     did?: string,
+    sortIndex?: number,
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
     // TODO 使用 wid 全面替换 ID
@@ -213,7 +214,7 @@ type BackupData = {
     pages?: WebPage[],
     lights?: Step[],
     box?: BoxItem[],
-    dataType: BackupDataType,
+    dataType: BackupDataType[],
     resources?: ResourceInfo[],
     version?: BackupVersion,
     extension_version?: string,

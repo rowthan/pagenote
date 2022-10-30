@@ -10,6 +10,7 @@ import {
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import Message2 from "./communication/ExtenstionBridge";
+import {BaseMessageHeader} from "./communication/base";
 
 
 const notSupportYet = function () {
@@ -23,7 +24,9 @@ const notSupportYet = function () {
 let bridge:any;
 const TIMEOUT = 8000;
 export const defaultWrapper = function (method:string,targetId:string,clientId: string='default_api_client') {
-    return function (request:any) {
+    return function (request:any,header: Partial<BaseMessageHeader> = {
+        targetClientId: targetId
+    }) {
         // bridge 运行时初始化，
         if(!bridge){
             // 优先使用 extension runtime message; Edge 普通网页也会有 chrome.runtime 对象、故还需要进一步判断 onMessage
@@ -45,6 +48,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
         }
 
         return bridge.requestMessage(method,request,{
+            ...header,
             targetClientId: targetId
         })
     }
@@ -53,6 +57,13 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        addLights: wrapperFun('addLights',lightpage.id),
+        addPages: wrapperFun('addPages',lightpage.id),
+        queryPages: wrapperFun('queryPages',lightpage.id),
+        removeLights: wrapperFun('removeLights',lightpage.id),
+        removePages: wrapperFun('removePages',lightpage.id),
+        updateLights: wrapperFun('updateLights',lightpage.id),
+        updatePages: wrapperFun('updatePages',lightpage.id),
         addLight: wrapperFun('addLight',lightpage.id),
         queryLights: wrapperFun('queryLights',lightpage.id),
         removeLight: wrapperFun('removeLight',lightpage.id),

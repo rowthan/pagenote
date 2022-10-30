@@ -1,4 +1,4 @@
-import {BackupData, BackupDataType, FileData, ResourceInfo, WebPage} from "./@types/data";
+import {BackupData, BackupDataType, FileData, ResourceInfo, Step, WebPage} from "./@types/data";
 import {Find, FindResponse, Pagination, Query} from "./@types/database";
 import {BaseMessageResponse, IBaseMessageListener, IExtenstionMessageListener} from "./communication/base";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
@@ -108,22 +108,31 @@ export namespace lightpage {
 
     // 服务端可接受的请求API
     export type response = {
+        /**旧 API start 待删除 0.24 之后不支持**/
         saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage | null>,
         removeLightPage: IExtenstionMessageListener<{ key: string }, number>,
         removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
         getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, { pages: WebPage[] | WebPageKeys[], pagination: Pagination }>,
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
-        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, any>,
         // 导出pages
         exportPages: IExtenstionMessageListener<void, string>
         // 导入pages，只能插件内使用，数量太大，可能通讯失败
         importPages: IExtenstionMessageListener<BackupData | string, number>,
+        /** 旧 API end*/
 
-        addLight: IExtenstionMessageListener<any, any>;
-        removeLight: IExtenstionMessageListener<any, any>;
-        updateLight: IExtenstionMessageListener<any, any>;
-        queryLights: IExtenstionMessageListener<any, any>;
+        // 页面操作
+        addPages: IExtenstionMessageListener<WebPage, number>
+        removePages: IExtenstionMessageListener<Partial<WebPage>, number>
+        updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
+        queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<WebPage>>
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, Record<string, WebPage[]>>,
+
+        // 标记操作
+        addLights: IExtenstionMessageListener<Step[], number>;
+        removeLights: IExtenstionMessageListener<Partial<Step>, number>;
+        updateLights: IExtenstionMessageListener<Partial<Step>[], number>;
+        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<Step>>;
 
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -323,7 +332,7 @@ export namespace action {
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
 
-        backup: IExtenstionMessageListener<{dataType: BackupDataType}, BackupData>
+        backup: IExtenstionMessageListener<{dataTypes: BackupDataType[]}, BackupData>
         backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
 
         log: IExtenstionMessageListener<LogInfo, string>
