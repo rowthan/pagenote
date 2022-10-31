@@ -149,14 +149,13 @@ enum MetaResourceType {
 type MetaResource = {
     url: string, // 可访问的URL 地址，
     type: MetaResourceType
-    data?: string, // 原始数据
     createAt?: number, // 资源创建时间
 }
 
 type WebPageDatas = {
     extVersion?: string, // 使用的插件版本
     plainData?: PlainData,
-    snapshots?: Omit<MetaResource, 'data'>[],
+    snapshots?: MetaResource[],
     categories?: string[],
 }
 

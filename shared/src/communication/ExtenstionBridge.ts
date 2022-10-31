@@ -25,7 +25,7 @@ function isPromise(value:any) {
 }
 
 
-class Message2 implements Communication<any>{
+export default class ExtensionMessage2 implements Communication<any>{
   clientId: string; // 当前信使的ID
   proxy: IExtenstionMessageProxy; // 所有消息的监听代理
   listeners: Record<string, IExtenstionMessageListener<any, any>> = {} // 指定事件的监听
@@ -63,16 +63,13 @@ class Message2 implements Communication<any>{
       if(that.state!==STATUS.READY){
         return false;
       }
-      const { data,type,header={senderClientId:'',originClientId:'',targetClientId:'',keepConnection:false,isResponse:false} } = request;
-      const { senderClientId,originClientId,targetClientId,isResponse } = header;
+      const { data,type,header} = request;
+      const { senderClientId,originClientId,targetClientId,isResponse } = header || {};
 
-      const requestTargetClientId = targetClientId || that.option.targetClientId;
-
-      // 目标识别：如果请求方 确定了发送对象是当前 client
-      if(requestTargetClientId && requestTargetClientId!==that.clientId){
+      // 1. 单线模式，只监听某个目标对象的请求。 非目标请求源，事件、代理均不响应
+      if(that.option.targetClientId && senderClientId && senderClientId!==that.option.targetClientId){
         return false
       }
-      const listenFun = that.listeners[type];
       // 封装 sender 信息，原生基础上加入 header 标识信息
       const thisSender = {
         ...sender,
@@ -85,12 +82,16 @@ class Message2 implements Communication<any>{
       }
 
       let res;
-      if(listenFun && typeof listenFun==='function'){
+
+      const listenFun = that.listeners[type];
+      // 2. 请求源有明确目标服务节点时，判断是否当前 clientId ，监听器响应
+      if(targetClientId && targetClientId===that.clientId && listenFun){
         res = listenFun(data,thisSender,sendResponse);
+      } else {
+        // 3. 代理模式，响应非 listener 的剩余请求，代理器内部判断目的地服务是否匹配
+        that.proxy && that.proxy(request,thisSender,sendResponse)
       }
-      if(typeof that.proxy === 'function'){
-        res = that.proxy(request,thisSender,sendResponse);
-      }
+
       // 如果返回的是一个 promise，则返回promise（不方便判断promise，简化为判断 function）；否则判断是否断开
       res = isPromise(res) ? true : res!==false;
       // 客户端希望保持连接 或 服务端希望保持连接
@@ -189,5 +190,3 @@ class Message2 implements Communication<any>{
     console.error('extension 无需实现')
   }
 }
-
-export default Message2;

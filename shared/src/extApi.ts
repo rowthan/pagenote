@@ -127,17 +127,17 @@ export namespace lightpage {
         /** 旧 API end*/
 
         // 页面操作
-        addPages: IExtenstionMessageListener<WebPage, number>
-        removePages: IExtenstionMessageListener<Partial<WebPage>, number>
+        addPages: IExtenstionMessageListener<WebPage[], number>
+        removePages: IExtenstionMessageListener<{ keys: string[] }, number>
         updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
-        queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<WebPage>>
-        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, Record<string, WebPage[]>>,
+        queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, Record<string, Partial<WebPage>[]>>,
 
         // 标记操作
         addLights: IExtenstionMessageListener<Step[], number>;
-        removeLights: IExtenstionMessageListener<Partial<Step>, number>;
+        removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<Partial<Step>[], number>;
-        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<Step>>;
+        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<Partial<Step>>>;
 
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -470,6 +470,8 @@ export namespace frontApi {
         togglePagenote: IExtenstionMessageListener<void, boolean>
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
         fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean }>
+        // 通知刷新数据
+        refresh: IExtenstionMessageListener<void, void>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
