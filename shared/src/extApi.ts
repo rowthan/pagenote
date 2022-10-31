@@ -341,7 +341,7 @@ export namespace action {
         backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
 
         log: IExtenstionMessageListener<LogInfo, string>
-        logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<LogInfo>>
+        logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<Partial<LogInfo>>>
 
         addScheduleTask: IExtenstionMessageListener<ScheduleTask, number>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -451,6 +451,7 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
         axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
+        fetch: IExtenstionMessageListener<{input: ResourceInfo | URL, init?: RequestInit}, Response & {json?: any, text?: string}>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
