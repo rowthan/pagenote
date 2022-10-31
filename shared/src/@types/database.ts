@@ -18,7 +18,7 @@ export interface FindResponse<T> {
     next_cursor?: number | string
 }
 
-export type Projection<Model> = Partial<Record<keyof Model, 1|0>> & {[key:string]:1|0}
+export type Projection<Model> = Partial<Record<keyof Model, 1|-1>> & {[key:string]:1|-1}
 
 export type Sort<Model> = Partial<Record<keyof Model, 1|-1>>
 
