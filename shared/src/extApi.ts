@@ -1,4 +1,4 @@
-import {BackupData, BackupDataType, FileData, ResourceInfo, Step, WebPage} from "./@types/data";
+import {BackupData, BackupDataType, ResourceInfo, Step, WebPage} from "./@types/data";
 import {Find, FindResponse, Pagination, Query} from "./@types/database";
 import {
     BaseMessageHeader,
@@ -451,7 +451,7 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
         axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
-        fetch: IExtenstionMessageListener<{input: ResourceInfo | URL, init?: RequestInit}, Response & {json?: any, text?: string}>
+        fetch: IExtenstionMessageListener<{input: string, init?: RequestInit}, Response & {jsonData?: any}>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

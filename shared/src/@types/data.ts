@@ -1,4 +1,4 @@
-import {LightStatus} from "../pagenote-brush";
+import {LightStatus, LightType} from "../pagenote-brush";
 import {boxroom} from "../extApi";
 import BoxItem = boxroom.BoxItem;
 
@@ -43,7 +43,7 @@ type Step = {
     lightStatus: LightStatus // 高亮状态
     annotationStatus: AnnotationStatus,
     annotationShowType: AnnotationShowType,
-    lightType?: LinkStyle, // 画笔类型，删除线、高亮
+    lightType?: LightType, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
     text?: string, // 标记的文本内容
     pre? : string, // 标记的文本内容 上文信息
