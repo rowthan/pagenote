@@ -11,7 +11,7 @@ export enum ACTION_TYPES {
     send_to_email = 'send_to_email',
     search = 'search',
     create_new_pagenote = 'create_new_pagenote',
-    axios='axios',
+    fetch='fetch',
 }
 
 export enum ACTION_SCENE {

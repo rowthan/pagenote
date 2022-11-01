@@ -3,23 +3,25 @@ import {ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {PREDEFINED_ICON} from "../icons";
 
 const version = '0.1.0'
-const axios:ActionConfig = {
+const fetch:ActionConfig = {
     define:{
         name:'请求 API',
-        actionType: ACTION_TYPES.axios,
+        actionType: ACTION_TYPES.fetch,
         version: version,
         icon: PREDEFINED_ICON.api,
         clickScript: function (e,target,API,params,) {
             const data = {
                 content: "#pagenote "+target.text,
             }
-            API.methods.axios({
-                method: 'POST',
-                url: params.apiLink,
-                data: data
+            API.methods.fetch({
+                init:{
+                    method: 'POST',
+                    data: data
+                },
+                input: params.apiLink,
             }).then(function(result){
                 API.methods.notification({
-                    message: result.data.message
+                    message: result.jsonData.message
                 })
                 console.log(result,'result')
             }).catch(function(e){
@@ -57,4 +59,4 @@ const axios:ActionConfig = {
     }
 };
 
-export default axios;
+export default fetch;

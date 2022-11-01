@@ -2,7 +2,7 @@ import {ActionConfig} from "./index";
 import {ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {PREDEFINED_ICON} from "../icons";
 
-const version = '0.1.0'
+const version = '0.2.0'
 const send_to_flomo:ActionConfig = {
     define:{
         name:'Send to flomo',
@@ -15,13 +15,15 @@ const send_to_flomo:ActionConfig = {
                     const data = {
                         content: result,
                     }
-                    API.methods.axios({
-                        method: 'POST',
-                        url: params.apiLink,
-                        data: data
+                    API.methods.fetch({
+                        input: params.apiLink,
+                        init:{
+                            method: 'POST',
+                            data: data
+                        },
                     }).then(function(result){
                         API.methods.notification({
-                            message: result.data.message
+                            message: result.jsonData.message
                         })
                         console.log(result,'result')
                     }).catch(function(e){

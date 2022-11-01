@@ -7,9 +7,10 @@ import custom from "./custom";
 import {Action, ACTION_SCENE, ACTION_TYPES} from "./@types";
 import {ICON} from "../icons";
 import {Target} from "../@types/data";
-import axios from "./axios";
-import {AxiosStatic} from "axios";
-
+import fetch from "./fetch";
+import { network} from "../extApi";
+import FetchResponse = network.FetchResponse;
+import FetchRequest = network.FetchRequest;
 const defaultActionMap: Record<ACTION_TYPES,ActionConfig> = {
     [ACTION_TYPES.custom]: custom,
     [ACTION_TYPES.create_new_pagenote]: create_new_light,
@@ -17,7 +18,7 @@ const defaultActionMap: Record<ACTION_TYPES,ActionConfig> = {
     [ACTION_TYPES.send_to_email]: send_to_email,
     [ACTION_TYPES.send_to_flomo]: send_to_flomo,
     [ACTION_TYPES.copyToClipboard]: copy,
-    [ACTION_TYPES.axios]: axios,
+    [ACTION_TYPES.fetch]: fetch,
 }
 
 export const publicActionStores = [create_new_light,search,copy,send_to_email,send_to_flomo,custom]
@@ -35,7 +36,7 @@ export interface ActionAPI {
         // toast提示
         notification: (tip:{message: string,})=>void,
         // 发送网络请求
-        axios: AxiosStatic,
+        fetch: (request: FetchRequest)=>Promise<FetchResponse>,
         // 弹窗
         popupwindow: (url:string, title:string, w?:number, h?:number)=>void,
         // 弹窗对数据进行二次编辑数据
