@@ -6,7 +6,6 @@ import {
     IBaseMessageListener,
     IExtenstionMessageListener
 } from "./communication/base";
-import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
 import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
 import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
@@ -449,8 +448,7 @@ export namespace fileDB {
 export namespace network {
     export const id = 'network';
     export interface response {
-        pagenote: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
-        axios: IExtenstionMessageListener<AxiosRequestConfig, AxiosResponse>
+        pagenote: IExtenstionMessageListener<{input: string, init?: RequestInit}, Response & {jsonData?: any}>
         fetch: IExtenstionMessageListener<{input: string, init?: RequestInit}, Response & {jsonData?: any}>
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -472,7 +470,7 @@ export namespace frontApi {
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
         fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean }>
         // 通知刷新数据
-        refresh: IExtenstionMessageListener<void, void>
+        refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

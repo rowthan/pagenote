@@ -75,7 +75,6 @@ type Position = {
 }
 
 type PlainData = {
-
     categories?: string[],
     snapshots?: string[],
     setting?: any,
@@ -116,6 +115,7 @@ type WebPageTimes = {
 enum DataVersion {
     version3='3', // 携带有 lastmode etag 字段
     version4='4', // 删除 plainData 中网页信息字段
+    version5 = '5', // 迁移至 indexedDB
 }
 
 type WebPageSiteInfo = {
@@ -141,7 +141,7 @@ type RouteInfo = {
     sessionId?: string
 }
 
-enum MetaResourceType {
+export enum MetaResourceType {
     image='image',
     html='html',
 }
