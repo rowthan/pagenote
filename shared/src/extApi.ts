@@ -198,7 +198,7 @@ export namespace setting {
     export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): SDK_SETTING {
         const defaultBrushes = [
             getDefaultBrush({
-                bg: '#FFFF83',
+                bg: '#ffe534',
             }),
             getDefaultBrush({
                 bg: '#A6FFE9',
@@ -447,9 +447,19 @@ export namespace fileDB {
 
 export namespace network {
     export const id = 'network';
+
+    export interface FetchRequest {
+        input: string,
+        init?: RequestInit & {data?: Record<string, any>}
+    }
+
+    export interface FetchResponse extends Response{
+        jsonData?: any
+    }
+
     export interface response {
-        pagenote: IExtenstionMessageListener<{input: string, init?: RequestInit}, Response & {jsonData?: any}>
-        fetch: IExtenstionMessageListener<{input: string, init?: RequestInit}, Response & {jsonData?: any}>
+        pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

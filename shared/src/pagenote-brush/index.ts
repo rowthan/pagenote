@@ -24,7 +24,7 @@ export interface Brush {
 }
 
 export function getDefaultBrush(brush: Partial<Brush>={}):Brush {
-    let bg = brush.bg || '#FFDE5D';
+    let bg = brush.bg || 'rgba(19,77,222,0.5)';
     let color = brush.color;
     try{
         if(bg.length <=6 && bg[0]!=='#'){
