@@ -376,7 +376,8 @@ export namespace user {
             pro: number,
             seed: number,
             nickname?: string,
-            maskEmail?: string;
+            emailMask?: string;
+            developer?: number;
         },
         verify?:{
             exp?: number
