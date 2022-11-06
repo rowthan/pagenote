@@ -10,6 +10,8 @@ type BaseMessageHeader = {
     timeout?: number // 超时时间
     isResponse: boolean // 请求类型，请求、响应
 
+    requestNamespace?: string; // 请求的命名空间，用于分组权限控制
+
     funId?: string // 所有请求公用同一个通信通道时（dom\session\iframe），用于识别一对请求、响应。
 
     keepConnection?: boolean, // extension 通信时，用于标识是否需要保持连接（响应处理函数为异步时）
