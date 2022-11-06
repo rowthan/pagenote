@@ -9,7 +9,7 @@ import {
     user
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
-import ExtenstionMessage2 from "./communication/ExtenstionBridge";
+import ExtensionMessage2 from "./communication/ExtenstionBridge";
 import {BaseMessageHeader} from "./communication/base";
 
 
@@ -31,7 +31,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
         if(!bridge){
             // 优先使用 extension runtime message; Edge 普通网页也会有 chrome.runtime 对象、故还需要进一步判断 onMessage
             if(globalThis && globalThis.chrome && chrome.runtime && chrome.runtime.onMessage){
-                bridge = new ExtenstionMessage2(clientId,{
+                bridge = new ExtensionMessage2(clientId,{
                     asServer: true,
                     isBackground: false,
                     timeout: TIMEOUT,
@@ -48,8 +48,9 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
         }
 
         return bridge.requestMessage(method,request,{
+            requestNamespace: targetId,// 默认请求 targetId 为命名空间，若一个服务下有多个权限控制，如 get\set 可自定义 header 修改
             ...header,
-            targetClientId: targetId
+            targetClientId: targetId,
         })
     }
 };
@@ -125,6 +126,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const fileDBApi: fileDB.request = {
+        uploadFile: wrapperFun('uploadFile',fileDB.id),
         getFile:  wrapperFun('getFile',fileDB.id),
         removeFiles: wrapperFun('removeFiles',fileDB.id),
         getFiles: wrapperFun('getFiles',fileDB.id),

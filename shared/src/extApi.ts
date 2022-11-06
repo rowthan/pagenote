@@ -1,5 +1,5 @@
 import {BackupData, BackupDataType, ResourceInfo, Step, WebPage} from "./@types/data";
-import {Find, FindResponse, Pagination, Query} from "./@types/database";
+import {Find, FindResponse, Pagination, Projection, Query} from "./@types/database";
 import {
     BaseMessageHeader,
     BaseMessageResponse,
@@ -130,7 +130,7 @@ export namespace lightpage {
         removePages: IExtenstionMessageListener<{ keys: string[] }, number>
         updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
-        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys> }, Record<string, Partial<WebPage>[]>>,
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
 
         // 标记操作
         addLights: IExtenstionMessageListener<Step[], number>;
@@ -440,6 +440,9 @@ export namespace fileDB {
         /**删除资源*/
         removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt: number }>
 
+        /**upload file 至服务端，并返回URL*/
+        uploadFile: IExtenstionMessageListener<{ content: string, server: string }, string>;
+
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -461,6 +464,25 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        [key: string]: IExtenstionMessageListener<any, any>
+    }
+
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace permission {
+    export const id = 'permission'
+
+    export interface Permission {
+        namespace: string;
+        granted: boolean;
+        description: string;
+        domain: string;
+    }
+
+    export interface response {
+        permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
+        requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
