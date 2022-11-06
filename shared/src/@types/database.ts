@@ -5,8 +5,6 @@ export interface Find<Model> {
     skip?: number, // 游标 TODO 删除，使用
     next_cursor?: number | string,
     projection?: Projection<Model>, // 字段过滤
-    // TODO 删除此字段
-    ignoreDetail?: boolean // 是否忽略详情，一般用于 list 列表时候，不需要查看详情
 }
 
 export interface FindResponse<T> {
