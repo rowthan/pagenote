@@ -22,7 +22,7 @@ const notSupportYet = function () {
 }
 
 let bridge:any;
-const TIMEOUT = 8000;
+const TIMEOUT = 10000;
 export const defaultWrapper = function (method:string,targetId:string,clientId: string='default_api_client') {
     return function (request:any,header: Partial<BaseMessageHeader> = {
         targetClientId: targetId

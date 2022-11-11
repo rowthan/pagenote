@@ -20,7 +20,14 @@ export type Projection<Model> = Partial<Record<keyof Model, 1|-1>> & {[key:strin
 
 export type Sort<Model> = Partial<Record<keyof Model, 1|-1>>
 
-export type Query<Model> = Partial<Record<keyof Model, any>>
+export type QueryValue = string | number | {
+    $like?: string; // 模糊搜索
+    $in?: string[]; // 数组
+    $gt?: number; // 大于
+    $lt?: number; // 小于
+};
+
+export type Query<Model> = Partial<Record<keyof Model, QueryValue>>
 
 export interface Pagination {
     total: number,

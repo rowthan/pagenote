@@ -2,14 +2,14 @@ import {LightStatus, LightType} from "../pagenote-brush";
 import {boxroom} from "../extApi";
 import BoxItem = boxroom.BoxItem;
 
-enum BackupVersion {
+export enum BackupVersion {
     version1 = 1,
     version = 2,
     version3 = 3, // 新增 HTML、files 文件
     version4 = 4, // 不做 encode 处理
 }
 
-enum AnnotationStatus {
+export enum AnnotationStatus {
     // fixed=1,
     // un_fixed=0,
     SHOW=2,
@@ -75,7 +75,7 @@ type Position = {
 }
 
 type PlainData = {
-    categories?: string[],
+    categories?: string[],// TODO 删除
     snapshots?: string[],
     setting?: any,
     steps: Step[],
@@ -112,7 +112,7 @@ type WebPageTimes = {
     commits?: {hash:string,time: number, did: string}[], // 版本号记录。每次同步都生成一次hash, 生成类似 git commit 记录，用于跟踪版本合并、冲突解决
 }
 
-enum DataVersion {
+export enum DataVersion {
     version3='3', // 携带有 lastmode etag 字段
     version4='4', // 删除 plainData 中网页信息字段
     version5 = '5', // 迁移至 indexedDB
@@ -146,7 +146,7 @@ export enum MetaResourceType {
     html='html',
 }
 
-type MetaResource = {
+export type MetaResource = {
     url: string, // 可访问的URL 地址，
     type: MetaResourceType
     createAt?: number, // 资源创建时间
@@ -210,11 +210,11 @@ export enum BackupDataType {
 
 type BackupData = {
     backupId: string
-    pages?: WebPage[],
-    lights?: Step[],
-    box?: BoxItem[],
+    pages?: Partial<WebPage>[],
+    lights?: Partial<Step>[],
+    box?: Partial<BoxItem>[],
     dataType: BackupDataType[],
-    resources?: ResourceInfo[],
+    resources?: Partial<ResourceInfo>[],
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
@@ -230,10 +230,4 @@ export type {
     Target,
     AllowUpdateKeys,
     BackupData
-}
-
-export {
-    AnnotationStatus,
-    BackupVersion,
-    DataVersion
 }
