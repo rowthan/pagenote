@@ -114,8 +114,6 @@ export namespace lightpage {
     export type response = {
         /**旧 API start 待删除 0.24 之后不支持**/
         saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage | null>,
-        removeLightPage: IExtenstionMessageListener<{ key: string }, number>,
-        removeLightPages: IExtenstionMessageListener<string[], number>
         /**查询列表pages*/
         getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, { pages: WebPage[] | WebPageKeys[], pagination: Pagination }>,
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
@@ -125,14 +123,14 @@ export namespace lightpage {
         importPages: IExtenstionMessageListener<BackupData | string, number>,
         /** 旧 API end*/
 
-        // 页面操作
+        // 页面
         addPages: IExtenstionMessageListener<WebPage[], number>
         removePages: IExtenstionMessageListener<{ keys: string[] }, number>
         updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
 
-        // 标记操作
+        // 标记
         addLights: IExtenstionMessageListener<Step[], number>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<Partial<Step>[], number>;
