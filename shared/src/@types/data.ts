@@ -90,6 +90,7 @@ type WebPageIds = {
     url: string, // 此条数据绑定的 URL
     urls: string[], // 此条数据绑定的 URL 集合
     pageType: PAGE_TYPES
+    did?: string
 }
 
 type WebPageTimes = {
@@ -146,20 +147,23 @@ export enum MetaResourceType {
     html='html',
 }
 
-export type MetaResource = {
+export type SnapshotResource = {
+    key: string, // 唯一标识符，md5 生成
     url: string, // 可访问的URL 地址，
+    pageKey: string
     type: MetaResourceType
     createAt?: number, // 资源创建时间
+    did?: string
 }
 
 type WebPageDatas = {
     extVersion?: string, // 使用的插件版本
     plainData?: PlainData,
-    snapshots?: MetaResource[],
+    snapshots?: SnapshotResource[],
     categories?: string[],
 }
 
-type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
+export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
 
 type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
@@ -224,7 +228,6 @@ type BackupData = {
 
 export type {
     PlainData,
-    WebPage,
     Step,
     Position,
     Target,

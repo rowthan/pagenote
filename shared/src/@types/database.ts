@@ -21,15 +21,16 @@ export type Projection<Model> = {
 }
 
 export type Sort<Model> = {
-    [key in keyof Model]: 1 | -1
+    [key in keyof Model]?: 1 | -1
 }
 
-export type QueryValue = string | number | boolean | {
+export type MongoLikeQueryValue = {
     $like?: string; // 模糊搜索
     $in?: string[]; // 数组
     $gt?: number; // 大于
     $lt?: number; // 小于
-};
+}
+export type QueryValue = string | number | boolean | MongoLikeQueryValue;
 
 export type Query<Model> = {
     [key in keyof Model]?: QueryValue

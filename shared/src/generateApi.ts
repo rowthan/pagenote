@@ -58,6 +58,10 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        addSnapshots: wrapperFun('addSnapshots',lightpage.id),
+        groupLights: wrapperFun('groupLights',lightpage.id),
+        querySnapshots: wrapperFun('querySnapshots',lightpage.id),
+        removeSnapshot: wrapperFun('removeSnapshot',lightpage.id),
         addLights: wrapperFun('addLights',lightpage.id),
         addPages: wrapperFun('addPages',lightpage.id),
         queryPages: wrapperFun('queryPages',lightpage.id),
@@ -65,18 +69,13 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         removePages: wrapperFun('removePages',lightpage.id),
         updateLights: wrapperFun('updateLights',lightpage.id),
         updatePages: wrapperFun('updatePages',lightpage.id),
-        addLight: wrapperFun('addLight',lightpage.id),
         queryLights: wrapperFun('queryLights',lightpage.id),
-        removeLight: wrapperFun('removeLight',lightpage.id),
-        updateLight: wrapperFun('updateLight',lightpage.id),
         syncStat: wrapperFun('syncStat',lightpage.id),
         exportPages: wrapperFun('exportPages',lightpage.id),
         importPages: wrapperFun('importPages',lightpage.id),
-        removeLightPages: wrapperFun('removeLightPages',lightpage.id),
         getLightPageDetail: wrapperFun('getLightPageDetail',lightpage.id),
         getLightPages: wrapperFun('getLightPages',lightpage.id),
         groupPages: wrapperFun('groupPages',lightpage.id),
-        removeLightPage: wrapperFun('removeLightPage',lightpage.id),
         saveLightPage: wrapperFun('saveLightPage',lightpage.id)
     }
 
