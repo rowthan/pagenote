@@ -162,6 +162,8 @@ export namespace setting {
         lastModified: number,
         brushes: Brush[],
         copyAllowList: string[],
+
+        // TODO 删除 提取至一级目录下
         commonSetting: {
             maxRecord: number,
             showBarTimeout: number,
@@ -176,6 +178,12 @@ export namespace setting {
         convertMethods: ConvertMethod[],
         dataVersion: SDK_VERSION,
         useRecommend: boolean
+
+        maxRecord: number,
+        showBarTimeout: number,
+        keyupTimeout: number,
+        removeAfterDays: number,
+        [key: string]: any;
     }
 
     export interface response {
@@ -253,6 +261,12 @@ export namespace setting {
             lastModified: 0,
             dataVersion: SDK_VERSION.ts_format,
             useRecommend: true,
+
+            keyupTimeout: 0,
+            maxRecord: 999,
+            removeAfterDays: 30,
+            showBarTimeout: 0,
+
             _sdkVersion: "5.5.3",
         }
         return {
