@@ -181,7 +181,8 @@ const getDetailWebPage = function () {
         urls: [],
         version: DataVersion.version4,
         extVersion: "",
-        categories: []
+        categories: [],
+        did: ""
     }
     return webpage
 }

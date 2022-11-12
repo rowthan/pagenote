@@ -1,4 +1,4 @@
-import {BackupData, BackupDataType, ResourceInfo, Step, WebPage} from "./@types/data";
+import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage} from "./@types/data";
 import {Find, FindResponse, Pagination, Projection, Query} from "./@types/database";
 import {
     BaseMessageHeader,
@@ -128,14 +128,21 @@ export namespace lightpage {
         removePages: IExtenstionMessageListener<{ keys: string[] }, number>
         updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
-        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPageKeys, query?: Query<WebPageKeys>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
 
         // 标记
         addLights: IExtenstionMessageListener<Step[], number>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<Partial<Step>[], number>;
         queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<Partial<Step>>>;
+        groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, Partial<Step>[]>>,
 
+        // 截图快照
+        addSnapshots: IExtenstionMessageListener<SnapshotResource[], number>
+        removeSnapshot: IExtenstionMessageListener<{ key: string } | {url: string} | {pageKey: string}, number>
+        querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<SnapshotResource>>
+
+        // 同步状态
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
