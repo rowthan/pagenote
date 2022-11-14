@@ -125,7 +125,7 @@ export namespace lightpage {
 
         // 页面
         addPages: IExtenstionMessageListener<WebPage[], number>
-        removePages: IExtenstionMessageListener<{ keys: string[] }, number>
+        removePages: IExtenstionMessageListener<{ keys: string[], removeRelated?: ('light' | 'snapshot')[] }, number>
         updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
@@ -163,6 +163,8 @@ export namespace setting {
         _sync?: boolean, // 是否在各端之间同步设置
         _supportVersions?: string[], // 当前支持SDK的版本列表
         _sdkVersion: string, // 当前使用的 SDK 版本
+        _syncClipboard?: boolean
+        _syncPageLights?: boolean
     }
 
     export type SDK_SETTING = Inner_Setting & {
