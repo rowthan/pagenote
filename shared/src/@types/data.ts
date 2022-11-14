@@ -212,7 +212,7 @@ export enum BackupDataType {
     light='light'
 }
 
-type BackupData = {
+export type BackupData = {
     backupId: string
     pages?: Partial<WebPage>[],
     lights?: Partial<Step>[],
@@ -232,5 +232,4 @@ export type {
     Position,
     Target,
     AllowUpdateKeys,
-    BackupData
 }
