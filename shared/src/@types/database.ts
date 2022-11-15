@@ -1,4 +1,4 @@
-export interface Find<Model> {
+export type Find<Model> = {
     query?: Query<Model>, // 搜索过滤条件
     sort?: Sort<Model>,
     limit: number, // 分页数
@@ -7,7 +7,7 @@ export interface Find<Model> {
     projection?: Projection<Model>, // 字段过滤
 }
 
-export interface FindResponse<T> {
+export type FindResponse<T> = {
     total: number
     list: T[]
     page?: number
@@ -30,10 +30,21 @@ export type MongoLikeQueryValue = {
     $gt?: number; // 大于
     $lt?: number; // 小于
 }
-export type QueryValue = string | number | boolean | MongoLikeQueryValue;
+
+export type BasicQueryValue = string | number | boolean
+
+export type QueryValue = BasicQueryValue | MongoLikeQueryValue;
 
 export type Query<Model> = {
-    [key in keyof Model]?: QueryValue
+    [key in keyof Model]?: QueryValue;
+} | {
+    $or: {
+        [key in keyof Model]?: QueryValue
+    }[];
+} | {
+    $and: {
+        [key in keyof Model]?: QueryValue
+    }[];
 }
 
 export interface Pagination {
