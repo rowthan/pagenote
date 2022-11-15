@@ -82,7 +82,7 @@ export namespace lightpage {
     export const id = 'lightpage';
 
     // 索引字段
-    export type WebPageKeys = {
+    type WebPageKeys = {
         key: string,
         deleted: boolean,
         domain: string,
@@ -109,11 +109,13 @@ export namespace lightpage {
         directory: string // 存放目录
     }
 
+    type PartWebpage = Partial<WebPage>
+    type PartStep = Partial<Step>
 
     // 服务端可接受的请求API
     export type response = {
         /**旧 API start 待删除 0.24 之后不支持**/
-        saveLightPage: IExtenstionMessageListener<Partial<WebPage>, WebPage | null>,
+        saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询列表pages*/
         getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, { pages: WebPage[] | WebPageKeys[], pagination: Pagination }>,
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
@@ -126,21 +128,21 @@ export namespace lightpage {
         // 页面
         addPages: IExtenstionMessageListener<WebPage[], number>
         removePages: IExtenstionMessageListener<{ keys: string[], removeRelated?: ('light' | 'snapshot')[] }, number>
-        updatePages: IExtenstionMessageListener<Partial<WebPage>[], number>
-        queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<Partial<WebPage>>>
-        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, Partial<WebPage>[]>>,
+        updatePages: IExtenstionMessageListener<PartWebpage[], number>
+        queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<PartWebpage>>
+        groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, PartWebpage[]>>,
 
         // 标记
         addLights: IExtenstionMessageListener<Step[], number>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
-        updateLights: IExtenstionMessageListener<Partial<Step>[], number>;
-        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<Partial<Step>>>;
-        groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, Partial<Step>[]>>,
+        updateLights: IExtenstionMessageListener<PartStep[], number>;
+        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<PartStep>>;
+        groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
 
         // 截图快照
         addSnapshots: IExtenstionMessageListener<SnapshotResource[], number>
-        removeSnapshot: IExtenstionMessageListener<{ key: string } | {url: string} | {pageKey: string}, number>
-        querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<SnapshotResource>>
+        removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
+        querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
 
         // 同步状态
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
@@ -173,7 +175,7 @@ export namespace setting {
         copyAllowList: string[],
 
         // TODO 删除 提取至一级目录下
-        commonSetting: {
+        commonSetting?: {
             maxRecord: number,
             showBarTimeout: number,
             keyupTimeout: number,
@@ -370,6 +372,37 @@ export namespace action {
     export type request = ComputeRequestToBackground<response>
 }
 
+export namespace developer {
+    export interface LogInfo<T=any> {
+        id?: string;
+        createAt: number,
+        level: string,
+        namespace: string,
+        stack: string,
+        meta?: T,
+        version: string
+    }
+
+    export interface Permission {
+        namespace: string;
+        granted: boolean;
+        description: string;
+        domain: string;
+    }
+
+    export type response = {
+        log: IExtenstionMessageListener<LogInfo, string>
+        logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<Partial<LogInfo>>>
+
+        permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
+        requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
+
+        [key: string]: IExtenstionMessageListener<any, any>
+    }
+
+    export type request = ComputeRequestToBackground<response>
+}
+
 export namespace user {
     export const id = 'user'
     export type WhoAmI = {
@@ -485,25 +518,6 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
-        [key: string]: IExtenstionMessageListener<any, any>
-    }
-
-    export type request = ComputeRequestToBackground<response>
-}
-
-export namespace permission {
-    export const id = 'permission'
-
-    export interface Permission {
-        namespace: string;
-        granted: boolean;
-        description: string;
-        domain: string;
-    }
-
-    export interface response {
-        permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
-        requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

@@ -1,5 +1,5 @@
 import {Step} from "../@types/data";
-import md5 from "md5";
+const md5 = require('md5')
 
 
 /**suffix 区分不同用户对同一个位置标记*/

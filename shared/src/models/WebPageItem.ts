@@ -159,7 +159,6 @@ const getDetailWebPage = function () {
         mtimeMs: 0,
         sdkSetting: undefined,
         sessionId: "",
-        snapshots: [],
         tags: [],
         visitedAt: 0,
         pageType: PAGE_TYPES.http,

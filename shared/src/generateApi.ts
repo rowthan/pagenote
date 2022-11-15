@@ -61,7 +61,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         addSnapshots: wrapperFun('addSnapshots',lightpage.id),
         groupLights: wrapperFun('groupLights',lightpage.id),
         querySnapshots: wrapperFun('querySnapshots',lightpage.id),
-        removeSnapshot: wrapperFun('removeSnapshot',lightpage.id),
+        removeSnapshots: wrapperFun('removeSnapshots',lightpage.id),
         addLights: wrapperFun('addLights',lightpage.id),
         addPages: wrapperFun('addPages',lightpage.id),
         queryPages: wrapperFun('queryPages',lightpage.id),

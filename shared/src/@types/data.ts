@@ -85,6 +85,29 @@ export enum PAGE_TYPES {
     file= 'file',
     http= 'http'
 }
+
+export enum DataVersion {
+    version3='3', // 携带有 lastmode etag 字段
+    version4='4', // 删除 plainData 中网页信息字段
+    version5 = '5', // 迁移至 indexedDB
+}
+
+export enum MetaResourceType {
+    image='image',
+    html='html',
+}
+
+export type SnapshotResource = {
+    key: string, // 唯一标识符，md5 生成
+    url: string, // 可访问的URL 地址，
+    thumb?: string, // 缩略图
+    pageKey: string
+    type: MetaResourceType
+    createAt?: number, // 资源创建时间
+    did?: string
+}
+
+
 type WebPageIds = {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
     url: string, // 此条数据绑定的 URL
@@ -92,7 +115,6 @@ type WebPageIds = {
     pageType: PAGE_TYPES
     did?: string
 }
-
 type WebPageTimes = {
     // 数据真实的创建、最后更新时间
     createAt: number,
@@ -113,10 +135,10 @@ type WebPageTimes = {
     commits?: {hash:string,time: number, did: string}[], // 版本号记录。每次同步都生成一次hash, 生成类似 git commit 记录，用于跟踪版本合并、冲突解决
 }
 
-export enum DataVersion {
-    version3='3', // 携带有 lastmode etag 字段
-    version4='4', // 删除 plainData 中网页信息字段
-    version5 = '5', // 迁移至 indexedDB
+type WebPageDatas = {
+    extVersion?: string, // 使用的插件版本
+    plainData?: PlainData,
+    categories?: string[],
 }
 
 type WebPageSiteInfo = {
@@ -140,27 +162,6 @@ type WebPageSiteInfo = {
 // 链路信息，记录各个网站之间的联系
 type RouteInfo = {
     sessionId?: string
-}
-
-export enum MetaResourceType {
-    image='image',
-    html='html',
-}
-
-export type SnapshotResource = {
-    key: string, // 唯一标识符，md5 生成
-    url: string, // 可访问的URL 地址，
-    pageKey: string
-    type: MetaResourceType
-    createAt?: number, // 资源创建时间
-    did?: string
-}
-
-type WebPageDatas = {
-    extVersion?: string, // 使用的插件版本
-    plainData?: PlainData,
-    snapshots?: SnapshotResource[],
-    categories?: string[],
 }
 
 export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
