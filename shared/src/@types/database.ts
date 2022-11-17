@@ -13,7 +13,7 @@ export type FindResponse<T> = {
     page?: number
     limit?: number
     has_more?: boolean
-    next_cursor?: number | string
+    next_cursor?: number | string | null
 }
 
 export type Projection<Model> = {
