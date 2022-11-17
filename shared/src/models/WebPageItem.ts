@@ -166,6 +166,7 @@ const getDetailWebPage = function () {
         deleted: false,
         description: "",
         icon: "",
+        cover: '',
         key: "",
         plainData: {
             categories: [],

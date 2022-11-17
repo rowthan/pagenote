@@ -149,6 +149,7 @@ type WebPageSiteInfo = {
     version: DataVersion,
     description: string, // 网站描述
     thumb: string, // 预览缩略图
+    cover?: string // 网页封面
     tags?: string[],
     directory?: string, // 存放路径
     customTitle?: string, // 自定义标题
@@ -210,7 +211,8 @@ export enum BackupDataType {
     pages= 'pages',
     box='box',
     resources='resources',
-    light='light'
+    light='light',
+    snapshot = 'snapshot',
 }
 
 export type BackupData = {
@@ -220,6 +222,7 @@ export type BackupData = {
     box?: Partial<BoxItem>[],
     dataType: BackupDataType[],
     resources?: Partial<ResourceInfo>[],
+    snapshots?: Partial<SnapshotResource>[],
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
