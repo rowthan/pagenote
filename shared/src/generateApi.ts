@@ -6,7 +6,8 @@ import {
     action,
     localdir,
     fileDB,
-    user
+    user,
+    network
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import ExtensionMessage2 from "./communication/ExtenstionBridge";
@@ -144,6 +145,11 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         setUserToken: wrapperFun('setUserToken',user.id)
     }
 
+    const networkApi: network.request = {
+        fetch: wrapperFun('fetch',network.id),
+        pagenote: wrapperFun('pagenote',network.id),
+    }
+
     return {
         lightpage: lightpageApi,
         boxroom: boxroomApi,
@@ -153,6 +159,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         fileSystem: fileSystemApi,
         fileDB: fileDBApi,
         user: userApi,
+        network: networkApi,
     }
 };
 
