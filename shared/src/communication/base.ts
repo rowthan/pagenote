@@ -2,19 +2,44 @@
  * server & client
  * 消息传递请求头，类似 HTTP header
  * */
-
+// TODO clientID 统一更名为 bridgeId
 type BaseMessageHeader = {
     originClientId: string, // 源头客户端，用于判断这个请求最初的发起端；可用于服务端响应后，判断是否由自身发起的。
     senderClientId: string, // 当前请求源
     targetClientId: string, // 目标寻址源
     timeout?: number // 超时时间
-    isResponse: boolean // 请求类型，请求、响应
+    isResponse: boolean // 区分请求类型，请求/响应
 
-    requestNamespace?: string; // 请求的命名空间，用于分组权限控制
+    /**
+     * 信息载体，用于
+     * 1. bridge 荷载有限的情况下(session/localStorage bridge 单次请求数据量最多为 5MB 时)；
+     * 2. 数据无法被序列化(2进制文件)；
+     * 将数据临时存储在其他载体中。
+     * */
+    carrier?:{
+        carrierType: 'indexedDB',
+        carrierKey: string
+    }
 
-    funId?: string // 所有请求公用同一个通信通道时（dom\session\iframe），用于识别一对请求、响应。
+    /**
+     * 异常数据，接收方接收到此信息时，用于 throw 抛出
+     * */
+    exception?: null | any;
 
-    keepConnection?: boolean, // extension 通信时，用于标识是否需要保持连接（响应处理函数为异步时）
+    /**
+     * 请求的命名空间，用于分组权限控制
+     * */
+    requestNamespace?: string;
+
+    /**
+     * 所有请求公用同一个通信通道时（dom\session\iframe），用于识别一对请求、响应 TODO 更名为 sessionId
+     * */
+    funId?: string
+
+    /**
+     * extension 通信时，用于标识是否需要保持连接（响应处理函数为异步时）
+     * */
+    keepConnection?: boolean,
     targetTabId?: number // extension 通信时，用于标识目标tab
 
     targetOrigin?: string // iframe 通信时，可指定 origin，来减少广播对象
