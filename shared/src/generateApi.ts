@@ -38,6 +38,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
                     targetClientId: targetId,
                 })
             }else{
+                // TODO 优化 sessionBridge 单次请求数据量有上限问题
                 bridge = new SessionStorageBridge(clientId,{
                     asServer: true,
                     listenKey: "pagenote-message",
