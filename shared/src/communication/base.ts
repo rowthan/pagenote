@@ -7,8 +7,9 @@ type BaseMessageHeader = {
     originClientId: string, // 源头客户端，用于判断这个请求最初的发起端；可用于服务端响应后，判断是否由自身发起的。
     senderClientId: string, // 当前请求源
     targetClientId: string, // 目标寻址源
-    timeout?: number // 超时时间
+    timeout: number // 超时时间
     isResponse: boolean // 区分请求类型，请求/响应
+    withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获
 
     /**
      * 信息载体，用于
@@ -21,10 +22,6 @@ type BaseMessageHeader = {
         carrierKey: string
     }
 
-    /**
-     * 异常数据，接收方接收到此信息时，用于 throw 抛出
-     * */
-    exception?: null | any;
 
     /**
      * 请求的命名空间，用于分组权限控制
@@ -47,6 +44,9 @@ type BaseMessageHeader = {
     hostname?: string // session bridge 请求时携带当前URL信息
 }
 
+
+export const DEFAULT_TIMEOUT = 8000;
+
 /**
  * client
  * */
@@ -66,10 +66,30 @@ type BaseMessageSender = {
 /**
  * server
  * */
+export enum RESPONSE_STATUS_CODE {
+    SUCCESS = 200,
+    AUTH_REQUIRED = 401,
+    PERMISSION_REQUIRED = 403,
+    NOT_ALLOWED = 503,
+    TIMEOUT = 100,
+    UN_REACHED =  101, // 不可触达，通信通道被关闭，或无插件上下文
+    NOT_FOUND = 404,
+}
+
+export type RESPONSE_CODE = RESPONSE_STATUS_CODE | number;
 type BaseMessageResponse<T> = {
     success: boolean,
     data:T,
     error?:any
+
+    /**
+     * 模拟 http 状态文档；异常数据
+     * */
+    statusText: string;
+    /**
+     * 响应状态码，模拟 http 状态码；接收方接收到此信息时，用于 throw 抛出， Promise.reject 依据
+     * */
+    status: RESPONSE_CODE
 }
 
 /**
@@ -101,7 +121,7 @@ interface CommunicationOption {
     listenKey?: string, // sessionStorageBridge 监听的key值
 }
 
-enum STATUS {
+export enum STATUS {
     UN_READY='0',
     READY='1',
     STOP='-1'
@@ -131,9 +151,6 @@ interface IExtenstionMessageListener<R, T> extends IBaseMessageListener<R, chrom
 
 interface IExtenstionMessageProxy extends IBaseMessageProxy<BaseMessageRequest, chrome.runtime.MessageSender, ListenerResponse, ListenerResponse> {}
 
-export {
-    STATUS
-}
 export type {
     IBaseMessageListener,
     IBaseMessageProxy,

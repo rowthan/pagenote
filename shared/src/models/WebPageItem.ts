@@ -147,7 +147,6 @@ const getDetailWebPage = function () {
         domain: "",
         path: "",
         achieved: false,
-        commits: [],
         customTitle: "",
         directory: "",
         etag: "",

@@ -3,9 +3,10 @@ import {
     BaseMessageRequest,
     BaseMessageResponse,
     Communication,
-    CommunicationOption,
+    CommunicationOption, DEFAULT_TIMEOUT,
     IBaseMessageListener,
     IBaseMessageProxy,
+    RESPONSE_STATUS_CODE,
     STATUS,
 } from "./base";
 
@@ -154,18 +155,21 @@ class SessionStorageBridge implements Communication<any> {
     }
 
     requestMessage<RESPONSE>(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<RESPONSE>> {
-        let resolveFun: (arg0: BaseMessageResponse<any>) => void;
+        let resolveFun: (arg0: BaseMessageResponse<RESPONSE>) => void;
+        let rejectFun: (arg0: BaseMessageResponse<RESPONSE>)=>void
         const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve) => {
-            resolveFun = resolve;
+            resolveFun = header.withCatch ? rejectFun : resolve;
         })
 
         // 创建唯一事件ID，区分同时发出的多个事件
         let funId = type + Date.now() + Math.random()
         let timer = setTimeout(function () {
-            resolveFun({
+            rejectFun({
                 success: false,
                 error: 'timeout',
-                data: null,
+                data: undefined,
+                status: RESPONSE_STATUS_CODE.TIMEOUT,
+                statusText: 'timeout'
             })
         }, header?.timeout || this.option.timeout)
 
@@ -174,7 +178,11 @@ class SessionStorageBridge implements Communication<any> {
         const onceFunIdListener: IMessageListener<any, any> = function (responseData: BaseMessageResponse<any>) {
             delete that.listeners[funId]; // 响应处理后，清空监听
             clearTimeout(timer)
-            resolveFun(responseData)
+            if(responseData.status !== RESPONSE_STATUS_CODE.SUCCESS){
+                rejectFun(responseData)
+            }else{
+                resolveFun(responseData)
+            }
         }
         this.addListener(funId, onceFunIdListener)
 
@@ -188,6 +196,8 @@ class SessionStorageBridge implements Communication<any> {
                 funId: header?.funId || funId,
                 isResponse: header?.isResponse === true,
                 hostname: window.location.hostname,
+                withCatch: header.withCatch,
+                timeout: header.timeout || DEFAULT_TIMEOUT,
             },
             type: type,
         }

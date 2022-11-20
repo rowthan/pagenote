@@ -1,12 +1,13 @@
 import {
-  IExtenstionMessageProxy,
-  IExtenstionMessageListener,
   BaseMessageHeader,
   BaseMessageRequest,
   BaseMessageResponse,
   Communication,
-  CommunicationOption,
+  CommunicationOption, DEFAULT_TIMEOUT,
   IBaseSendResponse,
+  IExtenstionMessageListener,
+  IExtenstionMessageProxy,
+  RESPONSE_STATUS_CODE,
   STATUS
 } from "./base";
 
@@ -15,8 +16,6 @@ type ExtensionOption = CommunicationOption & {
 }
 
 // 默认返回数据：失败、超时
-const defaultErrorData: BaseMessageResponse<any> = {success:false,error:'调用失败',data:null}
-const timeoutError: BaseMessageResponse<any> = {success:false,error:'timeout',data:null}
 const messengerMap: Record<string, boolean> = {}
 
 
@@ -64,7 +63,7 @@ export default class ExtensionMessage2 implements Communication<any>{
         return false;
       }
       const { data,type,header} = request;
-      const { senderClientId,originClientId,targetClientId,isResponse } = header || {};
+      const { senderClientId,originClientId,targetClientId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
 
       // 1. 单线模式，只监听某个目标对象的请求。 非目标请求源，事件、代理均不响应
       if(that.option.targetClientId && senderClientId && senderClientId!==that.option.targetClientId){
@@ -78,6 +77,8 @@ export default class ExtensionMessage2 implements Communication<any>{
           senderClientId : senderClientId,
           targetClientId : senderClientId,
           isResponse: isResponse,
+          withCatch: withCatch,
+          timeout: timeout
         }
       }
 
@@ -122,40 +123,47 @@ export default class ExtensionMessage2 implements Communication<any>{
     this.proxy = proxy;
   }
 
-  requestMessage(type: string,data: any,header?:BaseMessageHeader): Promise<BaseMessageResponse<any>> {
+  requestMessage<T>(type: string,data: any,header?:BaseMessageHeader): Promise<BaseMessageResponse<T>> {
     const request: BaseMessageRequest= {
       type: type,
       data: data,
       header:{
+        ...header,
         targetClientId: header?.targetClientId || this.option.targetClientId || '',
         originClientId: header?.originClientId || this.clientId,
         senderClientId: this.clientId,
         isResponse: false,
-        keepConnection: header?.keepConnection
+        keepConnection: header?.keepConnection,
+        withCatch: header.withCatch,
       }
     }
 
-    let resolveFun: (data:BaseMessageResponse<any>)=>void;
-    const promise: Promise<BaseMessageResponse<any>> = new Promise(function (resolve,reject) {
+    let resolveFun: (data:BaseMessageResponse<T>)=>void;
+    let rejectFun: (reason: BaseMessageResponse<T>)=>void;
+    const promise: Promise<BaseMessageResponse<T>> = new Promise(function (resolve,reject) {
       resolveFun = resolve;
+      /**如果忽略异常，则直接通过 resolve 响应*/
+      rejectFun = header.withCatch ? reject : resolve;
     })
 
     const timeout = header?.timeout || this.option.timeout;
     let timer = setTimeout(function () {
-      resolveFun({
+      rejectFun({
+        data: undefined,
         success: false,
-        error: {
-          reason: 'timeout after '+ timeout,
-          request: request
-        },
-        data: null
+        status: RESPONSE_STATUS_CODE.TIMEOUT,
+        statusText: 'timeout'
       })
-      console.warn('timeout',request)
     },timeout)
 
-    const requestCallback = function (data: BaseMessageResponse<any>) {
-      clearTimeout(timer)
-      resolveFun(data);
+    const requestCallback = function (data: BaseMessageResponse<T>) {
+      clearTimeout(timer);
+      /**状态码不等于 200 时，异常抛出*/
+      if(data.status && data.status !== RESPONSE_STATUS_CODE.SUCCESS){
+        rejectFun(data)
+      }else{
+        resolveFun(data);
+      }
     }
 
     if(this.option.isBackground){
@@ -168,7 +176,12 @@ export default class ExtensionMessage2 implements Communication<any>{
           if(tabid){
             chrome.tabs.sendMessage(tabid, request,requestCallback);
           }else{
-            throw Error('未找到当前激活tab页')
+            rejectFun({
+              status: RESPONSE_STATUS_CODE.UN_REACHED,
+              statusText: '未找到当前激活tab页',
+              success: false,
+              data: undefined
+            })
           }
         })
       }
@@ -176,11 +189,13 @@ export default class ExtensionMessage2 implements Communication<any>{
       if(chrome && chrome.runtime){
         chrome.runtime.sendMessage(request,requestCallback);
       }else{
-        requestCallback({
+        rejectFun({
+          status: RESPONSE_STATUS_CODE.UN_REACHED,
+          statusText: '插件不可用,刷新后重试',
           success: false,
-          error: '插件不可用',
-          data: null,
+          data: undefined
         })
+        console.error('无法通信插件,')
       }
     }
     return promise
