@@ -11,14 +11,16 @@ import {
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import ExtensionMessage2 from "./communication/ExtenstionBridge";
-import {BaseMessageHeader} from "./communication/base";
+import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "./communication/base";
 
 
 const notSupportYet = function () {
     return Promise.resolve({
         success: false,
         error: 'not allowed',
-        data: undefined
+        data: undefined,
+        status: RESPONSE_STATUS_CODE.NOT_FOUND,
+        statusText: '404'
     })
 }
 

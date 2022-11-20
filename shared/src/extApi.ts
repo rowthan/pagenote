@@ -509,6 +509,9 @@ export namespace network {
     export interface FetchRequest {
         input: string,
         init?: RequestInit & {data?: Record<string, any>}
+        config?: {
+            cacheDuration?: boolean // 可复用 cache 用于返回的时限范围
+        },
     }
 
     export interface FetchResponse extends Response{

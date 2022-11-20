@@ -1,4 +1,5 @@
 import SessionStorageBridge from "../communication/sessionStorageBridge";
+import {RESPONSE_STATUS_CODE} from "../communication/base";
 
 enum SDK_WORK_TYPE {
     WEB=0,
@@ -34,7 +35,9 @@ class PagenoteSdkManage {
         this.bridge.addListener(EVENT.GET_SDK_INFO, (request,sender,response)=> {
             response({
                 success: true,
-                data: this.sdkInfo
+                data: this.sdkInfo,
+                statusText: '',
+                status: RESPONSE_STATUS_CODE.SUCCESS
             })
         })
     }

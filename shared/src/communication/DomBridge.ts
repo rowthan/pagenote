@@ -3,9 +3,10 @@ import {
     BaseMessageRequest,
     BaseMessageResponse,
     Communication,
-    CommunicationOption,
+    CommunicationOption, DEFAULT_TIMEOUT,
     IBaseMessageListener,
     IBaseMessageProxy,
+    RESPONSE_STATUS_CODE,
     STATUS,
 } from "./base";
 
@@ -74,7 +75,8 @@ export default class DomBridge implements Communication<any>{
                         targetClientId: header.senderClientId,
                         senderClientId: this.clientId,
                         funId: header.funId,
-                        isResponse: true
+                        isResponse: true,
+                        timeout: header.timeout || 8000
                     }
                 }
                 triggerDom(this.element,requestData)
@@ -112,6 +114,8 @@ export default class DomBridge implements Communication<any>{
                 success: false,
                 error: 'timeout',
                 data: null,
+                status: RESPONSE_STATUS_CODE.SUCCESS,
+                statusText: ""
             })
         },header?.timeout || this.option.timeout)
 
@@ -133,6 +137,7 @@ export default class DomBridge implements Communication<any>{
                 targetClientId: targetClientId,
                 funId: header?.funId || funId,
                 isResponse: false,
+                timeout: header.timeout || DEFAULT_TIMEOUT,
             },
             type: type,
         }
@@ -169,6 +174,7 @@ export default class DomBridge implements Communication<any>{
                 originClientId: this.clientId,
                 targetClientId: '',
                 isResponse: false,
+                timeout: header.timeout || DEFAULT_TIMEOUT
             }
         })
     }
