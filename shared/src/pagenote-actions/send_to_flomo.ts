@@ -16,14 +16,12 @@ const send_to_flomo:ActionConfig = {
                         content: result,
                     }
                     API.methods.fetch({
-                        input: params.apiLink,
-                        init:{
-                            method: 'POST',
-                            data: data
-                        },
+                        url: params.apiLink,
+                        method: 'POST',
+                        data: data
                     }).then(function(result){
                         API.methods.notification({
-                            message: result.jsonData.message
+                            message: result.json.message
                         })
                         console.log(result,'result')
                     }).catch(function(e){

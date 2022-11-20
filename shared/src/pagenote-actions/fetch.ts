@@ -14,14 +14,12 @@ const fetch:ActionConfig = {
                 content: "#pagenote "+target.text,
             }
             API.methods.fetch({
-                init:{
-                    method: 'POST',
-                    data: data
-                },
-                input: params.apiLink,
+                url: params.apiLink,
+                method: 'POST',
+                data: data
             }).then(function(result){
                 API.methods.notification({
-                    message: result.jsonData.message
+                    message: result.json.message
                 })
                 console.log(result,'result')
             }).catch(function(e){
