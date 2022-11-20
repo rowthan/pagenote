@@ -516,7 +516,7 @@ export namespace network {
         headers?: Record<string, string>
 
         _config?: {
-            cacheDuration?: boolean // 可复用 cache 用于返回的时限范围
+            cacheDuration?: number // 可复用 cache 用于返回的时限范围
         },
     }
 

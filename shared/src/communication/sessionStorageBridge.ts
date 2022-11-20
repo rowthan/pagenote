@@ -157,8 +157,10 @@ class SessionStorageBridge implements Communication<any> {
     requestMessage<RESPONSE>(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<RESPONSE>> {
         let resolveFun: (arg0: BaseMessageResponse<RESPONSE>) => void;
         let rejectFun: (arg0: BaseMessageResponse<RESPONSE>)=>void
-        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve) => {
-            resolveFun = header.withCatch ? rejectFun : resolve;
+        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve,reject) => {
+            resolveFun = resolve;
+            /**如果忽略异常，则直接通过 resolve 响应*/
+            rejectFun = header.withCatch ? reject : resolve;
         })
 
         // 创建唯一事件ID，区分同时发出的多个事件
