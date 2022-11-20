@@ -506,16 +506,27 @@ export namespace fileDB {
 export namespace network {
     export const id = 'network';
 
-    export interface FetchRequest {
-        input: string,
-        init?: RequestInit & {data?: Record<string, any>}
-        config?: {
+    export interface FetchRequest extends RequestInit{
+        url: string,
+        data?: Record<string, any>,
+        method: 'GET'|'POST' | string
+
+        credentials?: RequestCredentials
+        cache?: RequestCache
+        headers?: Record<string, string>
+
+        _config?: {
             cacheDuration?: boolean // 可复用 cache 用于返回的时限范围
         },
     }
 
-    export interface FetchResponse extends Response{
-        jsonData?: any
+    export interface FetchResponse extends ResponseInit{
+        readonly json?: any,
+        readonly body?: any,
+        readonly config?: Record<string, any>
+        readonly headers?: Record<string, any>,
+        readonly status: number;
+        readonly statusText: string;
     }
 
     export interface response {
