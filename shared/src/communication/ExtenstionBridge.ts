@@ -3,7 +3,8 @@ import {
   BaseMessageRequest,
   BaseMessageResponse,
   Communication,
-  CommunicationOption, DEFAULT_TIMEOUT,
+  CommunicationOption,
+  DEFAULT_TIMEOUT,
   IBaseSendResponse,
   IExtenstionMessageListener,
   IExtenstionMessageProxy,
@@ -87,10 +88,30 @@ export default class ExtensionMessage2 implements Communication<any>{
       const listenFun = that.listeners[type];
       // 2. 请求源有明确目标服务节点时，判断是否当前 clientId ，监听器响应
       if(targetClientId && targetClientId===that.clientId && listenFun){
-        res = listenFun(data,thisSender,sendResponse);
+        try{
+          res = listenFun(data,thisSender,sendResponse);
+        }catch (e) {
+          sendResponse({
+            data: undefined,
+            error: e,
+            status: RESPONSE_STATUS_CODE.INTER_ERROR,
+            statusText: "inner error",
+            success: false
+          })
+        }
       } else {
         // 3. 代理模式，响应非 listener 的剩余请求，代理器内部判断目的地服务是否匹配
-        that.proxy && that.proxy(request,thisSender,sendResponse)
+        try{
+          that.proxy && that.proxy(request,thisSender,sendResponse)
+        }catch (e) {
+          sendResponse({
+            data: undefined,
+            error: e,
+            status: RESPONSE_STATUS_CODE.INTER_ERROR,
+            statusText: "inner error",
+            success: false
+          })
+        }
       }
 
       // 如果返回的是一个 promise，则返回promise（不方便判断promise，简化为判断 function）；否则判断是否断开
@@ -159,7 +180,7 @@ export default class ExtensionMessage2 implements Communication<any>{
     const requestCallback = function (data: BaseMessageResponse<T>) {
       clearTimeout(timer);
       /**状态码不等于 200 时，异常抛出*/
-      if(data.status && data.status !== RESPONSE_STATUS_CODE.SUCCESS){
+      if(data?.status && data?.status !== RESPONSE_STATUS_CODE.SUCCESS){
         rejectFun(data)
       }else{
         resolveFun(data);

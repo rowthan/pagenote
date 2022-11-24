@@ -1,5 +1,5 @@
 import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage} from "./@types/data";
-import {Find, FindResponse, Pagination, Projection, Query} from "./@types/database";
+import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
     BaseMessageHeader,
     BaseMessageResponse,
@@ -49,6 +49,7 @@ export namespace boxroom {
         boxType?: string, // 资源类型
         from?: string, // 来源
         createAt?: number, // 来源
+        updateAt?: number,
         expiredAt?: number,
         type?: string,
         text?: string,
@@ -117,12 +118,7 @@ export namespace lightpage {
         /**旧 API start 待删除 0.24 之后不支持**/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询列表pages*/
-        getLightPages: IExtenstionMessageListener<Find<WebPageKeys>, { pages: WebPage[] | WebPageKeys[], pagination: Pagination }>,
         getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
-        // 导出pages
-        exportPages: IExtenstionMessageListener<void, string>
-        // 导入pages，只能插件内使用，数量太大，可能通讯失败
-        importPages: IExtenstionMessageListener<BackupData | string, number>,
         /** 旧 API end*/
 
         // 页面
@@ -194,6 +190,7 @@ export namespace setting {
         showBarTimeout: number,
         keyupTimeout: number,
         removeAfterDays: number,
+        enableType?: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
         [key: string]: any;
     }
 
@@ -332,15 +329,6 @@ export namespace action {
         text: string,
     }
 
-    export interface LogInfo<T=any> {
-        id?: string;
-        createAt: number,
-        level: string,
-        namespace: string,
-        stack: string,
-        meta?: T,
-        version: string
-    }
 
     export type ScheduleTask = {
         terminal: string
@@ -359,11 +347,8 @@ export namespace action {
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
 
-        backup: IExtenstionMessageListener<{dataTypes: BackupDataType[]}, BackupData>
-        backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
-
-        log: IExtenstionMessageListener<LogInfo, string>
-        logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<Partial<LogInfo>>>
+        // backup: IExtenstionMessageListener<{dataTypes: BackupDataType[]}, BackupData>
+        // backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
 
         addScheduleTask: IExtenstionMessageListener<ScheduleTask, number>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -373,6 +358,8 @@ export namespace action {
 }
 
 export namespace developer {
+    export const id = 'developer'
+
     export interface LogInfo<T=any> {
         id?: string;
         createAt: number,

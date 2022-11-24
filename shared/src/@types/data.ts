@@ -137,7 +137,6 @@ type WebPageTimes = {
 type WebPageDatas = {
     extVersion?: string, // 使用的插件版本
     plainData?: PlainData,
-    categories?: string[],
 }
 
 type WebPageSiteInfo = {
@@ -149,7 +148,7 @@ type WebPageSiteInfo = {
     description: string, // 网站描述
     thumb: string, // 预览缩略图
     cover?: string // 网页封面
-    tags?: string[],
+    categories?: string[],
     directory?: string, // 存放路径
     customTitle?: string, // 自定义标题
     /**sdk 的设置信息*/

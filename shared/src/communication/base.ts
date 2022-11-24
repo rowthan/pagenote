@@ -74,6 +74,7 @@ export enum RESPONSE_STATUS_CODE {
     TIMEOUT = 100,
     UN_REACHED =  101, // 不可触达，通信通道被关闭，或无插件上下文
     NOT_FOUND = 404,
+    INTER_ERROR = 500,
 }
 
 export type RESPONSE_CODE = RESPONSE_STATUS_CODE | number;

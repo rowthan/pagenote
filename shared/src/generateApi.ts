@@ -7,7 +7,7 @@ import {
     localdir,
     fileDB,
     user,
-    network
+    network, developer
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import ExtensionMessage2 from "./communication/ExtenstionBridge";
@@ -109,8 +109,8 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         addScheduleTask: wrapperFun('addScheduleTask',action.id),
         log: wrapperFun('log',action.id),
         logs: wrapperFun('logs',action.id),
-        backup: wrapperFun('backup',action.id),
-        backupList: wrapperFun('backupList',action.id),
+        // backup: wrapperFun('backup',action.id),
+        // backupList: wrapperFun('backupList',action.id),
         report: wrapperFun('report',action.id),
         getMemoryRuntime: wrapperFun('getMemoryRuntime',action.id),
         setMemoryRuntime: wrapperFun('setMemoryRuntime',action.id),
@@ -152,6 +152,13 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         pagenote: wrapperFun('pagenote',network.id),
     }
 
+    const developerApi: developer.request = {
+        log: wrapperFun('log',network.id),
+        logs: wrapperFun('logs',network.id),
+        permissionList: wrapperFun('permissionList',network.id),
+        requestPermission: wrapperFun('requestPermission',network.id),
+    }
+
     return {
         lightpage: lightpageApi,
         boxroom: boxroomApi,
@@ -162,6 +169,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         fileDB: fileDBApi,
         user: userApi,
         network: networkApi,
+        developer: developerApi,
     }
 };
 
