@@ -3,7 +3,8 @@ import {
     BaseMessageRequest,
     BaseMessageResponse,
     Communication,
-    CommunicationOption, DEFAULT_TIMEOUT,
+    CommunicationOption,
+    DEFAULT_TIMEOUT,
     IBaseMessageListener,
     IBaseMessageProxy,
     RESPONSE_STATUS_CODE,
@@ -180,7 +181,7 @@ class SessionStorageBridge implements Communication<any> {
         const onceFunIdListener: IMessageListener<any, any> = function (responseData: BaseMessageResponse<any>) {
             delete that.listeners[funId]; // 响应处理后，清空监听
             clearTimeout(timer)
-            if(responseData.status !== RESPONSE_STATUS_CODE.SUCCESS){
+            if(responseData?.status && responseData?.status !== RESPONSE_STATUS_CODE.SUCCESS){
                 rejectFun(responseData)
             }else{
                 resolveFun(responseData)

@@ -1,20 +1,28 @@
 export type Find<Model> = {
     query?: Query<Model>, // 搜索过滤条件
     sort?: Sort<Model>,
-    limit: number, // 分页数
-    skip?: number, // 游标 TODO 删除，使用
-    next_cursor?: number | string,
     projection?: Projection<Model>, // 字段过滤
+} & Pagination
+
+export type Pagination = {
+    /**余量标识*/
+    has_more?: boolean
+
+    /**总条目数量*/
+    total?: number,
+
+    /**按分页*/
+    limit?: number | undefined, // 一页数量
+    page?: number | undefined, // 当前页面
+
+    /**按游标*/
+    cursor?: string | undefined
+    next_cursor?: string | undefined,
 }
 
 export type FindResponse<T> = {
-    total: number
     list: T[]
-    page?: number
-    limit?: number
-    has_more?: boolean
-    next_cursor?: number | string | null
-}
+} & Required<Pagination>
 
 export type Projection<Model> = {
     [key in keyof Model]?: 1 | -1
@@ -47,8 +55,4 @@ export type Query<Model> = {
     }[];
 }
 
-export interface Pagination {
-    total: number,
-    limit: number,
-    pages: number
-}
+
