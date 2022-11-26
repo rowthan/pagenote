@@ -60,7 +60,7 @@ type Step = {
     isFocusTag?: boolean,
     time?: number,
     createAt?: number, // 创建时间
-    updateAt?: number, // 修改时间
+    updateAt: number, // 修改时间
     score?: number, // 此条笔记重要评分
     originContext?: string, // 原始上下文
     deleted?: boolean // 删除标记
@@ -104,6 +104,7 @@ export type SnapshotResource = {
     pageKey: string
     type: MetaResourceType
     createAt?: number, // 资源创建时间
+    updateAt?: number,
     did?: string
 }
 
