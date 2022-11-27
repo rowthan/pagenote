@@ -1,4 +1,5 @@
-/**执行同步的任务类型*/
+import get from "lodash/get";
+
 export enum SYNC_ACTION {
     /**1. 远程本地存在冲突*/
     conflict = 'conflict',
@@ -126,19 +127,14 @@ export function isSame(current: AbstractInfo, old: AbstractInfo) {
     return false
 }
 
-// 基于摘要信息创建快照
-export function createSnapshot(abstracts: AbstractInfo[]): Snapshot {
-    const dataMap: Snapshot = {}
-    for (let i = 0; i < abstracts.length; i++) {
-        const tempItem = abstracts[i]
-        dataMap[tempItem.id] = {
-            id: tempItem.id,
-            lastmod: tempItem.lastmod,
-            etag: tempItem.etag,
-            updateAt: tempItem.updateAt,
-        }
+export function createAbstract<T>(data: T | null, keys: { timeKey: keyof T, uniqueKey: keyof T }): AbstractInfo | null {
+    if (!data) {
+        return null
     }
-    return dataMap
+    return {
+        id: (get(data, keys.uniqueKey) || '') as string,
+        updateAt: (get(data, keys.timeKey) || 0) as number
+    }
 }
 
 type ChangeMap = Record<string, ChangeFlag>
@@ -335,10 +331,6 @@ interface GetSnapshot {
     (): Promise<Snapshot | null>
 }
 
-interface SetSnapshot {
-    (snapshot: Snapshot): void
-}
-
 export interface ResolveTask {
     (i: string, task: Omit<TaskDetail, 'id'>): Promise<{
         result: TaskState,
@@ -346,23 +338,48 @@ export interface ResolveTask {
     }>
 }
 
-interface SyncOption {
+export interface MethodById<T> {
+    (id: string): Promise<T | null>
+}
+
+export interface ModifyByIdAndData<T> {
+    (id: string, data: T): Promise<T | null>,
+}
+
+/**增删改查*/
+interface SyncMethods<T> {
+    add: ModifyByIdAndData<T>
+    update: ModifyByIdAndData<T>
+    remove: MethodById<T>
+    query: MethodById<T>
+}
+
+interface SyncOption<T> {
+    abstractKey: {
+        timeKey: keyof T,
+        uniqueKey: keyof T,
+    }
+
     lockResolving: number //同步任务预估完成时间
     // 当前快照信息
     getCurrentCloudSnapshot: GetSnapshot
     getCurrentLocalSnapshot: GetSnapshot
 
-    // 上次快照信息
-    getLastCloudSnapshot: GetSnapshot
-    getLastLocalSnapshot: GetSnapshot
-    setLastCloudSnapshot: SetSnapshot
-    setLastLocalSnapshot: SetSnapshot
+    /**快照信息存储中介*/
+    getStoreId: () => Promise<string>
+    storageGet: (storeId: string) => Promise<Snapshot | null>
+    storageSet: (storeId: string, snapshot: Snapshot | null) => Promise<Snapshot | null>
 
-    resolveActions: Record<SYNC_ACTION, ResolveTask>
+    basicMethod?: {
+        cloud: SyncMethods<T>,
+        local: SyncMethods<T>
+    }
+
+    resolveActions?: Record<SYNC_ACTION, ResolveTask>
 }
 
-class SyncStrategy {
-    private readonly option: SyncOption
+export default class SyncStrategy<T> {
+    private readonly option: SyncOption<T>
     private syncTaskMap: SyncTaskMap = {};
     public lastSyncAt: number = 0;
     public resolving: boolean = false;
@@ -375,15 +392,20 @@ class SyncStrategy {
         cloudSnapshot: {}
     }
 
-    constructor(option: SyncOption) {
+    constructor(option: SyncOption<T>) {
         this.option = option
+    }
+
+    _getCacheSnapshot(type: 'local' | 'cloud') {
+        return this.option.getStoreId().then(function (res) {
+            return type + '_' + res;
+        })
     }
 
     /**计算本地变化*/
     async _computeLocalDiff(): Promise<SyncTaskInfo> {
         const currentLocalSnapshot = await this.option.getCurrentLocalSnapshot() || {};
-        const lastLocalSnapshot = await this.option.getLastLocalSnapshot() || {};
-
+        const lastLocalSnapshot = await this.option.storageGet(await this._getCacheSnapshot('local')) || {};
         this.tempNewSnapshot.localSnapshot = lastLocalSnapshot;
         return {
             latestSnapshot: currentLocalSnapshot,
@@ -393,25 +415,137 @@ class SyncStrategy {
 
     /**计算远程变化*/
     async _computeCloudDiff(): Promise<SyncTaskInfo> {
-        const lastCloudSnapshot = await this.option.getLastCloudSnapshot() || {};
+        const lastCloudSnapshot = await this.option.storageGet(await this._getCacheSnapshot('cloud')) || {};
         const currentCloudSnapshot = await this.option.getCurrentCloudSnapshot() || {};
-
         this.tempNewSnapshot.cloudSnapshot = lastCloudSnapshot;
         const diff = diffSnapshot(currentCloudSnapshot, lastCloudSnapshot);
+
         return {
             latestSnapshot: currentCloudSnapshot || {},
             changeMap: diff
         }
     }
 
-    async _computeSyncTask(): Promise<SyncTaskMap> {
+    _computeSyncTask(): Promise<SyncTaskMap> {
         this.syncTaskMap = {};
         // 计算差异
-        const localDiff = await this._computeLocalDiff();
-        const cloudDiff = await this._computeCloudDiff();
-        this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
+        return Promise.all([
+            this._computeLocalDiff(),
+            this._computeCloudDiff(),
+        ]).then(([localDiff, cloudDiff]) => {
+            this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
+            console.log(this.syncTaskMap)
+            return this.syncTaskMap
+        })
+    }
 
-        return this.syncTaskMap
+    _getResolveMethod(actionType: SYNC_ACTION): ResolveTask {
+        const {resolveActions, basicMethod, abstractKey} = this.option;
+        if (resolveActions && resolveActions[actionType]) {
+            return resolveActions[actionType]
+        }
+        if (!basicMethod) {
+            throw Error('basicMethod or resolveActions is required')
+        }
+        const {cloud, local} = basicMethod;
+        switch (actionType) {
+            case SYNC_ACTION.clientDelete:
+                return function (id) {
+                    return local.remove(id).then(function (res) {
+                        return {
+                            data: res,
+                            abstract: createAbstract<T>(res, abstractKey),
+                            result: TaskState.success
+                        }
+                    })
+                }
+            case SYNC_ACTION.serverDelete:
+                return function (id) {
+                    return cloud.remove(id).then(function (res) {
+                        return {
+                            data: res,
+                            abstract: createAbstract<T>(res, abstractKey),
+                            result: TaskState.success
+                        }
+                    })
+                }
+
+            case SYNC_ACTION.conflict:
+                return function (id: string) {
+                    return Promise.all([
+                        cloud.query(id),
+                        local.query(id)
+                    ]).then(function ([cloudRes, localRes]) {
+                        const localUpdateAt = localRes ? localRes[abstractKey.timeKey] : 0
+                        const cloudUpdateAt = cloudRes ? cloudRes[abstractKey.timeKey] : 0;
+
+                        if ((localUpdateAt || 0) > (cloudUpdateAt || 0)) {
+                            if (!localRes) {
+                                console.error('resolve conflict error', localRes)
+                                throw Error('no data to add')
+                            }
+                            return cloud.add(id, localRes).then(function (res) {
+                                return {
+                                    data: res,
+                                    abstract: createAbstract(res, abstractKey),
+                                    result: TaskState.success
+                                }
+                            })
+                        } else {
+                            if (!cloudRes) {
+                                console.error('resolve conflict error', localRes)
+                                throw Error('no data to add')
+                            }
+                            return local.add(id, cloudRes).then(function (res) {
+                                return {
+                                    data: res,
+                                    abstract: createAbstract(res, abstractKey),
+                                    result: TaskState.success
+                                }
+                            })
+                        }
+                    })
+                }
+
+            /**override 和 download 使用同样的方法**/
+            case SYNC_ACTION.overrideDownload:
+            case SYNC_ACTION.clientDownload:
+                return function (id: string) {
+                    return cloud.query(id).then(function (result) {
+                        if (result) {
+                            return local.add(id, result).then(function (res) {
+                                return {
+                                    data: res,
+                                    abstract: createAbstract(res, abstractKey),
+                                    result: TaskState.success
+                                }
+                            })
+                        } else {
+                            throw Error(`can't find ${id} from cloud`)
+                        }
+                    })
+                }
+
+            /**override 和 batchUpdate 使用同样的方法**/
+            case SYNC_ACTION.overrideUpload:
+            case SYNC_ACTION.clientUpload:
+                return function (id: string) {
+                    return local.query(id).then(function (result) {
+                        if (result) {
+                            return cloud.add(id, result).then(function (res) {
+                                return {
+                                    data: res,
+                                    abstract: createAbstract(res, abstractKey),
+                                    result: TaskState.success
+                                }
+                            })
+                        } else {
+                            throw Error(`can't find ${id} from cloud`)
+                        }
+                    })
+                }
+        }
+        throw Error('无可使用方法')
     }
 
     async _resolveTask(task: SyncTaskMap) {
@@ -420,25 +554,25 @@ class SyncStrategy {
             const taskDetail = task[i];
             const {actionType} = taskDetail;
             try {
-                const result = await this.option.resolveActions[actionType](i, taskDetail);
+                const result = await this._getResolveMethod(actionType)(i, taskDetail);
                 taskDetail.state = result.result;
-                if(taskDetail.state === TaskState.success){
+                if (taskDetail.state === TaskState.success) {
                     newAbstractInfo[i] = result.abstract;
                     // 更新摘要
                     // 如果删除资源，则快照中直接除名
-                    if(newAbstractInfo[i]===null){
+                    if (newAbstractInfo[i] === null) {
                         delete this.tempNewSnapshot.cloudSnapshot[i];
                         delete this.tempNewSnapshot.localSnapshot[i];
-                    }else if(newAbstractInfo[i]){ // 有最新快照信息，将其赋值给本地、云端快照
+                    } else if (newAbstractInfo[i]) { // 有最新快照信息，将其赋值给本地、云端快照
                         this.tempNewSnapshot.cloudSnapshot[i] = newAbstractInfo[i] as AbstractInfo
                         this.tempNewSnapshot.localSnapshot[i] = newAbstractInfo[i] as AbstractInfo
                     }
 
-                    this.option.setLastLocalSnapshot(this.tempNewSnapshot.localSnapshot);
-                    this.option.setLastCloudSnapshot(this.tempNewSnapshot.cloudSnapshot);
+                    this.option.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
+                    this.option.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
                 }
             } catch (e) {
-                console.error('resolve error:',e)
+                console.error('resolve error:', e)
                 taskDetail.state = TaskState.networkError
             }
         }
@@ -448,22 +582,22 @@ class SyncStrategy {
         return Promise.resolve(task)
     }
 
-    async sync(): Promise<SyncTaskMap>{
-        if(this.resolving){
+    sync(): Promise<SyncTaskMap> {
+        if (this.resolving) {
             clearTimeout(<NodeJS.Timeout>this.nextTimer)
-            this.nextTimer = setTimeout( ()=> {
+            this.nextTimer = setTimeout(() => {
                 return this.sync()
-            },this.option.lockResolving / 2)
+            }, this.option.lockResolving / 2)
             return Promise.reject('正在同步，请稍后执行')
         }
         this.resolving = true;
         // 解锁
-        setTimeout( ()=> {
+        setTimeout(() => {
             this.resolving = false;
-        },this.option.lockResolving)
-        const task = await this._computeSyncTask();
-        return this._resolveTask(task)
+        }, this.option.lockResolving)
+        return this._computeSyncTask().then((task) => {
+            return this._resolveTask(task)
+        })
     }
 }
 
-export default SyncStrategy
