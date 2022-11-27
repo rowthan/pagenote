@@ -88,7 +88,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         update: wrapperFun('update',boxroom.id),
         get:wrapperFun('get',boxroom.id),
         remove:wrapperFun('remove',boxroom.id),
-        save:wrapperFun('save',boxroom.id)
+        add:wrapperFun('add',boxroom.id)
     }
 
     const settingApi: setting.request = {
