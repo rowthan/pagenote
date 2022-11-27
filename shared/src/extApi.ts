@@ -69,8 +69,8 @@ export namespace boxroom {
 
     export type response = {
         get: IExtenstionMessageListener<Find<BoxKeys>, BoxItem[]>,
-        save: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>,
-        update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem>
+        add: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>,
+        update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
