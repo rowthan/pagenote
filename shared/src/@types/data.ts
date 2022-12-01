@@ -67,6 +67,8 @@ type Step = {
     author?: string // 原始作者
     url?: string
     pageKey?: string
+    hash?: string
+    v?: number // 数据版本
 }
 
 type Position = {

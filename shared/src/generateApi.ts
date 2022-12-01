@@ -137,6 +137,9 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const userApi: user.request = {
+        exchange: wrapperFun('exchange',user.id),
+        signin: wrapperFun('signin',user.id),
+        signout: wrapperFun('signout',user.id),
         getDevice: wrapperFun('getDevice',user.id),
         getDeviceList: wrapperFun('getDeviceList',user.id),
         setDevice: wrapperFun('setDevice',user.id),
@@ -153,10 +156,10 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const developerApi: developer.request = {
-        log: wrapperFun('log',network.id),
-        logs: wrapperFun('logs',network.id),
-        permissionList: wrapperFun('permissionList',network.id),
-        requestPermission: wrapperFun('requestPermission',network.id),
+        log: wrapperFun('log',developer.id),
+        logs: wrapperFun('logs',developer.id),
+        permissionList: wrapperFun('permissionList',developer.id),
+        requestPermission: wrapperFun('requestPermission',developer.id),
     }
 
     return {
