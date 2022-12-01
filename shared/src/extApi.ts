@@ -68,9 +68,12 @@ export namespace boxroom {
     }
 
     export type response = {
+        // 批量操作
+
         get: IExtenstionMessageListener<Find<BoxKeys>, BoxItem[]>,
-        add: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>,
+        add: IExtenstionMessageListener<BoxItem, BoxItem | null>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>
+        // TODO remove by string id
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -316,6 +319,7 @@ export namespace browserAction {
 export namespace action {
     import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
     import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
+    import Tab = chrome.tabs.Tab;
     export const id = 'action'
 
     export interface injectParams {
@@ -351,6 +355,9 @@ export namespace action {
         // backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>
 
         addScheduleTask: IExtenstionMessageListener<ScheduleTask, number>
+
+        /**防止重复打开新标签*/
+        openTab: IExtenstionMessageListener<{ url: string, tabId?: string|number, windowId?: string|number }, { tab: Tab }>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -360,14 +367,23 @@ export namespace action {
 export namespace developer {
     export const id = 'developer'
 
+    export enum LogLevel {
+        DEBUG = 'debug',
+        INFO = 'info',
+        WARN = 'warn',
+        ERROR = 'error',
+    }
+
     export interface LogInfo<T=any> {
         id?: string;
         createAt: number,
-        level: string,
+        level: LogLevel | string,
         namespace: string,
-        stack: string,
+        stack?: string,
         meta?: T,
         version: string
+        json?: Record<string, any>
+        message?: string,
     }
 
     export interface Permission {
@@ -432,15 +448,21 @@ export namespace user {
         platform: string,
         browser: string,
         registerAt?: Date,
+        updateAt?: number,
+        createAt?: number,
     }
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<void, User | undefined>,
 
-        // 使用 exchangeToken
+        signin: IExtenstionMessageListener<{email: string, uid: number, password: string, token?: string}, boolean>
+        signout: IExtenstionMessageListener<void, boolean>
+        exchange: IExtenstionMessageListener<void, boolean>
+
+        // 使用 exchangeToken TODO 全面上架 0.25.0 之后删除
         setUserToken: IExtenstionMessageListener<string, string>
-        // 使用 exchangeToken
+        // 使用 exchangeToken  TODO 全面上架 0.25.0 之后删除
         getUserToken: IExtenstionMessageListener<void, string>
 
         // 当前设备信息

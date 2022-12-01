@@ -95,7 +95,7 @@ export default class ExtensionMessage2 implements Communication<any>{
             data: undefined,
             error: e,
             status: RESPONSE_STATUS_CODE.INTER_ERROR,
-            statusText: "inner error",
+            statusText: "inner error by listen",
             success: false
           })
         }
@@ -108,7 +108,7 @@ export default class ExtensionMessage2 implements Communication<any>{
             data: undefined,
             error: e,
             status: RESPONSE_STATUS_CODE.INTER_ERROR,
-            statusText: "inner error",
+            statusText: "inner error proxy",
             success: false
           })
         }

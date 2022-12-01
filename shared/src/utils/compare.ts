@@ -6,8 +6,8 @@ function isLow(current='0.0.0',compareVersion='',separator='.'):boolean {
     const secondVersion = compareVersion.split(separator);
     let isOld = true;
     for(let i=0; i<secondVersion.length; i++) {
-        const preVersion = parseInt(firstVersion[i]);
-        const nexVersion = parseInt(secondVersion[i]);
+        const preVersion = parseInt(firstVersion[i]) || 0;
+        const nexVersion = parseInt(secondVersion[i]) || 0;
         if(preVersion!==nexVersion){
             isOld = preVersion<nexVersion;
             break;

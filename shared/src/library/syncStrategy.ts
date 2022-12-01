@@ -1,4 +1,3 @@
-import get from "lodash/get";
 
 export enum SYNC_ACTION {
     /**1. 远程本地存在冲突*/
@@ -132,8 +131,8 @@ export function createAbstract<T>(data: T | null, keys: { timeKey: keyof T, uniq
         return null
     }
     return {
-        id: (get(data, keys.uniqueKey) || '') as string,
-        updateAt: (get(data, keys.timeKey) || 0) as number
+        id: (data[keys.uniqueKey] || '') as string,
+        updateAt: (data[keys.timeKey] || 0) as number
     }
 }
 
@@ -352,6 +351,9 @@ interface SyncMethods<T> {
     update: ModifyByIdAndData<T>
     remove: MethodById<T>
     query: MethodById<T>
+
+    /**全量数据的当前快照信息*/
+    getCurrentSnapshot: GetSnapshot,
 }
 
 interface SyncOption<T> {
@@ -361,9 +363,6 @@ interface SyncOption<T> {
     }
 
     lockResolving: number //同步任务预估完成时间
-    // 当前快照信息
-    getCurrentCloudSnapshot: GetSnapshot
-    getCurrentLocalSnapshot: GetSnapshot
 
     /**快照信息存储中介*/
     getStoreId: () => Promise<string>
@@ -404,7 +403,7 @@ export default class SyncStrategy<T> {
 
     /**计算本地变化*/
     async _computeLocalDiff(): Promise<SyncTaskInfo> {
-        const currentLocalSnapshot = await this.option.getCurrentLocalSnapshot() || {};
+        const currentLocalSnapshot = await this.option.basicMethod.local.getCurrentSnapshot() || {};
         const lastLocalSnapshot = await this.option.storageGet(await this._getCacheSnapshot('local')) || {};
         this.tempNewSnapshot.localSnapshot = lastLocalSnapshot;
         return {
@@ -416,7 +415,7 @@ export default class SyncStrategy<T> {
     /**计算远程变化*/
     async _computeCloudDiff(): Promise<SyncTaskInfo> {
         const lastCloudSnapshot = await this.option.storageGet(await this._getCacheSnapshot('cloud')) || {};
-        const currentCloudSnapshot = await this.option.getCurrentCloudSnapshot() || {};
+        const currentCloudSnapshot = await this.option.basicMethod.cloud.getCurrentSnapshot() || {};
         this.tempNewSnapshot.cloudSnapshot = lastCloudSnapshot;
         const diff = diffSnapshot(currentCloudSnapshot, lastCloudSnapshot);
 
@@ -550,6 +549,7 @@ export default class SyncStrategy<T> {
 
     async _resolveTask(task: SyncTaskMap) {
         const newAbstractInfo: Record<string, AbstractInfo | null> = {}
+        // TODO 按优先级处理 local > server; update > delete; 频控调度
         for (let i in task) {
             const taskDetail = task[i];
             const {actionType} = taskDetail;

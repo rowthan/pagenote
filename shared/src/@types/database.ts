@@ -12,12 +12,13 @@ export type Pagination = {
     total?: number,
 
     /**按分页*/
-    limit?: number | undefined, // 一页数量
-    page?: number | undefined, // 当前页面
+    limit?: number, // 一页数量
+    page?: number, // 当前页面
+    totalPages?: number // 总页数
 
-    /**按游标*/
-    cursor?: string | undefined
-    next_cursor?: string | undefined,
+    /**按游标，暂无使用场景*/
+    // cursor?: string | undefined
+    // next_cursor?: string | undefined,
 }
 
 export type FindResponse<T> = {
