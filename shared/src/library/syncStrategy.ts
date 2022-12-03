@@ -107,8 +107,7 @@ export function isSame(current: AbstractInfo, old: AbstractInfo) {
     }
 
     if (
-        temCurrent.updateAt &&
-        temCurrent.updateAt > 0 &&
+        !isNaN(temCurrent.updateAt) &&
         temCurrent.updateAt === temOld.updateAt
     ) {
         return true
@@ -383,6 +382,8 @@ export default class SyncStrategy<T> {
     public lastSyncAt: number = 0;
     public resolving: boolean = false;
     private nextTimer: NodeJS.Timer | undefined;
+    // 一次任务集处理ID，标识当前正在执行的任务集；非当前任务集ID的任务，放弃执行
+    private resolveId: string;
     private tempNewSnapshot: {
         localSnapshot: Snapshot,
         cloudSnapshot: Snapshot,
@@ -433,7 +434,6 @@ export default class SyncStrategy<T> {
             this._computeCloudDiff(),
         ]).then(([localDiff, cloudDiff]) => {
             this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
-            console.log(this.syncTaskMap)
             return this.syncTaskMap
         })
     }
@@ -547,10 +547,18 @@ export default class SyncStrategy<T> {
         throw Error('无可使用方法')
     }
 
-    async _resolveTask(task: SyncTaskMap) {
+    async _resolveTask(task: SyncTaskMap,resolveId: string) {
         const newAbstractInfo: Record<string, AbstractInfo | null> = {}
         // TODO 按优先级处理 local > server; update > delete; 频控调度
         for (let i in task) {
+            /**
+             * 判断当前任务集ID是否匹配最新的任务集ID，如有更新的处理集，抛弃历史任务。
+             * 1. 防止历史任务时效性过期
+             * 2. 防止重复执行相同任务
+             * */
+            if(resolveId !== this.resolveId){
+                break;
+            }
             const taskDetail = task[i];
             const {actionType} = taskDetail;
             try {
@@ -596,7 +604,9 @@ export default class SyncStrategy<T> {
             this.resolving = false;
         }, this.option.lockResolving)
         return this._computeSyncTask().then((task) => {
-            return this._resolveTask(task)
+            const latestResolveId = new Date().toString();
+            this.resolveId = latestResolveId;
+            return this._resolveTask(task,latestResolveId)
         })
     }
 }
