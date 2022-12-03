@@ -54,7 +54,7 @@ type Step = {
     offsetY?: number, // 批注与高亮元素的相对偏移量
     parentW?: number, // 高亮元素父节点宽度
     lightId?: string, // 每一条标记的唯一 hash id
-    images?: any[], // 图片高亮，待支持
+    images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
     lightBg?: string, // 将废弃
     daskBg?: string, // 将废弃
     isFocusTag?: boolean,
