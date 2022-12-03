@@ -90,11 +90,6 @@ export namespace lightpage {
 
     // 服务端可接受的请求API
     export type response = {
-        /**单次请求对网页、标记、快照的存储*/
-        saveLightPage: IExtenstionMessageListener<PartWebpage[], WebPage | null>,
-        /**查询网页携带的全量数据： 网页、标记、快照*/
-        getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
-
         // 1.页面
         addPages: IExtenstionMessageListener<WebPage[], number>
         removePages: IExtenstionMessageListener<{ keys: string[], removeRelated?: ('light' | 'snapshot')[] }, number>
@@ -113,6 +108,11 @@ export namespace lightpage {
         addSnapshots: IExtenstionMessageListener<SnapshotResource[], number>
         removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
         querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
+
+        /**单次请求对网页、标记、快照总体的存储（增量存储）*/
+        saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
+        /**查询网页携带的全量数据： 网页、标记、快照*/
+        getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
 
         // 同步状态
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
