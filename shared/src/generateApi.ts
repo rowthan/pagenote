@@ -106,6 +106,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        openTab: wrapperFun('openTab',action.id),
         addScheduleTask: wrapperFun('addScheduleTask',action.id),
         log: wrapperFun('log',action.id),
         logs: wrapperFun('logs',action.id),
