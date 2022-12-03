@@ -85,60 +85,31 @@ export namespace boxroom {
 export namespace lightpage {
     export const id = 'lightpage';
 
-    // 索引字段
-    type WebPageKeys = {
-        key: string,
-        deleted: boolean,
-        domain: string,
-        icon: string,
-        path: string,
-        text: string,
-        tip: string,
-        context: string,
-        title: string,
-        description: string;
-        categories: string[],
-        category: string,
-        createAt: number,
-        updateAt: number,
-        expiredAt: number,
-        basename: string,
-        lastmod: string,
-        etag: string,
-        lightCnt: number, // 高亮个数
-        colors: string[],
-        score: number,
-        thumb: string,
-        isEmpty: boolean,
-        directory: string // 存放目录
-    }
-
     type PartWebpage = Partial<WebPage>
     type PartStep = Partial<Step>
 
     // 服务端可接受的请求API
     export type response = {
-        /**旧 API start 待删除 0.24 之后不支持**/
-        saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
-        /**查询列表pages*/
-        getLightPageDetail: IExtenstionMessageListener<Query<WebPageKeys>, WebPage | null>,
-        /** 旧 API end*/
+        /**单次请求对网页、标记、快照的存储*/
+        saveLightPage: IExtenstionMessageListener<PartWebpage[], WebPage | null>,
+        /**查询网页携带的全量数据： 网页、标记、快照*/
+        getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
 
-        // 页面
+        // 1.页面
         addPages: IExtenstionMessageListener<WebPage[], number>
         removePages: IExtenstionMessageListener<{ keys: string[], removeRelated?: ('light' | 'snapshot')[] }, number>
         updatePages: IExtenstionMessageListener<PartWebpage[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<PartWebpage>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, PartWebpage[]>>,
 
-        // 标记
+        // 2.标记
         addLights: IExtenstionMessageListener<Step[], number>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<PartStep[], number>;
         queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<PartStep>>;
         groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
 
-        // 截图快照
+        // 3.截图快照
         addSnapshots: IExtenstionMessageListener<SnapshotResource[], number>
         removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
         querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
