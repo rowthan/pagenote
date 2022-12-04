@@ -57,6 +57,7 @@ export namespace boxroom {
         version?: string
         icon?: string
         domain?: string
+        deleted?: boolean
     }
 
     // 索引
@@ -67,14 +68,27 @@ export namespace boxroom {
         boxType: string
     }
 
+    export type UpdateBox = Partial<BoxItem> & {id: string}
+
+
     export type response = {
         // 批量操作
 
+        // TODO get 删除（全面升级 0.25 之后）
         get: IExtenstionMessageListener<Find<BoxKeys>, BoxItem[]>,
         add: IExtenstionMessageListener<BoxItem, BoxItem | null>,
         update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>
         // TODO remove by string id
         remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
+
+
+
+        /**0.24.5 之后支持*/
+        addItems: IExtenstionMessageListener<BoxItem[], (Partial<BoxItem> | null)[]>,
+        removeItems: IExtenstionMessageListener<{ ids: string[] }, number>,
+        updateItems: IExtenstionMessageListener<UpdateBox[], number>
+        queryItems: IExtenstionMessageListener<Find<BoxItem>, FindResponse<BoxItem>>,
+
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -135,8 +149,15 @@ export namespace setting {
         _sync?: boolean, // 是否在各端之间同步设置
         _supportVersions?: string[], // 当前支持SDK的版本列表
         _sdkVersion: string, // 当前使用的 SDK 版本
+
+        /**同步设置*/
         _syncClipboard?: boolean
-        _syncPageLights?: boolean
+        _syncPage?: boolean,
+        _syncLight?: boolean,
+        _syncSnapshot?: boolean,
+
+        // 第三方服务
+        _enableImageCloud?: boolean // 图床
     }
 
     export type SDK_SETTING = Inner_Setting & {
