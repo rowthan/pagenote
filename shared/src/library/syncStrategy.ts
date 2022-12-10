@@ -179,12 +179,23 @@ type SyncTaskInfo = {
     latestSnapshot: Snapshot
 }
 export type SyncTaskMap = Record<string, TaskDetail>
-
+export type SyncTaskActionsMap = {
+    [key in SYNC_ACTION]: SyncTaskMap
+}
 // 基于 diff 和快照，计算两端的同步任务
 export function computeSyncTask(
     local: SyncTaskInfo,
     cloud: SyncTaskInfo
-): SyncTaskMap {
+): SyncTaskActionsMap {
+    const taskGroup: SyncTaskActionsMap = {
+        clientDelete: {},
+        clientDownload: {},
+        clientUpload: {},
+        conflict: {},
+        overrideDownload: {},
+        overrideUpload: {},
+        serverDelete: {}
+    }
     const tasks: SyncTaskMap = {}
     /** 1 */
     for (const i in local.changeMap) {
@@ -219,14 +230,13 @@ export function computeSyncTask(
         }
 
         if (actionType !== undefined) {
-            tasks[i] = {
+            taskGroup[actionType][i] = tasks[i] = {
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
                 localAbstract: local.latestSnapshot[i],
                 actionType: actionType,
             }
-
         }
 
         delete local.changeMap[i]
@@ -241,7 +251,7 @@ export function computeSyncTask(
                 flag
             )
         ) {
-            tasks[i] = {
+            taskGroup[SYNC_ACTION.clientUpload][i] = tasks[i] = {
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
@@ -259,7 +269,7 @@ export function computeSyncTask(
                 flag
             )
         ) {
-            tasks[i] = {
+            taskGroup[SYNC_ACTION.clientDownload][i] = tasks[i] = {
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
@@ -268,7 +278,7 @@ export function computeSyncTask(
             }
         }
     }
-    return tasks
+    return taskGroup
 }
 
 type ResolveFunMap = Record<SYNC_ACTION,
@@ -376,9 +386,21 @@ interface SyncOption<T> {
     resolveActions?: Record<SYNC_ACTION, ResolveTask>
 }
 
+function getInitTaskMap(): SyncTaskActionsMap {
+    return {
+        clientDelete: {},
+        clientDownload: {},
+        clientUpload: {},
+        conflict: {},
+        overrideDownload: {},
+        overrideUpload: {},
+        serverDelete: {}
+    }
+}
+
 export default class SyncStrategy<T> {
     private readonly option: SyncOption<T>
-    private syncTaskMap: SyncTaskMap = {};
+    public syncTaskMap: SyncTaskActionsMap = getInitTaskMap();
     public lastSyncAt: number = 0;
     public resolving: boolean = false;
     private nextTimer: NodeJS.Timer | undefined;
@@ -426,8 +448,8 @@ export default class SyncStrategy<T> {
         }
     }
 
-    _computeSyncTask(): Promise<SyncTaskMap> {
-        this.syncTaskMap = {};
+    _computeSyncTask(): Promise<SyncTaskActionsMap> {
+        this.syncTaskMap = getInitTaskMap();
         // 计算差异
         return Promise.all([
             this._computeLocalDiff(),
@@ -547,42 +569,81 @@ export default class SyncStrategy<T> {
         throw Error('无可使用方法')
     }
 
-    async _resolveTask(task: SyncTaskMap,resolveId: string) {
-        const newAbstractInfo: Record<string, AbstractInfo | null> = {}
-        // TODO 按优先级处理 local > server; update > delete; 频控调度
-        for (let i in task) {
-            /**
-             * 判断当前任务集ID是否匹配最新的任务集ID，如有更新的处理集，抛弃历史任务。
-             * 1. 防止历史任务时效性过期
-             * 2. 防止重复执行相同任务
-             * */
-            if(resolveId !== this.resolveId){
-                break;
-            }
-            const taskDetail = task[i];
-            const {actionType} = taskDetail;
-            try {
-                const result = await this._getResolveMethod(actionType)(i, taskDetail);
-                taskDetail.state = result.result;
-                if (taskDetail.state === TaskState.success) {
-                    newAbstractInfo[i] = result.abstract;
-                    // 更新摘要
-                    // 如果删除资源，则快照中直接除名
-                    if (newAbstractInfo[i] === null) {
-                        delete this.tempNewSnapshot.cloudSnapshot[i];
-                        delete this.tempNewSnapshot.localSnapshot[i];
-                    } else if (newAbstractInfo[i]) { // 有最新快照信息，将其赋值给本地、云端快照
-                        this.tempNewSnapshot.cloudSnapshot[i] = newAbstractInfo[i] as AbstractInfo
-                        this.tempNewSnapshot.localSnapshot[i] = newAbstractInfo[i] as AbstractInfo
-                    }
-
-                    this.option.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
-                    this.option.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
+    async _resolveSingleTask(taskDetail: TaskDetail, resolveId: string){
+        /**
+         * 判断当前任务集ID是否匹配最新的任务集ID，如有更新的处理集，抛弃历史任务。
+         * 1. 防止历史任务时效性过期
+         * 2. 防止重复执行相同任务
+         * */
+        if(resolveId && resolveId !== this.resolveId){
+            return
+        }
+        const {actionType,id,localAbstract} = taskDetail;
+        let responseAbstract: AbstractInfo = localAbstract;
+        try {
+            const result = await this._getResolveMethod(actionType)(id, taskDetail);
+            taskDetail.state = result.result;
+            if (taskDetail.state === TaskState.success) {
+                responseAbstract = result.abstract;
+                // 更新摘要
+                // 如果删除资源，则快照中直接除名
+                if (responseAbstract === null) {
+                    delete this.tempNewSnapshot.cloudSnapshot[id];
+                    delete this.tempNewSnapshot.localSnapshot[id];
+                } else if (responseAbstract) { // 有最新快照信息，将其赋值给本地、云端快照
+                    this.tempNewSnapshot.cloudSnapshot[id] = responseAbstract
+                    this.tempNewSnapshot.localSnapshot[id] = responseAbstract
                 }
-            } catch (e) {
-                console.error('resolve error:', e)
-                taskDetail.state = TaskState.networkError
+
+                this.option.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
+                this.option.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
             }
+        } catch (e) {
+            console.error('resolve error:', e)
+            taskDetail.state = TaskState.networkError
+        }
+    }
+
+    async _resolveTaskMap(task: SyncTaskActionsMap, resolveId: string) {
+        /**本地数据更新 start
+         * 按照 本地 > 远程 优先级处理任务，保证本地能得到最新的数据展示。
+         * */
+
+        /**1. 优先删除本地，不需要等待完成 await*/
+        for(let taskId in task[SYNC_ACTION.clientDelete]){
+            this._resolveSingleTask(task[SYNC_ACTION.clientDelete][taskId],resolveId)
+        }
+        /**2. 优先下载本地*/
+        for(let taskId in task[SYNC_ACTION.clientDownload]){
+            await this._resolveSingleTask(task[SYNC_ACTION.clientDownload][taskId],resolveId)
+        }
+        /**3. 优先更新本地*/
+        for(let taskId in task[SYNC_ACTION.overrideDownload]){
+            await this._resolveSingleTask(task[SYNC_ACTION.overrideDownload][taskId],resolveId)
+        }
+
+
+        /**4. 冲突解决*/
+        for(let taskId in task[SYNC_ACTION.conflict]){
+            await this._resolveSingleTask(task[SYNC_ACTION.conflict][taskId],resolveId)
+        }
+
+
+        /**服务端更新 start*/
+
+        /**5. 服务端删除*/
+        for(let taskId in task[SYNC_ACTION.serverDelete]){
+            await this._resolveSingleTask(task[SYNC_ACTION.serverDelete][taskId],resolveId)
+        }
+
+        /**6. 服务端上传*/
+        for(let taskId in task[SYNC_ACTION.clientUpload]){
+            await this._resolveSingleTask(task[SYNC_ACTION.clientUpload][taskId],resolveId)
+        }
+
+        /**7. 服务端更新*/
+        for(let taskId in task[SYNC_ACTION.overrideUpload]){
+            await this._resolveSingleTask(task[SYNC_ACTION.overrideUpload][taskId],resolveId)
         }
 
         this.lastSyncAt = Date.now();
@@ -590,13 +651,13 @@ export default class SyncStrategy<T> {
         return Promise.resolve(task)
     }
 
-    sync(): Promise<SyncTaskMap> {
+    sync(): Promise<SyncTaskActionsMap> {
         if (this.resolving) {
             clearTimeout(<NodeJS.Timeout>this.nextTimer)
             this.nextTimer = setTimeout(() => {
                 return this.sync()
             }, this.option.lockResolving / 2)
-            return Promise.reject('正在同步，请稍后执行')
+            return Promise.reject('正在同步，已加锁')
         }
         this.resolving = true;
         // 解锁
@@ -606,7 +667,7 @@ export default class SyncStrategy<T> {
         return this._computeSyncTask().then((task) => {
             const latestResolveId = new Date().toString();
             this.resolveId = latestResolveId;
-            return this._resolveTask(task,latestResolveId)
+            return this._resolveTaskMap(task,latestResolveId)
         })
     }
 }

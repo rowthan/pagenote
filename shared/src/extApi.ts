@@ -1,4 +1,4 @@
-import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage} from "./@types/data";
+import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage, ContentType} from "./@types/data";
 import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
     BaseMessageHeader,
@@ -371,8 +371,8 @@ export namespace developer {
         createAt: number,
         level: LogLevel | string,
         namespace: string,
-        stack?: string,
-        meta?: T,
+        stack?: string,  // TODO 删除
+        meta?: T, // TODO 删除
         version: string
         json?: Record<string, any>
         message?: string,
@@ -533,6 +533,7 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        uploadFile: IExtenstionMessageListener<{content: string, contentType: ContentType}, string>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -554,6 +555,9 @@ export namespace frontApi {
         fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean }>
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
+
+        // 在标签页启用 pagenote
+        start: IExtenstionMessageListener<{ tabId: string }, {injected: boolean}>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

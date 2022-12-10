@@ -31,6 +31,7 @@ type Step = {
     wid?: string // whats-element id
     session?: string,
     did?: string,
+    l_did?: string, // 最后编辑人
     sortIndex?: number,
     x: number, // 标记在文档中基于 body 的 x轴 位置
     y: number, // 标记在文档中基于 body 的 y轴 位置
@@ -101,7 +102,8 @@ export enum MetaResourceType {
 
 export type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
-    url: string, // 可访问的URL 地址，
+    url: string, // 可访问的URL 地址，base64 或链接
+    uri?: string // 互联网可访问的链接地址
     thumb?: string, // 缩略图
     pageKey: string
     type: MetaResourceType

@@ -12,8 +12,9 @@ export type Pagination = {
     total?: number,
 
     /**按分页*/
-    limit?: number, // 一页数量
-    page?: number, // 当前页面
+    limit?: number, // 本次查询限额数量
+    page?: number, // 当前页码
+    pageSize?: number, // 一页数量
     totalPages?: number // 总页数
 
     /**按游标，暂无使用场景*/
@@ -36,6 +37,7 @@ export type Sort<Model> = {
 export type MongoLikeQueryValue = {
     $like?: string; // 模糊搜索
     $in?: string[]; // 数组
+    $nin?: string[];
     $gt?: number; // 大于
     $lt?: number; // 小于
 }

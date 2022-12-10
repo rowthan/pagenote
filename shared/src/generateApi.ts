@@ -156,8 +156,9 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const networkApi: network.request = {
+        uploadFile: wrapperFun('uploadFile',network.id),
         fetch: wrapperFun('fetch',network.id),
-        pagenote: wrapperFun('pagenote',network.id),
+        pagenote: wrapperFun('pagenote',network.id)
     }
 
     const developerApi: developer.request = {
