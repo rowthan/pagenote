@@ -128,6 +128,9 @@ export namespace lightpage {
         /**查询网页携带的全量数据： 网页、标记、快照*/
         getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
 
+        /**download 导出备份文件*/
+        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource> }, {filename: string,}>
+
         // 同步状态
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
