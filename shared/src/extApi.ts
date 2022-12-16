@@ -188,7 +188,7 @@ export namespace setting {
         showBarTimeout: number,
         keyupTimeout: number,
         removeAfterDays: number,
-        enableType?: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
+        enableType: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
         [key: string]: any;
     }
 
@@ -248,6 +248,7 @@ export namespace setting {
             }),
         ]
         const setting: SDK_SETTING = {
+            enableType: 'always',
             // _libra: false,
             // _sync: false,
             actions: [createInitAction(ACTION_TYPES.search), createInitAction(ACTION_TYPES.copyToClipboard), createInitAction(ACTION_TYPES.send_to_email)],
@@ -273,7 +274,7 @@ export namespace setting {
             removeAfterDays: 30,
             showBarTimeout: 0,
 
-            _sdkVersion: "5.5.3",
+            _sdkVersion: "5.5.3"
         }
         return {
             ...setting,
