@@ -8,9 +8,17 @@ export interface PathStat {
   pathArray: string[]
 }
 
+interface Filter {
+  dirFilter?: RegExp
+  fileFilter?: RegExp
+  excludeFileFilter?: RegExp
+  excludeDirFilter?: RegExp
+  deep: boolean
+}
+
 export async function verifyPermission(
-  fileHandle: FileSystemHandle | null,
-  mode?: FileSystemPermissionMode
+    fileHandle: FileSystemHandle | null,
+    mode?: FileSystemPermissionMode
 ) {
   if (!fileHandle) {
     return null
@@ -37,14 +45,29 @@ export async function verifyPermission(
   return false
 }
 
+export function concatPaths(pathArray: string[]) {
+  let path = ''
+  for (let i = 0; i < pathArray.length; i++) {
+    const suffix = i !== pathArray.length - 1 ? '/' : ''
+    path += (pathArray[i] || '').replace(/^\//, '').replace(/\/$/, '') + suffix
+  }
+  if (path[0] !== '/') {
+    path = '/' + path
+  }
+  return path
+}
+
 interface Props {
   rootDirctoryHandle?: FileSystemDirectoryHandle
 }
 export default class LocalFileSystem {
-  private rootDirctoryHandle: FileSystemDirectoryHandle | null
+  private rootDirctoryHandle: FileSystemDirectoryHandle | null = null
+  public rootName = ''
+  public hasPermission = false
+  public browserSupport = true;
 
   constructor(props: Props) {
-    this.rootDirctoryHandle = props.rootDirctoryHandle || null
+    this.setRootHandle(props.rootDirctoryHandle)
   }
 
   public async setRoot(): Promise<FileSystemDirectoryHandle | null> {
@@ -53,29 +76,48 @@ export default class LocalFileSystem {
       return null
     }
     this.rootDirctoryHandle = directoryHandle
+    this.setRootHandle(directoryHandle)
     return directoryHandle
   }
 
+  public setRootHandle(handle?: FileSystemDirectoryHandle) {
+    if (handle) {
+      this.rootDirctoryHandle = handle
+      this.rootName = this.rootDirctoryHandle?.name || ''
+    }
+    this.requestPermission()
+  }
+
+  public async requestPermission(
+      mode: FileSystemPermissionMode = 'readwrite'
+  ): Promise<boolean> {
+    const permission = await verifyPermission(this.rootDirctoryHandle, mode)
+    this.hasPermission = !!permission
+    return this.hasPermission
+  }
+
   public async getHandleAndPathArray(
-    path: string,
-    mode: FileSystemPermissionMode = 'readwrite'
+      path: string,
+      mode: FileSystemPermissionMode = 'readwrite'
   ): Promise<{
     handle: FileSystemDirectoryHandle | null
-    pathArray: string[]
+    pathArray: string[] // 解析 path 的每一个层级路径地址
   }> {
-    const pathArr = path.replace(/\/+$/, '').split('/')
     const directoryHandle = this.rootDirctoryHandle
     const permission = await verifyPermission(directoryHandle, mode)
     if (!permission) {
-      return {
-        handle: null,
-        pathArray: [],
-      }
+      throw new Error(`无文件 ${path} ${mode}夹权限`)
     }
-    const responsePath = pathArr.slice(1, pathArr.length)
+    const pathArr = path
+        .replace(/\/+$/, '')
+        .split('/')
+        .filter(function (item) {
+          return !!item
+        })
+    // const responsePath = pathArr.slice(1, pathArr.length)
     return {
       handle: directoryHandle,
-      pathArray: responsePath,
+      pathArray: pathArr,
     }
   }
 
@@ -91,23 +133,16 @@ export default class LocalFileSystem {
         directoryHandle = await directoryHandle.getDirectoryHandle(pathArr[i])
       }
       const file = await (
-        await directoryHandle.getFileHandle(pathArr[i])
+          await directoryHandle.getFileHandle(pathArr[i])
       ).getFile()
-
       return file.text()
-
-      // if (opts.encoding && opts.encoding.match(/^utf-?8$/i)) {
-      //     return file.text();
-      // } else {
-      //     return new Uint8Array(await file.arrayBuffer());
-      // }
     }
   }
 
   public async writeFile(
-    path: string,
-    data: string,
-    keepExistingData = false
+      path: string,
+      data: string,
+      keepExistingData = false
   ): Promise<File> {
     const result = await this.getHandleAndPathArray(path, 'readwrite')
     let directoryHandle = result.handle
@@ -134,7 +169,7 @@ export default class LocalFileSystem {
     }
   }
 
-  public async readdir(path: string): Promise<string[]> {
+  public async readdir(path: string, filter?: Filter): Promise<string[]> {
     const result = await this.getHandleAndPathArray(path, 'read')
     let directoryHandle = result.handle
     const pathArr = result.pathArray
@@ -146,13 +181,52 @@ export default class LocalFileSystem {
       }
       const names = []
       for await (const entry of directoryHandle.values()) {
-        names.push(entry.name)
+        const fullPathName = concatPaths([path, entry.name])
+
+        if (filter?.excludeDirFilter) {
+          if (entry.kind === 'directory') {
+            if (filter.excludeDirFilter.test(entry.name)) {
+              continue
+            }
+          }
+        }
+
+        if (filter?.excludeFileFilter) {
+          if (entry.kind === 'file') {
+            if (filter.excludeFileFilter.test(entry.name)) {
+              continue
+            }
+          }
+        }
+
+        if (filter?.fileFilter) {
+          if (entry.kind === 'file' && filter.fileFilter.test(fullPathName)) {
+            names.push(fullPathName)
+          }
+        } else if (filter?.dirFilter) {
+          if (
+              entry.kind === 'directory' &&
+              filter.dirFilter.test(fullPathName)
+          ) {
+            names.push(fullPathName)
+          }
+        } else {
+          names.push(fullPathName)
+        }
+        if (filter?.deep) {
+          if (entry.kind === 'directory') {
+            const deepPath = concatPaths([path, entry.name])
+            const result = await this.readdir(deepPath, filter)
+            names.push(...result)
+          }
+        }
       }
       return names
     }
   }
 
   public async unlink(path: string): Promise<void> {
+    path = concatPaths(['/', path])
     const result = await this.getHandleAndPathArray(path, 'readwrite')
     let directoryHandle = result.handle
     const pathArr = result.pathArray
@@ -167,7 +241,7 @@ export default class LocalFileSystem {
     }
   }
 
-  public async stats(path: string): Promise<PathStat> {
+  public async stats(path: string): Promise<PathStat | null> {
     const result = await this.getHandleAndPathArray(path, 'read')
     let directoryHandle = result.handle
     const pathArr = result.pathArray
@@ -197,11 +271,12 @@ export default class LocalFileSystem {
   }
 
   public async mkdir(path: string): Promise<FileSystemDirectoryHandle> {
-    const result = await this.getHandleAndPathArray(path, 'readwrite')
+    const filepath = concatPaths(['/', path])
+    const result = await this.getHandleAndPathArray(filepath, 'readwrite')
     let directoryHandle = result.handle
     const pathArr = result.pathArray
     if (!directoryHandle) {
-      throw new Error(`${path} is not valid`)
+      throw new Error(`${filepath} is not valid`)
     } else {
       for (let i = 0; i < pathArr.length; i++) {
         directoryHandle = await directoryHandle.getDirectoryHandle(pathArr[i], {
@@ -213,13 +288,13 @@ export default class LocalFileSystem {
   }
 
   public copyFile(
-    currentPath: string,
-    newPath: string,
-    keepExistingData = true
+      currentPath: string,
+      newPath: string,
+      keepExistingData = true
   ): Promise<boolean> {
     return this.readFile(currentPath).then((result) => {
       return this.writeFile(newPath, result, keepExistingData).then(function (
-        file
+          file
       ) {
         return !!file
       })
@@ -236,7 +311,7 @@ export default class LocalFileSystem {
       let i = 0
       for (; i < pathArr.length - 1; i++) {
         try {
-          directoryHandle = await directoryHandle.getDirectoryHandle(pathArr[i])
+          directoryHandle = await directoryHandle?.getDirectoryHandle(pathArr[i])
         } catch (error) {
           return false
         }
