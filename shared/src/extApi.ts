@@ -1,7 +1,7 @@
 import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage, ContentType} from "./@types/data";
 import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
-    BaseMessageHeader,
+    BaseMessageHeader, BaseMessageRequest,
     BaseMessageResponse,
     IBaseMessageListener,
     IExtenstionMessageListener
@@ -346,6 +346,10 @@ export namespace action {
 
         getMemoryRuntime: IExtenstionMessageListener<string, any>
         setMemoryRuntime: IExtenstionMessageListener<Record<string, any>, any>
+
+        /**持久化的存储*/
+        getPersistentValue: IExtenstionMessageListener<string, any>
+        setPersistentValue: IExtenstionMessageListener<{ key: string, value: any }, boolean>
 
         // backup: IExtenstionMessageListener<{dataTypes: BackupDataType[]}, BackupData>
         // backupList: IExtenstionMessageListener<{ dataType: BackupDataType, projectionField?: string }, BackupData[]>

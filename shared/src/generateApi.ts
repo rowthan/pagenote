@@ -62,6 +62,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        exportBackup: wrapperFun('exportBackup',lightpage.id),
         addSnapshots: wrapperFun('addSnapshots',lightpage.id),
         groupLights: wrapperFun('groupLights',lightpage.id),
         querySnapshots: wrapperFun('querySnapshots',lightpage.id),
@@ -110,6 +111,8 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        getPersistentValue: wrapperFun('getPersistentValue',action.id),
+        setPersistentValue: wrapperFun('setPersistentValue',action.id),
         openTab: wrapperFun('openTab',action.id),
         addScheduleTask: wrapperFun('addScheduleTask',action.id),
         log: wrapperFun('log',action.id),

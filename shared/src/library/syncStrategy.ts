@@ -355,7 +355,7 @@ export interface ModifyByIdAndData<T> {
 }
 
 /**增删改查*/
-interface SyncMethods<T> {
+export interface SyncMethods<T> {
     add: ModifyByIdAndData<T>
     update: ModifyByIdAndData<T>
     remove: MethodById<T>
