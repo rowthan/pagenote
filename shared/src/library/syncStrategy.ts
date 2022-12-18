@@ -30,14 +30,14 @@ enum TaskState {
 type TaskDetail = {
     id: string;
     state: TaskState;
-    localAbstract: AbstractInfo,
-    cloudAbstract: AbstractInfo,
+    localAbstract?: AbstractInfo,
+    cloudAbstract?: AbstractInfo,
     actionType: SYNC_ACTION;
 };
 
 
 /** 一条数据的摘要信息 */
-export type AbstractInfo = {
+export type AbstractInfo = null | {
     id: string // 唯一标识，本地、远程联系的唯一ID
 
     /**本地读写基于的，操作ID*/
@@ -52,6 +52,7 @@ export type AbstractInfo = {
     /**2. 数据相关指标*/
     updateAt: number // 数据的最后更新时间
 }
+
 export type Snapshot = Record<string, AbstractInfo>
 
 export enum ChangeFlag {
@@ -348,24 +349,19 @@ interface GetSnapshot {
 }
 
 export interface ResolveTask {
-    (i: MethodId, task: Omit<TaskDetail, 'id'>): Promise<{
+    (id: string, task: Omit<TaskDetail, 'id'>): Promise<{
         result: TaskState,
         abstract: AbstractInfo | null,
     }>
 }
 
-export type MethodId = {
-    id: string,
-    l_id?: string | undefined,
-    c_id?: string | undefined
-}
 
 export interface MethodById<T> {
-    (id: MethodId): Promise<T | null>
+    (id: string): Promise<T | null>
 }
 
 export interface ModifyByIdAndData<T> {
-    (id: MethodId, data: T): Promise<T | null>,
+    (id: string, data: T): Promise<T | null>,
 }
 
 /**增删改查*/
@@ -379,7 +375,7 @@ export interface SyncMethods<T> {
     getCurrentSnapshot: GetSnapshot,
 }
 
-export interface AbstractKey<T> {
+export type AbstractKey<T> = {
     getUniqueId: (input: T)=>string
     getLocalMethodId: (input: T)=>string | undefined
     getCloudMethodId: (input: T)=>string | undefined
@@ -605,11 +601,7 @@ export default class SyncStrategy<T> {
         const {actionType,id,localAbstract, cloudAbstract} = taskDetail;
         let responseAbstract: AbstractInfo = localAbstract;
         try {
-            const result = await this._getResolveMethod(actionType)({
-                id: id,
-                l_id: localAbstract.l_id,
-                c_id: cloudAbstract.c_id,
-            }, taskDetail);
+            const result = await this._getResolveMethod(actionType)(id, taskDetail);
             taskDetail.state = result.result;
             if (taskDetail.state === TaskState.success) {
                 responseAbstract = result.abstract;
