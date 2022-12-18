@@ -35,6 +35,7 @@ type TaskDetail = {
     actionType: SYNC_ACTION;
 };
 
+
 /** 一条数据的摘要信息 */
 export type AbstractInfo = {
     id: string // 唯一标识，本地、远程联系的唯一ID
@@ -130,14 +131,13 @@ export function isSame(current: AbstractInfo, old: AbstractInfo) {
     return false
 }
 
-export function createAbstract<T>(data: T | null, keys: AbstractKey<T>): AbstractInfo | null {
+function createAbstract<T>(data: T | null, keys: AbstractKey<T>): AbstractInfo | null {
     if (!data) {
         return null
     }
-    const uniqueId = (data[keys.uniqueKey] || '')  as string
     return {
-        id: uniqueId,
-        updateAt: (data[keys.timeKey] || 0) as number,
+        id: keys.getUniqueId(data),
+        updateAt: keys.getUpdateAtTime(data),
         c_id: keys.getCloudMethodId(data),
         l_id: keys.getLocalMethodId(data),
     }
@@ -380,10 +380,10 @@ export interface SyncMethods<T> {
 }
 
 export interface AbstractKey<T> {
-    timeKey: keyof T,
-    uniqueKey: keyof T,
+    getUniqueId: (input: T)=>string
     getLocalMethodId: (input: T)=>string | undefined
     getCloudMethodId: (input: T)=>string | undefined
+    getUpdateAtTime: (input: T)=>number
 }
 
 interface SyncOption<T> {
@@ -521,8 +521,8 @@ export default class SyncStrategy<T> {
                         cloud.query(id),
                         local.query(id)
                     ]).then(function ([cloudRes, localRes]) {
-                        const localUpdateAt = localRes ? localRes[abstractKey.timeKey] : 0
-                        const cloudUpdateAt = cloudRes ? cloudRes[abstractKey.timeKey] : 0;
+                        const localUpdateAt = localRes ? abstractKey.getUpdateAtTime(localRes) : 0
+                        const cloudUpdateAt = cloudRes ? abstractKey.getUpdateAtTime(cloudRes) : 0;
 
                         if ((localUpdateAt || 0) > (cloudUpdateAt || 0)) {
                             if (!localRes) {
