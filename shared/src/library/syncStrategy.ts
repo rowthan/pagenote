@@ -349,7 +349,7 @@ interface GetSnapshot {
 }
 
 export interface ResolveTask {
-    (id: string, task: Omit<TaskDetail, 'id'>): Promise<{
+    (id: string, task: TaskDetail): Promise<{
         result: TaskState,
         abstract: AbstractInfo | null,
     }>
@@ -357,11 +357,11 @@ export interface ResolveTask {
 
 
 export interface MethodById<T> {
-    (id: string): Promise<T | null>
+    (id: string, taskDetail: TaskDetail): Promise<T | null>
 }
 
 export interface ModifyByIdAndData<T> {
-    (id: string, data: T): Promise<T | null>,
+    (id: string, data: T, taskDetail: TaskDetail): Promise<T | null>,
 }
 
 /**增删改查*/
@@ -491,8 +491,8 @@ export default class SyncStrategy<T> {
         const {cloud, local} = basicMethod;
         switch (actionType) {
             case SYNC_ACTION.clientDelete:
-                return function (id) {
-                    return local.remove(id).then(function (res) {
+                return function (id,taskDetail) {
+                    return local.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
                             abstract: createAbstract<T>(res, abstractKey),
@@ -501,8 +501,8 @@ export default class SyncStrategy<T> {
                     })
                 }
             case SYNC_ACTION.serverDelete:
-                return function (id) {
-                    return cloud.remove(id).then(function (res) {
+                return function (id,taskDetail) {
+                    return cloud.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
                             abstract: createAbstract<T>(res, abstractKey),
@@ -512,10 +512,10 @@ export default class SyncStrategy<T> {
                 }
 
             case SYNC_ACTION.conflict:
-                return function (id) {
+                return function (id,taskDetail) {
                     return Promise.all([
-                        cloud.query(id),
-                        local.query(id)
+                        cloud.query(id,taskDetail),
+                        local.query(id,taskDetail)
                     ]).then(function ([cloudRes, localRes]) {
                         const localUpdateAt = localRes ? abstractKey.getUpdateAtTime(localRes) : 0
                         const cloudUpdateAt = cloudRes ? abstractKey.getUpdateAtTime(cloudRes) : 0;
@@ -525,7 +525,7 @@ export default class SyncStrategy<T> {
                                 console.error('resolve conflict error', localRes)
                                 throw Error('no data to add')
                             }
-                            return cloud.add(id, localRes).then(function (res) {
+                            return cloud.add(id, localRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
                                     abstract: createAbstract(res, abstractKey),
@@ -537,7 +537,7 @@ export default class SyncStrategy<T> {
                                 console.error('resolve conflict error', localRes)
                                 throw Error('no data to add')
                             }
-                            return local.add(id, cloudRes).then(function (res) {
+                            return local.add(id, cloudRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
                                     abstract: createAbstract(res, abstractKey),
@@ -551,10 +551,10 @@ export default class SyncStrategy<T> {
             /**override 和 download 使用同样的方法**/
             case SYNC_ACTION.overrideDownload:
             case SYNC_ACTION.clientDownload:
-                return function (id) {
-                    return cloud.query(id).then(function (result) {
+                return function (id,taskDetail) {
+                    return cloud.query(id,taskDetail).then(function (result) {
                         if (result) {
-                            return local.add(id, result).then(function (res) {
+                            return local.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
                                     abstract: createAbstract(res, abstractKey),
@@ -570,10 +570,10 @@ export default class SyncStrategy<T> {
             /**override 和 batchUpdate 使用同样的方法**/
             case SYNC_ACTION.overrideUpload:
             case SYNC_ACTION.clientUpload:
-                return function (id) {
-                    return local.query(id).then(function (result) {
+                return function (id,taskDetail) {
+                    return local.query(id,taskDetail).then(function (result) {
                         if (result) {
-                            return cloud.add(id, result).then(function (res) {
+                            return cloud.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
                                     abstract: createAbstract(res, abstractKey),
