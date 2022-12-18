@@ -37,7 +37,12 @@ type TaskDetail = {
 
 /** 一条数据的摘要信息 */
 export type AbstractInfo = {
-    id: string // 唯一标识
+    id: string // 唯一标识，本地、远程联系的唯一ID
+
+    /**本地读写基于的，操作ID*/
+    l_id: string
+    /**远程读写基于的，操作ID，如文件系统的，文件名路径；数据库系统的 自动生成ID；notion 系统的 page ID*/
+    c_id: string
 
     /**1. 文件相关指标，文件指标相同的情况下，可以避免进一步比较文件内容是否相同**/
     etag?: string // etag hash标识，
@@ -95,8 +100,8 @@ export const NO_ACTION = [`${ChangeFlag.deleted}${ChangeFlag.deleted}`]
 
 // 比较两个摘要是否相同
 export function isSame(current: AbstractInfo, old: AbstractInfo) {
-    const temCurrent: AbstractInfo = current || {id: '', updateAt: 0}
-    const temOld: AbstractInfo = old || {id: '', updateAt: 0}
+    const temCurrent: AbstractInfo = current || {id: '', updateAt: 0, l_id: '', c_id:''}
+    const temOld: AbstractInfo = old || {id: '', updateAt: 0, l_id: '', c_id:''}
     // 按etag比较
     if (temCurrent?.etag && temCurrent.etag === temOld.etag) {
         return true
@@ -125,13 +130,16 @@ export function isSame(current: AbstractInfo, old: AbstractInfo) {
     return false
 }
 
-export function createAbstract<T>(data: T | null, keys: { timeKey: keyof T, uniqueKey: keyof T }): AbstractInfo | null {
+export function createAbstract<T>(data: T | null, keys: AbstractKey<T>): AbstractInfo | null {
     if (!data) {
         return null
     }
+    const uniqueId = (data[keys.uniqueKey] || '')  as string
     return {
-        id: (data[keys.uniqueKey] || '') as string,
-        updateAt: (data[keys.timeKey] || 0) as number
+        id: uniqueId,
+        updateAt: (data[keys.timeKey] || 0) as number,
+        c_id: keys.getCloudMethodId(data),
+        l_id: keys.getLocalMethodId(data),
     }
 }
 
@@ -340,18 +348,24 @@ interface GetSnapshot {
 }
 
 export interface ResolveTask {
-    (i: string, task: Omit<TaskDetail, 'id'>): Promise<{
+    (i: MethodId, task: Omit<TaskDetail, 'id'>): Promise<{
         result: TaskState,
         abstract: AbstractInfo | null,
     }>
 }
 
+export type MethodId = {
+    id: string,
+    l_id?: string | undefined,
+    c_id?: string | undefined
+}
+
 export interface MethodById<T> {
-    (id: string): Promise<T | null>
+    (id: MethodId): Promise<T | null>
 }
 
 export interface ModifyByIdAndData<T> {
-    (id: string, data: T): Promise<T | null>,
+    (id: MethodId, data: T): Promise<T | null>,
 }
 
 /**增删改查*/
@@ -365,24 +379,34 @@ export interface SyncMethods<T> {
     getCurrentSnapshot: GetSnapshot,
 }
 
+export interface AbstractKey<T> {
+    timeKey: keyof T,
+    uniqueKey: keyof T,
+    getLocalMethodId: (input: T)=>string | undefined
+    getCloudMethodId: (input: T)=>string | undefined
+}
+
 interface SyncOption<T> {
-    abstractKey: {
-        timeKey: keyof T,
-        uniqueKey: keyof T,
+    /**基于数据提取摘要数据的依据*/
+    abstractKey: AbstractKey<T>
+
+    /**同步任务预估完成时间，加锁时长依据*/
+    lockResolving: number
+
+    /**快照信息存储中介；判断当前同步数据源ID；快照数据存储方法*/
+    store:{
+        getStoreId: () => Promise<string>
+        storageGet: (storeId: string) => Promise<Snapshot | null>
+        storageSet: (storeId: string, snapshot: Snapshot | null) => Promise<Snapshot | null>
     }
 
-    lockResolving: number //同步任务预估完成时间
-
-    /**快照信息存储中介*/
-    getStoreId: () => Promise<string>
-    storageGet: (storeId: string) => Promise<Snapshot | null>
-    storageSet: (storeId: string, snapshot: Snapshot | null) => Promise<Snapshot | null>
-
+    /**本地和远程数据操作的基础方法*/
     basicMethod?: {
         cloud: SyncMethods<T>,
         local: SyncMethods<T>
     }
 
+    /**TODO 待删除，不支持此模式*/
     resolveActions?: Record<SYNC_ACTION, ResolveTask>
 }
 
@@ -419,7 +443,7 @@ export default class SyncStrategy<T> {
     }
 
     _getCacheSnapshot(type: 'local' | 'cloud') {
-        return this.option.getStoreId().then(function (res) {
+        return this.option.store.getStoreId().then(function (res) {
             return type + '_' + res;
         })
     }
@@ -427,7 +451,7 @@ export default class SyncStrategy<T> {
     /**计算本地变化*/
     async _computeLocalDiff(): Promise<SyncTaskInfo> {
         const currentLocalSnapshot = await this.option.basicMethod.local.getCurrentSnapshot() || {};
-        const lastLocalSnapshot = await this.option.storageGet(await this._getCacheSnapshot('local')) || {};
+        const lastLocalSnapshot = await this.option.store.storageGet(await this._getCacheSnapshot('local')) || {};
         this.tempNewSnapshot.localSnapshot = lastLocalSnapshot;
         return {
             latestSnapshot: currentLocalSnapshot,
@@ -437,7 +461,7 @@ export default class SyncStrategy<T> {
 
     /**计算远程变化*/
     async _computeCloudDiff(): Promise<SyncTaskInfo> {
-        const lastCloudSnapshot = await this.option.storageGet(await this._getCacheSnapshot('cloud')) || {};
+        const lastCloudSnapshot = await this.option.store.storageGet(await this._getCacheSnapshot('cloud')) || {};
         const currentCloudSnapshot = await this.option.basicMethod.cloud.getCurrentSnapshot() || {};
         this.tempNewSnapshot.cloudSnapshot = lastCloudSnapshot;
         const diff = diffSnapshot(currentCloudSnapshot, lastCloudSnapshot);
@@ -492,7 +516,7 @@ export default class SyncStrategy<T> {
                 }
 
             case SYNC_ACTION.conflict:
-                return function (id: string) {
+                return function (id) {
                     return Promise.all([
                         cloud.query(id),
                         local.query(id)
@@ -531,7 +555,7 @@ export default class SyncStrategy<T> {
             /**override 和 download 使用同样的方法**/
             case SYNC_ACTION.overrideDownload:
             case SYNC_ACTION.clientDownload:
-                return function (id: string) {
+                return function (id) {
                     return cloud.query(id).then(function (result) {
                         if (result) {
                             return local.add(id, result).then(function (res) {
@@ -550,7 +574,7 @@ export default class SyncStrategy<T> {
             /**override 和 batchUpdate 使用同样的方法**/
             case SYNC_ACTION.overrideUpload:
             case SYNC_ACTION.clientUpload:
-                return function (id: string) {
+                return function (id) {
                     return local.query(id).then(function (result) {
                         if (result) {
                             return cloud.add(id, result).then(function (res) {
@@ -578,10 +602,14 @@ export default class SyncStrategy<T> {
         if(resolveId && resolveId !== this.resolveId){
             return
         }
-        const {actionType,id,localAbstract} = taskDetail;
+        const {actionType,id,localAbstract, cloudAbstract} = taskDetail;
         let responseAbstract: AbstractInfo = localAbstract;
         try {
-            const result = await this._getResolveMethod(actionType)(id, taskDetail);
+            const result = await this._getResolveMethod(actionType)({
+                id: id,
+                l_id: localAbstract.l_id,
+                c_id: cloudAbstract.c_id,
+            }, taskDetail);
             taskDetail.state = result.result;
             if (taskDetail.state === TaskState.success) {
                 responseAbstract = result.abstract;
@@ -595,8 +623,8 @@ export default class SyncStrategy<T> {
                     this.tempNewSnapshot.localSnapshot[id] = responseAbstract
                 }
 
-                this.option.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
-                this.option.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
+                this.option.store.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
+                this.option.store.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
             }
         } catch (e) {
             console.error('resolve error:', e)
