@@ -132,17 +132,6 @@ export function isSame(current: AbstractInfo, old: AbstractInfo) {
     return false
 }
 
-function createAbstract<T>(data: T | null, keys: AbstractKey<T>): AbstractInfo | null {
-    if (!data) {
-        return null
-    }
-    return {
-        id: keys.getUniqueId(data),
-        updateAt: keys.getUpdateAtTime(data),
-        c_id: keys.getCloudMethodId(data),
-        l_id: keys.getLocalMethodId(data),
-    }
-}
 
 type ChangeMap = Record<string, ChangeFlag>
 
@@ -375,16 +364,10 @@ export interface SyncMethods<T> {
     getCurrentSnapshot: GetSnapshot,
 }
 
-export type AbstractKey<T> = {
-    getUniqueId: (input: T)=>string
-    getLocalMethodId: (input: T)=>string | undefined
-    getCloudMethodId: (input: T)=>string | undefined
-    getUpdateAtTime: (input: T)=>number
-}
 
 interface SyncOption<T> {
     /**基于数据提取摘要数据的依据*/
-    abstractKey: AbstractKey<T>
+    getAbstractInfo: (data: T | null)=>AbstractInfo
 
     /**同步任务预估完成时间，加锁时长依据*/
     lockResolving: number
@@ -481,7 +464,7 @@ export default class SyncStrategy<T> {
     }
 
     _getResolveMethod(actionType: SYNC_ACTION): ResolveTask {
-        const {resolveActions, basicMethod, abstractKey} = this.option;
+        const {resolveActions, basicMethod, getAbstractInfo} = this.option;
         if (resolveActions && resolveActions[actionType]) {
             return resolveActions[actionType]
         }
@@ -495,7 +478,7 @@ export default class SyncStrategy<T> {
                     return local.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
-                            abstract: createAbstract<T>(res, abstractKey),
+                            abstract: getAbstractInfo(res),
                             result: TaskState.success
                         }
                     })
@@ -505,7 +488,7 @@ export default class SyncStrategy<T> {
                     return cloud.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
-                            abstract: createAbstract<T>(res, abstractKey),
+                            abstract: getAbstractInfo(res),
                             result: TaskState.success
                         }
                     })
@@ -517,8 +500,8 @@ export default class SyncStrategy<T> {
                         cloud.query(id,taskDetail),
                         local.query(id,taskDetail)
                     ]).then(function ([cloudRes, localRes]) {
-                        const localUpdateAt = localRes ? abstractKey.getUpdateAtTime(localRes) : 0
-                        const cloudUpdateAt = cloudRes ? abstractKey.getUpdateAtTime(cloudRes) : 0;
+                        const localUpdateAt = localRes ? getAbstractInfo(localRes).updateAt : 0
+                        const cloudUpdateAt = cloudRes ? getAbstractInfo(cloudRes).updateAt : 0;
 
                         if ((localUpdateAt || 0) > (cloudUpdateAt || 0)) {
                             if (!localRes) {
@@ -528,7 +511,7 @@ export default class SyncStrategy<T> {
                             return cloud.add(id, localRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: createAbstract(res, abstractKey),
+                                    abstract: getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -540,7 +523,7 @@ export default class SyncStrategy<T> {
                             return local.add(id, cloudRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: createAbstract(res, abstractKey),
+                                    abstract: getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -557,7 +540,7 @@ export default class SyncStrategy<T> {
                             return local.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: createAbstract(res, abstractKey),
+                                    abstract: getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -576,7 +559,7 @@ export default class SyncStrategy<T> {
                             return cloud.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: createAbstract(res, abstractKey),
+                                    abstract: getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
