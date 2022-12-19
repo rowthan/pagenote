@@ -27,7 +27,7 @@ enum TaskState {
     decodeError = "decodeError"
 }
 
-type TaskDetail = {
+export type SyncTaskDetail = {
     id: string;
     state: TaskState;
     localAbstract?: AbstractInfo,
@@ -176,7 +176,7 @@ type SyncTaskInfo = {
     changeMap: ChangeMap
     latestSnapshot: Snapshot
 }
-export type SyncTaskMap = Record<string, TaskDetail>
+export type SyncTaskMap = Record<string, SyncTaskDetail>
 export type SyncTaskActionsMap = {
     [key in SYNC_ACTION]: SyncTaskMap
 }
@@ -279,66 +279,12 @@ export function computeSyncTask(
     return taskGroup
 }
 
-type ResolveFunMap = Record<SYNC_ACTION,
-    (key: string, taskDetail: TaskDetail) => Promise<boolean>>
-
-// 执行同步任务
-export function resolveSyncTask(
-    taskMap: SyncTaskMap,
-    resolveFunMap: ResolveFunMap
-) {
-    const clientDownload: Record<string, TaskDetail> = {}
-    const clientDelete: Record<string, TaskDetail> = {}
-    const serverDelete: Record<string, TaskDetail> = {}
-    const clientUpload: Record<string, TaskDetail> = {}
-    const conflict: Record<string, TaskDetail> = {}
-    for (const i in taskMap) {
-        const tempTask = taskMap[i]
-        // 已执行、或正在执行，直接跳过，防止重复执行
-        if ([TaskState.success, TaskState.resolving].includes(tempTask.state)) {
-            continue
-        }
-        switch (tempTask.actionType) {
-            case SYNC_ACTION.clientDelete:
-                clientDelete[i] = tempTask
-                resolveFunMap[SYNC_ACTION.clientDelete](i, tempTask)
-                break
-            case SYNC_ACTION.clientDownload:
-                clientDownload[i] = tempTask
-                resolveFunMap[SYNC_ACTION.clientDownload](i, tempTask)
-                break
-            case SYNC_ACTION.clientUpload:
-                clientUpload[i] = tempTask
-                resolveFunMap[SYNC_ACTION.clientUpload](i, tempTask)
-                break
-            case SYNC_ACTION.conflict:
-                conflict[i] = tempTask
-                resolveFunMap[SYNC_ACTION.conflict](i, tempTask)
-                break
-            case SYNC_ACTION.serverDelete:
-                serverDelete[i] = tempTask
-                resolveFunMap[SYNC_ACTION.serverDelete](i, tempTask)
-                break
-            case SYNC_ACTION.overrideDownload:
-                clientDownload[i] = tempTask
-                resolveFunMap[SYNC_ACTION.overrideDownload](i, tempTask)
-                break
-            case SYNC_ACTION.overrideUpload:
-                clientUpload[i] = tempTask
-                resolveFunMap[SYNC_ACTION.overrideUpload](i, tempTask)
-                break
-            default:
-                console.log('未知类型任务', taskMap[i])
-        }
-    }
-}
-
 interface GetSnapshot {
     (): Promise<Snapshot | null>
 }
 
 export interface ResolveTask {
-    (id: string, task: TaskDetail): Promise<{
+    (id: string, task: SyncTaskDetail): Promise<{
         result: TaskState,
         abstract: AbstractInfo | null,
     }>
@@ -346,11 +292,11 @@ export interface ResolveTask {
 
 
 export interface MethodById<T> {
-    (id: string, taskDetail: TaskDetail): Promise<T | null>
+    (id: string, taskDetail: SyncTaskDetail): Promise<T | null>
 }
 
 export interface ModifyByIdAndData<T> {
-    (id: string, data: T, taskDetail: TaskDetail): Promise<T | null>,
+    (id: string, data: T, taskDetail: SyncTaskDetail): Promise<T | null>,
 }
 
 /**增删改查*/
@@ -385,8 +331,6 @@ interface SyncOption<T> {
         local: SyncMethods<T>
     }
 
-    /**TODO 待删除，不支持此模式*/
-    resolveActions?: Record<SYNC_ACTION, ResolveTask>
 }
 
 function getInitTaskMap(): SyncTaskActionsMap {
@@ -402,7 +346,7 @@ function getInitTaskMap(): SyncTaskActionsMap {
 }
 
 export default class SyncStrategy<T> {
-    private readonly option: SyncOption<T>
+    private option: SyncOption<T>
     public syncTaskMap: SyncTaskActionsMap = getInitTaskMap();
     public lastSyncAt: number = 0;
     public resolving: boolean = false;
@@ -421,7 +365,15 @@ export default class SyncStrategy<T> {
         this.option = option
     }
 
+    updateOption(option: Partial<SyncOption<T>>){
+        this.option = {
+            ...this.option,
+            ...option
+        }
+    }
+
     _getCacheSnapshot(type: 'local' | 'cloud') {
+        //  TODO 加上 cache
         return this.option.store.getStoreId().then(function (res) {
             return type + '_' + res;
         })
@@ -464,10 +416,7 @@ export default class SyncStrategy<T> {
     }
 
     _getResolveMethod(actionType: SYNC_ACTION): ResolveTask {
-        const {resolveActions, basicMethod, getAbstractInfo} = this.option;
-        if (resolveActions && resolveActions[actionType]) {
-            return resolveActions[actionType]
-        }
+        const { basicMethod, getAbstractInfo} = this.option;
         if (!basicMethod) {
             throw Error('basicMethod or resolveActions is required')
         }
@@ -572,17 +521,17 @@ export default class SyncStrategy<T> {
         throw Error('无可使用方法')
     }
 
-    async _resolveSingleTask(taskDetail: TaskDetail, resolveId: string){
+    async _resolveSingleTask(taskDetail: SyncTaskDetail, resolveId: string){
         /**
          * 判断当前任务集ID是否匹配最新的任务集ID，如有更新的处理集，抛弃历史任务。
          * 1. 防止历史任务时效性过期
          * 2. 防止重复执行相同任务
          * */
         if(resolveId && resolveId !== this.resolveId){
-            return
+            return Promise.reject(`resolveId is not matched`)
         }
-        const {actionType,id,localAbstract, cloudAbstract} = taskDetail;
-        let responseAbstract: AbstractInfo = localAbstract;
+        const {actionType,id} = taskDetail;
+        let responseAbstract: AbstractInfo;
         try {
             const result = await this._getResolveMethod(actionType)(id, taskDetail);
             taskDetail.state = result.result;
@@ -607,51 +556,57 @@ export default class SyncStrategy<T> {
         }
     }
 
-    async _resolveTaskMap(task: SyncTaskActionsMap, resolveId: string) {
+    async _resolveTaskMap(task: SyncTaskActionsMap, resolveId?: string):Promise<SyncTaskActionsMap> {
+        this.resolveId = resolveId || new Date().toString();
+
         /**本地数据更新 start
          * 按照 本地 > 远程 优先级处理任务，保证本地能得到最新的数据展示。
          * */
 
+        const promiseTaskList: Promise<any>[] = []
         /**1. 优先删除本地，不需要等待完成 await*/
         for(let taskId in task[SYNC_ACTION.clientDelete]){
-            this._resolveSingleTask(task[SYNC_ACTION.clientDelete][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientDelete][taskId],resolveId))
         }
         /**2. 优先下载本地*/
         for(let taskId in task[SYNC_ACTION.clientDownload]){
-            await this._resolveSingleTask(task[SYNC_ACTION.clientDownload][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientDownload][taskId],resolveId))
         }
         /**3. 优先更新本地*/
         for(let taskId in task[SYNC_ACTION.overrideDownload]){
-            await this._resolveSingleTask(task[SYNC_ACTION.overrideDownload][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.overrideDownload][taskId],resolveId))
         }
 
 
         /**4. 冲突解决*/
         for(let taskId in task[SYNC_ACTION.conflict]){
-            await this._resolveSingleTask(task[SYNC_ACTION.conflict][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.conflict][taskId],resolveId))
         }
 
 
         /**服务端更新 start*/
-
         /**5. 服务端删除*/
         for(let taskId in task[SYNC_ACTION.serverDelete]){
-            await this._resolveSingleTask(task[SYNC_ACTION.serverDelete][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.serverDelete][taskId],resolveId))
         }
 
         /**6. 服务端上传*/
         for(let taskId in task[SYNC_ACTION.clientUpload]){
-            await this._resolveSingleTask(task[SYNC_ACTION.clientUpload][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientUpload][taskId],resolveId))
         }
 
         /**7. 服务端更新*/
         for(let taskId in task[SYNC_ACTION.overrideUpload]){
-            await this._resolveSingleTask(task[SYNC_ACTION.overrideUpload][taskId],resolveId)
+            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.overrideUpload][taskId],resolveId))
         }
 
-        this.lastSyncAt = Date.now();
-        this.resolving = false;
-        return Promise.resolve(task)
+        return Promise.all(promiseTaskList).then(function (res) {
+            return task;
+        }).finally( ()=> {
+            //  同步结束
+            this.lastSyncAt = Date.now();
+            this.resolving = false;
+        })
     }
 
     sync(): Promise<SyncTaskActionsMap> {
@@ -668,10 +623,33 @@ export default class SyncStrategy<T> {
             this.resolving = false;
         }, this.option.lockResolving)
         return this._computeSyncTask().then((task) => {
-            const latestResolveId = new Date().toString();
-            this.resolveId = latestResolveId;
-            return this._resolveTaskMap(task,latestResolveId)
+            return this._resolveTaskMap(task)
         })
     }
 }
 
+
+interface ScheduleFun<T extends (...args: any)=>Promise<any>> {
+    (...args: Parameters<T>): Promise<ReturnType<T>>;
+}
+
+/**
+ * 对方法添加频控调度处理；防止连续触发导致被限制
+ * */
+export function scheduleWrap<T extends (...args: any)=>Promise<any>>(fun: T,gap: number=1000): ScheduleFun<T>{
+    let times = -1;
+    return function (arg: any, ...args: any){
+        times++
+        const timeout = times * gap;
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                fun(arg, ...args).then(function (res) {
+                    resolve(res)
+                }).catch(function (reason) {
+                    reject(reason)
+                })
+                times--
+            }, timeout)
+        });
+    }
+}

@@ -109,7 +109,11 @@ export type SnapshotResource = {
     type: MetaResourceType
     createAt?: number, // 资源创建时间
     updateAt?: number,
+
+    expiredAt?: number,
     did?: string
+
+    deleted?: boolean
 }
 
 
