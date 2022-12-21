@@ -49,6 +49,8 @@ export type AbstractInfo = null | {
     etag?: string // etag hash标识，
     lastmod?: string // 文件的最后修改时间 GTM 格式
 
+    mtimeMs?: number // 文件系统的最后修改时间，单位 s
+
     /**2. 数据相关指标*/
     updateAt: number // 数据的最后更新时间
 }
@@ -625,31 +627,5 @@ export default class SyncStrategy<T> {
         return this._computeSyncTask().then((task) => {
             return this._resolveTaskMap(task)
         })
-    }
-}
-
-
-interface ScheduleFun<T extends (...args: any)=>Promise<any>> {
-    (...args: Parameters<T>): Promise<ReturnType<T>>;
-}
-
-/**
- * 对方法添加频控调度处理；防止连续触发导致被限制
- * */
-export function scheduleWrap<T extends (...args: any)=>Promise<any>>(fun: T,gap: number=1000): ScheduleFun<T>{
-    let times = -1;
-    return function (arg: any, ...args: any){
-        times++
-        const timeout = times * gap;
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                fun(arg, ...args).then(function (res) {
-                    resolve(res)
-                }).catch(function (reason) {
-                    reject(reason)
-                })
-                times--
-            }, timeout)
-        });
     }
 }
