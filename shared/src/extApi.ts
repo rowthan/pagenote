@@ -166,7 +166,7 @@ export namespace setting {
     export type SDK_SETTING = Inner_Setting & {
         lastModified: number,
         brushes: Brush[],
-        copyAllowList: string[],
+        copyAllowList?: string[],
 
         // TODO 删除 提取至一级目录下
         commonSetting?: {
@@ -176,11 +176,11 @@ export namespace setting {
             removeAfterDays: number,
         },
         actions: Action[],
-        disableList: string[],
+        disableList?: string[],
         controlC: boolean,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
-        convertMethods: ConvertMethod[],
+        convertMethods?: ConvertMethod[],
         dataVersion: SDK_VERSION,
         useRecommend: boolean
 
@@ -358,6 +358,9 @@ export namespace action {
 
         /**防止重复打开新标签*/
         openTab: IExtenstionMessageListener<{ url: string, tabId?: string|number, windowId?: string|number }, { tab: Tab }>
+
+        getCurrentTab: IExtenstionMessageListener<void, Tab>
+
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -399,6 +402,12 @@ export namespace developer {
 
         permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
         requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
+
+        requestFront: IExtenstionMessageListener<{
+            api: keyof frontApi.response,
+            tabId?: number,
+            data: any
+        }, any>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -560,7 +569,7 @@ export namespace frontApi {
         toggleAllLight: IExtenstionMessageListener<void, boolean>
         togglePagenote: IExtenstionMessageListener<void, boolean>
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
-        fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean }>
+        fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean, url: string }>
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
 

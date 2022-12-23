@@ -7,7 +7,8 @@ import {
     localdir,
     fileDB,
     user,
-    network, developer
+    network,
+    developer,
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import ExtensionMessage2 from "./communication/ExtenstionBridge";
@@ -111,6 +112,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        getCurrentTab: wrapperFun('getCurrentTab',action.id),
         getPersistentValue: wrapperFun('getPersistentValue',action.id),
         setPersistentValue: wrapperFun('setPersistentValue',action.id),
         openTab: wrapperFun('openTab',action.id),
@@ -165,10 +167,11 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const developerApi: developer.request = {
+        requestFront: wrapperFun('requestFront',developer.id),
         log: wrapperFun('log',developer.id),
         logs: wrapperFun('logs',developer.id),
         permissionList: wrapperFun('permissionList',developer.id),
-        requestPermission: wrapperFun('requestPermission',developer.id),
+        requestPermission: wrapperFun('requestPermission',developer.id)
     }
 
     return {

@@ -42,6 +42,8 @@ type BaseMessageHeader = {
     targetOrigin?: string // iframe 通信时，可指定 origin，来减少广播对象
 
     hostname?: string // session bridge 请求时携带当前URL信息
+
+    [key: string]: string | boolean | number | any
 }
 
 

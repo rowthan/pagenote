@@ -104,6 +104,7 @@ export default class ExtensionMessage2 implements Communication<any>{
         try{
           that.proxy && that.proxy(request,thisSender,sendResponse)
         }catch (e) {
+          console.error(e)
           sendResponse({
             data: undefined,
             error: e,

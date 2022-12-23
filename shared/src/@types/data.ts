@@ -27,7 +27,7 @@ enum AnnotationShowType {
 }
 
 type Step = {
-    key?: string // 标记的全局唯一ID
+    key: string // 标记的全局唯一ID
     wid?: string // whats-element id
     session?: string,
     did?: string,
