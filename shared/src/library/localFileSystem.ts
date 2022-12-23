@@ -98,16 +98,20 @@ export default class LocalFileSystem {
 
   public async getHandleAndPathArray(
       path: string,
-      mode: FileSystemPermissionMode = 'readwrite'
+      mode: FileSystemPermissionMode = 'readwrite',
+      checkPermission = true
   ): Promise<{
     handle: FileSystemDirectoryHandle | null
     pathArray: string[] // 解析 path 的每一个层级路径地址
   }> {
     const directoryHandle = this.rootDirctoryHandle
-    const permission = await verifyPermission(directoryHandle, mode)
-    if (!permission) {
-      throw new Error(`无文件 ${path} ${mode}夹权限`)
+    if(checkPermission){
+      const permission = await verifyPermission(directoryHandle, mode)
+      if (!permission) {
+        throw new Error(`无文件 ${path} ${mode}夹权限`)
+      }
     }
+
     const pathArr = path
         .replace(/\/+$/, '')
         .split('/')
@@ -182,7 +186,6 @@ export default class LocalFileSystem {
       const names = []
       for await (const entry of directoryHandle.values()) {
         const fullPathName = concatPaths([path, entry.name])
-
         if (filter?.excludeDirFilter) {
           if (entry.kind === 'directory') {
             if (filter.excludeDirFilter.test(entry.name)) {
@@ -242,7 +245,7 @@ export default class LocalFileSystem {
   }
 
   public async stats(path: string): Promise<PathStat | null> {
-    const result = await this.getHandleAndPathArray(path, 'read')
+    const result = await this.getHandleAndPathArray(path, 'read',false)
     let directoryHandle = result.handle
     const pathArr = result.pathArray
     if (!directoryHandle) {
@@ -259,13 +262,14 @@ export default class LocalFileSystem {
       } catch (error) {
         fHandle = await directoryHandle.getFileHandle(pathArr[i])
       }
+      const fileHandle = await fHandle?.getFile();
       return {
         isDirectory: !!dHandle,
         isFile: !!fHandle,
         pathArray: pathArr,
         handle: fHandle || dHandle,
-        ctimeMs: fHandle ? (await fHandle.getFile()).lastModified : Date.now(),
-        mtimeMs: fHandle ? (await fHandle.getFile()).lastModified : Date.now(),
+        ctimeMs: fileHandle ? (fileHandle).lastModified : Date.now(),
+        mtimeMs: fileHandle ? (fileHandle).lastModified : Date.now(),
       }
     }
   }
