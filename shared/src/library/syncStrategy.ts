@@ -3,17 +3,18 @@ export enum SYNC_ACTION {
     /**1. 远程本地存在冲突*/
     conflict = 'conflict',
     /**2. 下载服务端至本地*/
-    clientDownload = 'clientDownload',
+    clientAdd = 'clientAdd',
     /**3. 删除本地*/
     clientDelete = "clientDelete",
-    /**4. 上传本地至服务端*/
-    clientUpload = "clientUpload",
-    /**5. 服务端删除*/
+    /**4. 下载服务端至本地（覆盖更新）*/
+    clientUpdate = "clientUpdate",
+
+    /**5. 上传本地至服务端*/
+    serverAdd = "serverAdd",
+    /**6. 服务端删除*/
     serverDelete = "serverDelete",
-    /**6. 上传至服务端（覆盖更新）*/
-    overrideUpload = "overrideUpload",
-    /**7. 下载服务端至本地（覆盖更新）*/
-    overrideDownload = "overrideDownload",
+    /**7. 上传至服务端（覆盖更新）*/
+    serverUpdate = "serverUpdate",
 }
 
 /**同步任务状态*/
@@ -41,9 +42,9 @@ export type AbstractInfo = null | {
     id: string // 唯一标识，本地、远程联系的唯一ID
 
     /**本地读写基于的，操作ID*/
-    l_id: string
+    l_id?: string
     /**远程读写基于的，操作ID，如文件系统的，文件名路径；数据库系统的 自动生成ID；notion 系统的 page ID*/
-    c_id: string
+    c_id?: string
 
     /**1. 文件相关指标，文件指标相同的情况下，可以避免进一步比较文件内容是否相同**/
     etag?: string // etag hash标识，
@@ -178,7 +179,7 @@ type SyncTaskInfo = {
     changeMap: ChangeMap
     latestSnapshot: Snapshot
 }
-export type SyncTaskMap = Record<string, SyncTaskDetail>
+export type SyncTaskMap = Map<string, SyncTaskDetail>
 export type SyncTaskActionsMap = {
     [key in SYNC_ACTION]: SyncTaskMap
 }
@@ -187,16 +188,7 @@ export function computeSyncTask(
     local: SyncTaskInfo,
     cloud: SyncTaskInfo
 ): SyncTaskActionsMap {
-    const taskGroup: SyncTaskActionsMap = {
-        clientDelete: {},
-        clientDownload: {},
-        clientUpload: {},
-        conflict: {},
-        overrideDownload: {},
-        overrideUpload: {},
-        serverDelete: {}
-    }
-    const tasks: SyncTaskMap = {}
+    const taskGroup: SyncTaskActionsMap = getInitTaskMap();
     /** 1 */
     for (const i in local.changeMap) {
         // 如果远端不存在该变化，则忽略该变化，进入步骤2处理
@@ -217,26 +209,26 @@ export function computeSyncTask(
             }
         } else if (DOWNLOAD_FLAG.includes(flag)) {
             if (!same) {
-                actionType = SYNC_ACTION.overrideDownload
+                actionType = SYNC_ACTION.clientUpdate
             }
         } else if (CLIENT_DELETE_FLAG.includes(flag)) {
             actionType = SYNC_ACTION.clientDelete
         } else if (CLIENT_UPLOAD_FLAG.includes(flag)) {
             if (!same) {
-                actionType = SYNC_ACTION.overrideUpload
+                actionType = SYNC_ACTION.serverUpdate
             }
         } else if (SERVER_DELETE_FLAG.includes(flag)) {
             actionType = SYNC_ACTION.serverDelete
         }
 
         if (actionType !== undefined) {
-            taskGroup[actionType][i] = tasks[i] = {
+            taskGroup[actionType].set(i,{
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
                 localAbstract: local.latestSnapshot[i],
                 actionType: actionType,
-            }
+            })
         }
 
         delete local.changeMap[i]
@@ -251,13 +243,13 @@ export function computeSyncTask(
                 flag
             )
         ) {
-            taskGroup[SYNC_ACTION.clientUpload][i] = tasks[i] = {
+            taskGroup[SYNC_ACTION.serverAdd].set(i,{
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
                 localAbstract: local.latestSnapshot[i],
-                actionType: SYNC_ACTION.clientUpload,
-            }
+                actionType: SYNC_ACTION.serverAdd,
+            })
         }
     }
 
@@ -269,13 +261,13 @@ export function computeSyncTask(
                 flag
             )
         ) {
-            taskGroup[SYNC_ACTION.clientDownload][i] = tasks[i] = {
+            taskGroup[SYNC_ACTION.clientAdd].set(i,{
                 id: i,
                 state: TaskState.pending,
                 cloudAbstract: cloud.latestSnapshot[i],
                 localAbstract: local.latestSnapshot[i],
-                actionType: SYNC_ACTION.clientDownload,
-            }
+                actionType: SYNC_ACTION.clientAdd,
+            })
         }
     }
     return taskGroup
@@ -302,105 +294,101 @@ export interface ModifyByIdAndData<T> {
 }
 
 /**增删改查*/
-export interface SyncMethods<T> {
+export type SyncMethods<T> = {
+    /**当前数据源ID标识*/
+    getSourceId: ()=>Promise<string>
+
+    /**增删改查基础方法*/
     add: ModifyByIdAndData<T>
     update: ModifyByIdAndData<T>
     remove: MethodById<T>
     query: MethodById<T>
 
     /**全量数据的当前快照信息*/
-    getCurrentSnapshot: GetSnapshot,
+    getCurrentSnapshot: GetSnapshot
+
+    /**基于单个数据的全量信息，提取摘要数据*/
+    getAbstractInfo: (data: T | null)=>AbstractInfo
 }
 
+export type CacheMethod = {
+    /**快照信息缓存，至少选择存储到一端。推荐存储在本地*/
+    cache:{
+        storageGet: (cacheId: string) => Promise<Snapshot | null>
+        storageSet: (cacheId: string, snapshot: Snapshot | null) => Promise<void>
+    }
+}
 
-interface SyncOption<T> {
-    /**基于数据提取摘要数据的依据*/
-    getAbstractInfo: (data: T | null)=>AbstractInfo
-
+export type Client<T> = {
+    cloud: SyncMethods<T>,
+    local: SyncMethods<T> & CacheMethod
+}
+export interface SyncOption<T> {
     /**同步任务预估完成时间，加锁时长依据*/
     lockResolving: number
-
-    /**快照信息存储中介；判断当前同步数据源ID；快照数据存储方法*/
-    store:{
-        getStoreId: () => Promise<string>
-        storageGet: (storeId: string) => Promise<Snapshot | null>
-        storageSet: (storeId: string, snapshot: Snapshot | null) => Promise<Snapshot | null>
-    }
-
     /**本地和远程数据操作的基础方法*/
-    basicMethod?: {
-        cloud: SyncMethods<T>,
-        local: SyncMethods<T>
-    }
-
+    client: Client<T>
 }
 
 function getInitTaskMap(): SyncTaskActionsMap {
     return {
-        clientDelete: {},
-        clientDownload: {},
-        clientUpload: {},
-        conflict: {},
-        overrideDownload: {},
-        overrideUpload: {},
-        serverDelete: {}
+        [SYNC_ACTION.clientDelete]: new Map(),
+        [SYNC_ACTION.clientAdd]: new Map(),
+        [SYNC_ACTION.clientUpdate]: new Map(),
+        [SYNC_ACTION.conflict]: new Map(),
+        [SYNC_ACTION.serverAdd]: new Map(),
+        [SYNC_ACTION.serverUpdate]: new Map(),
+        [SYNC_ACTION.serverDelete]: new Map()
     }
 }
 
 export default class SyncStrategy<T> {
-    private option: SyncOption<T>
+    private readonly client: Client<T>
     public syncTaskMap: SyncTaskActionsMap = getInitTaskMap();
     public lastSyncAt: number = 0;
+
+    public lockResolving: number
     public resolving: boolean = false;
     private nextTimer: NodeJS.Timer | undefined;
     // 一次任务集处理ID，标识当前正在执行的任务集；非当前任务集ID的任务，放弃执行
-    private resolveId: string;
+    private resolveId: string = '';
     private tempNewSnapshot: {
-        localSnapshot: Snapshot,
-        cloudSnapshot: Snapshot,
+        local: Snapshot,
+        cloud: Snapshot,
     } = {
-        localSnapshot: {},
-        cloudSnapshot: {}
+        local: {},
+        cloud: {}
     }
+
+    private syncPairId = ''
 
     constructor(option: SyncOption<T>) {
-        this.option = option
+        this.lockResolving = option.lockResolving
+        this.client = option.client;
     }
 
-    updateOption(option: Partial<SyncOption<T>>){
-        this.option = {
-            ...this.option,
-            ...option
+    /**生成同步对ID*/
+    async _getSyncPariId(type:'local'|'cloud'){
+        if(!this.syncPairId){
+            const localId = await this.client.local.getSourceId();
+            const cloudId = await this.client.cloud.getSourceId();
+            this.syncPairId = `${localId}_${cloudId}`;
         }
+        return `${this.syncPairId}_${type}`
     }
 
-    _getCacheSnapshot(type: 'local' | 'cloud') {
-        //  TODO 加上 cache
-        return this.option.store.getStoreId().then(function (res) {
-            return type + '_' + res;
-        })
-    }
 
-    /**计算本地变化*/
-    async _computeLocalDiff(): Promise<SyncTaskInfo> {
-        const currentLocalSnapshot = await this.option.basicMethod.local.getCurrentSnapshot() || {};
-        const lastLocalSnapshot = await this.option.store.storageGet(await this._getCacheSnapshot('local')) || {};
-        this.tempNewSnapshot.localSnapshot = lastLocalSnapshot;
+    async _computeDiff(client: 'local'|'cloud'){
+        const currentSnapshot = await this.client[client].getCurrentSnapshot() || {};
+        const storeId = await this._getSyncPariId(client);
+        const lastSnapshot = await this.client.local.cache.storageGet(storeId) || {};
+        this.tempNewSnapshot[client] = {
+            ...currentSnapshot,
+            ...lastSnapshot
+        };
+        const diff = diffSnapshot(currentSnapshot,this.tempNewSnapshot[client]);
         return {
-            latestSnapshot: currentLocalSnapshot,
-            changeMap: diffSnapshot(currentLocalSnapshot, lastLocalSnapshot)
-        }
-    }
-
-    /**计算远程变化*/
-    async _computeCloudDiff(): Promise<SyncTaskInfo> {
-        const lastCloudSnapshot = await this.option.store.storageGet(await this._getCacheSnapshot('cloud')) || {};
-        const currentCloudSnapshot = await this.option.basicMethod.cloud.getCurrentSnapshot() || {};
-        this.tempNewSnapshot.cloudSnapshot = lastCloudSnapshot;
-        const diff = diffSnapshot(currentCloudSnapshot, lastCloudSnapshot);
-
-        return {
-            latestSnapshot: currentCloudSnapshot || {},
+            latestSnapshot: currentSnapshot,
             changeMap: diff
         }
     }
@@ -409,8 +397,8 @@ export default class SyncStrategy<T> {
         this.syncTaskMap = getInitTaskMap();
         // 计算差异
         return Promise.all([
-            this._computeLocalDiff(),
-            this._computeCloudDiff(),
+            this._computeDiff('local'),
+            this._computeDiff('cloud'),
         ]).then(([localDiff, cloudDiff]) => {
             this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
             return this.syncTaskMap
@@ -418,18 +406,14 @@ export default class SyncStrategy<T> {
     }
 
     _getResolveMethod(actionType: SYNC_ACTION): ResolveTask {
-        const { basicMethod, getAbstractInfo} = this.option;
-        if (!basicMethod) {
-            throw Error('basicMethod or resolveActions is required')
-        }
-        const {cloud, local} = basicMethod;
+        const {cloud, local} = this.client;
         switch (actionType) {
             case SYNC_ACTION.clientDelete:
                 return function (id,taskDetail) {
                     return local.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
-                            abstract: getAbstractInfo(res),
+                            abstract: local.getAbstractInfo(res),
                             result: TaskState.success
                         }
                     })
@@ -439,7 +423,7 @@ export default class SyncStrategy<T> {
                     return cloud.remove(id,taskDetail).then(function (res) {
                         return {
                             data: res,
-                            abstract: getAbstractInfo(res),
+                            abstract: cloud.getAbstractInfo(res),
                             result: TaskState.success
                         }
                     })
@@ -451,8 +435,8 @@ export default class SyncStrategy<T> {
                         cloud.query(id,taskDetail),
                         local.query(id,taskDetail)
                     ]).then(function ([cloudRes, localRes]) {
-                        const localUpdateAt = localRes ? getAbstractInfo(localRes).updateAt : 0
-                        const cloudUpdateAt = cloudRes ? getAbstractInfo(cloudRes).updateAt : 0;
+                        const localUpdateAt = localRes ? local.getAbstractInfo(localRes)?.updateAt : 0
+                        const cloudUpdateAt = cloudRes ? cloud.getAbstractInfo(cloudRes)?.updateAt : 0;
 
                         if ((localUpdateAt || 0) > (cloudUpdateAt || 0)) {
                             if (!localRes) {
@@ -462,7 +446,7 @@ export default class SyncStrategy<T> {
                             return cloud.add(id, localRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: getAbstractInfo(res),
+                                    abstract: cloud.getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -474,7 +458,7 @@ export default class SyncStrategy<T> {
                             return local.add(id, cloudRes,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: getAbstractInfo(res),
+                                    abstract: local.getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -483,15 +467,15 @@ export default class SyncStrategy<T> {
                 }
 
             /**override 和 download 使用同样的方法**/
-            case SYNC_ACTION.overrideDownload:
-            case SYNC_ACTION.clientDownload:
+            case SYNC_ACTION.clientUpdate:
+            case SYNC_ACTION.clientAdd:
                 return function (id,taskDetail) {
                     return cloud.query(id,taskDetail).then(function (result) {
                         if (result) {
                             return local.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: getAbstractInfo(res),
+                                    abstract: local.getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -502,15 +486,15 @@ export default class SyncStrategy<T> {
                 }
 
             /**override 和 batchUpdate 使用同样的方法**/
-            case SYNC_ACTION.overrideUpload:
-            case SYNC_ACTION.clientUpload:
+            case SYNC_ACTION.serverUpdate:
+            case SYNC_ACTION.serverAdd:
                 return function (id,taskDetail) {
                     return local.query(id,taskDetail).then(function (result) {
                         if (result) {
                             return cloud.add(id, result,taskDetail).then(function (res) {
                                 return {
                                     data: res,
-                                    abstract: getAbstractInfo(res),
+                                    abstract: cloud.getAbstractInfo(res),
                                     result: TaskState.success
                                 }
                             })
@@ -542,15 +526,19 @@ export default class SyncStrategy<T> {
                 // 更新摘要
                 // 如果删除资源，则快照中直接除名
                 if (responseAbstract === null) {
-                    delete this.tempNewSnapshot.cloudSnapshot[id];
-                    delete this.tempNewSnapshot.localSnapshot[id];
+                    delete this.tempNewSnapshot.cloud[id];
+                    delete this.tempNewSnapshot.local[id];
                 } else if (responseAbstract) { // 有最新快照信息，将其赋值给本地、云端快照
-                    this.tempNewSnapshot.cloudSnapshot[id] = responseAbstract
-                    this.tempNewSnapshot.localSnapshot[id] = responseAbstract
+                    this.tempNewSnapshot.cloud[id] = this.tempNewSnapshot.local[id] = {
+                        id: responseAbstract.id,
+                        updateAt: responseAbstract.updateAt,
+                    }
                 }
 
-                this.option.store.storageSet(await this._getCacheSnapshot('local'), this.tempNewSnapshot.localSnapshot);
-                this.option.store.storageSet(await this._getCacheSnapshot('cloud'), this.tempNewSnapshot.cloudSnapshot);
+
+                this.client.local.cache.storageSet(await this._getSyncPariId('local'), this.tempNewSnapshot.local).then(async ()=>{
+                    this.client.local.cache.storageSet(await this._getSyncPariId('cloud'), this.tempNewSnapshot.cloud);
+                });
             }
         } catch (e) {
             console.error('resolve error:', e)
@@ -566,43 +554,33 @@ export default class SyncStrategy<T> {
          * */
 
         const promiseTaskList: Promise<any>[] = []
+        const that = this;
+        function pushTask(item: SyncTaskDetail) {
+            promiseTaskList.push(that._resolveSingleTask(item,that.resolveId))
+        }
         /**1. 优先删除本地，不需要等待完成 await*/
-        for(let taskId in task[SYNC_ACTION.clientDelete]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientDelete][taskId],resolveId))
-        }
-        /**2. 优先下载本地*/
-        for(let taskId in task[SYNC_ACTION.clientDownload]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientDownload][taskId],resolveId))
-        }
-        /**3. 优先更新本地*/
-        for(let taskId in task[SYNC_ACTION.overrideDownload]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.overrideDownload][taskId],resolveId))
-        }
+        task[SYNC_ACTION.clientDelete].forEach( pushTask)
 
+        /**2. 优先下载本地*/
+        task[SYNC_ACTION.clientAdd].forEach( pushTask)
+
+        /**3. 优先更新本地*/
+        task[SYNC_ACTION.clientUpdate].forEach(pushTask)
 
         /**4. 冲突解决*/
-        for(let taskId in task[SYNC_ACTION.conflict]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.conflict][taskId],resolveId))
-        }
-
+        task[SYNC_ACTION.conflict].forEach(pushTask)
 
         /**服务端更新 start*/
         /**5. 服务端删除*/
-        for(let taskId in task[SYNC_ACTION.serverDelete]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.serverDelete][taskId],resolveId))
-        }
+        task[SYNC_ACTION.serverDelete].forEach(pushTask)
 
         /**6. 服务端上传*/
-        for(let taskId in task[SYNC_ACTION.clientUpload]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.clientUpload][taskId],resolveId))
-        }
+        task[SYNC_ACTION.serverAdd].forEach(pushTask)
 
         /**7. 服务端更新*/
-        for(let taskId in task[SYNC_ACTION.overrideUpload]){
-            promiseTaskList.push(this._resolveSingleTask(task[SYNC_ACTION.overrideUpload][taskId],resolveId))
-        }
+        task[SYNC_ACTION.serverUpdate].forEach(pushTask)
 
-        return Promise.all(promiseTaskList).then(function (res) {
+        return Promise.all(promiseTaskList).then(function () {
             return task;
         }).finally( ()=> {
             //  同步结束
@@ -616,16 +594,49 @@ export default class SyncStrategy<T> {
             clearTimeout(<NodeJS.Timeout>this.nextTimer)
             this.nextTimer = setTimeout(() => {
                 return this.sync()
-            }, this.option.lockResolving / 2)
+            }, this.lockResolving / 2)
             return Promise.reject('正在同步，已加锁')
         }
         this.resolving = true;
         // 解锁
         setTimeout(() => {
             this.resolving = false;
-        }, this.option.lockResolving)
+        }, this.lockResolving)
         return this._computeSyncTask().then((task) => {
             return this._resolveTaskMap(task)
         })
     }
 }
+
+
+interface ScheduleFun<T extends (...args: any)=>Promise<any>> {
+    (...args: Parameters<T>): ReturnType<T>;
+}
+
+/**
+ * 对方法添加频控调度处理；防止连续触发导致被限制。执行间隔 n ms
+ * */
+export function scheduleWrap<T extends (...args: any)=>Promise<any>>(fun: T,gap: number=100,parallel: number=2): ScheduleFun<T>{
+    let times = -1;
+    return function (...args: any){
+        times++
+
+        // 基于已有执行的任务 times - 可并行的任务 parallel 得到需要延时执行的时长
+        const timeout = Math.max(times - parallel,0) * gap;
+
+        //@ts-ignore
+        const promise: ReturnType<T> = new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                fun(...args).then(function (res) {
+                    resolve(res)
+                }).catch(function (reason) {
+                    reject(reason)
+                })
+                times--
+            }, timeout)
+        })
+
+        return promise;
+    }
+}
+
