@@ -153,7 +153,7 @@ export namespace setting {
     }
 
     export type SDK_SETTING = Inner_Setting & {
-        lastModified: number,
+        lastModified?: number, // TODO 删除
         brushes: Brush[],
         copyAllowList?: string[],
 
@@ -166,12 +166,13 @@ export namespace setting {
         },
         actions: Action[],
         disableList?: string[],
-        controlC: boolean,
+        controlC?: boolean, // TODO 0.26.0 之后删除
+        controlCTimeout?: number,
         autoBackup: number, // 自动备份周期
         enableMarkImg: boolean,
         convertMethods?: ConvertMethod[],
         dataVersion: SDK_VERSION,
-        useRecommend: boolean
+        useRecommend?: boolean // TODO 删除
 
         maxRecord: number,
         showBarTimeout: number,
@@ -250,6 +251,7 @@ export namespace setting {
                 showBarTimeout: 0
             },
             controlC: true,
+            controlCTimeout: 0,
             copyAllowList: [],
             disableList: [],
             enableMarkImg: false,
@@ -432,6 +434,7 @@ export namespace user {
             nickname?: string,
             emailMask?: string;
             developer?: number;
+            uid?: string;
         },
         verify?:{
             exp?: number
@@ -550,6 +553,14 @@ export namespace network {
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
     export const id = 'front-server'
+
+    export type TabStat = {
+        connected: boolean,
+        active: boolean,
+        url: string
+        enabledCopy: boolean
+    }
+
     export type response = {
         onCaptureView: IExtenstionMessageListener<{ imageStr: string, isAuto?: boolean }, string>
         mark_image: IExtenstionMessageListener<chrome.contextMenus.OnClickData, string>
@@ -558,7 +569,7 @@ export namespace frontApi {
         toggleAllLight: IExtenstionMessageListener<void, boolean>
         togglePagenote: IExtenstionMessageListener<void, boolean>
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
-        fetchStatus: IExtenstionMessageListener<void, { connected: boolean, active: boolean, url: string }>
+        fetchStatus: IExtenstionMessageListener<void, TabStat>
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
 
