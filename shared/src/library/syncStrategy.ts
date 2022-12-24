@@ -499,7 +499,7 @@ export default class SyncStrategy<T> {
                                 }
                             })
                         } else {
-                            throw Error(`can't find ${id} from cloud`)
+                            throw Error(`can't find ${id} from local`)
                         }
                     })
                 }

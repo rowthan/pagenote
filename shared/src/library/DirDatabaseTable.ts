@@ -1,10 +1,10 @@
 import {AbstractInfo} from "./syncStrategy";
-import LocalFileSystem from './localFileSystem'
-import md5 from "md5";
+import LocalFileSystem, {PathStat} from './localFileSystem'
+const md5 = require('md5')
 
 interface TableInfo<T> {
     tableName: string,
-    getAbstractInfo: (inputData: T, filePath: string)=> AbstractInfo
+    getAbstractInfo: (inputData: T, stat: PathStat)=> AbstractInfo
 }
 
 function parseFileContentAsJSON<T>(input: string):T | undefined {
@@ -61,15 +61,15 @@ export default class DirDatabaseTable<T> {
     }
 
     /**添加文件*/
-    add(filePath: string, data: T): Promise<T|undefined>{
+    add(filePath: string, data: T): Promise<T|null>{
         return this.localFileSystem.writeFile(this._getFilePath(filePath),JSON.stringify(data)).then(async function (file) {
             const text = await file.text();
-            return parseFileContentAsJSON(text)
+            return parseFileContentAsJSON(text) || null
         })
     }
 
     /**查询文件*/
-    query(filePath: string,):Promise<T|undefined>{
+    query(filePath: string,):Promise<T|null>{
         return this.localFileSystem.readFile(this._getFilePath(filePath)).then(function (res) {
             return parseFileContentAsJSON<T>(res)
         })
@@ -81,7 +81,7 @@ export default class DirDatabaseTable<T> {
     }
 
     /**更新文件*/
-    update(filePath: string, data: T):Promise<T|undefined>{
+    update(filePath: string, data: T):Promise<T|null>{
         return this.add(filePath,data)
     }
 
@@ -136,7 +136,7 @@ export default class DirDatabaseTable<T> {
                             if (!json) {
                                 return
                             }
-                            const abstract = getAbstractInfo(json,tempFile);
+                            const abstract = getAbstractInfo(json,stat);
                             if (!abstract.id) {
                                 console.error(json,tempFile)
                                 throw Error(`${i} 文件异常，读取失败`)
