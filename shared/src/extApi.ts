@@ -45,11 +45,11 @@ export type SyncStat = {
 export namespace boxroom {
     export const id = 'boxroom'
     export type BoxItem = {
-        id?: string, // 资源ID，非指定情况下md5值
+        id: string, // 资源ID，非指定情况下md5值
         boxType?: string, // 资源类型
         from?: string, // 来源
         createAt?: number, // 来源
-        updateAt?: number,
+        updateAt: number,
         expiredAt?: number,
         type?: string,
         text?: string,
@@ -72,22 +72,11 @@ export namespace boxroom {
 
 
     export type response = {
-        // 批量操作
-
-        // TODO get 删除（全面升级 0.25 之后）
-        get: IExtenstionMessageListener<Find<BoxKeys>, BoxItem[]>,
-        add: IExtenstionMessageListener<BoxItem, BoxItem | null>,
-        update: IExtenstionMessageListener<Partial<BoxItem>, BoxItem | null>
-        // TODO remove by string id
-        remove: IExtenstionMessageListener<Partial<boxroom.BoxItem>, void>,
-
-
-
         /**0.24.5 之后支持*/
         addItems: IExtenstionMessageListener<BoxItem[], (Partial<BoxItem> | null)[]>,
         removeItems: IExtenstionMessageListener<{ ids: string[] }, number>,
         updateItems: IExtenstionMessageListener<UpdateBox[], number>
-        queryItems: IExtenstionMessageListener<Find<BoxItem>, FindResponse<BoxItem>>,
+        queryItems: IExtenstionMessageListener<Find<BoxItem>, FindResponse<Partial<BoxItem>>>,
 
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -457,7 +446,7 @@ export namespace user {
         platform: string,
         browser: string,
         registerAt?: Date,
-        updateAt?: number,
+        updateAt: number,
         createAt?: number,
     }
 
