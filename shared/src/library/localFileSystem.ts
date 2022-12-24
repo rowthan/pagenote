@@ -6,6 +6,7 @@ export interface PathStat {
   ctimeMs: number
   mtimeMs: number
   pathArray: string[]
+  filePath: string
 }
 
 interface Filter {
@@ -270,6 +271,7 @@ export default class LocalFileSystem {
         handle: fHandle || dHandle,
         ctimeMs: fileHandle ? (fileHandle).lastModified : Date.now(),
         mtimeMs: fileHandle ? (fileHandle).lastModified : Date.now(),
+        filePath: concatPaths(pathArr),
       }
     }
   }
