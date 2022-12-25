@@ -434,7 +434,7 @@ export namespace user {
             nickname?: string,
             emailMask?: string;
             developer?: number;
-            uid?: string;
+            avatar?: string
         },
         verify?:{
             exp?: number
@@ -543,6 +543,8 @@ export namespace network {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
         uploadFile: IExtenstionMessageListener<{content: string, contentType: ContentType}, string>
+
+        thridPartRequest: IExtenstionMessageListener<any, any>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

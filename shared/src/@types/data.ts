@@ -33,17 +33,17 @@ type Step = {
     did?: string,
     l_did?: string, // 最后编辑人
     sortIndex?: number,
-    x: number, // 标记在文档中基于 body 的 x轴 位置
-    y: number, // 标记在文档中基于 body 的 y轴 位置
+    x?: number, // 标记在文档中基于 body 的 x轴 位置
+    y?: number, // 标记在文档中基于 body 的 y轴 位置
     // TODO 使用 wid 全面替换 ID
-    id: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
-    tip: string, // 标记的笔记（用户输入）
+    id?: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
+    tip?: string, // 标记的笔记（用户输入）
     /**标记背景色，统一使用十六进制*/
-    bg: string,
-    isActive: boolean, // 是否为激活状态
-    lightStatus: LightStatus // 高亮状态
-    annotationStatus: AnnotationStatus,
-    annotationShowType: AnnotationShowType,
+    bg?: string,
+    isActive?: boolean, // 是否为激活状态
+    lightStatus?: LightStatus // 高亮状态
+    annotationStatus?: AnnotationStatus,
+    annotationShowType?: AnnotationShowType,
     lightType?: LightType, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
     text?: string, // 标记的文本内容
@@ -119,9 +119,9 @@ export type SnapshotResource = {
 
 type WebPageIds = {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
-    url: string, // 此条数据绑定的 URL
-    urls: string[], // 此条数据绑定的 URL 集合
-    pageType: PAGE_TYPES
+    url?: string, // 此条数据绑定的 URL
+    urls?: string[], // 此条数据绑定的 URL 集合
+    pageType?: PAGE_TYPES
     did?: string
 }
 type WebPageTimes = {
