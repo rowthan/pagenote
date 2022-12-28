@@ -19,7 +19,7 @@ type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener
 
 type ComputeRequestToFront<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
-        (arg: Parameters<Funs[fun]>[0], tabId?: number): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+        (arg: Parameters<Funs[fun]>[0], header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
@@ -154,6 +154,7 @@ export namespace setting {
 
     export type SDK_SETTING = Inner_Setting & {
         lastModified?: number, // TODO 删除
+        updateAt?: number
         brushes: Brush[],
         copyAllowList?: string[],
 
@@ -238,7 +239,7 @@ export namespace setting {
             }),
         ]
         const setting: SDK_SETTING = {
-            enableType: 'always',
+            enableType: 'when-needed',
             // _libra: false,
             // _sync: false,
             actions: [createInitAction(ACTION_TYPES.search), createInitAction(ACTION_TYPES.copyToClipboard), createInitAction(ACTION_TYPES.send_to_email)],
@@ -257,6 +258,7 @@ export namespace setting {
             enableMarkImg: false,
             convertMethods: [getDefaultConvertMethod()],
             lastModified: 0,
+            updateAt: 0,
             dataVersion: SDK_VERSION.ts_format,
             useRecommend: true,
 
@@ -307,6 +309,7 @@ export namespace action {
     import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
     import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
     import Tab = chrome.tabs.Tab;
+    import QueryInfo = chrome.tabs.QueryInfo;
     export const id = 'action'
 
     export interface injectParams {
@@ -351,6 +354,7 @@ export namespace action {
         openTab: IExtenstionMessageListener<{ url: string, tabId?: string|number, windowId?: string|number }, { tab: Tab }>
 
         getCurrentTab: IExtenstionMessageListener<void, Tab>
+        queryTabs: IExtenstionMessageListener<QueryInfo, Tab[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -396,8 +400,19 @@ export namespace developer {
 
         requestFront: IExtenstionMessageListener<{
             api: keyof frontApi.response,
-            tabId?: number,
+            header: BaseMessageHeader,
             data: any
+        }, any>
+
+        requestBackEnd: IExtenstionMessageListener<{
+            api: keyof frontApi.response,
+            header: BaseMessageHeader,
+            data: any
+        }, any>
+
+        chrome: IExtenstionMessageListener<{
+            namespace: string,
+            method: string
         }, any>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -544,7 +559,8 @@ export namespace network {
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
         uploadFile: IExtenstionMessageListener<{content: string, contentType: ContentType}, string>
 
-        thridPartRequest: IExtenstionMessageListener<any, any>
+        /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
+        openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

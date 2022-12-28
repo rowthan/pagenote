@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.10.18.d",
+  "version": "1.10.18",
   "description": "",
   "main": "lib/",
   "dependencies": {

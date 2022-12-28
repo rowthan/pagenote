@@ -108,6 +108,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const actionApi: action.request = {
+        queryTabs: wrapperFun('queryTabs',action.id),
         getCurrentTab: wrapperFun('getCurrentTab',action.id),
         getPersistentValue: wrapperFun('getPersistentValue',action.id),
         setPersistentValue: wrapperFun('setPersistentValue',action.id),
@@ -157,13 +158,16 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const networkApi: network.request = {
+        openApi:wrapperFun('openApi',network.id),
         uploadFile: wrapperFun('uploadFile',network.id),
         fetch: wrapperFun('fetch',network.id),
         pagenote: wrapperFun('pagenote',network.id)
     }
 
     const developerApi: developer.request = {
+        chrome: wrapperFun('chrome',developer.id),
         requestFront: wrapperFun('requestFront',developer.id),
+        requestBackEnd: wrapperFun('requestBackEnd',developer.id),
         log: wrapperFun('log',developer.id),
         logs: wrapperFun('logs',developer.id),
         permissionList: wrapperFun('permissionList',developer.id),
