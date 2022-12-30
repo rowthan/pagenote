@@ -160,22 +160,21 @@ export namespace setting {
 
         // TODO 删除 提取至一级目录下
         commonSetting?: {
-            maxRecord: number,
-            showBarTimeout: number,
-            keyupTimeout: number,
-            removeAfterDays: number,
+            maxRecord?: number,
+            showBarTimeout?: number,
+            keyupTimeout?: number,
+            removeAfterDays?: number,
         },
         actions: Action[],
         disableList?: string[],
         controlC?: boolean, // TODO 0.26.0 之后删除
         controlCTimeout?: number,
         autoBackup: number, // 自动备份周期
-        enableMarkImg: boolean,
+        enableMarkImg?: boolean,
         convertMethods?: ConvertMethod[],
-        dataVersion: SDK_VERSION,
-        useRecommend?: boolean // TODO 删除
+        dataVersion?: SDK_VERSION,
 
-        maxRecord: number,
+        maxRecord?: number, // TODO 0.26.0 后删除
         showBarTimeout: number,
         keyupTimeout: number,
         removeAfterDays: number,
@@ -398,21 +397,18 @@ export namespace developer {
         permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
         requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
 
+        /**请求前台标签页*/
         requestFront: IExtenstionMessageListener<{
-            api: keyof frontApi.response,
+            type: keyof frontApi.response,
             header: BaseMessageHeader,
             data: any
         }, any>
 
-        requestBackEnd: IExtenstionMessageListener<{
-            api: keyof frontApi.response,
-            header: BaseMessageHeader,
-            data: any
-        }, any>
-
+        /**代理执行浏览器插件方法*/
         chrome: IExtenstionMessageListener<{
             namespace: string,
-            method: string
+            type: string,
+            params: any
         }, any>
 
         [key: string]: IExtenstionMessageListener<any, any>

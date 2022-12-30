@@ -150,7 +150,6 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         getDevice: wrapperFun('getDevice',user.id),
         getDeviceList: wrapperFun('getDeviceList',user.id),
         setDevice: wrapperFun('setDevice',user.id),
-        exchangeToken: wrapperFun('exchangeToken',user.id),
         getUser: wrapperFun('getUser',user.id),
         getUserToken: wrapperFun('getUserToken',user.id),
         getWhoAmI: wrapperFun('getWhoAmI',user.id),
@@ -167,7 +166,6 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     const developerApi: developer.request = {
         chrome: wrapperFun('chrome',developer.id),
         requestFront: wrapperFun('requestFront',developer.id),
-        requestBackEnd: wrapperFun('requestBackEnd',developer.id),
         log: wrapperFun('log',developer.id),
         logs: wrapperFun('logs',developer.id),
         permissionList: wrapperFun('permissionList',developer.id),
