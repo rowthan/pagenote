@@ -125,7 +125,6 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         injectToFrontPage: wrapperFun('injectToFrontPage',action.id),
         copyToClipboard: wrapperFun('copyToClipboard',action.id),
         captureView: wrapperFun('captureView',action.id),
-        axios: wrapperFun('axios',action.id),
         injectCodeToPage: wrapperFun('injectCodeToPage',action.id),
         track: wrapperFun('track',action.id)
     }
@@ -164,6 +163,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const developerApi: developer.request = {
+        requestBack: wrapperFun('requestBack',developer.id),
         chrome: wrapperFun('chrome',developer.id),
         requestFront: wrapperFun('requestFront',developer.id),
         log: wrapperFun('log',developer.id),

@@ -400,8 +400,15 @@ export namespace developer {
         /**请求前台标签页*/
         requestFront: IExtenstionMessageListener<{
             type: keyof frontApi.response,
-            header: BaseMessageHeader,
-            data: any
+            header?: Partial<BaseMessageHeader>,
+            arguments: any[]
+        }, any>
+
+        /**请求后台，不推荐使用，用于未被定义的接口请求或已经下线的接口请求*/
+        requestBack: IExtenstionMessageListener<{
+            type: keyof frontApi.response,
+            header?: Partial<BaseMessageHeader>,
+            arguments: any[]
         }, any>
 
         /**代理执行浏览器插件方法*/
@@ -472,14 +479,13 @@ export namespace user {
         signout: IExtenstionMessageListener<void, boolean>
         exchange: IExtenstionMessageListener<void, boolean>
 
-        // 使用 exchangeToken TODO 全面上架 0.25.0 之后删除
         setUserToken: IExtenstionMessageListener<string, string>
         // 使用 exchangeToken  TODO 全面上架 0.25.0 之后删除
-        getUserToken: IExtenstionMessageListener<void, string>
+        getUserToken?: IExtenstionMessageListener<void, string>
 
         // 当前设备信息
-        setDevice: IExtenstionMessageListener<Partial<Device>, Device>
-        getDevice: IExtenstionMessageListener<void, Device>
+        setDevice: IExtenstionMessageListener<Partial<Device>, Device | undefined>
+        getDevice: IExtenstionMessageListener<void, Device | undefined>
         getDeviceList: IExtenstionMessageListener<void, Device[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
