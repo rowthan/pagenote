@@ -390,6 +390,13 @@ export namespace developer {
         domain: string;
     }
 
+    export type RequestBackProxyRequest = {
+        namespace: string //命名空间
+        type: string, // 方法名称
+        params: any // 请求参数
+        header?: Partial<BaseMessageHeader>,
+    }
+
     export type response = {
         log: IExtenstionMessageListener<LogInfo, string>
         logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<Partial<LogInfo>>>
@@ -401,21 +408,17 @@ export namespace developer {
         requestFront: IExtenstionMessageListener<{
             type: keyof frontApi.response,
             header?: Partial<BaseMessageHeader>,
-            arguments: any[]
+            params: any
         }, any>
 
         /**请求后台，不推荐使用，用于未被定义的接口请求或已经下线的接口请求*/
-        requestBack: IExtenstionMessageListener<{
-            type: keyof frontApi.response,
-            header?: Partial<BaseMessageHeader>,
-            arguments: any[]
-        }, any>
+        requestBack: IExtenstionMessageListener<RequestBackProxyRequest, any>
 
         /**代理执行浏览器插件方法*/
         chrome: IExtenstionMessageListener<{
             namespace: string,
             type: string,
-            params: any
+            args?: any[]
         }, any>
 
         [key: string]: IExtenstionMessageListener<any, any>
