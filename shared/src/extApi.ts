@@ -10,6 +10,7 @@ import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
 import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
 import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
 import {createInitAction} from "./pagenote-actions";
+import {BrowserType} from "./utils/browser";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
@@ -120,7 +121,6 @@ export namespace lightpage {
         /**download 导出备份文件*/
         exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource> }, {filename: string,}>
 
-        // 同步状态
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -381,6 +381,7 @@ export namespace developer {
         version: string
         json?: Record<string, any>
         message?: string,
+        tag?: 'remove' | 'add' | 'action' | string
     }
 
     export interface Permission {
@@ -400,6 +401,8 @@ export namespace developer {
     export type response = {
         log: IExtenstionMessageListener<LogInfo, string>
         logs: IExtenstionMessageListener<Find<LogInfo>, FindResponse<Partial<LogInfo>>>
+
+        downloadLog: IExtenstionMessageListener<Query<LogInfo>, { filename: string }>
 
         permissionList: IExtenstionMessageListener<{ granted?: boolean }, Permission[]>
         requestPermission: IExtenstionMessageListener<{ namespace?: string }, boolean>
@@ -429,6 +432,16 @@ export namespace developer {
 
 export namespace user {
     export const id = 'user'
+
+    export enum ExtensionPlatform {
+        Chrome = 'chrome',
+        Edge = 'edge',
+        SAFARI = 'safari',
+        Firefox = 'firefox',
+        OFFLINE = 'offline',
+        TEST = 'test'
+    }
+
     export type WhoAmI = {
         origin: string,
         extensionId: string,
@@ -438,8 +451,8 @@ export namespace user {
         short_name: string,
         browser: string,
         browserVersion: string,
-        browserPlatform: string,
-        platform: string,
+        browserPlatform: BrowserType,
+        platform: ExtensionPlatform,
         language: string,
         isCN: boolean,
         isMac: boolean,
