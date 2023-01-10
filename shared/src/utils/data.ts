@@ -2,21 +2,13 @@
 import {BackupData, BackupVersion} from "../@types/data";
 
 const makeExportString = function (backupData:BackupData):string{
-    const exportDataObject = {
-        pages: backupData.pages,
-        version: backupData.version || BackupVersion.version4,
-        extension_version: backupData.extension_version,
-        backup_at: new Date().getTime(),
-    }
-
     // version4 不做encode处理，避免增加文件体积
-    if(backupData.version === BackupVersion.version4){
-        return JSON.stringify(exportDataObject)
+    if(backupData.version === BackupVersion.version4 || backupData.version > BackupVersion.version4){
+        return JSON.stringify(backupData)
     }
-
 
     // 低版本处理方式
-    const dataString = encodeURIComponent(JSON.stringify(exportDataObject));
+    const dataString = encodeURIComponent(JSON.stringify(backupData));
     return dataString;
 }
 
