@@ -163,6 +163,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const developerApi: developer.request = {
+        downloadLog: wrapperFun('downloadLog',developer.id),
         requestBack: wrapperFun('requestBack',developer.id),
         chrome: wrapperFun('chrome',developer.id),
         requestFront: wrapperFun('requestFront',developer.id),
