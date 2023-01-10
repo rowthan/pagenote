@@ -34,12 +34,19 @@ export type Sort<Model> = {
     [key in keyof Model]?: 1 | -1
 }
 
+// TODO 使用mongoose query 替换
 export type MongoLikeQueryValue = {
     $like?: string; // 模糊搜索
+
+    $regex: string,
+    $options: string
+
+
     $in?: string[]; // 数组
     $nin?: string[];
     $gt?: number; // 大于
     $lt?: number; // 小于
+    $ne?: any, // 不等于
 }
 
 export type BasicQueryValue = string | number | boolean
