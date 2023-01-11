@@ -589,13 +589,13 @@ export default class SyncStrategy<T> {
         })
     }
 
-    sync(): Promise<SyncTaskActionsMap> {
+    sync(): Promise<{task?: SyncTaskActionsMap,locked?: boolean,}> {
         if (this.resolving) {
             clearTimeout(<NodeJS.Timeout>this.nextTimer)
             this.nextTimer = setTimeout(() => {
                 return this.sync()
             }, this.lockResolving / 2)
-            return Promise.reject('正在同步，已加锁')
+            return Promise.resolve({locked: true})
         }
         this.resolving = true;
         // 解锁
@@ -603,7 +603,12 @@ export default class SyncStrategy<T> {
             this.resolving = false;
         }, this.lockResolving)
         return this._computeSyncTask().then((task) => {
-            return this._resolveTaskMap(task)
+            return this._resolveTaskMap(task).then(function (res) {
+                return{
+                    task: res,
+                    locked: false,
+                }
+            })
         })
     }
 }
