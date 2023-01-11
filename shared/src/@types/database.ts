@@ -38,8 +38,8 @@ export type Sort<Model> = {
 export type MongoLikeQueryValue = {
     $like?: string; // 模糊搜索
 
-    $regex: string,
-    $options: string
+    $regex?: string,
+    $options?: string
 
 
     $in?: string[]; // 数组

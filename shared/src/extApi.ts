@@ -154,30 +154,23 @@ export namespace setting {
 
     export type SDK_SETTING = Inner_Setting & {
         lastModified?: number, // TODO 删除
-        updateAt?: number
         brushes: Brush[],
-        copyAllowList?: string[],
+        copyAllowList?: string[], // TODO 删除
 
         // TODO 删除 提取至一级目录下
-        commonSetting?: {
-            maxRecord?: number,
-            showBarTimeout?: number,
-            keyupTimeout?: number,
-            removeAfterDays?: number,
-        },
         actions: Action[],
-        disableList?: string[],
+        disableList?: string[], // TODO 删除
         controlC?: boolean, // TODO 0.26.0 之后删除
         controlCTimeout?: number,
-        autoBackup: number, // 自动备份周期
-        enableMarkImg?: boolean,
-        convertMethods?: ConvertMethod[],
-        dataVersion?: SDK_VERSION,
+        autoBackup?: number, // 自动备份周期 TODO 删除
+        enableMarkImg?: boolean, // TODO 删除
+        convertMethods?: ConvertMethod[], // TODO 删除
+        dataVersion?: SDK_VERSION, // TODO 删除
 
         maxRecord?: number, // TODO 0.26.0 后删除
         showBarTimeout: number,
         keyupTimeout: number,
-        removeAfterDays: number,
+        removeAfterDays?: number, // TODO 删除
         enableType: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
         [key: string]: any;
     }
