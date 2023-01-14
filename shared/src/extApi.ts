@@ -416,7 +416,6 @@ export namespace developer {
             type: string,
             args?: any[]
         }, any>
-
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -431,27 +430,27 @@ export namespace user {
         Edge = 'edge',
         SAFARI = 'safari',
         Firefox = 'firefox',
+        San60= '360',
         OFFLINE = 'offline',
         TEST = 'test'
     }
 
     export type WhoAmI = {
-        origin: string,
-        extensionId: string,
-        name: string,
-        version: string,
-        mainVersion: string,// 主要版本
-        short_name: string,
-        browser: string,
-        browserVersion: string,
-        browserPlatform: BrowserType,
-        platform: ExtensionPlatform,
-        language: string,
-        isCN: boolean,
-        isMac: boolean,
-        isTest: boolean,
-        did: string, // 客户端的标识 did 不可变更
-        supportSDK: string[],
+        origin?: string,
+        extensionId?: string,
+        name?: string,
+        version?: string,
+        mainVersion?: string,// 主要版本
+        short_name?: string,
+        browserType?: BrowserType,
+        browserVersion?: string,
+        extensionPlatform?: ExtensionPlatform,
+        language?: string,
+        isCN?: boolean,
+        isMac?: boolean,
+        isTest?: boolean,
+        did?: string, // 客户端的标识 did 不可变更
+        supportSDK?: string[],
     }
 
     export interface User {

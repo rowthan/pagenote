@@ -1,4 +1,4 @@
-enum BrowserType {
+export enum BrowserType {
     Edge = 'edge',
     IE = 'ie',
     SAFARI = 'safari',
@@ -6,14 +6,10 @@ enum BrowserType {
     OPREAR = 'opera',
     CHROME = 'chrome',
     UNKNOW = '',
-  }
-  
-  function getBrowserTypeAndVersion(): {
-    type: BrowserType
-    version: string
-    iOS: boolean
-  } {
-    const userAgent = window.navigator.userAgent
+}
+
+export function getBrowserTypeAndVersion(): { type: BrowserType, version: string, iOS: boolean } {
+    const userAgent = navigator.userAgent
     let type = BrowserType.UNKNOW
     let version = ''
     const matchEdge = userAgent.match(/(Edg|Edge)\/((\d{1,}.)+)/)
@@ -24,34 +20,32 @@ enum BrowserType {
     const matchIE11 = userAgent.match(/(rv):(\d{1,}\.\d)/)
     const matchSafari = userAgent.match(/(Safari)\/(\d{1,}.*)/)
     if (matchEdge) {
-      type = BrowserType.Edge
-      version = matchEdge[2]
+        type = BrowserType.Edge
+        version = matchEdge[2]
     } else if (matchFirefox) {
-      type = BrowserType.Firefox
-      version = matchFirefox[2]
+        type = BrowserType.Firefox
+        version = matchFirefox[2]
     } else if (matchOPR) {
-      type = BrowserType.OPREAR
-      version = matchOPR[2]
+        type = BrowserType.OPREAR
+        version = matchOPR[2]
     } else if (matchIE) {
-      type = BrowserType.IE
-      version = matchIE[2]
+        type = BrowserType.IE
+        version = matchIE[2]
     } else if (matchIE11) {
-      type = BrowserType.IE
-      version = matchIE11[2]
+        type = BrowserType.IE
+        version = matchIE11[2]
     } else if (matchChrome) {
-      type = BrowserType.CHROME
-      version = matchChrome[2]
+        type = BrowserType.CHROME
+        version = matchChrome[2]
     } else if (matchSafari) {
-      type = BrowserType.SAFARI
-      version = matchSafari[2]
+        type = BrowserType.SAFARI
+        version = matchSafari[2]
     }
     const platform = /Mac/gi.test(userAgent)
     return {
-      type,
-      version,
-      iOS: platform,
+        type,
+        version,
+        iOS: platform,
     }
-  }
-  
-  export { getBrowserTypeAndVersion, BrowserType }
-  
+}
+
