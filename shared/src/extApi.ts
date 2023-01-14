@@ -121,6 +121,9 @@ export namespace lightpage {
         /**download 导出备份文件*/
         exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource> }, {filename: string,}>
 
+        /**导入备份文件**/
+        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number }>
+
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }

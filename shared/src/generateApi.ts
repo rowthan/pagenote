@@ -63,6 +63,7 @@ export const defaultWrapper = function (method:string,targetId:string,clientId: 
 export const generateApi = function (wrapperFun=defaultWrapper) {
 
     const lightpageApi: lightpage.request = {
+        importBackup: wrapperFun('importBackup',lightpage.id),
         exportBackup: wrapperFun('exportBackup',lightpage.id),
         addSnapshots: wrapperFun('addSnapshots',lightpage.id),
         groupLights: wrapperFun('groupLights',lightpage.id),
