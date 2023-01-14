@@ -13,14 +13,16 @@ type BaseMessageHeader = {
 
     /**
      * 信息载体，用于
-     * 1. bridge 荷载有限的情况下(session/localStorage bridge 单次请求数据量最多为 5MB 时)；
-     * 2. 数据无法被序列化(2进制文件)；
+     * 1. 数据无法被序列化(2进制\blob文件)；需要同域空间下
      * 将数据临时存储在其他载体中。
      * */
     carrier?:{
         carrierType: 'indexedDB',
         carrierKey: string
     }
+
+    /**1. bridge 荷载有限的情况下(session/localStorage bridge 单次请求数据量最多为 5MB 时)；通过使用uri的方式载体*/
+    requestDataUri?: string
 
 
     /**
@@ -43,7 +45,7 @@ type BaseMessageHeader = {
 
     hostname?: string // session bridge 请求时携带当前URL信息
 
-    [key: string]: string | boolean | number | any
+    // [key: string]: string | boolean | number | any
 }
 
 

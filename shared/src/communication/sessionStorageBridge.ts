@@ -10,6 +10,7 @@ import {
     RESPONSE_STATUS_CODE,
     STATUS,
 } from "./base";
+import {createURLForJSON, sumSizeMB} from "./utils";
 
 
 type SessionHeader = BaseMessageHeader & {
@@ -34,14 +35,23 @@ interface BridgeOption extends CommunicationOption {
 
 const EVENT_NAME = 'storage';
 
-function triggerMessage(key: string, requestData: object) {
-    const dataString = JSON.stringify(requestData)
-    try {
-        // TODO 长信息过载，批量处理
-        window.sessionStorage.setItem(key, dataString);
-    } catch (e) {
-        console.warn('信息超载，可能通讯失败', e)
+function triggerMessage(key: string, requestData: BaseMessageRequest) {
+    let dataString = JSON.stringify(requestData)
+    // 初步估计信息占用空间
+    const totalMB = sumSizeMB(dataString);
+    // 请求数据大于 4MB 时，将数据进行转换为URI地址，防止 sessionStorage 无法承载
+    if(totalMB>4){
+        requestData.header.requestDataUri = createURLForJSON(requestData.data);
+        requestData.data = undefined; // 转移数据为 requestDataUri
+        dataString = JSON.stringify(requestData)
+    }else{
+        try {
+            window.sessionStorage.setItem(key, dataString);
+        } catch (e) {
+            console.error('信息超载，可能通讯失败', e)
+        }
     }
+
     const event = new Event(EVENT_NAME);
     // @ts-ignore
     event.key = key;
@@ -78,7 +88,7 @@ class SessionStorageBridge implements Communication<any> {
     startListen() {
         const that = this;
         const {listenKey} = this.option
-        const globalListen = function (event: StorageEvent) {
+        const globalListen = async function (event: StorageEvent) {
             let requestData: BaseMessageRequest;
             try {
                 let dataString: string = ''
@@ -95,7 +105,8 @@ class SessionStorageBridge implements Communication<any> {
             } catch (e) {
                 return;
             }
-            const {header, type, data} = requestData || {};
+
+            const {header, type} = requestData || {};
             if (!header || !type) {
                 return;
             }
@@ -106,6 +117,15 @@ class SessionStorageBridge implements Communication<any> {
             // 请求类型 且 配置不作为服务器，则不接受请求
             if (header.isResponse === false && that.option.asServer !== true) {
                 return;
+            }
+
+            if(requestData?.header?.requestDataUri && !requestData.data){
+                try{
+                    const dataRes = await fetch(requestData.header.requestDataUri);
+                    requestData.data = await dataRes.json();
+                }catch (e) {
+                    console.error('parse requestDataUri ERROR',e)
+                }
             }
 
             const sendResponse = function (data: any) {
@@ -131,7 +151,7 @@ class SessionStorageBridge implements Communication<any> {
                 // 事件有明确目标源，校验当前是否为接收方
                 const canResolveThisEvent = !header.targetClientId || header.targetClientId === that.clientId
                 if (canResolveThisEvent) {
-                    resolveFun(data, sender, sendResponse)
+                    resolveFun(requestData.data, sender, sendResponse)
                     clearMessage(listenKey)
                 }
             } else if (that.proxy) {
