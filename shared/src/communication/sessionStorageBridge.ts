@@ -44,12 +44,12 @@ function triggerMessage(key: string, requestData: BaseMessageRequest) {
         requestData.header.requestDataUri = createURLForJSON(requestData.data);
         requestData.data = undefined; // 转移数据为 requestDataUri
         dataString = JSON.stringify(requestData)
-    }else{
-        try {
-            window.sessionStorage.setItem(key, dataString);
-        } catch (e) {
-            console.error('信息超载，可能通讯失败', e)
-        }
+    }
+
+    try {
+        window.sessionStorage.setItem(key, dataString);
+    } catch (e) {
+        console.error('信息超载，可能通讯失败', e)
     }
 
     const event = new Event(EVENT_NAME);
