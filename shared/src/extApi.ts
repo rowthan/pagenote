@@ -234,7 +234,7 @@ export namespace setting {
             }),
         ]
         const setting: SDK_SETTING = {
-            enableType: 'when-needed',
+            enableType: 'always',
             // _libra: false,
             // _sync: false,
             actions: [createInitAction(ACTION_TYPES.search), createInitAction(ACTION_TYPES.copyToClipboard), createInitAction(ACTION_TYPES.send_to_email)],
@@ -448,9 +448,12 @@ export namespace user {
         browserType?: BrowserType,
         browserVersion?: string,
         extensionPlatform?: ExtensionPlatform,
+        extensionDetailUrl?: string, // 插件详情页
+        extensionStoreUrl?: string, // 插件应用商店地址
         language?: string,
         isCN?: boolean,
         isMac?: boolean,
+        isFirefox?: boolean, // Firefox 浏览器判断，需要做兼容性处理
         isTest?: boolean,
         did?: string, // 客户端的标识 did 不可变更
         supportSDK?: string[],
