@@ -187,6 +187,19 @@ export namespace setting {
         [key: string]: any;
     }
 
+    /**搜索引擎*/
+    export type ISearchEngine = {
+        type?: string, // 搜索引擎类别，如baidu\google
+        needPreResolveLink?: boolean, // 是否需要前置解析搜索结果。如百度需要（需要请求百度API才能得知真正的URL），Google 不需要
+        resultItemSelector?: string, // 搜索结果一条数据节点选择器
+        linkSelector?: string, // 获取链接对象，默认 a
+        appendRootSelector?: string, // 向页面中，植入元素的根节点
+        queryKey?: string, // 从URL中获取搜索词的，键值
+
+        inputSelector?: string // 从DOM中获取搜索词的元素 input 节点
+        checkRules: string[], // 检测当前某个URL是否符合当前搜索引擎配置
+    }
+
     export interface response {
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
@@ -196,6 +209,7 @@ export namespace setting {
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
         resetSetting: IExtenstionMessageListener<void, SDK_SETTING>
+        getSearchEngines: IExtenstionMessageListener<void, ISearchEngine[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
