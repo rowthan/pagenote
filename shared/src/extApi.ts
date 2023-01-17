@@ -1,4 +1,13 @@
-import {BackupData, BackupDataType, SnapshotResource, ResourceInfo, Step, WebPage, ContentType} from "./@types/data";
+import {
+    BackupData,
+    BackupDataType,
+    SnapshotResource,
+    ResourceInfo,
+    Step,
+    WebPage,
+    ContentType,
+    LocalResource
+} from "./@types/data";
 import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
     BaseMessageHeader, BaseMessageRequest,
@@ -450,6 +459,7 @@ export namespace user {
         extensionPlatform?: ExtensionPlatform,
         extensionDetailUrl?: string, // 插件详情页
         extensionStoreUrl?: string, // 插件应用商店地址
+        extensionShortcutUrl?: string // 快捷键管理页
         language?: string,
         isCN?: boolean,
         isMac?: boolean,
@@ -606,6 +616,13 @@ export namespace frontApi {
         fetchStatus: IExtenstionMessageListener<void, TabStat>
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
+
+        offlineHTML: IExtenstionMessageListener<{
+            cssInLine: boolean, // 将样式文件全部 inline 处理
+            disableScript: boolean, // 禁止script脚本
+            imageInLine: boolean, // 将图片inline 处理
+            offlineImg: boolean, // 将图片资源本地化存储处理
+        },  Partial<LocalResource>>
 
         // 在标签页启用 pagenote
         start: IExtenstionMessageListener<{ tabId: string }, {injected: boolean}>

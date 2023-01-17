@@ -214,6 +214,28 @@ export type ResourceInfo = BaseFileInfo & {
     [key:string]: any,
 }
 
+export type LocalResource = {
+    resourceId?: string, // 插件本地获取该资源的唯一标识
+
+    name?: string, // 文件名
+
+    originUrl?: string // 原始资源对应的链接地址，可能会无法访问的资源
+    onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
+
+    contentType: ContentType, // 文件类型
+    contentLength?: number, // 资源size
+    lastModified?: string,
+    ETag?: string,
+    data?: string, // 资源内容，只支持字符串存储，不支持二进制数据
+
+    relatedPageKey?: string, //关联的网页key
+    relatedPageUrl?: string // 关联的网址
+
+    // 数据资源的存储时间信息
+    createAt?: number,
+    updateAt?: number
+}
+
 export enum BackupDataType {
     pages= 'pages',
     box='box',
