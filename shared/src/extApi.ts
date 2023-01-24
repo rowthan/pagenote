@@ -1,12 +1,10 @@
 import {
     BackupData,
-    BackupDataType,
     SnapshotResource,
     ResourceInfo,
     Step,
     WebPage,
     ContentType,
-    LocalResource
 } from "./@types/data";
 import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
@@ -104,21 +102,21 @@ export namespace lightpage {
     // 服务端可接受的请求API
     export type response = {
         // 1.页面
-        addPages: IExtenstionMessageListener<WebPage[], number>
+        addPages: IExtenstionMessageListener<WebPage[], string[]>
         removePages: IExtenstionMessageListener<{ keys: string[], removeRelated?: ('light' | 'snapshot')[] }, number>
         updatePages: IExtenstionMessageListener<PartWebpage[], number>
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<PartWebpage>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, PartWebpage[]>>,
 
         // 2.标记
-        addLights: IExtenstionMessageListener<Step[], number>;
+        addLights: IExtenstionMessageListener<Step[], string[]>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<PartStep[], number>;
         queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<PartStep>>;
         groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
 
         // 3.截图快照
-        addSnapshots: IExtenstionMessageListener<SnapshotResource[], number>
+        addSnapshots: IExtenstionMessageListener<SnapshotResource[], string[]>
         removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
         querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
 
@@ -138,6 +136,48 @@ export namespace lightpage {
     }
 
     export type request = ComputeRequestToBackground<response>
+}
+
+export namespace localResource{
+    export const id = 'localResource'
+
+    export type LocalResource = {
+        resourceId?: string, // 插件本地获取该资源的唯一标识
+
+        name?: string, // 文件名
+
+        originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
+        onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
+
+        contentType: ContentType, // 文件类型
+        contentLength?: number, // 资源size
+        lastModified?: string,
+        ETag?: string,
+        data: string, // 资源内容，只支持字符串存储，不支持二进制数据
+
+        relatedPageKey?: string, //关联的网页key
+        relatedPageUrl?: string // 关联的网址
+
+        // 数据资源的存储时间信息
+        createAt?: number,
+        updateAt?: number
+    }
+
+
+    export type response = {
+        add: IExtenstionMessageListener<LocalResource, LocalResource | null>
+
+        update: IExtenstionMessageListener<Partial<LocalResource> & {resourceId: string}, LocalResource>
+        remove: IExtenstionMessageListener<{ keys: string[] }, number>
+        query: IExtenstionMessageListener<Find<LocalResource>, FindResponse<Partial<LocalResource>>>
+
+        putItems: IExtenstionMessageListener<LocalResource[], string[]>
+
+        [key: string]: IExtenstionMessageListener<any, any>
+    }
+
+    export type request = ComputeRequestToBackground<response>
+
 }
 
 export namespace setting {
@@ -592,6 +632,11 @@ export namespace network {
         readonly headers?: Record<string, any>,
         readonly status: number;
         readonly statusText: string;
+
+        readonly ok: boolean;
+        readonly redirected: boolean;
+        // readonly type: ResponseType;
+        readonly url: string;
     }
 
     export interface response {
@@ -610,6 +655,7 @@ export namespace network {
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
+    import LocalResource = localResource.LocalResource;
     export const id = 'front-server'
 
     export type TabStat = {

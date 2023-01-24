@@ -5,6 +5,8 @@ export enum BrowserType {
     Firefox = 'firefox',
     OPREAR = 'opera',
     CHROME = 'chrome',
+
+    SAN60 = '360',
     UNKNOW = '',
 }
 

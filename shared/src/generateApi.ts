@@ -8,7 +8,7 @@ import {
     fileDB,
     user,
     network,
-    developer,
+    developer, localResource,
 } from "./extApi";
 import SessionStorageBridge from "./communication/sessionStorageBridge";
 import ExtensionMessage2 from "./communication/ExtenstionBridge";
@@ -95,11 +95,12 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const settingApi: setting.request = {
+        getSearchEngines: wrapperFun('getSearchEngines',setting.id),
         getSetting: wrapperFun('getSetting',setting.id),
         getUserSetting: wrapperFun('getUserSetting',setting.id),
         resetSetting: wrapperFun('resetSetting',setting.id),
         saveSetting: wrapperFun('saveSetting',setting.id),
-        syncSetting: wrapperFun('syncSetting',setting.id),
+        syncSetting: wrapperFun('syncSetting',setting.id)
     }
 
     const browserActionApi: browserAction.request ={
@@ -174,6 +175,14 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         requestPermission: wrapperFun('requestPermission',developer.id)
     }
 
+    const localResourceApi: localResource.request = {
+        add: wrapperFun('add',localResource.id),
+        putItems: wrapperFun('putItems',localResource.id),
+        query: wrapperFun('query',localResource.id),
+        remove: wrapperFun('remove',localResource.id),
+        update: wrapperFun('update',localResource.id),
+    }
+
     return {
         lightpage: lightpageApi,
         boxroom: boxroomApi,
@@ -185,6 +194,7 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
         user: userApi,
         network: networkApi,
         developer: developerApi,
+        localResource: localResourceApi,
     }
 };
 
