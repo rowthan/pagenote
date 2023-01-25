@@ -176,11 +176,12 @@ export const generateApi = function (wrapperFun=defaultWrapper) {
     }
 
     const localResourceApi: localResource.request = {
+        group: wrapperFun('group',localResource.id),
         add: wrapperFun('add',localResource.id),
         putItems: wrapperFun('putItems',localResource.id),
         query: wrapperFun('query',localResource.id),
         remove: wrapperFun('remove',localResource.id),
-        update: wrapperFun('update',localResource.id),
+        update: wrapperFun('update',localResource.id)
     }
 
     return {
