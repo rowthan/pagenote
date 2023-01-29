@@ -1,12 +1,15 @@
 import {LightStatus, LightType} from "../pagenote-brush";
-import {boxroom} from "../extApi";
+import {boxroom, localResource} from "../extApi";
 import BoxItem = boxroom.BoxItem;
+import LocalResource = localResource.LocalResource;
 
 export enum BackupVersion {
     version1 = 1,
     version = 2,
     version3 = 3, // 新增 HTML、files 文件
     version4 = 4, // 不做 encode 处理
+
+    version5 = 5 // 2023,新增离线HTML文件，区分于资源
 }
 
 export enum AnnotationStatus {
@@ -218,6 +221,7 @@ export enum BackupDataType {
     pages= 'pages',
     box='box',
     resources='resources',
+    html = 'html',
     light='light',
     snapshot = 'snapshot',
 }
@@ -230,11 +234,15 @@ export type BackupData = {
     dataType: BackupDataType[],
     resources?: Partial<ResourceInfo>[],
     snapshots?: Partial<SnapshotResource>[],
+
+    htmlList?: Partial<LocalResource>[]
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
     size?: number,
     remark?: string
+
+    thumb?: string
 }
 
 export type {

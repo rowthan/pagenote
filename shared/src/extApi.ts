@@ -94,6 +94,7 @@ export namespace boxroom {
 }
 
 export namespace lightpage {
+    import LocalResource = localResource.LocalResource;
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>
@@ -125,11 +126,12 @@ export namespace lightpage {
         /**查询网页携带的全量数据： 网页、标记、快照*/
         getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
 
+        // TODO import export 独立至 common 中
         /**download 导出备份文件*/
-        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource> }, {filename: string,}>
+        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }, {filename: string,}>
 
         /**导入备份文件**/
-        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number }>
+        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
 
         syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -159,6 +161,8 @@ export namespace localResource{
 
         relatedPageKey?: string, //关联的网页key
         relatedPageUrl?: string // 关联的网址
+
+        deleted?: boolean,
 
         // 数据资源的存储时间信息
         createAt?: number,
@@ -215,10 +219,9 @@ export namespace setting {
 
         // TODO 删除 提取至一级目录下
         actions: Action[],
-        disableList?: string[], // TODO 删除
+        disableList?: string[],
         controlC?: boolean, // TODO 0.26.0 之后删除
         controlCTimeout?: number,
-        autoBackup?: number, // 自动备份周期 TODO 删除
         enableMarkImg?: boolean, // TODO 删除
         convertMethods?: ConvertMethod[], // TODO 删除
         dataVersion?: SDK_VERSION, // TODO 删除
@@ -227,7 +230,7 @@ export namespace setting {
         showBarTimeout: number,
         keyupTimeout: number,
         removeAfterDays?: number, // TODO 删除
-        enableType: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
+        enableType?: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
         [key: string]: any;
     }
 
@@ -237,6 +240,8 @@ export namespace setting {
         needPreResolveLink?: boolean, // 是否需要前置解析搜索结果。如百度需要（需要请求百度API才能得知真正的URL），Google 不需要
         resultItemSelector?: string, // 搜索结果一条数据节点选择器
         linkSelector?: string, // 获取链接对象，默认 a
+
+        linkDataSetAttr?: string, // 可以从 dataset 中直接获取的URL 熟悉
         appendRootSelector?: string, // 向页面中，植入元素的根节点
         queryKey?: string, // 从URL中获取搜索词的，键值
 
@@ -667,6 +672,17 @@ export namespace frontApi {
         active: boolean,
         url: string
         enabledCopy: boolean
+
+        disabled?: boolean // 被禁用状态
+
+        isOfflineHTML: boolean, // 是否为离线网页
+    }
+
+    export type OfflineOption = {
+        cssInLine: boolean, // 将样式文件全部 inline 处理
+        disableScript: boolean, // 禁止script脚本
+        imageInLine: boolean, // 将图片inline 处理
+        offlineImg: boolean, // 将图片资源本地化存储处理
     }
 
     export type response = {
@@ -681,12 +697,7 @@ export namespace frontApi {
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
 
-        offlineHTML: IExtenstionMessageListener<{
-            cssInLine: boolean, // 将样式文件全部 inline 处理
-            disableScript: boolean, // 禁止script脚本
-            imageInLine: boolean, // 将图片inline 处理
-            offlineImg: boolean, // 将图片资源本地化存储处理
-        },  Partial<LocalResource>>
+        offlineHTML: IExtenstionMessageListener<OfflineOption,  Partial<LocalResource>>
 
         // 在标签页启用 pagenote
         start: IExtenstionMessageListener<{ tabId: string }, {injected: boolean}>
