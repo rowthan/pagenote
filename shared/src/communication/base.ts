@@ -2,6 +2,14 @@
  * server & client
  * 消息传递请求头，类似 HTTP header
  * */
+
+export type DataSegment = {
+    totalSegments: number // 总计分片数量
+    currentSegment: number // 当前分片位置
+    contentType: 'json', // 目前仅支持json数据类型
+    segmentString: string, // 分片数据，通过字符串传播，接收完毕后，接收方组装
+}
+
 // TODO clientID 统一更名为 bridgeId
 type BaseMessageHeader = {
     originClientId: string, // 源头客户端，用于判断这个请求最初的发起端；可用于服务端响应后，判断是否由自身发起的。
@@ -12,16 +20,21 @@ type BaseMessageHeader = {
     withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获
 
     /**
-     * 信息载体，用于
+     * 信息载体，用于将数据临时存储在其他载体中
      * 1. 数据无法被序列化(2进制\blob文件)；需要同域空间下
-     * 将数据临时存储在其他载体中。
+     * 2. 数据量较大时，无法传递
      * */
     carrier?:{
-        carrierType: 'indexedDB',
-        carrierKey: string
+        carrierType: "segments", //'indexedDB' | "network" | "blobURL" | 待支持
+        network?: string // 通过http网络获取，需联网
+        indexedDB?: string // 通过 indexedDB 获取，有同域限制
+        blobURL?: string // 有同域限制（Firefox）
+        segments?: DataSegment // 分片组装，无限制
     }
 
-    /**1. bridge 荷载有限的情况下(session/localStorage bridge 单次请求数据量最多为 5MB 时)；通过使用uri的方式载体*/
+    /**1. bridge 荷载有限的情况下(session/localStorage bridge 单次请求数据量最多为 5MB 时)；通过使用uri的方式载体
+     * todo ,统一归纳至 carrier 中去，删除此字段
+     * */
     requestDataUri?: string
 
 

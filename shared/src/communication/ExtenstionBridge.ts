@@ -11,6 +11,7 @@ import {
   RESPONSE_STATUS_CODE,
   STATUS
 } from "./base";
+import {sumSizeMB} from "./utils";
 
 type ExtensionOption = CommunicationOption & {
   isBackground: boolean
@@ -22,6 +23,57 @@ const messengerMap: Record<string, boolean> = {}
 
 function isPromise(value:any) {
   return typeof value === 'object' && value !== null && 'then' in value && 'catch' in value;
+}
+
+function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requestCallback?:(data: BaseMessageResponse<T>)=> void) {
+  // TODO 单次请求数据量不能超过 50mb ，否则可能失败，
+  const data = request.data;
+  let dataSizeMB = 0;
+  try{
+    dataSizeMB = data ? sumSizeMB(JSON.stringify(data)) : 0
+  }catch (e) {
+    console.error('计算数据量异常',e)
+  }
+  /**
+   * 一次请求按50MB分片处理计算。
+   * 不能通过URL传输，是因为 Firefox 不支持跨域的访问文件资源，background 无法解析文件URL
+   * TODO 区分 Firefox，其他浏览器用URL方式传递数据
+   * **/
+  const segments = Math.ceil(dataSizeMB / 50)
+  // 分片大于1时，分批次发送数据
+  if(segments>1){
+    const dataString = JSON.stringify(data);
+    const totalStringLength = dataString.length;
+    const onceStringLength = Math.ceil(totalStringLength / segments)
+    for(let i=0; i<segments; i++){
+      const segmentRequest: BaseMessageRequest = {
+        header: {
+          ...request.header,
+          carrier:{
+            carrierType: "segments",
+            segments:{
+              totalSegments: segments, // 总计分片数量
+              currentSegment: i, // 当前分片位置
+              contentType: 'json', // 目前仅支持json数据类型
+              segmentString: dataString.substring(i*onceStringLength,i*onceStringLength+onceStringLength), // 单次请求携带的数据
+            }
+          }
+        },
+        type: request.type,
+        data: undefined,// 原始数据清空
+      }
+      // 最后一个片段增加监听，其他的片段不监听响应
+      sendMessageByExtension(tabId,segmentRequest,i===segments-1 ? requestCallback : undefined)
+    }
+    return;
+  }
+
+
+  if(tabId){ // background -》 front
+    chrome.tabs.sendMessage(tabId,request,requestCallback)
+  }else{ // front -> background
+    chrome.runtime.sendMessage(request,requestCallback)
+  }
 }
 
 
@@ -59,11 +111,57 @@ export default class ExtensionMessage2 implements Communication<any>{
   startListen(){
     // 监听全局 message 消息
     const that = this;
+    const tempSegmentsMap: Record<string, string[]> = {}
     const globalMessageListener = function (request:BaseMessageRequest,sender: chrome.runtime.MessageSender,sendResponse:IBaseSendResponse<any>):boolean {
       if(that.state!==STATUS.READY){
         return false;
       }
+
       const { data,type,header} = request;
+      const {carrier} = header;
+      /**
+       * 分片请求，等待数据接收完毕，重新组装后调用
+       * */
+      if(data===undefined && carrier?.segments?.totalSegments > 0){
+        tempSegmentsMap[type] = tempSegmentsMap[type] || new Array(carrier?.segments.totalSegments).fill(null)
+        tempSegmentsMap[type][carrier?.segments.currentSegment] = carrier?.segments.segmentString;
+
+        const isFullSegments = tempSegmentsMap[type].every(function (item) {
+          return item!==null;
+        })
+
+        if(isFullSegments){
+          /**
+           * 分片接受完毕后，重新组装数据;
+           * 重新赋值 request，清空分片数据
+           * */
+          const dataString = tempSegmentsMap[type].join('');
+          try{
+            const originData = JSON.parse(dataString);
+            request.header.carrier = undefined;
+            request.data = originData;
+            delete tempSegmentsMap[type]
+          }catch (e) {
+            console.error('数据损坏',e)
+            sendResponse({
+              data: undefined,
+              error: e,
+              status: RESPONSE_STATUS_CODE.INTER_ERROR,
+              statusText: "分片数据组装失败",
+              success: false
+            })
+          }
+        }else{
+          console.log('分片',header.carrier?.segments?.currentSegment)
+          // 清空分片缓存
+          setTimeout(function () {
+            delete tempSegmentsMap[type]
+          },header.timeout ||20*1000)
+          return false;
+        }
+      }
+
+
       const { senderClientId,originClientId,targetClientId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
 
       // 1. 单线模式，只监听某个目标对象的请求。 非目标请求源，事件、代理均不响应
@@ -191,12 +289,12 @@ export default class ExtensionMessage2 implements Communication<any>{
     if(this.option.isBackground){
       const tabId = header?.targetTabId;
       if(tabId){
-        chrome.tabs.sendMessage(tabId,request,requestCallback)
+        sendMessageByExtension(tabId,request,requestCallback)
       }else{
         chrome.tabs.query({active: true, currentWindow: true},function (result) {
           const tabid = result[0]?.id;
           if(tabid){
-            chrome.tabs.sendMessage(tabid, request,requestCallback);
+            sendMessageByExtension(tabid, request,requestCallback);
           }else{
             rejectFun({
               status: RESPONSE_STATUS_CODE.UN_REACHED,
@@ -209,7 +307,7 @@ export default class ExtensionMessage2 implements Communication<any>{
       }
     } else{
       if(chrome && chrome.runtime){
-        chrome.runtime.sendMessage(request,requestCallback);
+        sendMessageByExtension(undefined,request,requestCallback);
       }else{
         rejectFun({
           status: RESPONSE_STATUS_CODE.UN_REACHED,
