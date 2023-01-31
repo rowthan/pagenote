@@ -219,6 +219,7 @@ class SessionStorageBridge implements Communication<any> {
                 funId: header?.funId || funId,
                 isResponse: header?.isResponse === true,
                 hostname: window.location.hostname,
+                senderURL: window.location.href,
                 withCatch: header.withCatch,
                 timeout: header.timeout || DEFAULT_TIMEOUT,
             },

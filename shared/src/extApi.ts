@@ -165,6 +165,7 @@ export namespace localResource{
         deleted?: boolean,
 
         // 数据资源的存储时间信息
+        visitedAt?:number // 资源访问最后时间
         createAt?: number,
         updateAt?: number
     }

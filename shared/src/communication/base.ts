@@ -58,6 +58,8 @@ type BaseMessageHeader = {
 
     hostname?: string // session bridge 请求时携带当前URL信息
 
+    senderURL: string // 请求方网页地址
+
     // [key: string]: string | boolean | number | any
 }
 

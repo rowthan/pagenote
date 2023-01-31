@@ -38,6 +38,7 @@ export class IframeBridge {
             header: {
                 originClientId: header?.originClientId || this.client, // 源头客户端
                 senderClientId: this.client, // 当前客户端
+                senderURL: window?.self?.location.href,
                 targetClientId: header?.targetClientId,
                 targetOrigin: header?.targetOrigin,
                 isResponse: false,

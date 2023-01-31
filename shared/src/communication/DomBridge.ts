@@ -74,6 +74,7 @@ export default class DomBridge implements Communication<any>{
                         originClientId: header.originClientId,
                         targetClientId: header.senderClientId,
                         senderClientId: this.clientId,
+                        senderURL: window.self?.location.href,
                         funId: header.funId,
                         isResponse: true,
                         timeout: header.timeout || 8000
@@ -134,6 +135,7 @@ export default class DomBridge implements Communication<any>{
             header: {
                 originClientId: this.clientId, // 源头客户端
                 senderClientId: this.clientId, // 当前客户端
+                senderURL: window.self?.location.href,
                 targetClientId: targetClientId,
                 funId: header?.funId || funId,
                 isResponse: false,
@@ -171,6 +173,7 @@ export default class DomBridge implements Communication<any>{
             data: data,
             header: header || {
                 senderClientId: this.clientId,
+                senderURL: window.self?.location.href,
                 originClientId: this.clientId,
                 targetClientId: '',
                 isResponse: false,

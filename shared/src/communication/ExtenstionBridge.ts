@@ -174,6 +174,7 @@ export default class ExtensionMessage2 implements Communication<any>{
         header:{
           originClientId : originClientId,
           senderClientId : senderClientId,
+          senderURL: chrome.runtime.getURL('/'),
           targetClientId : senderClientId,
           isResponse: isResponse,
           withCatch: withCatch,
