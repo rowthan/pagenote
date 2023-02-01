@@ -8,20 +8,19 @@ import {
 } from "./@types/data";
 import {Find, FindResponse, Projection, Query} from "./@types/database";
 import {
-    BaseMessageHeader, BaseMessageRequest,
+    BaseMessageHeader,
     BaseMessageResponse,
     IBaseMessageListener,
     IExtenstionMessageListener
 } from "./communication/base";
-import {Action, ACTION_TYPES} from "./pagenote-actions/@types";
+import {Action} from "./pagenote-actions/@types";
 import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
 import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
-import {createInitAction} from "./pagenote-actions";
 import {BrowserType} from "./utils/browser";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
-        (arg: Parameters<Funs[fun]>[0],header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+        (arg: Parameters<Funs[fun]>[0], header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
 }
 
@@ -76,7 +75,7 @@ export namespace boxroom {
         boxType: string
     }
 
-    export type UpdateBox = Partial<BoxItem> & {id: string}
+    export type UpdateBox = Partial<BoxItem> & { id: string }
 
 
     export type response = {
@@ -128,7 +127,7 @@ export namespace lightpage {
 
         // TODO import export 独立至 common 中
         /**download 导出备份文件*/
-        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }, {filename: string,}>
+        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }, { filename: string, }>
 
         /**导入备份文件**/
         importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
@@ -140,7 +139,7 @@ export namespace lightpage {
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace localResource{
+export namespace localResource {
     export const id = 'localResource'
 
     export type LocalResource = {
@@ -165,7 +164,7 @@ export namespace localResource{
         deleted?: boolean,
 
         // 数据资源的存储时间信息
-        visitedAt?:number // 资源访问最后时间
+        visitedAt?: number // 资源访问最后时间
         createAt?: number,
         updateAt?: number
     }
@@ -174,7 +173,7 @@ export namespace localResource{
     export type response = {
         add: IExtenstionMessageListener<LocalResource, LocalResource | null>
 
-        update: IExtenstionMessageListener<Partial<LocalResource> & {resourceId: string}, LocalResource>
+        update: IExtenstionMessageListener<Partial<LocalResource> & { resourceId: string }, LocalResource>
         remove: IExtenstionMessageListener<{ keys: string[] }, number>
         query: IExtenstionMessageListener<Find<LocalResource>, FindResponse<Partial<LocalResource>>>
 
@@ -310,7 +309,7 @@ export namespace setting {
             enableType: 'always',
             // _libra: false,
             // _sync: false,
-            actions: [createInitAction(ACTION_TYPES.search), createInitAction(ACTION_TYPES.copyToClipboard), createInitAction(ACTION_TYPES.send_to_email)],
+            actions: [],
             autoBackup: 3600 * 24 * 7,
             brushes: defaultBrushes,
             commonSetting: {
@@ -378,6 +377,7 @@ export namespace action {
     import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
     import Tab = chrome.tabs.Tab;
     import QueryInfo = chrome.tabs.QueryInfo;
+    import TabGroup = chrome.tabGroups.TabGroup;
     export const id = 'action'
 
     export interface injectParams {
@@ -419,7 +419,7 @@ export namespace action {
         addScheduleTask: IExtenstionMessageListener<ScheduleTask, number>
 
         /**防止重复打开新标签*/
-        openTab: IExtenstionMessageListener<{ url: string, tabId?: string|number, windowId?: string|number }, { tab: Tab }>
+        openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
 
         getCurrentTab: IExtenstionMessageListener<void, Tab>
         queryTabs: IExtenstionMessageListener<QueryInfo, Tab[]>
@@ -440,7 +440,7 @@ export namespace developer {
         ERROR = 'error',
     }
 
-    export interface LogInfo<T=any> {
+    export interface LogInfo<T = any> {
         id?: string;
         createAt: number,
         level: LogLevel | string,
@@ -506,7 +506,7 @@ export namespace user {
         Edge = 'edge',
         SAFARI = 'safari',
         Firefox = 'firefox',
-        San60= '360',
+        San60 = '360',
         OFFLINE = 'offline',
         TEST = 'test'
     }
@@ -542,7 +542,7 @@ export namespace user {
             developer?: number;
             avatar?: string
         },
-        verify?:{
+        verify?: {
             exp?: number
             iat?: number
         }
@@ -563,7 +563,7 @@ export namespace user {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<void, User | undefined>,
 
-        signin: IExtenstionMessageListener<{email: string, uid: number, password: string, token?: string}, boolean>
+        signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
         signout: IExtenstionMessageListener<void, boolean>
         exchange: IExtenstionMessageListener<void, boolean>
 
@@ -621,10 +621,10 @@ export namespace fileDB {
 export namespace network {
     export const id = 'network';
 
-    export interface FetchRequest extends RequestInit{
+    export interface FetchRequest extends RequestInit {
         url: string,
         data?: Record<string, any>,
-        method: 'GET'|'POST' | string
+        method: 'GET' | 'POST' | string
 
         credentials?: RequestCredentials
         cache?: RequestCache
@@ -635,7 +635,7 @@ export namespace network {
         },
     }
 
-    export interface FetchResponse extends ResponseInit{
+    export interface FetchResponse extends ResponseInit {
         readonly json?: any,
         readonly body?: any,
         readonly config?: Record<string, any>
@@ -652,10 +652,11 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
-        uploadFile: IExtenstionMessageListener<{content: string, contentType: ContentType}, string>
+        uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
 
         /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
         openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>
+
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -696,12 +697,12 @@ export namespace frontApi {
         makeHTMLSnapshot: IExtenstionMessageListener<void, { html: string, key: string }>
         fetchStatus: IExtenstionMessageListener<void, TabStat>
         // 通知刷新数据
-        refresh: IExtenstionMessageListener<{ changes: {key?: string, url?: string, type?: 'page' | 'light' | string}[] }, void>
+        refresh: IExtenstionMessageListener<{ changes: { key?: string, url?: string, type?: 'page' | 'light' | string }[] }, void>
 
-        offlineHTML: IExtenstionMessageListener<OfflineOption,  Partial<LocalResource>>
+        offlineHTML: IExtenstionMessageListener<OfflineOption, Partial<LocalResource>>
 
         // 在标签页启用 pagenote
-        start: IExtenstionMessageListener<{ tabId: string }, {injected: boolean}>
+        start: IExtenstionMessageListener<{ tabId: string }, { injected: boolean }>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
