@@ -1,12 +1,12 @@
 import {generateApi} from "./core";
 import {BaseMessageHeader} from "../communication/base";
 import SessionStorageBridge from "../communication/sessionStorageBridge";
+import {DEFAULT_TIMEOUT} from "../communication/base";
 
 export const PAGENOTE_SESSION_LISTEN_KEY = 'pagenote-message'
 
 
 let bridge: any;
-const TIMEOUT = 10000;
 export const defaultWrapper = function (method: string, targetId: string, clientId: string = 'web-api') {
     return function (request: any, header: Partial<BaseMessageHeader> = {
         targetClientId: targetId
@@ -15,7 +15,7 @@ export const defaultWrapper = function (method: string, targetId: string, client
             bridge = new SessionStorageBridge(clientId, {
                 asServer: true,
                 listenKey: PAGENOTE_SESSION_LISTEN_KEY,
-                timeout: TIMEOUT,
+                timeout: DEFAULT_TIMEOUT,
                 targetClientId: targetId,
             })
         }

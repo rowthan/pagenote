@@ -1,9 +1,9 @@
 import {generateApi} from "./core";
 import {BaseMessageHeader} from "../communication/base";
 import ExtensionMessage2 from "../communication/ExtenstionBridge";
+import {DEFAULT_TIMEOUT} from "../communication/base";
 
 let bridge: any;
-const TIMEOUT = 10000;
 export const defaultWrapper = function (method: string, targetId: string, clientId: string = 'ext-api') {
     return function (request: any, header: Partial<BaseMessageHeader> = {
         targetClientId: targetId
@@ -15,7 +15,7 @@ export const defaultWrapper = function (method: string, targetId: string, client
                 bridge = new ExtensionMessage2(clientId, {
                     asServer: true,
                     isBackground: true,
-                    timeout: TIMEOUT,
+                    timeout: DEFAULT_TIMEOUT,
                     targetClientId: targetId,
                 })
             } else {

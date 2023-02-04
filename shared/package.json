@@ -1,9 +1,10 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.10.22-rc.e",
+  "version": "1.11.0",
   "description": "",
   "main": "lib/",
   "dependencies": {
+    "colord": "^2.9.3",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mustache": "^4.2.0"

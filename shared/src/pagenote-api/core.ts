@@ -14,11 +14,12 @@ interface Wrapper {
     (method: string, targetId: string, clientId?: string): (request: any, header?: Partial<BaseMessageHeader>) => any
 }
 
-export function createApiForNamespace<T>(define: Record<string, boolean>, namespace: string, wrapperFun:Wrapper) {
+export function createApiForClient<T>(define: Record<string, boolean>, clientId: string, wrapperFun:Wrapper) {
     const object: Record<string, (request: any, header: BaseMessageHeader) => Promise<any>> = {}
     for (let method in define) {
         if (define[method]) {
-            object[method] = wrapperFun(method, namespace)
+            // TODO 所有方法共享一个请求方法
+            object[method] = wrapperFun(method, clientId)
         }else{
             object[method] = function () {
                 return Promise.resolve({
@@ -141,16 +142,16 @@ export const generateApi = function (wrapperFun:Wrapper) {
     }
 
     return {
-        lightpage: createApiForNamespace<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
-        boxroom: createApiForNamespace<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
-        setting: createApiForNamespace<setting.request>(settingMethod, setting.id, wrapperFun),
-        browserAction: createApiForNamespace<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
-        commonAction: createApiForNamespace<action.request>(actionApiMethod, action.id, wrapperFun),
-        fileSystem: createApiForNamespace<localdir.request>(localdirMethod, localdir.id, wrapperFun),
-        fileDB: createApiForNamespace<fileDB.request>(fileDBMethod, fileDB.id, wrapperFun),
-        user: createApiForNamespace<user.request>(userMethod, user.id, wrapperFun),
-        network: createApiForNamespace<network.request>(networkMethod, network.id, wrapperFun),
-        developer: createApiForNamespace<developer.request>(developerMethod, developer.id, wrapperFun),
-        localResource: createApiForNamespace<localResource.request>(localResourceMethod, localResource.id, wrapperFun),
+        lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
+        boxroom: createApiForClient<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
+        setting: createApiForClient<setting.request>(settingMethod, setting.id, wrapperFun),
+        browserAction: createApiForClient<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
+        commonAction: createApiForClient<action.request>(actionApiMethod, action.id, wrapperFun),
+        fileSystem: createApiForClient<localdir.request>(localdirMethod, localdir.id, wrapperFun),
+        fileDB: createApiForClient<fileDB.request>(fileDBMethod, fileDB.id, wrapperFun),
+        user: createApiForClient<user.request>(userMethod, user.id, wrapperFun),
+        network: createApiForClient<network.request>(networkMethod, network.id, wrapperFun),
+        developer: createApiForClient<developer.request>(developerMethod, developer.id, wrapperFun),
+        localResource: createApiForClient<localResource.request>(localResourceMethod, localResource.id, wrapperFun),
     }
 };

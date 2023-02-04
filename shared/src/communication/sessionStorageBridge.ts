@@ -120,6 +120,11 @@ class SessionStorageBridge implements Communication<any> {
             if (header.isResponse === false && that.option.asServer !== true) {
                 return;
             }
+            //  忽略有明确目标，且目标非当前服务
+            const skipThisRequest = header.targetClientId && header.targetClientId !== that.clientId
+            if(skipThisRequest){
+                return;
+            }
 
             if (requestData?.header?.requestDataUri && !requestData.data) {
                 try {
@@ -151,11 +156,8 @@ class SessionStorageBridge implements Communication<any> {
             const resolveFun = that.listeners[functionId] || that.listeners[type]
             if (resolveFun && typeof resolveFun === 'function') {
                 // 事件有明确目标源，校验当前是否为接收方
-                const canResolveThisEvent = !header.targetClientId || header.targetClientId === that.clientId
-                if (canResolveThisEvent) {
-                    resolveFun(requestData.data, sender, sendResponse)
-                    clearMessage(listenKey)
-                }
+                resolveFun(requestData.data, sender, sendResponse)
+                clearMessage(listenKey)
             } else if (that.proxy) {
                 // 代理模式，可以接收处理所有请求，在内部自行判断是否为目标源
                 that.proxy(requestData, sender, sendResponse);

@@ -79,7 +79,7 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
 }
 
 
-export default class ExtensionMessage2 implements Communication<any>{
+export default class ExtensionMessage implements Communication<any>{
   clientId: string; // 当前信使的ID
   proxy: IExtenstionMessageProxy; // 所有消息的监听代理
   listeners: Record<string, IExtenstionMessageListener<any, any>> = {} // 指定事件的监听
@@ -88,7 +88,7 @@ export default class ExtensionMessage2 implements Communication<any>{
 
   constructor(id:string,options?:ExtensionOption) {
     if(messengerMap[id]){
-      console.warn(id,'clientId already exist')
+      console.warn(id,' already exist')
     }
     messengerMap[id] = true;
     this.option = options || {
@@ -323,6 +323,6 @@ export default class ExtensionMessage2 implements Communication<any>{
   }
 
   responseMessage(type: string, data: any, header?: BaseMessageHeader): void {
-    throw new Error("Method not implemented.");
+    throw new Error(type+" not implemented.");
   }
 }
