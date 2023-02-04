@@ -1,17 +1,15 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.10.22-rc.a",
+  "version": "1.10.22-rc.e",
   "description": "",
   "main": "lib/",
   "dependencies": {
-    "color": "^4.2.3",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mustache": "^4.2.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.177",
-    "@types/color": "^3.0.3",
     "@types/md5": "^2.3.2",
     "@types/mocha": "^9.0.0",
     "@types/mustache": "^4.1.2",

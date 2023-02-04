@@ -1,15 +1,17 @@
-import {
+import type {
     BaseMessageHeader,
     BaseMessageRequest,
     BaseMessageResponse,
     Communication,
     CommunicationOption,
-    DEFAULT_TIMEOUT,
     IBaseMessageListener,
     IBaseMessageProxy,
-    RESPONSE_STATUS_CODE,
-    STATUS,
 } from "./base";
+import {
+    DEFAULT_TIMEOUT,
+    STATUS,
+    RESPONSE_STATUS_CODE,
+} from './base'
 import {createURLForJSON, sumSizeMB} from "./utils";
 
 
@@ -40,7 +42,7 @@ function triggerMessage(key: string, requestData: BaseMessageRequest) {
     // 初步估计信息占用空间
     const totalMB = sumSizeMB(dataString);
     // 请求数据大于 4MB 时，将数据进行转换为URI地址，防止 sessionStorage 无法承载
-    if(totalMB>4){
+    if (totalMB > 4) {
         requestData.header.requestDataUri = createURLForJSON(requestData.data);
         requestData.data = undefined; // 转移数据为 requestDataUri
         dataString = JSON.stringify(requestData)
@@ -49,7 +51,7 @@ function triggerMessage(key: string, requestData: BaseMessageRequest) {
     try {
         window.sessionStorage.setItem(key, dataString);
     } catch (e) {
-        console.error('信息超载，可能通讯失败', e)
+        console.error('data oversize', e)
     }
 
     const event = new Event(EVENT_NAME);
@@ -119,12 +121,12 @@ class SessionStorageBridge implements Communication<any> {
                 return;
             }
 
-            if(requestData?.header?.requestDataUri && !requestData.data){
-                try{
+            if (requestData?.header?.requestDataUri && !requestData.data) {
+                try {
                     const dataRes = await fetch(requestData.header.requestDataUri);
                     requestData.data = await dataRes.json();
-                }catch (e) {
-                    console.error('parse requestDataUri ERROR',e)
+                } catch (e) {
+                    console.error('parse requestDataUri ERROR', e)
                 }
             }
 
@@ -177,8 +179,8 @@ class SessionStorageBridge implements Communication<any> {
 
     requestMessage<RESPONSE>(type: string, data: any, header?: SessionHeader): Promise<BaseMessageResponse<RESPONSE>> {
         let resolveFun: (arg0: BaseMessageResponse<RESPONSE>) => void;
-        let rejectFun: (arg0: BaseMessageResponse<RESPONSE>)=>void
-        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve,reject) => {
+        let rejectFun: (arg0: BaseMessageResponse<RESPONSE>) => void
+        const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve, reject) => {
             resolveFun = resolve;
             /**如果忽略异常，则直接通过 resolve 响应*/
             rejectFun = header.withCatch ? reject : resolve;
@@ -201,9 +203,9 @@ class SessionStorageBridge implements Communication<any> {
         const onceFunIdListener: IMessageListener<any, any> = function (responseData: BaseMessageResponse<any>) {
             delete that.listeners[funId]; // 响应处理后，清空监听
             clearTimeout(timer)
-            if(responseData?.status && responseData?.status !== RESPONSE_STATUS_CODE.SUCCESS){
+            if (responseData?.status && responseData?.status !== RESPONSE_STATUS_CODE.SUCCESS) {
                 rejectFun(responseData)
-            }else{
+            } else {
                 resolveFun(responseData)
             }
         }

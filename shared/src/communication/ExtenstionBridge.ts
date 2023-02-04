@@ -1,16 +1,18 @@
-import {
+import type {
   BaseMessageHeader,
   BaseMessageRequest,
   BaseMessageResponse,
   Communication,
   CommunicationOption,
-  DEFAULT_TIMEOUT,
   IBaseSendResponse,
   IExtenstionMessageListener,
   IExtenstionMessageProxy,
-  RESPONSE_STATUS_CODE,
-  STATUS
 } from "./base";
+import {
+  DEFAULT_TIMEOUT,
+  RESPONSE_STATUS_CODE,
+  STATUS,
+} from './base'
 import {sumSizeMB} from "./utils";
 
 type ExtensionOption = CommunicationOption & {
@@ -32,7 +34,7 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
   try{
     dataSizeMB = data ? sumSizeMB(JSON.stringify(data)) : 0
   }catch (e) {
-    console.error('计算数据量异常',e)
+    console.error('sum size',e)
   }
   /**
    * 一次请求按50MB分片处理计算。
@@ -86,7 +88,7 @@ export default class ExtensionMessage2 implements Communication<any>{
 
   constructor(id:string,options?:ExtensionOption) {
     if(messengerMap[id]){
-      console.warn(id,'已存在'+id,'应注意避免ID重复，可能事件发送监听失败')
+      console.warn(id,'clientId already exist')
     }
     messengerMap[id] = true;
     this.option = options || {
@@ -142,17 +144,15 @@ export default class ExtensionMessage2 implements Communication<any>{
             request.data = originData;
             delete tempSegmentsMap[type]
           }catch (e) {
-            console.error('数据损坏',e)
             sendResponse({
               data: undefined,
               error: e,
               status: RESPONSE_STATUS_CODE.INTER_ERROR,
-              statusText: "分片数据组装失败",
+              statusText: "segments error",
               success: false
             })
           }
         }else{
-          console.log('分片',header.carrier?.segments?.currentSegment)
           // 清空分片缓存
           setTimeout(function () {
             delete tempSegmentsMap[type]
@@ -299,7 +299,7 @@ export default class ExtensionMessage2 implements Communication<any>{
           }else{
             rejectFun({
               status: RESPONSE_STATUS_CODE.UN_REACHED,
-              statusText: '未找到当前激活tab页',
+              statusText: 'did not find active tab',
               success: false,
               data: undefined
             })
@@ -312,17 +312,17 @@ export default class ExtensionMessage2 implements Communication<any>{
       }else{
         rejectFun({
           status: RESPONSE_STATUS_CODE.UN_REACHED,
-          statusText: '插件不可用,刷新后重试',
+          statusText: 'Extension is unavailable. refresh please',
           success: false,
           data: undefined
         })
-        console.error('无法通信插件,')
+        console.error("connect extension fail")
       }
     }
     return promise
   }
 
   responseMessage(type: string, data: any, header?: BaseMessageHeader): void {
-    console.error('extension 无需实现')
+    throw new Error("Method not implemented.");
   }
 }

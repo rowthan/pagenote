@@ -1,4 +1,4 @@
-import {
+import type {
     BackupData,
     SnapshotResource,
     ResourceInfo,
@@ -6,17 +6,17 @@ import {
     WebPage,
     ContentType,
 } from "./@types/data";
-import {Find, FindResponse, Projection, Query} from "./@types/database";
-import {
+import type {Find, FindResponse, Projection, Query} from "./@types/database";
+import type {
     BaseMessageHeader,
     BaseMessageResponse,
     IBaseMessageListener,
     IExtenstionMessageListener
 } from "./communication/base";
-import {Action} from "./pagenote-actions/@types";
-import {ConvertMethod, getDefaultConvertMethod} from "./pagenote-convert";
-import {Brush, getDefaultBrush, LightStatus, LightType} from "./pagenote-brush";
-import {BrowserType} from "./utils/browser";
+import type {Action} from "./pagenote-actions/@types";
+import type {ConvertMethod} from "./pagenote-convert";
+import type {Brush} from "./pagenote-brush";
+import type {BrowserType} from "./utils/browser";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
@@ -28,6 +28,10 @@ type ComputeRequestToFront<Funs extends Record<string, IBaseMessageListener<any,
     [fun in keyof Funs]: {
         (arg: Parameters<Funs[fun]>[0], header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
     }
+}
+
+export type ComputeRequestApiMapDefine<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
+    [fun in keyof Funs]: boolean
 }
 
 type ResponseType<T> = T extends BaseMessageResponse<infer R> ? R : T
@@ -265,82 +269,7 @@ export namespace setting {
 
     export type request = ComputeRequestToBackground<response>
 
-    export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): SDK_SETTING {
-        const defaultBrushes = [
-            getDefaultBrush({
-                bg: '#ffe534',
-            }),
-            getDefaultBrush({
-                bg: '#A6FFE9',
-                label: '删除线',
-                lightType: LightType.deleteLine,
-                defaultStatus: LightStatus.un_light
-            }),
-            getDefaultBrush({
-                bg: '#FFC7BA',
-                defaultStatus: LightStatus.full_light
-            }),
-            getDefaultBrush({
-                bg: '#B8EEFF',
-                defaultStatus: LightStatus.half_light
-            }),
-            getDefaultBrush({
-                bg: '#FFD0EF',
-                defaultStatus: LightStatus.half_light
-            }),
-            getDefaultBrush({
-                bg: '#D9C3FF',
-                defaultStatus: LightStatus.half_light
-            }),
-            getDefaultBrush({
-                bg: '#a64db4',
-                defaultStatus: LightStatus.half_light
-            }),
-            getDefaultBrush({
-                bg: '#195772',
-                defaultStatus: LightStatus.half_light
-            }),
-            getDefaultBrush({
-                bg: '#4467a8',
-                defaultStatus: LightStatus.half_light
-            }),
-        ]
-        const setting: SDK_SETTING = {
-            enableType: 'always',
-            // _libra: false,
-            // _sync: false,
-            actions: [],
-            autoBackup: 3600 * 24 * 7,
-            brushes: defaultBrushes,
-            commonSetting: {
-                keyupTimeout: 0,
-                maxRecord: 999,
-                removeAfterDays: 30,
-                showBarTimeout: 0
-            },
-            controlC: true,
-            controlCTimeout: 0,
-            copyAllowList: [],
-            disableList: [],
-            enableMarkImg: false,
-            convertMethods: [getDefaultConvertMethod()],
-            lastModified: 0,
-            updateAt: 0,
-            dataVersion: SDK_VERSION.ts_format,
-            useRecommend: true,
 
-            keyupTimeout: 0,
-            maxRecord: 999,
-            removeAfterDays: 30,
-            showBarTimeout: 0,
-
-            _sdkVersion: "5.5.3"
-        }
-        return {
-            ...setting,
-            ...originSetting
-        }
-    }
 }
 
 export namespace browserAction {

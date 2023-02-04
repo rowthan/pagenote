@@ -1,4 +1,4 @@
-const Color = require('color');
+import { colord } from "colord";
 
 export enum LightStatus {
     un_light=0,
@@ -30,8 +30,8 @@ export function getDefaultBrush(brush: Partial<Brush>={}):Brush {
         if(bg.length <=6 && bg[0]!=='#'){
             bg = '#' + bg;
         }
-        const colorObj = Color(bg)
-        bg = colorObj.hex();
+        const colorObj = colord(bg)
+        bg = colorObj.toHex();
         color = color || (colorObj.isDark() ? '#FFFFFF' : '#000000');
     }catch (e) {
         console.error(e)

@@ -1,15 +1,14 @@
-import SessionStorageBridge from "./communication/sessionStorageBridge";
-import ExtensionMessage2 from "./communication/ExtenstionBridge";
-import {BaseMessageHeader} from "./communication/base";
-import {generateApi} from "./pagenote-api/core";
+import {generateApi} from "./core";
+import {BaseMessageHeader} from "../communication/base";
+import ExtensionMessage2 from "../communication/ExtenstionBridge";
+import SessionStorageBridge from "../communication/sessionStorageBridge";
 
-// TODO 废弃，迁移至 pagenote-api/
 export const PAGENOTE_SESSION_LISTEN_KEY = 'pagenote-message'
 
 
 let bridge: any;
 const TIMEOUT = 10000;
-export const defaultWrapper = function (method: string, targetId: string, clientId: string = 'default') {
+export const defaultWrapper = function (method: string, targetId: string, clientId: string = 'common-api') {
     return function (request: any, header: Partial<BaseMessageHeader> = {
         targetClientId: targetId
     }) {
