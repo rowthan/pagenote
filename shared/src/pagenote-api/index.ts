@@ -18,7 +18,7 @@ export const defaultWrapper = function (method: string, targetId: string, client
             if (globalThis && globalThis.chrome && chrome.runtime && chrome.runtime.onMessage) {
                 bridge = new ExtensionMessage2(clientId, {
                     asServer: true,
-                    isBackground: true,
+                    isBackground: false,
                     timeout: DEFAULT_TIMEOUT,
                     targetClientId: targetId,
                 })
