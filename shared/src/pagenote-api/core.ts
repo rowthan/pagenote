@@ -32,6 +32,7 @@ export function createApiForClient<T>(define: Record<string, boolean>, clientId:
             }
         }
     }
+    // @ts-ignore
     return object as T;
 }
 

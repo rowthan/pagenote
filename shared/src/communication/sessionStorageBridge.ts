@@ -120,11 +120,6 @@ class SessionStorageBridge implements Communication<any> {
             if (header.isResponse === false && that.option.asServer !== true) {
                 return;
             }
-            //  忽略有明确目标，且目标非当前服务
-            const skipThisRequest = header.targetClientId && header.targetClientId !== that.clientId
-            if(skipThisRequest){
-                return;
-            }
 
             if (requestData?.header?.requestDataUri && !requestData.data) {
                 try {
