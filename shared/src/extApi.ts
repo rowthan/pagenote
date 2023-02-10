@@ -201,10 +201,8 @@ export namespace setting {
 
     // 插件内部的配置项，不在各端同步
     type Inner_Setting = {
-        _libra?: boolean, // 是否开启实验功能
-        _sync?: boolean, // 是否在各端之间同步设置
         _supportVersions?: string[], // 当前支持SDK的版本列表
-        _sdkVersion: string, // 当前使用的 SDK 版本
+        _sdkVersion?: string, // 当前使用的 SDK 版本
 
         /**同步设置*/
         _syncClipboard?: boolean
@@ -219,22 +217,18 @@ export namespace setting {
     export type SDK_SETTING = Inner_Setting & {
         lastModified?: number, // TODO 删除
         brushes: Brush[],
-        copyAllowList?: string[], // TODO 删除
 
         // TODO 删除 提取至一级目录下
         actions: Action[],
         disableList?: string[],
-        controlC?: boolean, // TODO 0.26.0 之后删除
+        controlC?: boolean,
         controlCTimeout?: number,
-        enableMarkImg?: boolean, // TODO 删除
         convertMethods?: ConvertMethod[], // TODO 删除
         dataVersion?: SDK_VERSION, // TODO 删除
 
         maxRecord?: number, // TODO 0.26.0 后删除
         showBarTimeout: number,
         keyupTimeout: number,
-        removeAfterDays?: number, // TODO 删除
-        enableType?: 'when-needed' | 'always' // 启动方式： 当需要时、总是自动开启
         [key: string]: any;
     }
 
@@ -469,7 +463,8 @@ export namespace user {
             nickname?: string,
             emailMask?: string;
             developer?: number;
-            avatar?: string
+            avatar?: string;
+            uid: number;
         },
         verify?: {
             exp?: number
@@ -497,8 +492,6 @@ export namespace user {
         exchange: IExtenstionMessageListener<void, boolean>
 
         setUserToken: IExtenstionMessageListener<string, string>
-        // 使用 exchangeToken  TODO 全面上架 0.25.0 之后删除
-        getUserToken?: IExtenstionMessageListener<void, string>
 
         // 当前设备信息
         setDevice: IExtenstionMessageListener<Partial<Device>, Device | undefined>
