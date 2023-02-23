@@ -57,11 +57,11 @@ export type Query<Model> = {
     [key in keyof Model]?: QueryValue;
 } | {
     $or: {
-        [key in keyof Model]?: QueryValue
+        [key in keyof Model]?: QueryValue | Query<Model>
     }[];
 } | {
     $and: {
-        [key in keyof Model]?: QueryValue
+        [key in keyof Model]?: QueryValue | Query<Model>
     }[];
 }
 

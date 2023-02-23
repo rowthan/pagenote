@@ -103,6 +103,8 @@ export namespace lightpage {
     type PartWebpage = Partial<WebPage>
     type PartStep = Partial<Step>
 
+    export type ExportFilter = { pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }
+
     // 服务端可接受的请求API TODO 合并 light page snapshot 接口，
     export type response = {
         // 1.页面
@@ -131,12 +133,13 @@ export namespace lightpage {
 
         // TODO import export 独立至 common 中
         /**download 导出备份文件*/
-        exportBackup: IExtenstionMessageListener<{ pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }, { filename: string, }>
+        exportBackup: IExtenstionMessageListener<ExportFilter, { filename: string, }>
 
         /**导入备份文件**/
         importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
 
-        syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
+        // TODO 删除
+        syncStat?: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -232,6 +235,8 @@ export namespace setting {
         [key: string]: any;
     }
 
+    export type ExtConfigItem = Record<string, string>
+
     /**搜索引擎*/
     export type ISearchEngine = {
         type?: string, // 搜索引擎类别，如baidu\google
@@ -248,6 +253,8 @@ export namespace setting {
     }
 
     export interface response {
+
+        // todo 删除以下
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // // 同步云端设置
@@ -256,6 +263,10 @@ export namespace setting {
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
         resetSetting: IExtenstionMessageListener<void, SDK_SETTING>
+
+
+        saveConfig: IExtenstionMessageListener<ExtConfigItem, ExtConfigItem>
+        getConfig: IExtenstionMessageListener<{ keys: string[] }, ExtConfigItem>
         getSearchEngines: IExtenstionMessageListener<void, ISearchEngine[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -574,10 +585,22 @@ export namespace network {
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
+
+        notion: IExtenstionMessageListener<{
+            namespace: string,
+            method: string,
+            args: any[]
+        }, any>
+
         uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
 
         /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
         openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>
+
+        state: IExtenstionMessageListener<void, {
+            online: boolean
+            google: boolean
+        }>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }

@@ -108,7 +108,8 @@ export type SnapshotResource = {
     url: string, // 可访问的URL 地址，base64 或链接
     uri?: string // 互联网可访问的链接地址
     thumb?: string, // 缩略图
-    pageKey: string
+    pageKey: string // 关联的网页key
+    pageUrl: string // 关联的网页url
     type: MetaResourceType
     createAt?: number, // 资源创建时间
     updateAt?: number,
@@ -155,7 +156,7 @@ type WebPageSiteInfo = {
     deleted: boolean,
     achieved: boolean,
     icon: string,
-    title: string, // 网站标题
+    title?: string, // 网站标题
     version: DataVersion,
     description: string, // 网站描述
     thumb: string, // 预览缩略图
@@ -243,6 +244,8 @@ export type BackupData = {
     remark?: string
 
     thumb?: string
+
+    did?: string;
 }
 
 export type {

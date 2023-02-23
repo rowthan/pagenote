@@ -67,6 +67,8 @@ export const generateApi = function (wrapperFun:Wrapper) {
     }
 
     const settingMethod: ComputeRequestApiMapDefine<setting.request> = {
+        getConfig: true,
+        saveConfig: true,
         getSearchEngines: true,
         getSetting: true,
         getUserSetting: true,
@@ -123,8 +125,12 @@ export const generateApi = function (wrapperFun:Wrapper) {
     }
 
     const networkMethod: ComputeRequestApiMapDefine<network.request> = {
-        fetch: true, openApi: true, pagenote: true, uploadFile: true
-
+        state: true,
+        notion: true,
+        fetch: true,
+        openApi: true,
+        pagenote: true,
+        uploadFile: true
     }
 
     const developerMethod: ComputeRequestApiMapDefine<developer.request> = {
