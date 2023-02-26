@@ -67,7 +67,7 @@ type Step = {
     updateAt: number, // 修改时间
     score?: number, // 此条笔记重要评分
     originContext?: string, // 原始上下文
-    deleted?: boolean // 删除标记
+    deleted: boolean // 删除标记
     author?: string // 原始作者
     url?: string
     pageKey?: string
@@ -83,8 +83,10 @@ type Position = {
 type PlainData = {
     categories?: string[],// TODO 删除
     snapshots?: string[],
-    setting?: any,
+    setting?: any, // TODO 删除
     steps: Step[],
+
+    offline?: LocalResource[] // 关联的离线数据
 }
 
 export enum PAGE_TYPES {
@@ -112,12 +114,12 @@ export type SnapshotResource = {
     pageUrl: string // 关联的网页url
     type: MetaResourceType
     createAt?: number, // 资源创建时间
-    updateAt?: number,
+    updateAt: number,
 
     expiredAt?: number,
     did?: string
 
-    deleted?: boolean
+    deleted: boolean
 }
 
 

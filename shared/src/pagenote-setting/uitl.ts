@@ -44,32 +44,19 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         }),
     ]
     const setting: SDK_SETTING = {
-        enableType: 'always',
         // _libra: false,
         // _sync: false,
         actions: [],
-        autoBackup: 3600 * 24 * 7,
         brushes: defaultBrushes,
-        commonSetting: {
-            keyupTimeout: 0,
-            maxRecord: 999,
-            removeAfterDays: 30,
-            showBarTimeout: 0
-        },
         controlC: true,
         controlCTimeout: 0,
-        copyAllowList: [],
         disableList: [],
-        enableMarkImg: false,
         convertMethods: [],
         lastModified: 0,
-        updateAt: 0,
         dataVersion: SDK_VERSION.ts_format,
-        useRecommend: true,
 
         keyupTimeout: 0,
         maxRecord: 999,
-        removeAfterDays: 30,
         showBarTimeout: 0,
 
         _sdkVersion: "5.5.3"

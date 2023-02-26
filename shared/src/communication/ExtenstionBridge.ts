@@ -114,6 +114,7 @@ export default class ExtensionMessage implements Communication<any>{
     // 监听全局 message 消息
     const that = this;
     const tempSegmentsMap: Record<string, string[]> = {}
+    // TODO 对 sendResponse 进行包装处理，当数据量大于限制时，background-front 无法发送完整数据
     const globalMessageListener = function (request:BaseMessageRequest,sender: chrome.runtime.MessageSender,sendResponse:IBaseSendResponse<any>):boolean {
       if(that.state!==STATUS.READY){
         return false;

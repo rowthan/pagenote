@@ -1,12 +1,12 @@
 import {
-    action,
+    action, box,
     boxroom,
     browserAction,
-    ComputeRequestApiMapDefine, developer,
-    fileDB,
+    ComputeRequestApiMapDefine, config, developer,
+    fileDB, html, light,
     lightpage,
     localdir, localResource, network,
-    setting, user
+    setting, snapshot, user
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
 
@@ -67,7 +67,7 @@ export const generateApi = function (wrapperFun:Wrapper) {
     }
 
     const settingMethod: ComputeRequestApiMapDefine<setting.request> = {
-        getConfig: true,
+        queryConfig: true,
         saveConfig: true,
         getSearchEngines: true,
         getSetting: true,
@@ -148,8 +148,35 @@ export const generateApi = function (wrapperFun:Wrapper) {
         add: true, group: true, putItems: true, query: true, remove: true, update: true
     }
 
+    const configMethod: ComputeRequestApiMapDefine<config.request> = {
+        init: false, stat: false,
+        group: true, put: true, query: true, remove: true, update: true
+    }
+
+    const htmlMethod: ComputeRequestApiMapDefine<html.request> = {
+        init: false, stat: false,
+        group: true, put: true, query: true, remove: true, update: true
+    }
+
+    const boxMethods: ComputeRequestApiMapDefine<box.request> = {
+        init: false, stat: false,
+        group: true, put: true, query: true, remove: true, update: true
+    }
+
+    const lightMethods: ComputeRequestApiMapDefine<light.request> = {
+        init: false, stat: false,
+        group: true, put: true, query: true, remove: true, update: true
+    }
+
+    const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = {
+        init: false, stat: false,
+        group: true, put: true, query: true, remove: true, update: true
+    }
+
+
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
+        // 待删除
         boxroom: createApiForClient<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
         setting: createApiForClient<setting.request>(settingMethod, setting.id, wrapperFun),
         browserAction: createApiForClient<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
@@ -160,5 +187,12 @@ export const generateApi = function (wrapperFun:Wrapper) {
         network: createApiForClient<network.request>(networkMethod, network.id, wrapperFun),
         developer: createApiForClient<developer.request>(developerMethod, developer.id, wrapperFun),
         localResource: createApiForClient<localResource.request>(localResourceMethod, localResource.id, wrapperFun),
+
+        // 格式化的统一数据操作 API
+        html: createApiForClient<html.request>(htmlMethod,html.id,wrapperFun),
+        config: createApiForClient<config.request>(configMethod,config.id,wrapperFun),
+        box: createApiForClient<box.request>(boxMethods,box.id,wrapperFun),
+        light: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
+        snapshot: createApiForClient<snapshot.request>(snapshotMethods,snapshot.id,wrapperFun)
     }
 };

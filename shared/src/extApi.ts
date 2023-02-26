@@ -53,6 +53,7 @@ export type SyncStat = {
     icon?: string;
 }
 
+// todo 待删除 保留至5月
 export namespace boxroom {
     export const id = 'boxroom'
     export type BoxItem = {
@@ -114,7 +115,7 @@ export namespace lightpage {
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<PartWebpage>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, PartWebpage[]>>,
 
-        // 2.标记
+        // 2.标记 TODO 待删除
         addLights: IExtenstionMessageListener<Step[], string[]>;
         removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
         updateLights: IExtenstionMessageListener<PartStep[], number>;
@@ -146,6 +147,7 @@ export namespace lightpage {
     export type request = ComputeRequestToBackground<response>
 }
 
+// TODO 删除
 export namespace localResource {
     export const id = 'localResource'
 
@@ -232,7 +234,6 @@ export namespace setting {
         maxRecord?: number, // TODO 0.26.0 后删除
         showBarTimeout: number,
         keyupTimeout: number,
-        [key: string]: any;
     }
 
     export type ExtConfigItem = Record<string, string>
@@ -266,7 +267,7 @@ export namespace setting {
 
 
         saveConfig: IExtenstionMessageListener<ExtConfigItem, ExtConfigItem>
-        getConfig: IExtenstionMessageListener<{ keys: string[] }, ExtConfigItem>
+        queryConfig: IExtenstionMessageListener<Query<{ key: string }>, ExtConfigItem>
         getSearchEngines: IExtenstionMessageListener<void, ISearchEngine[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -605,6 +606,95 @@ export namespace network {
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
+    export type request = ComputeRequestToBackground<response>
+}
+
+/**占位  stat 字段，用于标识数据的状态，合法、非法、删除等状态，使用字符串类型，可用于建立索引 待 28版本后启动此字段*/
+export type TableAPI<Schema extends {deleted: boolean, updateAt: number, stat?:"valid"|"un_valid"|"deleted"}> = {
+    init: IExtenstionMessageListener<Schema, boolean> //初始化表格、等
+
+    stat: IExtenstionMessageListener<void, any> // 状态检测
+    /**新增或更新（批量导入）已有数据*/
+    put: IExtenstionMessageListener<Schema[], string[]>
+    /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
+    remove: IExtenstionMessageListener<string[], number>
+    /**支持按条件的更新；*/
+    update: IExtenstionMessageListener<{query:Query<Schema>,data: Partial<Schema>}, number>
+    /**按条件查询数据*/
+    query: IExtenstionMessageListener<Find<Schema>, FindResponse<Partial<Schema>>>
+    /**聚合数据，*/
+    group: IExtenstionMessageListener<{ groupBy: keyof Schema, query?: Query<Schema>, projection?: Projection<Schema> }, Record<string, Partial<Schema>[]>>
+}
+
+export namespace config {
+    export const id = 'config';
+    export type ConfigObject = { key: string, value: string, updateAt: number, deleted: boolean }
+    export type response = TableAPI<ConfigObject>
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace light {
+    export const id = 'light';
+    export type response = TableAPI<Step>
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace html {
+    export type OfflineHTML = {
+        resourceId?: string, // 插件本地获取该资源的唯一标识
+
+        name?: string, // 文件名
+
+        originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
+        onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
+
+        localUrl?: string // 插件本地直接访问资源的地址，不上传服务器，由插件本地生成；不同插件主机地址不同
+
+        contentType: ContentType, // 文件类型
+        contentLength?: number, // 资源size
+        lastModified?: string,
+        ETag?: string,
+        data: string, // 资源内容，只支持字符串存储，不支持二进制数据
+
+        relatedPageKey?: string, //关联的网页key
+        relatedPageUrl?: string // 关联的网址
+
+        deleted: boolean,
+
+        // 数据资源的存储时间信息
+        visitedAt?: number // 资源访问最后时间
+        createAt?: number,
+        updateAt: number
+    }
+    export const id = 'html';
+    export type response = TableAPI<OfflineHTML>
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace box {
+    export const id = 'box';
+    export type Box = {
+        id: string, // 资源ID，非指定情况下md5值
+        boxType?: string, // 资源类型
+        from?: string, // 来源
+        createAt?: number, // 来源
+        updateAt: number,
+        expiredAt?: number,
+        type?: string,
+        text?: string,
+        did?: string
+        version?: string
+        icon?: string
+        domain?: string
+        deleted: boolean
+    }
+    export type response = TableAPI<Box>
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace snapshot {
+    export const id = 'snapshot';
+    export type response = TableAPI<SnapshotResource>
     export type request = ComputeRequestToBackground<response>
 }
 
