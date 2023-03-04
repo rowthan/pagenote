@@ -610,7 +610,8 @@ export namespace network {
 }
 
 /**占位  stat 字段，用于标识数据的状态，合法、非法、删除等状态，使用字符串类型，可用于建立索引 待 28版本后启动此字段*/
-export type TableAPI<Schema extends {deleted: boolean, updateAt: number, stat?:"valid"|"un_valid"|"deleted"}> = {
+export type TableSchemaBasicFields = {deleted: boolean, updateAt: number, stat?:"valid"|"un_valid"|"deleted"}
+export type TableAPI<Schema extends TableSchemaBasicFields> = {
     init: IExtenstionMessageListener<Schema, boolean> //初始化表格、等
 
     stat: IExtenstionMessageListener<void, any> // 状态检测

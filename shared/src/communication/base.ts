@@ -17,7 +17,9 @@ type BaseMessageHeader = {
     targetClientId: string, // 目标寻址源
     timeout: number // 超时时间
     isResponse: boolean // 区分请求类型，请求/响应
-    withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获
+    withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获 TODO 统一后删除
+
+    runAt?: number // 延迟执行请求，单位时间戳（秒 Date.now()）
 
     /**
      * 信息载体，用于将数据临时存储在其他载体中
