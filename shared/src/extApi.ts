@@ -206,20 +206,15 @@ export namespace setting {
 
     // 插件内部的配置项，不在各端同步
     type Inner_Setting = {
-        _supportVersions?: string[], // 当前支持SDK的版本列表
-        _sdkVersion?: string, // 当前使用的 SDK 版本
-
-        /**同步设置*/
         _syncClipboard?: boolean
         _syncPage?: boolean,
         _syncLight?: boolean,
         _syncSnapshot?: boolean,
 
-        // 第三方服务
-        _enableImageCloud?: boolean // 图床
     }
 
-    export type SDK_SETTING = Inner_Setting & {
+    // 可在各端同步的设置
+    export type COMMON_SDK_SETTING =  {
         lastModified?: number, // TODO 删除
         brushes: Brush[],
 
@@ -227,14 +222,14 @@ export namespace setting {
         actions: Action[],
         disableList?: string[],
         controlC?: boolean,
-        controlCTimeout?: number,
         convertMethods?: ConvertMethod[], // TODO 删除
         dataVersion?: SDK_VERSION, // TODO 删除
 
-        maxRecord?: number, // TODO 0.26.0 后删除
         showBarTimeout: number,
         keyupTimeout: number,
     }
+
+    export type SDK_SETTING = Inner_Setting & COMMON_SDK_SETTING
 
     export type ExtConfigItem = Record<string, string>
 
@@ -465,6 +460,7 @@ export namespace user {
         isFirefox?: boolean, // Firefox 浏览器判断，需要做兼容性处理
         isTest?: boolean,
         did?: string, // 客户端的标识 did 不可变更
+        sec_did?: string
         supportSDK?: string[],
     }
 
@@ -497,7 +493,7 @@ export namespace user {
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
-        getUser: IExtenstionMessageListener<void, User | undefined>,
+        getUser: IExtenstionMessageListener<{ forceRefresh?: boolean }, User | undefined>,
 
         signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
         signout: IExtenstionMessageListener<void, boolean>
@@ -610,7 +606,7 @@ export namespace network {
 }
 
 /**占位  stat 字段，用于标识数据的状态，合法、非法、删除等状态，使用字符串类型，可用于建立索引 待 28版本后启动此字段*/
-export type TableSchemaBasicFields = {deleted: boolean, updateAt: number, stat?:"valid"|"un_valid"|"deleted"}
+export type TableSchemaBasicFields = {deleted?: boolean, updateAt?: number, stat?:"valid"|"un_valid"|"deleted"}
 export type TableAPI<Schema extends TableSchemaBasicFields> = {
     init: IExtenstionMessageListener<Schema, boolean> //初始化表格、等
 
@@ -629,7 +625,7 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 
 export namespace config {
     export const id = 'config';
-    export type ConfigObject = { key: string, value: string, updateAt: number, deleted: boolean }
+    export type ConfigObject = { key: string, value: string, updateAt?: number, deleted?: boolean }
     export type response = TableAPI<ConfigObject>
     export type request = ComputeRequestToBackground<response>
 }

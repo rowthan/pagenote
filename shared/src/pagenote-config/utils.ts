@@ -1,6 +1,7 @@
 import {config} from "../extApi";
 import ConfigObject = config.ConfigObject;
-import {get, set} from "lodash";
+import get from "lodash/get";
+import set from 'lodash/set';
 
 function getDeepKeys(obj: Record<string, any>) {
     let keys: string[] = [];
@@ -16,7 +17,9 @@ function getDeepKeys(obj: Record<string, any>) {
     }
     return keys;
 }
-export function objectToConfigArray(config: Record<string, string>): Omit<ConfigObject, "deleted"|"updateAt">[] {
+
+type ConfigItem = Record<string, any>
+export function objectToConfigArray(config: ConfigItem): Omit<ConfigObject, "deleted"|"updateAt">[] {
     const keys = getDeepKeys(config);
     return keys.map(function (key) {
         return {
@@ -26,7 +29,7 @@ export function objectToConfigArray(config: Record<string, string>): Omit<Config
     })
 }
 
-export function configArrayToObject(inputs: Omit<ConfigObject, "deleted"|"updateAt">[]): Record<string, string> {
+export function configArrayToObject(inputs: Omit<ConfigObject, "deleted"|"updateAt">[]): ConfigItem {
     const object = {};
     inputs.forEach(function (item) {
         set(object,item.key,item.value)

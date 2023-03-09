@@ -49,17 +49,13 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         actions: [],
         brushes: defaultBrushes,
         controlC: true,
-        controlCTimeout: 0,
         disableList: [],
         convertMethods: [],
-        lastModified: 0,
-        dataVersion: SDK_VERSION.ts_format,
+        // lastModified: 0,
+        // dataVersion: SDK_VERSION.ts_format,
 
         keyupTimeout: 0,
-        maxRecord: 999,
         showBarTimeout: 0,
-
-        _sdkVersion: "5.5.3"
     }
     return {
         ...setting,
