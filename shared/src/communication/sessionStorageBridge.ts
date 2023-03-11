@@ -212,6 +212,7 @@ class SessionStorageBridge implements Communication<any> {
         const requestData: BaseMessageRequest = {
             data: data,
             header: {
+                ...header,
                 originClientId: this.clientId, // 源头客户端
                 senderClientId: this.clientId, // 当前客户端
                 targetClientId: targetClientId,
