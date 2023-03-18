@@ -559,10 +559,6 @@ export namespace network {
         credentials?: RequestCredentials
         cache?: RequestCache
         headers?: Record<string, string>
-
-        _config?: {
-            cacheDuration?: number // 可复用 cache 用于返回的时限范围
-        },
     }
 
     export interface FetchResponse extends ResponseInit {
@@ -627,6 +623,12 @@ export namespace config {
     export const id = 'config';
     export type ConfigObject = { key: string, value: string, updateAt?: number, deleted?: boolean }
     export type response = TableAPI<ConfigObject>
+    export type request = ComputeRequestToBackground<response>
+}
+
+export namespace page {
+    export const id = 'page';
+    export type response = TableAPI<WebPage>
     export type request = ComputeRequestToBackground<response>
 }
 

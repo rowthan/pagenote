@@ -192,6 +192,7 @@ export const generateApi = function (wrapperFun:Wrapper) {
         html: createApiForClient<html.request>(htmlMethod,html.id,wrapperFun),
         config: createApiForClient<config.request>(configMethod,config.id,wrapperFun),
         box: createApiForClient<box.request>(boxMethods,box.id,wrapperFun),
+        page: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
         light: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
         snapshot: createApiForClient<snapshot.request>(snapshotMethods,snapshot.id,wrapperFun)
     }

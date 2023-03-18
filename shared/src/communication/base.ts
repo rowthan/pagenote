@@ -21,6 +21,14 @@ type BaseMessageHeader = {
 
     runAt?: number // 延迟执行请求，单位时间戳（秒 Date.now()）
 
+
+    /**
+     * 缓存协议。和 http 不同，插件模式下客户端不感知缓存的存在，由服务器（background）端基于缓存协议，决定是否运行代码，以实现高效响应。
+     * */
+    cacheControl?:{
+        maxAge: number //单位秒
+    }
+    // Etag?: string
     /**
      * 信息载体，用于将数据临时存储在其他载体中
      * 1. 数据无法被序列化(2进制\blob文件)；需要同域空间下
@@ -112,6 +120,8 @@ type BaseMessageResponse<T> = {
      * 响应状态码，模拟 http 状态码；接收方接收到此信息时，用于 throw 抛出， Promise.reject 依据
      * */
     status: RESPONSE_CODE
+
+    // header?: BaseMessageHeader // 暂时没有这个场景，遇到了再加吧
 }
 
 /**
