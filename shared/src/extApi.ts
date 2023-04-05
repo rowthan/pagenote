@@ -210,7 +210,7 @@ export namespace setting {
         _syncPage?: boolean,
         _syncLight?: boolean,
         _syncSnapshot?: boolean,
-
+        [key: string]: string | boolean | any
     }
 
     // 可在各端同步的设置
@@ -223,7 +223,6 @@ export namespace setting {
         disableList?: string[],
         controlC?: boolean,
         convertMethods?: ConvertMethod[], // TODO 删除
-        dataVersion?: SDK_VERSION, // TODO 删除
 
         showBarTimeout: number,
         keyupTimeout: number,
@@ -253,8 +252,6 @@ export namespace setting {
         // todo 删除以下
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
-        // // 同步云端设置
-        // syncSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // 本地设置存储
         getSetting: IExtenstionMessageListener<void, SDK_SETTING>
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
@@ -477,7 +474,8 @@ export namespace user {
         verify?: {
             exp?: number
             iat?: number
-        }
+        },
+        expiredTip?: string
     }
 
     export interface Device {

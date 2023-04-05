@@ -180,7 +180,7 @@ class SessionStorageBridge implements Communication<any> {
         const returnPromise: Promise<BaseMessageResponse<any>> = new Promise((resolve, reject) => {
             resolveFun = resolve;
             /**如果忽略异常，则直接通过 resolve 响应*/
-            rejectFun = header.withCatch ? reject : resolve;
+            rejectFun = header?.withCatch ? reject : resolve;
         })
 
         // 创建唯一事件ID，区分同时发出的多个事件
@@ -212,7 +212,7 @@ class SessionStorageBridge implements Communication<any> {
         const requestData: BaseMessageRequest = {
             data: data,
             header: {
-                ...header,
+                ...(header||{}),
                 originClientId: this.clientId, // 源头客户端
                 senderClientId: this.clientId, // 当前客户端
                 targetClientId: targetClientId,
@@ -220,8 +220,8 @@ class SessionStorageBridge implements Communication<any> {
                 isResponse: header?.isResponse === true,
                 hostname: window.location.hostname,
                 senderURL: window.location.href,
-                withCatch: header.withCatch,
-                timeout: header.timeout || DEFAULT_TIMEOUT,
+                withCatch: header?.withCatch,
+                timeout: header?.timeout || DEFAULT_TIMEOUT,
             },
             type: type,
         }

@@ -19,15 +19,24 @@ type BaseMessageHeader = {
     isResponse: boolean // 区分请求类型，请求/响应
     withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获 TODO 统一后删除
 
-    runAt?: number // 延迟执行请求，单位时间戳（秒 Date.now()）
 
 
     /**
      * 缓存协议。和 http 不同，插件模式下客户端不感知缓存的存在，由服务器（background）端基于缓存协议，决定是否运行代码，以实现高效响应。
+     * maxAge: 单位秒
      * */
     cacheControl?:{
-        maxAge: number //单位秒
+        maxAge: number
+    },
+
+    /**
+     * 定时任务控制
+     * */
+    scheduleControl?:{
+        runAfterSecond?: number // 延迟执行请求，单位 秒；延迟运行
+        // runAtTime?: number // 指定运行时间
     }
+
     // Etag?: string
     /**
      * 信息载体，用于将数据临时存储在其他载体中
