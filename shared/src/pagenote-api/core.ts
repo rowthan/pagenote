@@ -5,7 +5,7 @@ import {
     ComputeRequestApiMapDefine, config, developer,
     fileDB, html, light,
     lightpage,
-    localdir, localResource, network,
+    localdir, localResource, network, page,
     setting, snapshot, user
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
@@ -192,7 +192,7 @@ export const generateApi = function (wrapperFun:Wrapper) {
         html: createApiForClient<html.request>(htmlMethod,html.id,wrapperFun),
         config: createApiForClient<config.request>(configMethod,config.id,wrapperFun),
         box: createApiForClient<box.request>(boxMethods,box.id,wrapperFun),
-        page: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
+        page: createApiForClient<page.request>(lightMethods,page.id,wrapperFun),
         light: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
         snapshot: createApiForClient<snapshot.request>(snapshotMethods,snapshot.id,wrapperFun)
     }
