@@ -613,6 +613,10 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
     update: IExtenstionMessageListener<{query:Query<Schema>,data: Partial<Schema>}, number>
     /**按条件查询数据*/
     query: IExtenstionMessageListener<Find<Schema>, FindResponse<Partial<Schema>>>
+
+    /***计数*/
+    count: IExtenstionMessageListener<Query<Schema>, number>
+
     /**聚合数据，*/
     group: IExtenstionMessageListener<{ groupBy: keyof Schema, query?: Query<Schema>, projection?: Projection<Schema> }, Record<string, Partial<Schema>[]>>
 }
