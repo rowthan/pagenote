@@ -33,7 +33,8 @@ type BaseMessageHeader = {
      * 定时任务控制
      * */
     scheduleControl?:{
-        runAfterSecond?: number // 延迟执行请求，单位 秒；延迟运行
+        // 设定延迟执行任务； [0,60,120] 表示，0秒后执行（立即执行），60秒后执行，120秒后执行
+        runAfterSeconds?: number[] // 延迟执行请求，单位 秒；延迟运行
         // runAtTime?: number // 指定运行时间
     }
 
