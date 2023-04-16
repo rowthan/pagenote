@@ -23,18 +23,18 @@ type BaseMessageHeader = {
 
     /**
      * 缓存协议。和 http 不同，插件模式下客户端不感知缓存的存在，由服务器（background）端基于缓存协议，决定是否运行代码，以实现高效响应。
-     * maxAge: 单位秒
+     * maxAge: 单位毫秒
      * */
     cacheControl?:{
-        maxAge: number
+        maxAgeMillisecond: number
     },
 
     /**
      * 定时任务控制
      * */
     scheduleControl?:{
-        // 设定延迟执行任务； [0,60,120] 表示，0秒后执行（立即执行），60秒后执行，120秒后执行
-        runAfterSeconds?: number[] // 延迟执行请求，单位 秒；延迟运行
+        // 设定延迟执行任务； [0,60000,120000] 表示，0秒后执行（立即执行），60秒后执行，120秒后执行
+        runAfterMillisecond?: number[] // 延迟执行请求，单位 毫秒；延迟运行
         // runAtTime?: number // 指定运行时间
     }
 
@@ -107,6 +107,7 @@ type BaseMessageSender = {
  * */
 export enum RESPONSE_STATUS_CODE {
     SUCCESS = 200,
+    CACHE = 304,
     AUTH_REQUIRED = 401,
     PERMISSION_REQUIRED = 403,
     NOT_ALLOWED = 503,
