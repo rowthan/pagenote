@@ -41,6 +41,8 @@ export type MongoLikeQueryValue = {
     $regex?: string,
     $options?: string
 
+    $exists?: boolean; // 是否存在
+
 
     $in?: string[]; // 数组
     $nin?: string[];

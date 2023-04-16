@@ -6,7 +6,7 @@ import {
     fileDB, html, light,
     lightpage,
     localdir, localResource, network, page,
-    setting, snapshot, user
+    setting, snapshot, TableAPI, user
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
 
@@ -14,13 +14,13 @@ interface Wrapper {
     (method: string, targetId: string, clientId?: string): (request: any, header?: Partial<BaseMessageHeader>) => any
 }
 
-export function createApiForClient<T>(define: Record<string, boolean>, clientId: string, wrapperFun:Wrapper) {
+export function createApiForClient<T>(define: Record<string, boolean>, clientId: string, wrapperFun: Wrapper) {
     const object: Record<string, (request: any, header: BaseMessageHeader) => Promise<any>> = {}
     for (let method in define) {
         if (define[method]) {
             // TODO 所有方法共享一个请求方法
             object[method] = wrapperFun(method, clientId)
-        }else{
+        } else {
             object[method] = function () {
                 return Promise.resolve({
                     success: true,
@@ -36,7 +36,7 @@ export function createApiForClient<T>(define: Record<string, boolean>, clientId:
     return object as T;
 }
 
-export const generateApi = function (wrapperFun:Wrapper) {
+export const generateApi = function (wrapperFun: Wrapper) {
     const lightpageMethod: ComputeRequestApiMapDefine<lightpage.request> = {
         addLights: true,
         addPages: true,
@@ -145,18 +145,20 @@ export const generateApi = function (wrapperFun:Wrapper) {
     }
 
 
-    const implementTableMethods:ComputeRequestApiMapDefine<any> = {
-        add: true, group: true, putItems: true, query: true, remove: true, update: true
+    const implementTableMethods: ComputeRequestApiMapDefine<TableAPI<any>> = {
+        count: true, group: true, init: true, put: true, query: true, remove: true, stat: true, update: true
     }
 
     const configMethod: ComputeRequestApiMapDefine<config.request> = implementTableMethods
     const htmlMethod: ComputeRequestApiMapDefine<html.request> = implementTableMethods
-    const localResourceMethod: ComputeRequestApiMapDefine<localResource.request> = implementTableMethods
     const boxMethods: ComputeRequestApiMapDefine<box.request> = implementTableMethods
     const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = implementTableMethods
 
+    const localResourceMethod: ComputeRequestApiMapDefine<localResource.request> = {
+        add: true, group: true, putItems: true, query: true, remove: true, update: true
+    }
 
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
@@ -173,11 +175,11 @@ export const generateApi = function (wrapperFun:Wrapper) {
         localResource: createApiForClient<localResource.request>(localResourceMethod, localResource.id, wrapperFun),
 
         // 格式化的统一数据操作 API
-        html: createApiForClient<html.request>(htmlMethod,html.id,wrapperFun),
-        config: createApiForClient<config.request>(configMethod,config.id,wrapperFun),
-        box: createApiForClient<box.request>(boxMethods,box.id,wrapperFun),
-        page: createApiForClient<page.request>(pageMethods,page.id,wrapperFun),
-        light: createApiForClient<light.request>(lightMethods,light.id,wrapperFun),
-        snapshot: createApiForClient<snapshot.request>(snapshotMethods,snapshot.id,wrapperFun)
+        html: createApiForClient<html.request>(htmlMethod, html.id, wrapperFun),
+        config: createApiForClient<config.request>(configMethod, config.id, wrapperFun),
+        box: createApiForClient<box.request>(boxMethods, box.id, wrapperFun),
+        page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
+        light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
+        snapshot: createApiForClient<snapshot.request>(snapshotMethods, snapshot.id, wrapperFun)
     }
 };
