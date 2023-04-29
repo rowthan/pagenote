@@ -17,6 +17,7 @@ import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";
 import type {BrowserType} from "./utils/browser";
+import {AbstractInfo} from "./library/syncStrategy";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
@@ -491,7 +492,7 @@ export namespace user {
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
-        getUser: IExtenstionMessageListener<{ forceRefresh?: boolean }, User | undefined>,
+        getUser: IExtenstionMessageListener<void, User | undefined>,
 
         signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
         signout: IExtenstionMessageListener<void, boolean>
@@ -616,6 +617,9 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 
     /***计数*/
     count: IExtenstionMessageListener<Query<Schema>, number>
+
+    /**获取全量摘要*/
+    abstract: IExtenstionMessageListener<void, Record<string, AbstractInfo>>
 
     /**聚合数据，*/
     group: IExtenstionMessageListener<{ groupBy: keyof Schema, query?: Query<Schema>, projection?: Projection<Schema> }, Record<string, Partial<Schema>[]>>

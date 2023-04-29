@@ -146,7 +146,15 @@ export const generateApi = function (wrapperFun: Wrapper) {
 
 
     const implementTableMethods: ComputeRequestApiMapDefine<TableAPI<any>> = {
-        count: true, group: true, init: true, put: true, query: true, remove: true, stat: true, update: true
+        abstract: true,
+        count: true,
+        group: true,
+        init: true,
+        put: true,
+        query: true,
+        remove: true,
+        stat: true,
+        update: true
     }
 
     const configMethod: ComputeRequestApiMapDefine<config.request> = implementTableMethods
