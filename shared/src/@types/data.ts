@@ -1,7 +1,7 @@
 import {LightStatus, LightType} from "../pagenote-brush";
-import {boxroom, localResource} from "../extApi";
+import {boxroom, html} from "../extApi";
 import BoxItem = boxroom.BoxItem;
-import LocalResource = localResource.LocalResource;
+import OfflineHTML = html.OfflineHTML;
 
 export enum BackupVersion {
     version1 = 1,
@@ -86,7 +86,7 @@ type PlainData = {
     setting?: any, // TODO 删除
     steps: Step[],
 
-    offline?: LocalResource[] // 关联的离线数据
+    offline?: OfflineHTML[] // 关联的离线数据
 }
 
 export enum PAGE_TYPES {
@@ -238,7 +238,7 @@ export type BackupData = {
     resources?: Partial<ResourceInfo>[],
     snapshots?: Partial<SnapshotResource>[],
 
-    htmlList?: Partial<LocalResource>[]
+    htmlList?: Partial<OfflineHTML>[]
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,

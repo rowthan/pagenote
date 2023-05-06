@@ -99,13 +99,13 @@ export namespace boxroom {
 }
 
 export namespace lightpage {
-    import LocalResource = localResource.LocalResource;
+    import OfflineHTML = html.OfflineHTML;
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>
     type PartStep = Partial<Step>
 
-    export type ExportFilter = { pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<LocalResource> }
+    export type ExportFilter = { pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<OfflineHTML> }
 
     // 服务端可接受的请求API TODO 合并 light page snapshot 接口，
     export type response = {
@@ -146,56 +146,6 @@ export namespace lightpage {
     }
 
     export type request = ComputeRequestToBackground<response>
-}
-
-// TODO 删除
-export namespace localResource {
-    export const id = 'localResource'
-
-    export type LocalResource = {
-        resourceId?: string, // 插件本地获取该资源的唯一标识
-
-        name?: string, // 文件名
-
-        originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
-        onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
-
-        localUrl?: string // 插件本地直接访问资源的地址，不上传服务器，由插件本地生成；不同插件主机地址不同
-
-        contentType: ContentType, // 文件类型
-        contentLength?: number, // 资源size
-        lastModified?: string,
-        ETag?: string,
-        data: string, // 资源内容，只支持字符串存储，不支持二进制数据
-
-        relatedPageKey?: string, //关联的网页key
-        relatedPageUrl?: string // 关联的网址
-
-        deleted?: boolean,
-
-        // 数据资源的存储时间信息
-        visitedAt?: number // 资源访问最后时间
-        createAt?: number,
-        updateAt?: number
-    }
-
-
-    export type response = {
-        add: IExtenstionMessageListener<LocalResource, LocalResource | null>
-
-        update: IExtenstionMessageListener<Partial<LocalResource> & { resourceId: string }, LocalResource>
-        remove: IExtenstionMessageListener<{ keys: string[] }, number>
-        query: IExtenstionMessageListener<Find<LocalResource>, FindResponse<Partial<LocalResource>>>
-
-        group: IExtenstionMessageListener<{ groupBy: keyof LocalResource, query?: Query<LocalResource>, projection?: Projection<LocalResource> }, Record<string, Partial<LocalResource>[]>>,
-
-        putItems: IExtenstionMessageListener<LocalResource[], string[]>
-
-        [key: string]: IExtenstionMessageListener<any, any>
-    }
-
-    export type request = ComputeRequestToBackground<response>
-
 }
 
 export namespace setting {
@@ -650,6 +600,10 @@ export namespace html {
 
         name?: string, // 文件名
 
+        description?: string
+
+        icon?: string // 图标
+
         originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
         onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
 
@@ -706,7 +660,7 @@ export namespace snapshot {
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
-    import LocalResource = localResource.LocalResource;
+    import OfflineHTML = html.OfflineHTML;
     export const id = 'front-server'
 
     export type TabStat = {
@@ -739,7 +693,7 @@ export namespace frontApi {
         // 通知刷新数据
         refresh: IExtenstionMessageListener<{ changes: { key?: string, url?: string, type?: 'page' | 'light' | string }[] }, void>
 
-        offlineHTML: IExtenstionMessageListener<OfflineOption, Partial<LocalResource>>
+        offlineHTML: IExtenstionMessageListener<OfflineOption, Partial<OfflineHTML>>
 
         // 在标签页启用 pagenote
         start: IExtenstionMessageListener<{ tabId: string }, { injected: boolean }>

@@ -5,7 +5,7 @@ import {
     ComputeRequestApiMapDefine, config, developer,
     fileDB, html, light,
     lightpage,
-    localdir, localResource, network, page,
+    localdir, network, page,
     setting, snapshot, TableAPI, user
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
@@ -164,14 +164,10 @@ export const generateApi = function (wrapperFun: Wrapper) {
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = implementTableMethods
 
-    const localResourceMethod: ComputeRequestApiMapDefine<localResource.request> = {
-        add: true, group: true, putItems: true, query: true, remove: true, update: true
-    }
-
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
         // 待删除
-        boxroom: createApiForClient<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
+        // boxroom: createApiForClient<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
         setting: createApiForClient<setting.request>(settingMethod, setting.id, wrapperFun),
         browserAction: createApiForClient<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
         commonAction: createApiForClient<action.request>(actionApiMethod, action.id, wrapperFun),
@@ -180,7 +176,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         user: createApiForClient<user.request>(userMethod, user.id, wrapperFun),
         network: createApiForClient<network.request>(networkMethod, network.id, wrapperFun),
         developer: createApiForClient<developer.request>(developerMethod, developer.id, wrapperFun),
-        localResource: createApiForClient<localResource.request>(localResourceMethod, localResource.id, wrapperFun),
 
         // 格式化的统一数据操作 API
         html: createApiForClient<html.request>(htmlMethod, html.id, wrapperFun),
