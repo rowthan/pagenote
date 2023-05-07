@@ -1,6 +1,6 @@
 import {
-    action, box,
-    boxroom,
+    action,
+    box,
     browserAction,
     ComputeRequestApiMapDefine, config, developer,
     fileDB, html, light,
@@ -58,13 +58,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         updatePages: true
     }
 
-    const boxMethod: ComputeRequestApiMapDefine<boxroom.request> = {
-        addItems: true,
-        queryItems: true,
-        removeItems: true,
-        syncStat: true,
-        updateItems: true
-    }
 
     const settingMethod: ComputeRequestApiMapDefine<setting.request> = {
         queryConfig: true,

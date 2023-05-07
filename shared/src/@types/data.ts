@@ -1,7 +1,7 @@
 import {LightStatus, LightType} from "../pagenote-brush";
-import {boxroom, html} from "../extApi";
-import BoxItem = boxroom.BoxItem;
+import {box, html} from "../extApi";
 import OfflineHTML = html.OfflineHTML;
+import Box = box.Box;
 
 export enum BackupVersion {
     version1 = 1,
@@ -214,6 +214,8 @@ export type Note = {
 
     // 优先级，1- xxx 数值越小优先级越高
     priority?: number
+
+    deleted: boolean
     // 创建时间
     createAt: number
     // 更新时间
@@ -284,10 +286,11 @@ export type BackupData = {
     backupId: string
     pages?: Partial<WebPage>[],
     lights?: Partial<Step>[],
-    box?: Partial<BoxItem>[],
+    box?: Partial<Box>[],
     dataType: BackupDataType[],
-    resources?: Partial<ResourceInfo>[],
+    resources?: Partial<ResourceInfo>[], // TODO  删除
     snapshots?: Partial<SnapshotResource>[],
+    note?: Partial<Note>[]
 
     htmlList?: Partial<OfflineHTML>[]
     version?: BackupVersion,

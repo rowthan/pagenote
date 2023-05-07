@@ -55,49 +55,6 @@ export type SyncStat = {
     icon?: string;
 }
 
-// todo 待删除 保留至5月
-export namespace boxroom {
-    export const id = 'boxroom'
-    export type BoxItem = {
-        id: string, // 资源ID，非指定情况下md5值
-        boxType?: string, // 资源类型
-        from?: string, // 来源
-        createAt?: number, // 来源
-        updateAt: number,
-        expiredAt?: number,
-        type?: string,
-        text?: string,
-        did?: string
-        version?: string
-        icon?: string
-        domain?: string
-        deleted?: boolean
-    }
-
-    // 索引
-    export type BoxKeys = {
-        id: string,
-        createAt: number,
-        from: string,
-        boxType: string
-    }
-
-    export type UpdateBox = Partial<BoxItem> & { id: string }
-
-
-    export type response = {
-        /**0.24.5 之后支持*/
-        addItems: IExtenstionMessageListener<BoxItem[], (Partial<BoxItem> | null)[]>,
-        removeItems: IExtenstionMessageListener<{ ids: string[] }, number>,
-        updateItems: IExtenstionMessageListener<UpdateBox[], number>
-        queryItems: IExtenstionMessageListener<Find<BoxItem>, FindResponse<Partial<BoxItem>>>,
-
-        syncStat: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
-        [key: string]: IExtenstionMessageListener<any, any>
-    }
-
-    export type request = ComputeRequestToBackground<response>
-}
 
 export namespace lightpage {
     import OfflineHTML = html.OfflineHTML;
