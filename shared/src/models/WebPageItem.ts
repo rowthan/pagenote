@@ -181,7 +181,7 @@ const getDetailWebPage = function () {
         extVersion: "",
         categories: [],
         did: "",
-        bind:{}
+        notion_id: ""
     }
     return webpage
 }

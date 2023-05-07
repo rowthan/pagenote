@@ -29,17 +29,20 @@ enum AnnotationShowType {
     inject=2 // 嵌入式
 }
 
+// 新的定位方式： https://docs.slatejs.org/concepts/03-locations#path
 export type Selection = {
-    anchor: { path: string, offset: 0 },
-    focus: { path: string, offset: 15 },
+    // anchor: { path: string, offset: number },
+    // focus: { path: string, offset: number },
+
+    anchorPath?: string;
+    anchorOffset?: number;
+    focusPath?: string;
+    focusOffset?: number;
 }
 
-type Step = {
+type Step = Selection & {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
-    // 新的定位方式： https://docs.slatejs.org/concepts/03-locations#path
-    // 选区定义
-    selection?: Selection
 
     session?: string,
     did?: string,
@@ -224,9 +227,7 @@ type RouteInfo = {
 
 // 与第三方绑定的附属信息，如对应的 notionid，数据库ID，云盘文件链接等。 eg: {notionid:"", webdavPath:"",dbid:""}
 type ExtraBind = {
-    bind?: {
-        [extraKey: string]: string|number|boolean
-    }
+    notion_id?: string
 }
 export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo & ExtraBind;
 
