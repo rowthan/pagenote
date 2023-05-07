@@ -180,7 +180,8 @@ const getDetailWebPage = function () {
         version: DataVersion.version4,
         extVersion: "",
         categories: [],
-        did: ""
+        did: "",
+        bind:{}
     }
     return webpage
 }

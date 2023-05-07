@@ -224,7 +224,7 @@ type RouteInfo = {
 
 // 与第三方绑定的附属信息，如对应的 notionid，数据库ID，云盘文件链接等。 eg: {notionid:"", webdavPath:"",dbid:""}
 type ExtraBind = {
-    bind: {
+    bind?: {
         [extraKey: string]: string|number|boolean
     }
 }

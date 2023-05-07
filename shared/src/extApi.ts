@@ -125,9 +125,9 @@ export namespace lightpage {
         groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
 
         // 3.截图快照
-        addSnapshots: IExtenstionMessageListener<SnapshotResource[], string[]>
-        removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
-        querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
+        // addSnapshots: IExtenstionMessageListener<SnapshotResource[], string[]>
+        // removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
+        // querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
 
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
