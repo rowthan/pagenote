@@ -5,6 +5,7 @@ import type {
     Step,
     WebPage,
     ContentType,
+    Note,
 } from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
@@ -657,6 +658,11 @@ export namespace snapshot {
     export type request = ComputeRequestToBackground<response>
 }
 
+export namespace note {
+    export const id = 'note';
+    export type response = TableAPI<Note>
+    export type request = ComputeRequestToBackground<response>
+}
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {

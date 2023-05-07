@@ -29,9 +29,18 @@ enum AnnotationShowType {
     inject=2 // 嵌入式
 }
 
+export type Selection = {
+    anchor: { path: string, offset: 0 },
+    focus: { path: string, offset: 15 },
+}
+
 type Step = {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
+    // 新的定位方式： https://docs.slatejs.org/concepts/03-locations#path
+    // 选区定义
+    selection?: Selection
+
     session?: string,
     did?: string,
     l_did?: string, // 最后编辑人
@@ -71,6 +80,8 @@ type Step = {
     author?: string // 原始作者
     url?: string
     pageKey?: string
+    // 标记关联网页，匹配规则
+    matchUrls?: string[]
     hash?: string
     v?: number // 数据版本
 }
@@ -84,7 +95,8 @@ type PlainData = {
     categories?: string[],// TODO 删除
     snapshots?: string[],
     setting?: any, // TODO 删除
-    steps: Step[],
+    steps?: Step[],
+    nodes?: Note[],
 
     offline?: OfflineHTML[] // 关联的离线数据
 }
@@ -173,12 +185,50 @@ type WebPageSiteInfo = {
     path: string, // 路由path
 }
 
+// 笔记富文本结构
+export type Note = {
+    // 唯一ID
+    key: string;
+     // hashID，用于比较变更
+    hash: string;
+
+    // 笔记的数据存储形式
+    plainType:"html"|"slate"|"markdown";
+    // html 表现形式内容
+    html?: string;
+    // 笔记的结构化数据形式
+    slate?: any;
+    // 笔记的 markdown 数据形式
+    markdown?: string;
+
+
+    // 笔记关联的表
+    relatedType: 'page'|'light'
+    // 关联的外表主键
+    page?: string;
+    light?: string;
+
+
+    // 优先级，1- xxx 数值越小优先级越高
+    priority?: number
+    // 创建时间
+    createAt: number
+    // 更新时间
+    updateAt: number
+}
+
 // 链路信息，记录各个网站之间的联系
 type RouteInfo = {
     sessionId?: string
 }
 
-export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo;
+// 与第三方绑定的附属信息，如对应的 notionid，数据库ID，云盘文件链接等。 eg: {notionid:"", webdavPath:"",dbid:""}
+type ExtraBind = {
+    bind: {
+        [extraKey: string]: string|number|boolean
+    }
+}
+export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo & ExtraBind;
 
 type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 

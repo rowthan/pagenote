@@ -3,7 +3,7 @@ import {
     boxroom,
     browserAction,
     ComputeRequestApiMapDefine, config, developer,
-    fileDB, html, light,
+    fileDB, html, light,node,
     lightpage,
     localdir, network, page,
     setting, snapshot, TableAPI, user
@@ -184,5 +184,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
         light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
         snapshot: createApiForClient<snapshot.request>(snapshotMethods, snapshot.id, wrapperFun)
+        note: createApiForClient<note.request>(implementTableMethods, note.id, wrapperFun)
     }
 };
