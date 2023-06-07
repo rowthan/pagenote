@@ -83,6 +83,10 @@ type BaseMessageHeader = {
     // [key: string]: string | boolean | number | any
 }
 
+type BaseMessageResponseHeader = {
+    [key: string]: string | number
+}
+
 
 export const DEFAULT_TIMEOUT = 8000;
 
@@ -132,7 +136,7 @@ type BaseMessageResponse<T> = {
      * */
     status: RESPONSE_CODE
 
-    // header?: BaseMessageHeader // 暂时没有这个场景，遇到了再加吧
+    header?: BaseMessageResponseHeader
 }
 
 /**

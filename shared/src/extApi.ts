@@ -383,6 +383,7 @@ export namespace user {
         verify?: {
             exp?: number
             iat?: number
+            newToken?: string
         },
         expiredTip?: string
     }
@@ -400,13 +401,13 @@ export namespace user {
 
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
-        getUser: IExtenstionMessageListener<void, User | undefined>,
+        getUser: IExtenstionMessageListener<{ refresh?: boolean }, User | undefined>,
 
-        signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
-        signout: IExtenstionMessageListener<void, boolean>
-        exchange: IExtenstionMessageListener<void, boolean>
+        // signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
+        // signout: IExtenstionMessageListener<void, boolean>
+        // exchange: IExtenstionMessageListener<void, boolean>
 
-        setUserToken: IExtenstionMessageListener<string, string>
+        setUserToken: IExtenstionMessageListener<string | null, string>
 
         // 当前设备信息
         setDevice: IExtenstionMessageListener<Partial<Device>, Device | undefined>

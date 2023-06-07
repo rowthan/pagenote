@@ -160,7 +160,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
         // 待删除
-        // boxroom: createApiForClient<boxroom.request>(boxMethod, boxroom.id, wrapperFun),
         setting: createApiForClient<setting.request>(settingMethod, setting.id, wrapperFun),
         browserAction: createApiForClient<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
         commonAction: createApiForClient<action.request>(actionApiMethod, action.id, wrapperFun),
