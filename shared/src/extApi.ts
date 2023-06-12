@@ -383,6 +383,8 @@ export namespace user {
         verify?: {
             exp?: number
             iat?: number
+            leftDay?: number
+            percent?: number
             newToken?: string
         },
         expiredTip?: string
@@ -535,8 +537,15 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 }
 
 export namespace config {
+    export type ConfigValue = string | number | boolean
     export const id = 'config';
-    export type ConfigObject = { key: string, value: string, updateAt?: number, deleted?: boolean }
+    export type ConfigObject = {
+        key: string,    // cloud.host
+        rootKey: string, // cloud
+        value: ConfigValue,  // https://api.pagenote.cn
+        updateAt?: number,
+    }
+    export type ConfigItem = Record<string, ConfigValue>
     export type response = TableAPI<ConfigObject>
     export type request = ComputeRequestToBackground<response>
 }

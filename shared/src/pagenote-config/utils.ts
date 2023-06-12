@@ -1,5 +1,6 @@
 import {config} from "../extApi";
 import ConfigObject = config.ConfigObject;
+import ConfigItem = config.ConfigItem;
 const get = require('lodash/get')
 const set = require('lodash/set')
 
@@ -18,19 +19,19 @@ function getDeepKeys(obj: Record<string, any>) {
     return keys;
 }
 
-type ConfigItem = Record<string, any>
-export function objectToConfigArray(config: ConfigItem): Omit<ConfigObject, "deleted"|"updateAt">[] {
+export function objectToConfigArray(config: ConfigItem): Pick<ConfigObject, "key"|"value"|"rootKey">[] {
     const keys = getDeepKeys(config);
     return keys.map(function (key) {
         return {
             key: key,
-            value: get(config,key)
+            value: get(config,key),
+            rootKey: key.split(".")[0]
         }
     })
 }
 
 export function configArrayToObject(inputs: Omit<ConfigObject, "deleted"|"updateAt">[]): ConfigItem {
-    const object = {};
+    const object:ConfigItem = {};
     inputs.forEach(function (item) {
         set(object,item.key,item.value)
     })
