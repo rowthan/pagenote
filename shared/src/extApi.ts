@@ -537,16 +537,17 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 }
 
 export namespace config {
-    export type ConfigValue = string | number | boolean
     export const id = 'config';
-    export type ConfigObject = {
+    type ConfigRootValue = string | number | boolean
+    export type ConfigValue = ConfigRootValue | Record<string, ConfigRootValue>
+    export type ConfigItem = {
         key: string,    // cloud.host
         rootKey: string, // cloud
         value: ConfigValue,  // https://api.pagenote.cn
         updateAt?: number,
     }
-    export type ConfigItem = Record<string, ConfigValue>
-    export type response = TableAPI<ConfigObject>
+    export type ConfigObject = Record<string, ConfigValue>
+    export type response = TableAPI<ConfigItem>
     export type request = ComputeRequestToBackground<response>
 }
 

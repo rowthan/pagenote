@@ -1,6 +1,6 @@
 import {config} from "../extApi";
-import ConfigObject = config.ConfigObject;
-import ConfigItem = config.ConfigItem;
+import ConfigObject = config.ConfigItem;
+import ConfigItem = config.ConfigObject;
 const get = require('lodash/get')
 const set = require('lodash/set')
 
