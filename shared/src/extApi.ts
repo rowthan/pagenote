@@ -22,7 +22,7 @@ import {AbstractInfo} from "./library/syncStrategy";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
-        (arg: Parameters<Funs[fun]>[0], header?: Partial<BaseMessageHeader>): Promise<Parameters<Parameters<Funs[fun]>[2]>[0]>
+       <Response extends Parameters<Parameters<Funs[fun]>[2]>[0]>(arg: Parameters<Funs[fun]>[0], header?: Partial<BaseMessageHeader>): Promise<Response>
     }
 }
 
@@ -328,6 +328,11 @@ export namespace developer {
             type: string,
             args?: any[]
         }, any>
+
+        /**db*/
+        stat: IExtenstionMessageListener<{ dbName: string, tableName: string }, TableStat>
+
+
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -512,11 +517,15 @@ export namespace network {
 }
 
 /**占位  stat 字段，用于标识数据的状态，合法、非法、删除等状态，使用字符串类型，可用于建立索引 待 28版本后启动此字段*/
-export type TableSchemaBasicFields = {deleted?: boolean, updateAt?: number, stat?:"valid"|"un_valid"|"deleted"}
+export type TableSchemaBasicFields = {deleted?: boolean, updateAt?: number, createAt?: number, stat?:"valid"|"un_valid"|"deleted"}
+export interface TableStat {
+    usage: number // 占用空间
+    size: number // 数据条数
+    quota: number // 总空间
+}
 export type TableAPI<Schema extends TableSchemaBasicFields> = {
     init: IExtenstionMessageListener<Schema, boolean> //初始化表格、等
 
-    stat: IExtenstionMessageListener<void, any> // 状态检测
     /**新增或更新（批量导入）已有数据*/
     put: IExtenstionMessageListener<Schema[], string[]>
     /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
@@ -534,6 +543,45 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 
     /**聚合数据，*/
     group: IExtenstionMessageListener<{ groupBy: keyof Schema, query?: Query<Schema>, projection?: Projection<Schema> }, Record<string, Partial<Schema>[]>>
+
+    /**
+     * 表信息摘要
+     * */
+    stat: IExtenstionMessageListener<void,TableStat>
+}
+
+
+type RequestParamsWithDBInfo<params> = {
+    db: string,
+    table: string
+    params: params
+}
+
+export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
+    /**新增或更新（批量导入）已有数据*/
+    put: IExtenstionMessageListener<RequestParamsWithDBInfo<Schema[]>, string[]>
+    /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
+    remove: IExtenstionMessageListener<RequestParamsWithDBInfo<string[]>, number>
+    /**支持按条件的更新；*/
+    update: IExtenstionMessageListener<RequestParamsWithDBInfo<{query:Query<Schema>,data: Partial<Schema>}>, number>
+    /**按条件查询数据*/
+    query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
+
+
+    /***计数*/
+    count: IExtenstionMessageListener<RequestParamsWithDBInfo<Query<Schema>>, number>
+    /**获取全量摘要*/
+    abstract: IExtenstionMessageListener<RequestParamsWithDBInfo<void>, Record<string, AbstractInfo>>
+    /**聚合数据，*/
+    group: IExtenstionMessageListener<RequestParamsWithDBInfo<{ groupBy: keyof Schema, query?: Query<Schema>, projection?: Projection<Schema> }>, Record<string, Partial<Schema>[]>>
+    /** 表信息摘要*/
+    stat: IExtenstionMessageListener<RequestParamsWithDBInfo<void>,TableStat>
+}
+
+export namespace table {
+    export const id = 'table';
+    export type response = CommonTableApi<TableSchemaBasicFields>
+    export type request = ComputeRequestToBackground<response>
 }
 
 export namespace config {

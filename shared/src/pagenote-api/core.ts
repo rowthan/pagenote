@@ -6,7 +6,7 @@ import {
     fileDB, html, light,
     lightpage,
     localdir, network, page,
-    setting, snapshot, TableAPI, user, note
+    setting, snapshot, TableAPI, user, note, table
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
 
@@ -127,6 +127,7 @@ export const generateApi = function (wrapperFun: Wrapper) {
     }
 
     const developerMethod: ComputeRequestApiMapDefine<developer.request> = {
+        stat: true,
         chrome: true,
         downloadLog: true,
         log: true,
@@ -156,6 +157,7 @@ export const generateApi = function (wrapperFun: Wrapper) {
     const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = implementTableMethods
+    const commonTableMethods: ComputeRequestApiMapDefine<table.request> = implementTableMethods
 
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
@@ -176,6 +178,9 @@ export const generateApi = function (wrapperFun: Wrapper) {
         page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
         light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
         snapshot: createApiForClient<snapshot.request>(snapshotMethods, snapshot.id, wrapperFun),
-        note: createApiForClient<note.request>(implementTableMethods, note.id, wrapperFun)
+        note: createApiForClient<note.request>(implementTableMethods, note.id, wrapperFun),
+
+        //通用数据库表操作 API
+        table: createApiForClient<table.request>(commonTableMethods,table.id,wrapperFun),
     }
 };
