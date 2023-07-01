@@ -124,6 +124,7 @@ export type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
     url: string, // 可访问的URL 地址，base64 或链接
     uri?: string // 互联网可访问的链接地址
+    alt?: string // 图片说明
     thumb?: string, // 缩略图
     pageKey: string // 关联的网页key
     pageUrl: string // 关联的网页url

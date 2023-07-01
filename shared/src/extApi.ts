@@ -329,10 +329,6 @@ export namespace developer {
             args?: any[]
         }, any>
 
-        /**db*/
-        stat: IExtenstionMessageListener<{ dbName: string, tableName: string }, TableStat>
-
-
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
