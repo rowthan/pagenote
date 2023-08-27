@@ -511,6 +511,8 @@ export interface TableStat {
     size: number // 数据条数
     quota: number // 总空间
 }
+
+// @deprecated 废弃
 export type TableAPI<Schema extends TableSchemaBasicFields> = {
     init: IExtenstionMessageListener<Schema, boolean> //初始化表格、等
 
@@ -519,7 +521,7 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
     /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
     remove: IExtenstionMessageListener<string[], number>
     /**支持按条件的更新；*/
-    update: IExtenstionMessageListener<{keys: string[],data: Partial<Schema>}, number>
+    update: IExtenstionMessageListener<{query:Query<Schema>,data: Partial<Schema>}, number>
     /**按条件查询数据*/
     query: IExtenstionMessageListener<Find<Schema>, FindResponse<Partial<Schema>>>
 
@@ -551,7 +553,7 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
     remove: IExtenstionMessageListener<RequestParamsWithDBInfo<string[]>, number>
     /**支持按条件的更新；*/
-    update: IExtenstionMessageListener<RequestParamsWithDBInfo<{query:Query<Schema>,data: Partial<Schema>}>, number>
+    update: IExtenstionMessageListener<RequestParamsWithDBInfo<{keys: string[],data: Partial<Schema>}>, number>
     /**按条件查询数据*/
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
