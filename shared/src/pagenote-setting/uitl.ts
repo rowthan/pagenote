@@ -57,7 +57,7 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         // _sync: false,
         actions: [],
         brushes: defaultBrushes,
-        controlC: true,
+        controlC: false,
         disableList: [],
         convertMethods: [],
         // lastModified: 0,

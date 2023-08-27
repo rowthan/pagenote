@@ -6,6 +6,7 @@ export type Find<Model> = {
 
 export type Pagination = {
     /**余量标识*/
+    // @deprecated 使用 skip
     has_more?: boolean
 
     /**总条目数量*/
@@ -13,8 +14,13 @@ export type Pagination = {
 
     /**按分页*/
     limit?: number, // 本次查询限额数量
+    skip?: number,
+
+    // @deprecated 使用 skip
     page?: number, // 当前页码
+    // @deprecated 使用 skip
     pageSize?: number, // 一页数量
+    // @deprecated 使用 skip
     totalPages?: number // 总页数
 
     /**按游标，暂无使用场景*/
