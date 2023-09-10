@@ -131,6 +131,8 @@ export type SnapshotResource = {
     type: MetaResourceType
     createAt?: number, // 资源创建时间
     updateAt: number,
+    width: number,
+    height: number,
 
     expiredAt?: number,
     did?: string
@@ -187,6 +189,7 @@ type WebPageSiteInfo = {
 
     domain: string,
     path: string, // 路由path
+    bookmark?: string[]
 }
 
 // 笔记富文本结构
