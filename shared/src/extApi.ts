@@ -373,8 +373,7 @@ export namespace user {
 
     export interface User {
         profile?: {
-            pro: number,
-            seed: number,
+            role: number,
             nickname?: string,
             emailMask?: string;
             developer?: number;
@@ -405,11 +404,6 @@ export namespace user {
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<{ refresh?: boolean }, User | undefined>,
-
-        // signin: IExtenstionMessageListener<{ email: string, uid: number, password: string, token?: string }, boolean>
-        // signout: IExtenstionMessageListener<void, boolean>
-        // exchange: IExtenstionMessageListener<void, boolean>
-
         setUserToken: IExtenstionMessageListener<string | null, string>
 
         // 当前设备信息
