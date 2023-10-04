@@ -81,19 +81,12 @@ export namespace lightpage {
         queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<PartStep>>;
         groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
 
-        // 3.截图快照
-        // addSnapshots: IExtenstionMessageListener<SnapshotResource[], string[]>
-        // removeSnapshots: IExtenstionMessageListener<{ keys: string[] }, number>
-        // querySnapshots: IExtenstionMessageListener<Find<SnapshotResource>, FindResponse<Partial<SnapshotResource>>>
 
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询网页携带的全量数据： 网页、标记、快照*/
         getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
 
-        // TODO import export 独立至 common 中
-        /**download 导出备份文件*/
-        exportBackup: IExtenstionMessageListener<ExportFilter, { filename: string, }>
 
         /**导入备份文件**/
         importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
@@ -257,7 +250,7 @@ export namespace action {
         /**防止重复打开新标签*/
         openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
 
-        getCurrentTab: IExtenstionMessageListener<void, Tab>
+        // getCurrentTab: IExtenstionMessageListener<void, Tab>
         queryTabs: IExtenstionMessageListener<QueryInfo, Tab[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -458,7 +451,12 @@ export namespace network {
 
     export interface FetchRequest extends RequestInit {
         url: string,
-        data?: Record<string, any>,
+        data?: {
+            query?: string,
+            mutation?: string,
+            variables?: Record<string, any>
+            [key: string]: any,
+        },
         method: 'GET' | 'POST' | string
 
         credentials?: RequestCredentials
@@ -626,7 +624,9 @@ export namespace html {
         relatedPageUrl?: string // 关联的网址
 
         deleted: boolean,
-
+        size?: number
+        domain?: string
+        thumb?: string // 快照缩略图
         // 数据资源的存储时间信息
         visitedAt?: number // 资源访问最后时间
         createAt?: number,
@@ -684,6 +684,9 @@ export namespace frontApi {
         disabled?: boolean // 被禁用状态
 
         isOfflineHTML: boolean, // 是否为离线网页
+
+        title: string
+        description: string
     }
 
     export type OfflineOption = {

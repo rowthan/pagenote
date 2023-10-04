@@ -200,20 +200,25 @@ export type Note = {
     hash: string;
 
     // 笔记的数据存储形式
-    plainType:"html"|"slate"|"markdown";
+    plainType:"html"|"slate"|"markdown"|"tiptap";
     // html 表现形式内容
     html?: string;
     // 笔记的结构化数据形式
     slate?: any;
     // 笔记的 markdown 数据形式
     markdown?: string;
+    tiptap?: Object;
 
 
     // 笔记关联的表
-    relatedType: 'page'|'light'
+    relatedType: 'page'|'light'|"url"|"domain"|"tag"|"path"
     // 关联的外表主键
     page?: string;
     light?: string;
+    url?: string;
+    domain?: string
+    tag?: string
+    path?: string
 
 
     // 优先级，1- xxx 数值越小优先级越高

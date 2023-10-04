@@ -88,7 +88,7 @@ type BaseMessageResponseHeader = {
 }
 
 
-export const DEFAULT_TIMEOUT = 8000;
+export const DEFAULT_TIMEOUT = 10000;
 
 /**
  * client
