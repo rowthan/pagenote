@@ -9,7 +9,8 @@ export enum BackupVersion {
     version3 = 3, // 新增 HTML、files 文件
     version4 = 4, // 不做 encode 处理
 
-    version5 = 5 // 2023,新增离线HTML文件，区分于资源
+    version5 = 5, // 2023,新增离线HTML文件，区分于资源
+    version6 = 6 // 支持 note 备份
 }
 
 export enum AnnotationStatus {
@@ -289,6 +290,7 @@ export enum BackupDataType {
     html = 'html',
     light='light',
     snapshot = 'snapshot',
+    note = 'note',
 }
 
 export type BackupData = {
@@ -297,7 +299,6 @@ export type BackupData = {
     lights?: Partial<Step>[],
     box?: Partial<Box>[],
     dataType: BackupDataType[],
-    resources?: Partial<ResourceInfo>[], // TODO  删除
     snapshots?: Partial<SnapshotResource>[],
     note?: Partial<Note>[]
 
@@ -311,6 +312,14 @@ export type BackupData = {
     thumb?: string
 
     did?: string;
+
+    // todo convert to items
+    items: {
+        db: string
+        table: string
+        remark: string
+        list: (WebPage | Step | Box | ResourceInfo | Note)[]
+    }[]
 }
 
 export type {
