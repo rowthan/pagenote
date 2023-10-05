@@ -14,6 +14,12 @@ function getWebDescription():string {
     return title ? title.getAttribute('content') : ''
 }
 
+export function getWebKeywords() {
+    const element = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
+    const content = element.content || '';
+    return content.replace(/[,，]/g,' ').split(/\s+/) || []
+}
+
 const contentToFile = function (content:string, filename:string):void {
     const eleLink = document.createElement('a');
     eleLink.download = filename;

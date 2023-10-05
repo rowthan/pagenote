@@ -555,6 +555,8 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**按条件查询数据*/
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
+    /**检索索引枚举值*/
+    keys: IExtenstionMessageListener<RequestParamsWithDBInfo<{key: string}>, (string | number)[]>
 
     /***计数*/
     count: IExtenstionMessageListener<RequestParamsWithDBInfo<Query<Schema>>, number>
@@ -664,11 +666,6 @@ export namespace snapshot {
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace note {
-    export const id = 'note';
-    export type response = TableAPI<Note>
-    export type request = ComputeRequestToBackground<response>
-}
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
@@ -687,6 +684,8 @@ export namespace frontApi {
 
         title: string
         description: string
+        keywords: string[]
+        abstract?: string
     }
 
     export type OfflineOption = {
