@@ -153,7 +153,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
 
     const configMethod: ComputeRequestApiMapDefine<config.request> = implementTableMethods
     const htmlMethod: ComputeRequestApiMapDefine<html.request> = implementTableMethods
-    const boxMethods: ComputeRequestApiMapDefine<box.request> = implementTableMethods
     const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = implementTableMethods
@@ -177,7 +176,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         // 格式化的统一数据操作 API
         html: createApiForClient<html.request>(htmlMethod, html.id, wrapperFun),
         config: createApiForClient<config.request>(configMethod, config.id, wrapperFun),
-        box: createApiForClient<box.request>(boxMethods, box.id, wrapperFun),
         page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
         light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
         snapshot: createApiForClient<snapshot.request>(snapshotMethods, snapshot.id, wrapperFun),

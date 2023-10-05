@@ -656,8 +656,6 @@ export namespace box {
         domain?: string
         deleted: boolean
     }
-    export type response = TableAPI<Box>
-    export type request = ComputeRequestToBackground<response>
 }
 
 export namespace snapshot {
