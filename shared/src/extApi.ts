@@ -160,8 +160,6 @@ export namespace setting {
         resetSetting: IExtenstionMessageListener<void, SDK_SETTING>
 
 
-        saveConfig: IExtenstionMessageListener<ExtConfigItem, ExtConfigItem>
-        queryConfig: IExtenstionMessageListener<Query<{ key: string }>, ExtConfigItem>
         getSearchEngines: IExtenstionMessageListener<void, ISearchEngine[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -578,7 +576,7 @@ export namespace table {
 
 export namespace config {
     export const id = 'config';
-    type ConfigRootValue = string | number | boolean
+    type ConfigRootValue = string | number | boolean | any;
     export type ConfigValue = ConfigRootValue | Record<string, ConfigRootValue>
     export type ConfigItem = {
         key: string,    // cloud.host
