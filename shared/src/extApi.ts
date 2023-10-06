@@ -309,8 +309,8 @@ export namespace developer {
         requestFront: IExtenstionMessageListener<{
             type: keyof frontApi.response,
             header?: Partial<BaseMessageHeader>,
-            params: any
-        }, any>
+            params: unknown
+        }, unknown>
 
         /**请求后台，不推荐使用，用于未被定义的接口请求或已经下线的接口请求*/
         requestBack: IExtenstionMessageListener<RequestBackProxyRequest, any>

@@ -137,6 +137,8 @@ export type SnapshotResource = {
 
     expiredAt?: number,
     did?: string
+    domain?: string,
+    size?: number
 
     deleted: boolean
 }
