@@ -16,8 +16,8 @@ function getWebDescription():string {
 
 export function getWebKeywords() {
     const element = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
-    const content = element.content || '';
-    return content.replace(/[,，]/g,' ').split(/\s+/) || []
+    const content = element?.content || '';
+    return content.replace(/[,，、;；。｜]/g,' ').split(/\s+/) || []
 }
 
 const contentToFile = function (content:string, filename:string):void {
