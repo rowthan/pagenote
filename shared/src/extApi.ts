@@ -5,7 +5,6 @@ import type {
     Step,
     WebPage,
     ContentType,
-    Note,
 } from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
@@ -352,6 +351,7 @@ export namespace user {
         extensionDetailUrl?: string, // 插件详情页
         extensionStoreUrl?: string, // 插件应用商店地址
         extensionShortcutUrl?: string // 快捷键管理页
+        chromeConnected?: boolean
         language?: string,
         isCN?: boolean,
         isMac?: boolean,
@@ -395,8 +395,6 @@ export namespace user {
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<{ refresh?: boolean }, User | undefined>,
-        setUserToken: IExtenstionMessageListener<string | null, string>
-
         // 当前设备信息
         setDevice: IExtenstionMessageListener<Partial<Device>, Device | undefined>
         getDevice: IExtenstionMessageListener<void, Device | undefined>
@@ -556,7 +554,7 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
     /**检索索引枚举值*/
-    keys: IExtenstionMessageListener<RequestParamsWithDBInfo<{key: string}>, (string | number)[]>
+    keys: IExtenstionMessageListener<RequestParamsWithDBInfo<{key: keyof Schema}>, (string | number)[]>
 
     /***计数*/
     count: IExtenstionMessageListener<RequestParamsWithDBInfo<Query<Schema>>, number>

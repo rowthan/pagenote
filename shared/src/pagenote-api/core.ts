@@ -155,7 +155,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
     const htmlMethod: ComputeRequestApiMapDefine<html.request> = implementTableMethods
     const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
-    const snapshotMethods: ComputeRequestApiMapDefine<snapshot.request> = implementTableMethods
     const commonTableMethods: ComputeRequestApiMapDefine<table.request> = {
         ...implementTableMethods,
         keys: true
@@ -178,7 +177,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         config: createApiForClient<config.request>(configMethod, config.id, wrapperFun),
         page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
         light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
-        snapshot: createApiForClient<snapshot.request>(snapshotMethods, snapshot.id, wrapperFun),
 
         //通用数据库表操作 API
         table: createApiForClient<table.request>(commonTableMethods,table.id,wrapperFun),
