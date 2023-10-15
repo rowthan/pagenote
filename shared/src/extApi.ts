@@ -549,7 +549,7 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
     remove: IExtenstionMessageListener<RequestParamsWithDBInfo<string[]>, number>
     /**支持按条件的更新；*/
-    update: IExtenstionMessageListener<RequestParamsWithDBInfo<{keys: string[],data: Partial<Schema>}>, number>
+    update: IExtenstionMessageListener<RequestParamsWithDBInfo<{keys: string[],data: Partial<Schema>, upsert?: boolean}>, number>
     /**按条件查询数据*/
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
