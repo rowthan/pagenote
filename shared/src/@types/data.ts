@@ -211,16 +211,17 @@ export type Note = {
     // 笔记的 markdown 数据形式
     markdown?: string;
     tiptap?: Object;
+    plainText?: string // 纯文本信息
 
 
     // 笔记关联的表
-    relatedType: 'page'|'light'|"url"|"domain"|"tag"|"path"
+    relatedType: 'page'|'light'|"url"|"domain"|"tags"|"path"
     // 关联的外表主键
     page?: string;
     light?: string;
     url?: string;
     domain?: string
-    tag?: string
+    tags?: string[]
     path?: string
 
 
