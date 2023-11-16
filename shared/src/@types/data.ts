@@ -10,7 +10,9 @@ export enum BackupVersion {
     version4 = 4, // 不做 encode 处理
 
     version5 = 5, // 2023,新增离线HTML文件，区分于资源
-    version6 = 6 // 支持 note 备份
+    version6 = 6, // 支持 note 备份
+
+    version7 = 7 // 通用型的备份格式，可扩展不指定具体字段
 }
 
 export enum AnnotationStatus {
@@ -219,7 +221,7 @@ export type Note = {
     // 关联的外表主键
     page?: string;
     light?: string;
-    url?: string;
+    url: string;
     domain?: string
     tags?: string[]
     path?: string
@@ -233,6 +235,8 @@ export type Note = {
     createAt: number
     // 更新时间
     updateAt: number
+
+    [key: string]: unknown
 }
 
 // 链路信息，记录各个网站之间的联系
@@ -298,12 +302,13 @@ export enum BackupDataType {
 
 export type BackupData = {
     backupId: string
+
     pages?: Partial<WebPage>[],
     lights?: Partial<Step>[],
     box?: Partial<Box>[],
     dataType: BackupDataType[],
     snapshots?: Partial<SnapshotResource>[],
-    note?: Partial<Note>[]
+    notes?: Partial<Note>[]
 
     htmlList?: Partial<OfflineHTML>[]
     version?: BackupVersion,
@@ -316,7 +321,6 @@ export type BackupData = {
 
     did?: string;
 
-    // todo convert to items
     items: {
         db: string
         table: string

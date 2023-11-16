@@ -501,7 +501,14 @@ export namespace network {
 }
 
 /**占位  stat 字段，用于标识数据的状态，合法、非法、删除等状态，使用字符串类型，可用于建立索引 待 28版本后启动此字段*/
-export type TableSchemaBasicFields = {deleted?: boolean, updateAt?: number, createAt?: number, stat?:"valid"|"un_valid"|"deleted"}
+export type TableSchemaBasicFields = {
+    key?: string
+    deleted?: boolean,
+    updateAt?: number,
+    createAt?: number,
+    stat?:"valid"|"un_valid"|"deleted",
+    [key: string]: boolean | number | string | string[] | any, // todo 删除 any
+}
 export interface TableStat {
     usage: number // 占用空间
     size: number // 数据条数
@@ -545,7 +552,7 @@ type RequestParamsWithDBInfo<params> = {
 
 export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**新增或更新（批量导入）已有数据*/
-    put: IExtenstionMessageListener<RequestParamsWithDBInfo<Schema[]>, string[]>
+    put: IExtenstionMessageListener<RequestParamsWithDBInfo<Schema[]>, string | string[]>
     /**彻底删除数据，保证安全性，不会误删，不支持条件删除，只可传入指定唯一键进行删除*/
     remove: IExtenstionMessageListener<RequestParamsWithDBInfo<string[]>, number>
     /**支持按条件的更新；*/
@@ -583,8 +590,6 @@ export namespace config {
         updateAt?: number,
     }
     export type ConfigObject = Record<string, ConfigValue>
-    export type response = TableAPI<ConfigItem>
-    export type request = ComputeRequestToBackground<response>
 }
 
 export namespace page {
@@ -612,8 +617,6 @@ export namespace html {
         originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
         onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
 
-        localUrl?: string // 插件本地直接访问资源的地址，不上传服务器，由插件本地生成；不同插件主机地址不同
-
         contentType: ContentType, // 文件类型
         contentLength?: number, // 资源size
         lastModified?: string,
@@ -633,8 +636,6 @@ export namespace html {
         updateAt: number
     }
     export const id = 'html';
-    export type response = TableAPI<OfflineHTML>
-    export type request = ComputeRequestToBackground<response>
 }
 
 export namespace box {
@@ -658,8 +659,6 @@ export namespace box {
 
 export namespace snapshot {
     export const id = 'snapshot';
-    export type response = TableAPI<SnapshotResource>
-    export type request = ComputeRequestToBackground<response>
 }
 
 

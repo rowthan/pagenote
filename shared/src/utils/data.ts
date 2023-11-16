@@ -1,7 +1,7 @@
 // 将webpage数据导出为字符串文本
 import {BackupData, BackupVersion} from "../@types/data";
 
-const makeExportString = function (backupData:BackupData):string{
+export const makeExportString = function (backupData:BackupData):string{
     // version4 不做encode处理，避免增加文件体积
     if(backupData.version === BackupVersion.version4 || backupData.version > BackupVersion.version4){
         return JSON.stringify(backupData)
@@ -13,7 +13,7 @@ const makeExportString = function (backupData:BackupData):string{
 }
 
 // 还原备份数据
-const resolveImportString = function (inputStr: string):BackupData {
+export const resolveImportString = function (inputStr: string):BackupData {
     let data
     try{
         data = JSON.parse(inputStr);
@@ -29,9 +29,4 @@ const resolveImportString = function (inputStr: string):BackupData {
         throw '数据可能已经损坏或不兼容，请联系开发者处理'
     }
     return data;
-}
-
-export {
-    makeExportString,
-    resolveImportString,
 }

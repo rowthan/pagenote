@@ -1,12 +1,12 @@
 import {
     action,
-    box,
     browserAction,
     ComputeRequestApiMapDefine, config, developer,
-    fileDB, html, light,
+    fileDB,
+    light,
     lightpage,
     localdir, network, page,
-    setting, snapshot, TableAPI, user, table
+    setting, TableAPI, user, table
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
 
@@ -151,8 +151,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         update: true,
     }
 
-    const configMethod: ComputeRequestApiMapDefine<config.request> = implementTableMethods
-    const htmlMethod: ComputeRequestApiMapDefine<html.request> = implementTableMethods
     const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
     const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const commonTableMethods: ComputeRequestApiMapDefine<table.request> = {
@@ -173,8 +171,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         developer: createApiForClient<developer.request>(developerMethod, developer.id, wrapperFun),
 
         // 格式化的统一数据操作 API
-        html: createApiForClient<html.request>(htmlMethod, html.id, wrapperFun),
-        config: createApiForClient<config.request>(configMethod, config.id, wrapperFun),
         page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
         light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
 
