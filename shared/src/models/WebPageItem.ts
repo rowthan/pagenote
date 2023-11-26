@@ -177,12 +177,16 @@ const getDetailWebPage = function () {
         updateAt: 0,
         url: "",
         urls: [],
-        version: DataVersion.version4,
+        version: DataVersion.version6,
         extVersion: "",
         categories: [],
         did: "",
         notion_id: "",
-        bookmark: []
+        urlSearch:"",
+        urlHash:"",
+        keywords:[],
+        $links:[],
+        browserBookmarks: []
     }
     return webpage
 }

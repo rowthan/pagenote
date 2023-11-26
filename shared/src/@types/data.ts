@@ -2,6 +2,8 @@ import {LightStatus, LightType} from "../pagenote-brush";
 import {box, html} from "../extApi";
 import OfflineHTML = html.OfflineHTML;
 import Box = box.Box;
+import {Query} from "./database";
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 export enum BackupVersion {
     version1 = 1,
@@ -12,7 +14,7 @@ export enum BackupVersion {
     version5 = 5, // 2023,新增离线HTML文件，区分于资源
     version6 = 6, // 支持 note 备份
 
-    version7 = 7 // 通用型的备份格式，可扩展不指定具体字段
+    version7 = 7 // 通用型的备份格式，可扩展不指定具体字段 items:[]
 }
 
 export enum AnnotationStatus {
@@ -90,7 +92,9 @@ type Step = Selection & {
     matchUrls?: string[]
     hash?: string
     v?: number // 数据版本
-}
+} & LinkRule<Step>
+
+export type Light = Step;
 
 type Position = {
     x:number,
@@ -105,9 +109,8 @@ type PlainData = {
     // @deprecated
     setting?: any, // TODO 删除
     // @deprecated
-    steps?: Step[],
+    steps?: (Step | Light)[],
     nodes?: Note[],
-
     offline?: OfflineHTML[] // 关联的离线数据
 }
 
@@ -120,6 +123,7 @@ export enum DataVersion {
     version3='3', // 携带有 lastmode etag 字段
     version4='4', // 删除 plainData 中网页信息字段
     version5 = '5', // 迁移至 indexedDB
+    version6 = '6', // 增加 网页 TDK URL 信息，特征关联ID
 }
 
 export enum MetaResourceType {
@@ -187,10 +191,13 @@ type WebPageTimes = {
 
 }
 
-type WebPageDatas = {
+type WebPageLinkedData = {
     extVersion?: string, // 使用的插件版本
     // @deprecated
     plainData?: PlainData,
+
+    // 实时的浏览器书签信息
+    browserBookmarks?: BookmarkTreeNode[],
 }
 
 type WebPageSiteInfo = {
@@ -204,17 +211,17 @@ type WebPageSiteInfo = {
     cover?: string // 网页封面
     categories?: string[],
     directory?: string, // 存放路径
+    //@deprecated
     customTitle?: string, // 自定义标题
     /**sdk 的设置信息*/
     sdkSetting?: any
 
     domain: string,
     path: string, // 路由path
-    bookmark?: string[]
 }
 
 // 笔记富文本结构
-export type Note = WebBasicInfo & MatchRule<Note> & {
+export type Note = WebBasicInfo  & {
     // 唯一ID
     key: string;
     // 笔记的数据存储形式
@@ -242,6 +249,56 @@ export type Note = WebBasicInfo & MatchRule<Note> & {
     createAt: number
     // 更新时间
     updateAt: number
+} & LinkRule<Note>
+
+/**
+ * 特征：记录特征匹配规则
+ * */
+
+type FeatureValue<T> = {
+    [key in keyof T]: T[key] | Query<T[key]>
+}
+
+/**特征对象
+ *
+ * key: 特征ID
+ * demo1:
+ * [key: string] 特征匹配规则，如 {title:'一页一记', domain: 'pagenote.cn'}
+ * 输入待匹配对象网页 => {title:"一页一记录",domain:"pagenote.cn",url:"https://pagenote.cn/signin", path: ''}
+ * => 匹配成功，得到 key 值，基于此值去 memo\light\page 表中查找符合条件的数据，聚合。实现数据多对多的关联绑定
+ *
+ * demo2: 具有复杂特征
+ * {width: 100, height: {$gt: 800}, domain:"", path:"/abc", title: {$regex: '一页一记', icon:"", keywords:["一页一记"]}
+ * */
+export type FeatureItem = {
+    key: string,
+} & FeatureValue<Note & Light & WebPage | SnapshotResource> & {
+    [key: string]: any
+}
+
+/***
+ * 非特殊场景不建议使用。适用于规则关联关系清楚，但数据源不确定（尚未落库）的场景
+ *
+ * 将匹配规则放到原始数据中。交换传统的查询匹配模式。数据源和请求方交换。
+ * 数据源A： memo : {$match:{tag:'abc'}} // memo 本身没有 tag 这个字段，该字段来源 B
+ * 请求参数B：webpage :{url: 'xxx' tag: ['abc','def'],title:'yyyy'} （不感知目标表的搜索规则）
+ *
+ * 优点：不需要关联外键，即可实现连表查询。灵活，支持被动查询
+ * 缺点：需要全量扫描表，性能较差。建议不要单独使用，建议：{$match:{},deleted:false} 尽可能缩小范围
+ *
+ * LinkRule = '0' ,便于建立非动态规则的索引，便于快速粗筛具有动态 $match 的数据
+ *
+ * $match 是自创的一种非标准的查询模式，需要服务端自行实现它的逻辑：
+ * 1. 参数过滤，匹配数据库时需要剔除该字段
+ * 2. 数据库查询出的结果，再次根据 $match 进行匹配
+ * */
+
+export interface LinkRule<T> {
+    // 关联特征表ID，当前数据的外链匹配管理
+    $links?: string[]
+
+    //@deprecated 匹配规则，不使用外键 $links 的情况下使用。存储至原始表，不利于查询（源数据量较大时）
+    // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>
 }
 
 // 链路信息，记录各个网站之间的联系
@@ -253,9 +310,21 @@ type RouteInfo = {
 type ExtraBind = {
     notion_id?: string
 }
-export type WebPage = WebPageIds & WebPageTimes & WebPageDatas & WebPageSiteInfo & RouteInfo & ExtraBind;
 
-type AllowUpdateKeys = keyof  WebPageDatas | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
+/**
+ * 数据结构
+ * webpage
+ *  -light
+ *  -note
+ *  -snapshot
+ *  -html
+ *  -box
+ *  -bookmark
+ * */
+export type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind & LinkRule<WebPageIds & WebPageSiteInfo>;
+
+
+type AllowUpdateKeys = keyof  WebPageLinkedData | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
 // 数据的存储形式，blob二进制文件或字符串文件
 export type FileData = Blob | string
@@ -307,21 +376,30 @@ export enum BackupDataType {
 
 export type BackupData = {
     backupId: string
-
-    pages?: Partial<WebPage>[],
-    lights?: Partial<Step>[],
-    box?: Partial<Box>[],
-    dataType: BackupDataType[],
-    snapshots?: Partial<SnapshotResource>[],
-    notes?: Partial<Note>[]
-
-    htmlList?: Partial<OfflineHTML>[]
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
     size?: number,
     remark?: string
 
+
+    // @deprecated
+    pages?: Partial<WebPage>[],
+    // @deprecated
+    lights?: Partial<Step>[],
+    // @deprecated
+    box?: Partial<Box>[],
+    // @deprecated
+    dataType?: BackupDataType[],
+    // @deprecated
+    snapshots?: Partial<SnapshotResource>[],
+    // @deprecated
+    notes?: Partial<Note>[]
+    // @deprecated
+    htmlList?: Partial<OfflineHTML>[]
+
+
+    // @deprecated
     thumb?: string
 
     did?: string;
@@ -329,8 +407,7 @@ export type BackupData = {
     items: {
         db: string
         table: string
-        remark: string
-        list: (WebPage | Step | Box | ResourceInfo | Note)[]
+        list: (WebPage | Step | Box | OfflineHTML | SnapshotResource | Note)[]
     }[]
 }
 
