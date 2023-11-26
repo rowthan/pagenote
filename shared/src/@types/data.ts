@@ -98,9 +98,13 @@ type Position = {
 }
 
 type PlainData = {
+    // @deprecated
     categories?: string[],// TODO 删除
+    // @deprecated
     snapshots?: string[],
+    // @deprecated
     setting?: any, // TODO 删除
+    // @deprecated
     steps?: Step[],
     nodes?: Note[],
 
@@ -136,6 +140,7 @@ export type SnapshotResource = {
     updateAt: number,
     width: number,
     height: number,
+    contentType: ContentType,
 
     expiredAt?: number,
     did?: string
@@ -145,10 +150,20 @@ export type SnapshotResource = {
     deleted: boolean
 }
 
+interface WebBasicInfo {
+    // URL 组成部分
+    url: string
+    path: string
+    domain: string
+    urlSearch?: string
+    urlHash?: string
 
-type WebPageIds = {
+    title: string
+    keywords?: string[]
+}
+
+type WebPageIds = WebBasicInfo & {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
-    url?: string, // 此条数据绑定的 URL
     urls?: string[], // 此条数据绑定的 URL 集合
     pageType?: PAGE_TYPES
     did?: string
@@ -174,6 +189,7 @@ type WebPageTimes = {
 
 type WebPageDatas = {
     extVersion?: string, // 使用的插件版本
+    // @deprecated
     plainData?: PlainData,
 }
 
@@ -198,12 +214,9 @@ type WebPageSiteInfo = {
 }
 
 // 笔记富文本结构
-export type Note = {
+export type Note = WebBasicInfo & MatchRule<Note> & {
     // 唯一ID
     key: string;
-     // hashID，用于比较变更
-    hash: string;
-
     // 笔记的数据存储形式
     plainType:"html"|"slate"|"markdown"|"tiptap";
     // html 表现形式内容
@@ -217,15 +230,9 @@ export type Note = {
 
 
     // 笔记关联的表
-    relatedType: 'page'|'light'|"url"|"domain"|"tags"|"path"
-    // 关联的外表主键
-    page?: string;
-    light?: string;
-    url: string;
-    domain?: string
+    // @deprecated
+    relatedType: "domain"|"path"
     tags?: string[]
-    path?: string
-
 
     // 优先级，1- xxx 数值越小优先级越高
     priority?: number
@@ -235,8 +242,6 @@ export type Note = {
     createAt: number
     // 更新时间
     updateAt: number
-
-    [key: string]: unknown
 }
 
 // 链路信息，记录各个网站之间的联系
