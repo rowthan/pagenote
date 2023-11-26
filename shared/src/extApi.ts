@@ -73,13 +73,6 @@ export namespace lightpage {
         queryPages: IExtenstionMessageListener<Find<WebPage>, FindResponse<PartWebpage>>
         groupPages: IExtenstionMessageListener<{ groupBy: keyof WebPage, query?: Query<WebPage>, projection?: Projection<WebPage> }, Record<string, PartWebpage[]>>,
 
-        // 2.标记 TODO 待删除
-        addLights: IExtenstionMessageListener<Step[], string[]>;
-        removeLights: IExtenstionMessageListener<{ keys: string[] }, number>;
-        updateLights: IExtenstionMessageListener<PartStep[], number>;
-        queryLights: IExtenstionMessageListener<Find<Step>, FindResponse<PartStep>>;
-        groupLights: IExtenstionMessageListener<{ groupBy: keyof Step, query?: Query<Step>, projection?: Projection<Step> }, Record<string, PartStep[]>>,
-
 
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
@@ -90,8 +83,6 @@ export namespace lightpage {
         /**导入备份文件**/
         importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
 
-        // TODO 删除
-        syncStat?: IExtenstionMessageListener<{ sync: boolean }, SyncStat>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 
@@ -131,8 +122,6 @@ export namespace setting {
 
     export type SDK_SETTING = Inner_Setting & COMMON_SDK_SETTING
 
-    export type ExtConfigItem = Record<string, string>
-
     /**搜索引擎*/
     export type ISearchEngine = {
         type?: string, // 搜索引擎类别，如baidu\google
@@ -150,7 +139,6 @@ export namespace setting {
 
     export interface response {
 
-        // todo 删除以下
         // 获取用户可用配置
         getUserSetting: IExtenstionMessageListener<void, SDK_SETTING>
         // 本地设置存储
@@ -158,7 +146,7 @@ export namespace setting {
         saveSetting: IExtenstionMessageListener<Partial<SDK_SETTING>, SDK_SETTING>
         resetSetting: IExtenstionMessageListener<void, SDK_SETTING>
 
-
+        //@deprecated
         getSearchEngines: IExtenstionMessageListener<void, ISearchEngine[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
@@ -395,10 +383,7 @@ export namespace user {
     export interface response {
         getWhoAmI: IExtenstionMessageListener<void, WhoAmI>,
         getUser: IExtenstionMessageListener<{ refresh?: boolean }, User | undefined>,
-        // 当前设备信息
-        setDevice: IExtenstionMessageListener<Partial<Device>, Device | undefined>
-        getDevice: IExtenstionMessageListener<void, Device | undefined>
-        getDeviceList: IExtenstionMessageListener<void, Device[]>
+        getDeviceList: IExtenstionMessageListener<{ did?: string }, Device[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
