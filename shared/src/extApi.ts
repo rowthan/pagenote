@@ -1,7 +1,5 @@
 import type {
     BackupData,
-    SnapshotResource,
-    ResourceInfo,
     Step,
     WebPage,
     ContentType,
@@ -62,7 +60,11 @@ export namespace lightpage {
     type PartWebpage = Partial<WebPage>
     type PartStep = Partial<Step>
 
-    export type ExportFilter = { pageFilter?: Query<WebPage>, lightFilter?: Query<Step>, snapshotFilter?: Query<SnapshotResource>, htmlFilter?: Query<OfflineHTML> }
+    export type ExportFilters = {
+        db: string
+        table: string,
+        query?: Query<any>
+    }[]
 
     // 服务端可接受的请求API TODO 合并 light page snapshot 接口，
     export type response = {
@@ -81,7 +83,17 @@ export namespace lightpage {
 
 
         /**导入备份文件**/
-        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, { lightCnt: number, pageCnt: number, snapshotCnt: number, htmlCnt: number }>
+        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, {
+            db: string
+            table: string,
+            keys: string[]
+        }[]>
+
+        exportBackup: IExtenstionMessageListener<ExportFilters, {
+            db: string
+            table: string,
+            keys: string[]
+        }[]>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -404,28 +416,6 @@ export namespace localdir {
     export type request = ComputeRequestToBackground<response>
 }
 
-export namespace fileDB {
-    export const id = 'fileDB'
-    export const FILE_RESOURCE_HOSTS = ['https://pagenote.cn', 'https://logike.cn']
-
-    export interface response {
-        /**新建或更新*/
-        saveFile: IExtenstionMessageListener<{ info: ResourceInfo, upsert: boolean }, ResourceInfo | undefined>
-        /**查询资源*/
-        getFile: IExtenstionMessageListener<Partial<ResourceInfo>, (ResourceInfo & { data: string }) | undefined>
-        /**查询资源（不含文件数据）*/
-        getFiles: IExtenstionMessageListener<Partial<ResourceInfo>, Omit<ResourceInfo, 'data'>[]>
-        /**删除资源*/
-        removeFiles: IExtenstionMessageListener<Partial<ResourceInfo>, { deleteCnt: number }>
-
-        /**upload file 至服务端，并返回URL*/
-        uploadFile: IExtenstionMessageListener<{ content: string, server: string }, string>;
-
-        [key: string]: IExtenstionMessageListener<any, any>
-    }
-
-    export type request = ComputeRequestToBackground<response>
-}
 
 export namespace network {
     export const id = 'network';
@@ -491,7 +481,6 @@ export type TableSchemaBasicFields = {
     deleted?: boolean,
     updateAt?: number,
     createAt?: number,
-    stat?:"valid"|"un_valid"|"deleted",
     [key: string]: boolean | number | string | string[] | any, // todo 删除 any
 }
 export interface TableStat {
@@ -577,17 +566,17 @@ export namespace config {
     export type ConfigObject = Record<string, ConfigValue>
 }
 
-export namespace page {
-    export const id = 'page';
-    export type response = TableAPI<WebPage>
-    export type request = ComputeRequestToBackground<response>
-}
-
-export namespace light {
-    export const id = 'light';
-    export type response = TableAPI<Step>
-    export type request = ComputeRequestToBackground<response>
-}
+// export namespace page {
+//     export const id = 'page';
+//     export type response = TableAPI<WebPage>
+//     export type request = ComputeRequestToBackground<response>
+// }
+//
+// export namespace light {
+//     export const id = 'light';
+//     export type response = TableAPI<Step>
+//     export type request = ComputeRequestToBackground<response>
+// }
 
 export namespace html {
     export type OfflineHTML = {

@@ -8,11 +8,6 @@ export type Pagination = {
     /**分页*/
     limit?: number, // 本次查询限额数量
     skip?: number,
-    total?: number,
-
-    /**余量标识*/
-    //@deprecated 使用 skip
-    has_more?: boolean
 
     // @deprecated 使用 skip
     page?: number, // 当前页码
@@ -28,10 +23,13 @@ export type Pagination = {
 
 export type FindResponse<T> = {
     list: T[]
-} & Required<Pagination>
+} & Required<{
+    has_more: boolean
+    total?: number,
+}>
 
 export type Projection<Model> = {
-    [key in keyof Model]?: 1 | -1
+    [key in keyof Model]?: 1
 }
 
 export type Sort<Model> = {

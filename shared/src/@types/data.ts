@@ -133,6 +133,7 @@ export enum MetaResourceType {
 
 export type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
+    resourceKey?: string // 映射 source 的ID
     url: string, // 可访问的URL 地址，base64 或链接
     uri?: string // 互联网可访问的链接地址
     alt?: string // 图片说明
@@ -152,6 +153,18 @@ export type SnapshotResource = {
     size?: number
 
     deleted: boolean
+}
+
+/** 资源信息*/
+export type Resource = {
+    /** content hash。资源唯一ID*/
+    key: string
+    /** 文件类型*/
+    contentType: ContentType
+    /** 原始地址：如：http://www.pagenote.cn/xxx.png*/
+    originUrl: string
+    /** 数据详情*/
+    data: string | Blob
 }
 
 interface WebBasicInfo {
@@ -354,7 +367,7 @@ type BaseFileInfo = {
     createAt: number,
 }
 
-export type ResourceInfo = BaseFileInfo & {
+type ResourceInfo = BaseFileInfo & {
     sourceTag: string, // 资源标签，用于过滤类型，如缩略图 thumb、snapshot、等。
     saveAs: SaveAsTypes // 本地资源存储类型
     contentType: ContentType, // 文件类型
@@ -363,6 +376,7 @@ export type ResourceInfo = BaseFileInfo & {
     ETag?: string,
     [key:string]: any,
 }
+
 
 export enum BackupDataType {
     pages= 'pages',
@@ -375,7 +389,7 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
-    backupId: string
+    backupId?: string
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
@@ -400,14 +414,12 @@ export type BackupData = {
 
 
     // @deprecated
-    thumb?: string
-
     did?: string;
 
     items: {
         db: string
         table: string
-        list: (WebPage | Step | Box | OfflineHTML | SnapshotResource | Note)[]
+        list: any[]
     }[]
 }
 
