@@ -1,0 +1,10 @@
+#
+# robots.txt for pagenote
+#
+
+Sitemap:  https://pagenote.cn/sitemap.xml 
+
+User-agent:  * 
+Disallow:  /api/doc
+Disallow:  /api/docs
+Disallow:  /api/search

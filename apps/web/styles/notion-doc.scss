@@ -1,0 +1,62 @@
+/**override default notion style*/
+
+.notion-app.light-mode, .notion-header {
+  background-color: transparent !important;
+}
+
+
+/**删除padding值，会导致网页都出现滚动条- 尽管网页内容并未超过视口。 todo pull a mr */
+.notion > * {
+  padding: 0 !important;
+}
+
+.notion-h {
+  display: block !important;
+  width: 100% !important;
+}
+
+
+.notion-app .breadcrumbs {
+  /*overflow: hidden;*/
+  width: 100%;
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+
+.notion-header .breadcrumb .title {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.notion-page-icon-hero {
+  margin-left: unset !important;
+  left: calc(min(16px, 8vw)) !important;
+}
+
+.notion-full-width .notion-page-icon-hero {
+  left: calc(min(96px, 8vw)) !important;
+}
+
+@media screen and (max-width: 920px) {
+  .notion-page-cover-wrapper {
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+  }
+  .notion-page-cover-wrapper img.notion-page-cover {
+    height: 200px !important;
+    max-height: 200px !important;
+    min-height: 200px !important;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .notion-table-of-contents.notion-gray {
+    position: fixed;
+    left: 40px;
+    max-width: calc(50% - 390px);
+  }
+}
