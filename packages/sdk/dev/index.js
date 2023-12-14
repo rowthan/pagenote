@@ -1,5 +1,5 @@
 import "../src/pagenote";
-import "../../demos/init"
+import "../../apps/demos/init"
 
 initPagenote()
 
