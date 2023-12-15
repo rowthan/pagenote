@@ -19,3 +19,7 @@ pagenote.init();
 -- sdk // PAGENOTE 的核心SDK代码
 -- snapshots // 项目 demos 图
 ```
+
+
+## 参考资料
+[pnpm](https://pnpm.io/zh/cli/install)

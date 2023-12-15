@@ -1,0 +1,95 @@
+/* Basic editor styles */
+.tiptap {
+  padding: 12px 8px;
+  font-size: 14px;
+  line-height: 1.24em;
+
+  > * + * {
+    //margin-top: 0.5em;
+  }
+
+  p {
+    margin: 0.5em 0;
+  }
+
+  ul,
+  ol {
+    list-style: disc;
+    padding: 0 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 3rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    line-height: 2rem;
+  }
+
+
+  code {
+    background-color: rgba(#616161, 0.1);
+    color: #616161;
+  }
+
+  a {
+    color: #63b3ed;
+    text-decoration: underline;
+  }
+
+  pre {
+    background: #0D0D0D;
+    color: #FFF;
+    font-family: 'JetBrainsMono', monospace;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+
+    code {
+      color: inherit;
+      padding: 0;
+      background: none;
+      font-size: 0.8rem;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  blockquote {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(#0D0D0D, 0.1);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(#0D0D0D, 0.1);
+    margin: 1.5rem 0;
+  }
+
+
+  .is-empty:before {
+    content: attr(data-placeholder);
+    float: left;
+    color: hsl(var(--placeholder));
+    pointer-events: none;
+    height: 0;
+  }
+}

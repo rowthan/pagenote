@@ -1,0 +1,21 @@
+@import "tailwind.scss";
+@import "swiper.scss";
+@import "notion-doc.scss";
+@import "notion-dark.scss";
+@import "animation.scss";
+@import "variables.scss";
+@import "tiptap";
+@import "memo";
+
+html {
+  height: 100%;
+  width: 100%;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+
+textarea {
+  background-color: inherit;
+}
+
+

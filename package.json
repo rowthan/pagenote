@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "pagenote",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "dev-web": "pnpm --filter pagenote-web dev"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "husky": "8.0.0"
+  },
+  "license": "ISC"
+}
