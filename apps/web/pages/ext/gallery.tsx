@@ -16,14 +16,16 @@ import { basePath } from '../../const/env'
 import { useRouter } from 'next/router'
 import RedirectToExt from 'components/RedirectToExt'
 import { Collection } from '../../const/collection'
+import {Button} from "../../@/components/ui/button";
+import {downloadBase64Images} from "../../utils/image";
 
-const breakpoints = [3840, 2400, 1080, 640, 384, 256, 128, 96, 64, 48]
+const breakpoints = [3840, 2400, 1080,980,720, 640, 384, 256, 128, 96, 64, 48]
 export default function Gallery() {
   const router = useRouter()
   const { data: images } = useTableQuery<SnapshotResource>(
     Collection.snapshot,
     {
-      limit: 100,
+      limit: 999,
       query: {
         pageKey: router.query.pageKey?.toString() || undefined,
       },
@@ -63,6 +65,10 @@ export default function Gallery() {
     window.open(`${basePath}/ext/img.html?id=${imageList[index].key}`)
   }
 
+  function batchDownload() {
+    downloadBase64Images(images)
+  }
+
   return (
     <>
       <Head>
@@ -70,6 +76,8 @@ export default function Gallery() {
       </Head>
       <RedirectToExt>
         <div className="bg-gray-200 p-4">
+          <Button className={'hidden'} onClick={batchDownload}>批量下载</Button>
+
           <PhotoAlbum
             layout="rows"
             photos={imageList}
