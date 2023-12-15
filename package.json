@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
-    "dev-web": "pnpm --filter pagenote-web dev"
+    "dev-web": "pnpm --filter pagenote-web dev",
+    "build-web": "pnpm --filter pagenote-web build"
   },
   "engines": {
     "node": ">=18"
@@ -15,7 +16,8 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "husky": "8.0.0"
+    "husky": "8.0.0",
+    "next": "^13.5.3"
   },
   "license": "ISC"
 }

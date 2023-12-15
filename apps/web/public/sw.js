@@ -1,6 +1,6 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
-var preCacheFiles = ['/']
+var preCacheFiles = []
 
 var cacheRules = {
   whiteList: [],
