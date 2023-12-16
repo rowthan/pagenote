@@ -6,13 +6,13 @@ import type {
     CommunicationOption,
     IBaseMessageListener,
     IBaseMessageProxy,
-} from "./base";
+} from "../base";
 import {
     DEFAULT_TIMEOUT,
     STATUS,
     RESPONSE_STATUS_CODE,
-} from './base'
-import {createURLForJSON, sumSizeMB} from "./utils";
+} from '../base'
+import {createURLForJSON, sumSizeMB} from "../utils";
 
 
 type SessionHeader = BaseMessageHeader & {
@@ -66,7 +66,7 @@ function clearMessage(key: string) {
     window.sessionStorage.setItem(key, '');
 }
 
-class SessionStorageBridge implements Communication<any> {
+export default class SessionStorageBridge implements Communication<any> {
     clientId: string;
     listeners: Record<string, IMessageListener<any, any>>;
     option: BridgeOption;
@@ -235,5 +235,3 @@ class SessionStorageBridge implements Communication<any> {
         this.state = STATUS.STOP
     }
 }
-
-export default SessionStorageBridge

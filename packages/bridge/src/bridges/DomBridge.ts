@@ -8,7 +8,7 @@ import {
     IBaseMessageProxy,
     RESPONSE_STATUS_CODE,
     STATUS,
-} from "./base";
+} from "../base";
 
 interface ListenerResponse {
     (data: any):void
@@ -30,6 +30,9 @@ function triggerDom(element:HTMLElement,requestData:BaseMessageRequest) {
     element.dispatchEvent(customEvent);
 }
 
+/**
+ * 基于 DOM 节点通信
+ * */
 export default class DomBridge implements Communication<any>{
     listeners: Record<string, IMessageListener> ={}
     proxy: IMessageProxy = function () {

@@ -2,12 +2,19 @@
   "name": "@pagenote/shared",
   "version": "1.14.1",
   "description": "",
-  "main": "lib/",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc -p tsconfig.json",
+    "dev": "tsc --watch -p tsconfig.json",
+    "publish-npm": "npm run build && npm publish --access public",
+    "test": "mocha"
+  },
   "dependencies": {
     "colord": "^2.9.3",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "@pagenote/bridge": "1.0.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.177",
@@ -22,13 +29,7 @@
     "tslint": "^6.1.3",
     "typescript": "^4.5.5"
   },
-  "scripts": {
-    "build": "rm -rf lib && tsc -p tsconfig.json",
-    "publish-npm": "npm run build && npm publish --access public",
-    "test": "mocha"
-  },
   "files": [
-    "index.js",
     "lib/**"
   ],
   "author": "",

@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "@pagenote/bridge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf lib && tsc -p tsconfig.json",
+    "dev": "tsc --watch -p tsconfig.json"
+  },
+  "files": ["lib/**"],
+  "devDependencies": {
+    "@types/chrome": "0.0.177"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

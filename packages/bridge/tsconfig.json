@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "module": "commonJs",
+        "target": "es5",
+        "allowJs": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "rootDir": "src",
+        "outDir": "lib",
+        "lib": [
+            "dom",
+            "es5",
+            "scripthost",
+            "es2015.promise",
+            "es2016"
+        ]
+    }
+}

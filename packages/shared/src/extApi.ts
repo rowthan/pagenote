@@ -10,7 +10,7 @@ import type {
     BaseMessageResponse,
     IBaseMessageListener,
     IExtenstionMessageListener
-} from "./communication/base";
+} from "@pagenote/bridge";
 import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";

@@ -1,5 +1,5 @@
-import SessionStorageBridge from "../communication/sessionStorageBridge";
-import {RESPONSE_STATUS_CODE} from "../communication/base";
+import {SessionStorageBridge,RESPONSE_STATUS_CODE} from "@pagenote/bridge";
+
 
 enum SDK_WORK_TYPE {
     WEB=0,
