@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf lib && tsc -p tsconfig.json",
-    "dev": "tsc --watch -p tsconfig.json"
+    "dev": "tsc --watch -p tsconfig.json",
+    "lint": "echo \"skip\""
   },
   "files": ["lib/**"],
   "devDependencies": {

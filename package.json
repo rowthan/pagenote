@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "dev": "yarn workspaces run dev",
-    "build": "yarn workspaces run build"
+    "build": "yarn workspaces run build",
+    "lint": "yarn workspaces run lint"
   },
   "engines": {
     "node": ">=18"

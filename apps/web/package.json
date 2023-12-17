@@ -11,6 +11,7 @@
     "build-dev-ext": "prefix=/web next build && next export",
     "build-ext": "npm run move-ext && prefix=/web next build && next export && npm run revert-pages",
     "start": "next start",
+    "lint": "next lint",
     "lint-fix": "next lint --fix",
     "lint-staged": "lint-staged"
   },
