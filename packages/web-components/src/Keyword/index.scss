@@ -1,0 +1,41 @@
+@keyframes loading{
+  0%{
+    background-position: 0 100%;
+  }
+  50%{
+    background-position: 0 0%;
+  }
+  100%{
+    background-position: 0 100%;
+  }
+}
+
+.word {
+  font-size: 14px;
+  color: #333;
+
+  --transition-fast: .1s;
+  --transition-medium: .2s;
+  --transition-slow: .5s;
+  --transition-ease: ease-in;
+
+
+  background-image: repeating-linear-gradient(90deg, rgba(var(--bg-raw), .9), rgba(var(--bg-raw), .9) 1px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 3px);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+
+  --bg-raw: 3,169,244;
+
+  &.loading{
+    transition: all var(--transition-fast) var(--transition-ease);
+    animation: loading 1s infinite;
+  }
+  &.loaded{
+    background-size: 100% 1px;
+    background-image: repeating-linear-gradient(90deg, rgba(var(--bg-raw), 1), rgba(var(--bg-raw), 1) 1px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px);
+  }
+  &.fail{
+    --bg-raw: 255,0,0;
+  }
+}

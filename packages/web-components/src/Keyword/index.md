@@ -4,10 +4,12 @@ This is an example component.
 
 ```jsx
 import { Keyword } from 'pagenote';
-
+import 'pagenote/index.wc.ts'
 export default () => <div>
-  <Keyword>key</Keyword>
-  <key-word>key</key-word>
+    <Keyword>微信公众号</Keyword>
+    <Keyword>微信公众号</Keyword>
+
+    <key-word>微信公众号</key-word>
   </div>
 ```
 
