@@ -1,7 +1,6 @@
 import {generateApi} from "./core";
-import {BaseMessageHeader} from "../communication/base";
-import SessionStorageBridge from "../communication/sessionStorageBridge";
-import {DEFAULT_TIMEOUT} from "../communication/base";
+import {BaseMessageHeader,DEFAULT_TIMEOUT} from "@pagenote/bridge";
+import {SessionStorageBridge} from "@pagenote/bridge";
 
 export const PAGENOTE_SESSION_LISTEN_KEY = 'pagenote-message'
 

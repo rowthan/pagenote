@@ -1,14 +1,13 @@
 import {
     action,
     browserAction,
-    ComputeRequestApiMapDefine, config, developer,
-    fileDB,
-    light,
+    ComputeRequestApiMapDefine,
+    developer,
     lightpage,
-    localdir, network, page,
+    localdir, network,
     setting, TableAPI, user, table
 } from "../extApi";
-import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "../communication/base";
+import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "@pagenote/bridge";
 
 interface Wrapper {
     (method: string, targetId: string, clientId?: string): (request: any, header?: Partial<BaseMessageHeader>) => any
@@ -99,10 +98,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
 
     }
 
-    const fileDBMethod: ComputeRequestApiMapDefine<fileDB.request> = {
-        getFile: true, getFiles: true, removeFiles: true, saveFile: true, uploadFile: true
-
-    }
 
     const userMethod: ComputeRequestApiMapDefine<user.request> = {
         exchange: true,
@@ -151,8 +146,6 @@ export const generateApi = function (wrapperFun: Wrapper) {
         update: true,
     }
 
-    const lightMethods: ComputeRequestApiMapDefine<light.request> = implementTableMethods
-    const pageMethods: ComputeRequestApiMapDefine<page.request> = implementTableMethods
     const commonTableMethods: ComputeRequestApiMapDefine<table.request> = {
         ...implementTableMethods,
         keys: true
@@ -165,14 +158,9 @@ export const generateApi = function (wrapperFun: Wrapper) {
         browserAction: createApiForClient<browserAction.request>(browserActionApiMethod, browserAction.id, wrapperFun),
         commonAction: createApiForClient<action.request>(actionApiMethod, action.id, wrapperFun),
         fileSystem: createApiForClient<localdir.request>(localdirMethod, localdir.id, wrapperFun),
-        fileDB: createApiForClient<fileDB.request>(fileDBMethod, fileDB.id, wrapperFun),
         user: createApiForClient<user.request>(userMethod, user.id, wrapperFun),
         network: createApiForClient<network.request>(networkMethod, network.id, wrapperFun),
         developer: createApiForClient<developer.request>(developerMethod, developer.id, wrapperFun),
-
-        // 格式化的统一数据操作 API
-        page: createApiForClient<page.request>(pageMethods, page.id, wrapperFun),
-        light: createApiForClient<light.request>(lightMethods, light.id, wrapperFun),
 
         //通用数据库表操作 API
         table: createApiForClient<table.request>(commonTableMethods,table.id,wrapperFun),

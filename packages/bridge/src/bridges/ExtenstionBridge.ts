@@ -7,13 +7,13 @@ import type {
   IBaseSendResponse,
   IExtenstionMessageListener,
   IExtenstionMessageProxy,
-} from "./base";
+} from "../base";
 import {
   DEFAULT_TIMEOUT,
   RESPONSE_STATUS_CODE,
   STATUS,
-} from './base'
-import {sumSizeMB} from "./utils";
+} from '../base'
+import {sumSizeMB} from "../utils";
 
 type ExtensionOption = CommunicationOption & {
   isBackground: boolean

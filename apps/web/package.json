@@ -11,6 +11,7 @@
     "build-dev-ext": "prefix=/web next build && next export",
     "build-ext": "npm run move-ext && prefix=/web next build && next export && npm run revert-pages",
     "start": "next start",
+    "lint": "next lint",
     "lint-fix": "next lint --fix",
     "lint-staged": "lint-staged"
   },
@@ -61,6 +62,7 @@
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
     "dexie": "^3.2.3",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "next": "^13.5.3",

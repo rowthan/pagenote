@@ -1,8 +1,7 @@
 import {generateApi} from "./core";
-import {BaseMessageHeader} from "../communication/base";
-import ExtensionMessage2 from "../communication/ExtenstionBridge";
-import SessionStorageBridge from "../communication/sessionStorageBridge";
-import {DEFAULT_TIMEOUT} from "../communication/base";
+import {BaseMessageHeader,DEFAULT_TIMEOUT} from "@pagenote/bridge";
+import {ExtenstionBridge} from "@pagenote/bridge";
+import {SessionStorageBridge} from "@pagenote/bridge";
 
 export const PAGENOTE_SESSION_LISTEN_KEY = 'pagenote-message'
 
@@ -16,7 +15,7 @@ export const defaultWrapper = function (method: string, targetId: string, client
         if (!bridge) {
             // 优先使用 extension runtime message; Edge 普通网页也会有 chrome.runtime 对象、故还需要进一步判断 onMessage
             if (globalThis && globalThis.chrome && chrome.runtime && chrome.runtime.onMessage) {
-                bridge = new ExtensionMessage2(clientId, {
+                bridge = new ExtenstionBridge(clientId, {
                     asServer: true,
                     isBackground: false,
                     timeout: DEFAULT_TIMEOUT,

@@ -7,17 +7,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
-    "dev-web": "pnpm --filter pagenote-web dev",
-    "build-web": "pnpm --filter pagenote-web build"
+    "dev": "yarn workspaces run dev",
+    "build": "yarn workspaces run build",
+    "lint": "yarn workspaces run lint"
   },
   "engines": {
     "node": ">=18"
   },
   "keywords": [],
   "author": "",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "devDependencies": {
     "husky": "8.0.0",
-    "next": "^13.5.3"
+    "next": "^13.5.3",
+    "typescript": "^5.3.3"
   },
   "license": "ISC"
 }

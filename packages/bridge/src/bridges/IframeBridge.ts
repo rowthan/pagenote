@@ -1,4 +1,4 @@
-import {BaseMessageHeader, BaseMessageRequest, DEFAULT_TIMEOUT, IBaseSendResponse} from "./base";
+import {BaseMessageHeader, BaseMessageRequest, DEFAULT_TIMEOUT, IBaseSendResponse} from "../base";
 
 interface Option {
     onReceiveMessage: (request:any,sender:any,sendResponse:SendResponse)=>void
@@ -8,7 +8,7 @@ interface Option {
 type SendResponse = IBaseSendResponse<any>;
 
 
-export class IframeBridge {
+export default class IframeBridge {
     option: Option
     client: string
     constructor(id:string,option:Option) {

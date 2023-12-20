@@ -1,15 +1,17 @@
 {
-  "name": "pagenote",
+  "name": "@pagenote/sdk",
   "version": "5.4.7",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "module": "es",
   "scripts": {
-    "build": "webpack --config webpack.prod.js && npm run tsc",
+    "build-sdk": "webpack --config webpack.prod.js && npm run tsc",
+    "build": "echo 'skip'",
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json",
-    "prepublish": "npm run tsc"
+    "prepublish": "npm run tsc",
+    "lint": "echo \"skip\""
   },
   "keywords": [
     "highlight",
