@@ -55,9 +55,9 @@ export default class Obsidian {
     this._status().then(r => {});
   }
 
-  _fetch(path: string, params:{
+  _fetch<T>(path: string, params:{
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    headers?: {
+    headers: {
       Accept:  AcceptType,
       'Content-Type'?: ContentType,
     },
@@ -82,7 +82,7 @@ export default class Obsidian {
       formData.append('file',body,file);
     }
 
-    return this._fetch('/vault/'+file,{
+    return this._fetch<CommonResponse>('/vault/'+file,{
       method: 'PUT',
       body: isPlainText ? body : formData,
       headers:{
@@ -103,7 +103,7 @@ export default class Obsidian {
    * 获取文件
    * */
   getFile(file: string): Promise<FileResponse | null>{
-    return this._fetch('/vault/'+file,{
+    return this._fetch<FileResponse>('/vault/'+file,{
       method: 'GET',
       headers:{
         Accept: AcceptType.json,
@@ -117,6 +117,9 @@ export default class Obsidian {
   getFileBlob(file: string): Promise<Blob | null>{
     return this._fetch('/vault/'+file,{
       method: 'GET',
+      headers:{
+        Accept: AcceptType.json,
+      },
     }).then(async function (res) {
       if(res.status === 200){
         return res.blob()
@@ -156,7 +159,7 @@ export default class Obsidian {
   appendFile(file: string,data:{
     data: string | any
   }){
-    return this._fetch('/vault/'+file,{
+    return this._fetch<CommonResponse>('/vault/'+file,{
       method: 'POST',
       body: data.data,
       headers:{
@@ -166,7 +169,7 @@ export default class Obsidian {
   }
 
   deleteFile(file: string){
-    return this._fetch('/vault/'+file,{
+    return this._fetch<CommonResponse>('/vault/'+file,{
       method: 'DELETE',
       headers:{
         Accept: AcceptType.json,

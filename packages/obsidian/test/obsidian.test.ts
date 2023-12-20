@@ -1,9 +1,11 @@
-import Obsidian from '../src/index';
+import Obsidian, {AcceptType} from '../src/index';
+import * as path from "path";
 
 global.fetch = require('node-fetch');
 global.FormData = require('form-data');
 // global.File = require('fs');
 const fs = require('fs');
+import {Blob} from 'buffer';
 // const mock = require('mock-fs');
 
 // 读取指定文件夹的文件
