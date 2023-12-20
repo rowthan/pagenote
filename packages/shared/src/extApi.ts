@@ -15,7 +15,7 @@ import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";
 import type {BrowserType} from "./utils/browser";
-import {AbstractInfo} from "./library/syncStrategy";
+import {AbstractInfo} from "../../sync/src/database/syncStrategy";
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {

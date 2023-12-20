@@ -1,4 +1,4 @@
-import {AbstractInfo} from "./syncStrategy";
+import {AbstractInfo} from "../../../sync/src/database/syncStrategy";
 import LocalFileSystem, {PathStat} from './localFileSystem'
 const md5 = require('md5')
 
