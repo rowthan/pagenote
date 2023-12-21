@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react'
-import { basePath } from 'const/env'
+import React, {useEffect} from 'react'
 import RedirectToExt from 'components/RedirectToExt'
 import useWhoAmi from 'hooks/useWhoAmi';
-import extApi from '@pagenote/shared/lib/pagenote-api'
-import { Note, SnapshotResource } from '@pagenote/shared/lib/@types/data';
+import {Note, SnapshotResource} from '@pagenote/shared/lib/@types/data';
 import useTableQuery from 'hooks/table/useTableQuery';
-import { Collection } from 'const/collection';
+import {Collection} from 'const/collection';
 import Handlebars from 'handlebars'
 import SyncSettingToObsidian from 'components/obsidian/SyncSetting';
 import obsidian from 'utils/obsidian';
@@ -118,7 +116,7 @@ export default function Data() {
 
       const result = await obsidian.getFileBlob(path)
       if(result){
-        // const blobUrl = URL.createObjectURL(result); 
+        // const blobUrl = URL.createObjectURL(result);
         // console.log(result)
       }else{
         const buffer = isBase64(url || '') ? base64ToFile(url,filename) : null //await downloadUrlImage(url)
@@ -128,13 +126,13 @@ export default function Data() {
       }
     })
   },[images])
-  
+
   function fetchFiles(){
     console.log('请求 obsidian')
 
     // obsidian.putFile('pagenote/image/snapshot',`${JSON.stringify(whoAmI)}`).then(function(res){
     //     console.log('put result',res)
-        
+
     // })
 
 
@@ -142,13 +140,13 @@ export default function Data() {
       const template = await obsidian.getFile('pagenote/image/index.template.md');
       const defaultTemplate = '{{#files}}![[{{this}}]]{{/files}}'
       console.log(template,defaultTemplate)
-      const templateObject = Handlebars.compile(template.content || defaultTemplate)
+      const templateObject = Handlebars.compile(template?.content || defaultTemplate)
       let content = templateObject(res)
       console.log(content)
       obsidian.putFile('pagenote/image/index.md',content)
     })
 
-    
+
   }
 
   useEffect(() => {
