@@ -7,6 +7,7 @@ import {Collection} from 'const/collection';
 import Handlebars from 'handlebars'
 import SyncSettingToObsidian from 'components/obsidian/SyncSetting';
 import obsidian from 'utils/obsidian';
+import {FilesResponse} from "@pagenote/obsidian";
 
 
 function base64ToFile(base64:string, fileName: string) {
@@ -90,7 +91,7 @@ export default function Data() {
         obsidian.putFile(path,content || 'no content')
       })
 
-      obsidian.listFiles('pagenote/memo/').then(function(res){
+      obsidian.listFiles('pagenote/memo/').then(function(res: FilesResponse){
         const defaultTemplate = `{{#files}}![[{{this}}]]  
 ---
         {{/files}}

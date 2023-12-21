@@ -44,7 +44,7 @@ export default class Obsidian {
     this.host = props.host;
   }
 
-  _fetch<T>(path: string, params:{
+  _fetch(path: string, params:{
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     headers?: {
       Accept:  AcceptType,
@@ -71,23 +71,26 @@ export default class Obsidian {
       formData.append('file',body,file);
     }
 
-    return this._fetch<CommonResponse>('/vault/'+file,{
+    return this._fetch('/vault/'+file,{
       method: 'PUT',
       body: isPlainText ? body : formData,
       headers:{
         Accept: AcceptType.json,
-        // 'Content-Type': isPlainText ? ContentType.markdown : ContentType.formData,
       }
     }).then(function (res) {
-      return res.json();
+      // 保存成功，状态码为 204
+      if(res.status !== 204){
+        return res.json()
+      }
+      return {}
     })
   }
 
   /**
    * 获取文件
    * */
-  getFile(file: string): Promise<FileResponse>{
-    return this._fetch<FileResponse>('/vault/'+file,{
+  getFile(file: string): Promise<FileResponse | null>{
+    return this._fetch('/vault/'+file,{
       method: 'GET',
       headers:{
         Accept: AcceptType.json,
@@ -99,7 +102,7 @@ export default class Obsidian {
   }
 
   getFileBlob(file: string): Promise<Blob | null>{
-    return this._fetch<FileResponse>('/vault/'+file,{
+    return this._fetch('/vault/'+file,{
       method: 'GET',
     }).then(async function (res) {
       if(res.status === 200){
@@ -111,7 +114,7 @@ export default class Obsidian {
 
 
   listFiles(dir: string = ''):Promise<FilesResponse>{
-    return this._fetch<FilesResponse>('/vault/'+dir,{
+    return this._fetch('/vault/'+dir,{
       method: 'GET',
       headers:{
         Accept: AcceptType.json,
@@ -127,7 +130,7 @@ export default class Obsidian {
   appendFile(file: string,data:{
     data: string | any
   }){
-    return this._fetch<CommonResponse>('/vault/'+file,{
+    return this._fetch('/vault/'+file,{
       method: 'POST',
       body: data.data,
       headers:{
@@ -137,7 +140,7 @@ export default class Obsidian {
   }
 
   deleteFile(file: string){
-    return this._fetch<CommonResponse>('/vault/'+file,{
+    return this._fetch('/vault/'+file,{
       method: 'DELETE',
       headers:{
         Accept: AcceptType.json,

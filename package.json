@@ -9,7 +9,7 @@
     "prepare": "husky install",
     "dev": "yarn workspaces run dev",
     "start": "yarn workspace pagenote-web start",
-    "build": "yarn workspace @pagenote/obsidian run build && yarn install &&  yarn workspace pagenote-web run build",
+    "build": "yarn workspace @pagenote/obsidian run build && yarn install --scope=@pagenote/obsidian,pagenote-web &&  yarn workspace pagenote-web run build",
     "lint": "yarn workspaces run lint"
   },
   "engines": {
