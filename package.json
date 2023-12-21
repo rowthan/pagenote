@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "dev": "yarn workspaces run dev",
-    "build": "yarn workspaces run build",
+    "start": "yarn workspace pagenote-web start",
+    "build": "yarn workspace @pagenote/obsidian run build && yarn install &&  yarn workspace pagenote-web run build",
     "lint": "yarn workspaces run lint"
   },
   "engines": {
@@ -22,7 +23,6 @@
   ],
   "devDependencies": {
     "husky": "8.0.0",
-    "next": "^13.5.3",
     "typescript": "^5.3.3"
   },
   "license": "ISC"

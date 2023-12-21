@@ -24,7 +24,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
-    "@pagenote/obsidian": "0.1.0",
+    "@pagenote/obsidian": "^0.1.0",
     "@pagenote/shared": "1.14.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
@@ -113,6 +113,6 @@
     "react-router-dom": "^6.6.1",
     "sass": "^1.62.0",
     "tailwindcss": "^3.2.4",
-    "typescript": "4.8.4"
+    "typescript": "^5.3.3"
   }
 }

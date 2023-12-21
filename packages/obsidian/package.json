@@ -1,10 +1,10 @@
 {
   "name": "@pagenote/obsidian",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/obsidian.esm.js",
   "typings": "dist/index.d.ts",
-  "type": "module",
   "files": [
     "dist",
     "src"
@@ -39,7 +39,6 @@
     "trailingComma": "es5"
   },
   "author": "rowthan",
-  "module": "dist/obsidian.esm.js",
   "size-limit": [
     {
       "path": "dist/obsidian.cjs.production.min.js",
