@@ -24,6 +24,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
+    "@pagenote/obsidian": "0.1.0",
     "@pagenote/shared": "1.14.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
@@ -53,6 +54,7 @@
     "@tiptap/starter-kit": "2.1.11",
     "@vercel/analytics": "^1.0.1",
     "@vercel/speed-insights": "^1.0.0",
+    "canvas": "^2.11.2",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.3.2",
     "clsx": "^2.0.0",
@@ -61,6 +63,7 @@
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
     "dexie": "^3.2.3",
+    "handlebars": "^4.7.8",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
