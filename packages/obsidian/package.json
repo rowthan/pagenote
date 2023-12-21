@@ -13,6 +13,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "dev": "tsdx watch",
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",

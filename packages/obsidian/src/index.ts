@@ -22,6 +22,7 @@ export enum AcceptType {
   markdown = 'text/markdown',
   text = 'text/*',
   json = 'application/vnd.olrapi.note+json',
+  jpeg = 'image/jpeg',
   any = '*/*'
 }
 
@@ -45,7 +46,7 @@ export default class Obsidian {
 
   _fetch<T>(path: string, params:{
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    headers: {
+    headers?: {
       Accept:  AcceptType,
       'Content-Type'?: ContentType,
     },
@@ -55,7 +56,7 @@ export default class Obsidian {
       method: params.method,
       // @ts-ignore
       headers: {
-        ...params.headers,
+        ...(params.headers || {}),
         'Authorization': `Bearer ${this.token}`,
       },
       body: params.body,
@@ -77,13 +78,8 @@ export default class Obsidian {
         Accept: AcceptType.json,
         // 'Content-Type': isPlainText ? ContentType.markdown : ContentType.formData,
       }
-    }).then(async function (res) {
-      if(res.status === 204){
-        return{
-        }
-      }else{
-        return await res.json();
-      }
+    }).then(function (res) {
+      return res.json();
     })
   }
 
@@ -95,9 +91,21 @@ export default class Obsidian {
       method: 'GET',
       headers:{
         Accept: AcceptType.json,
+        'Content-Type': ContentType.json,
       }
+    }).then(function (res) {
+      return res.json();
+    })
+  }
+
+  getFileBlob(file: string): Promise<Blob | null>{
+    return this._fetch<FileResponse>('/vault/'+file,{
+      method: 'GET',
     }).then(async function (res) {
-      return await res.json();
+      if(res.status === 200){
+        return res.blob()
+      }
+      return null;
     })
   }
 
