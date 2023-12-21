@@ -57,7 +57,7 @@ export default class Obsidian {
 
   _fetch<T>(path: string, params:{
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    headers: {
+    headers?: {
       Accept:  AcceptType,
       'Content-Type'?: ContentType,
     },
