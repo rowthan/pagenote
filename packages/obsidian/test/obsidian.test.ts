@@ -28,8 +28,11 @@ describe('Content Upload Test', () => {
     expect(response.errorCode).toBe(undefined);
 
     const result = await obsidian.getFile(file)
-    expect(result.errorCode).toBe(undefined);
-    expect(result.content).toBe(content);
+    if(result?.errorCode){
+      console.error(result.message);
+    }
+    expect(result?.errorCode).toBe(undefined);
+    expect(result?.content).toBe(content);
 
 
     const listResult = await obsidian.listFiles()
