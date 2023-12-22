@@ -1,5 +1,5 @@
 import React, {FC, PropsWithChildren} from "react";
-import withComponentStyles from "pagenote/HOC";
+import withComponentStyles from "../HOC";
 import '../tailwind.css'
 interface Props {
     css?: string

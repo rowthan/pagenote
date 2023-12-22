@@ -3,8 +3,8 @@
 This is an example component.
 
 ```jsx
-import { Popup } from 'pagenote';
-import 'pagenote/index.wc.ts'
+import { Popup } from '@pagenote/web-component';
+import '@pagenote/web-component/index.wc.ts'
 
 export default () => <div>
   <Popup left={500} top={400}>popup</Popup>
