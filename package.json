@@ -5,12 +5,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "lerna run test",
     "prepare": "husky install",
     "dev": "yarn workspaces run dev",
     "start": "yarn workspace pagenote-web start",
     "build": "lerna run --scope=pagenote-web --include-dependencies build",
     "build-web": "lerna run --scope=pagenote-web --include-dependencies build",
+    "build-packages": "lerna run --scope='@pagenote/*' --include-dependencies build",
     "lint": "yarn workspaces run lint",
     "publish": "lerna publish from-git --no-private"
   },

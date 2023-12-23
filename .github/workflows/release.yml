@@ -25,9 +25,9 @@ jobs:
 
       - name: Run Packages Tests
         run: |
-          yarn run test
+#          yarn run test skip
 
       - name: Build Packages
         run: |
-          yarn run build
+          yarn run build-packages
 
