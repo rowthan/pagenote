@@ -22,7 +22,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.cache/yarn
+          path: ~/.yarn/cache
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -58,7 +58,7 @@ jobs:
 
       - name: Lerna Version
         run: |
-          npx lerna version --no-private patch --yes
+          npx lerna version --no-push --no-private patch --yes
 
       - name: Set npm registry and token
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
@@ -66,6 +66,7 @@ jobs:
 
       - name: Publish to NPM
         run: |
+          echo "NPM token: $NODE_AUTH_TOKEN"
           npx lerna publish from-git --yes --conventional-commits --conventional-graduate
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
