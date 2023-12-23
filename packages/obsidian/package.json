@@ -50,18 +50,20 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^11.0.1",
     "@babel/preset-env": "^7.23.6",
+    "@size-limit/preset-small-lib": "^11.0.1",
     "babel-jest": "^29.7.0",
     "husky": "^8.0.3",
+    "jest-cli": "^29.7.0",
+    "mock-fs": "^5.2.0",
     "size-limit": "^11.0.1",
+    "ts-jest": "^29.1.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "axios": "^1.6.2",
-    "base64-js": "^1.5.1",
-    "ts-jest": "^29.1.1"
+    "base64-js": "^1.5.1"
   }
 }
