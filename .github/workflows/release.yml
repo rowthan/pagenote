@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -53,11 +53,11 @@ jobs:
           npx lerna version --no-push --no-private patch --yes
 
       - name: Set npm registry and token
-        run: echo //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN > ~/.npmrc
+        run: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc
 
 
       - name: Publish to NPM
         run: |
           npx lerna publish from-git --yes --conventional-commits --conventional-graduate
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
