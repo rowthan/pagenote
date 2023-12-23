@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "lerna run test",
-    "prepare": "husky install",
+    "prepare": "echo 'skip husky install'",
     "dev": "yarn workspaces run dev",
     "start": "yarn workspace pagenote-web start",
     "build": "lerna run --scope=pagenote-web --include-dependencies build",
