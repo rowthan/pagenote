@@ -23,11 +23,11 @@ jobs:
         run: |
           yarn install
 
-      - name: Run Tests
+      - name: Run Packages Tests
         run: |
           yarn run test
 
-      - name: Build
+      - name: Build Packages
         run: |
           yarn run build
 
