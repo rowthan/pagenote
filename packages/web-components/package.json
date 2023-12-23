@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@pagenote/web-component",
   "version": "0.0.12",
   "description": "A react library developed with dumi",
@@ -43,9 +44,6 @@
       "eslint --fix",
       "prettier --parser=typescript --write"
     ]
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
