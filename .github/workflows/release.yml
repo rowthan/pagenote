@@ -52,10 +52,6 @@ jobs:
         run: |
           npx lerna version --no-push --no-private patch --yes
 
-      - name: Set npm registry and token
-        run: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc
-
-
       - name: Publish to NPM
         run: |
           npx lerna publish from-git --yes --conventional-commits --conventional-graduate
