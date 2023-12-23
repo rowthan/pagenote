@@ -49,7 +49,7 @@ jobs:
 
       - name: Build Packages
         run: |
-          lerna run --scope='@pagenote/*' --include-dependencies build
+          npx lerna exec --scope='@pagenote/*' --include-dependencies yarn build
 
       - name: Set Git Identity
         run: |
