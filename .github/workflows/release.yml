@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout Repository
@@ -22,7 +23,7 @@ jobs:
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -48,20 +49,7 @@ jobs:
 
       - name: Build Packages
         run: |
-          yarn run build-packages
-
-#  publish:
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#
-#      - name: Setup Node.js
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: '18.x'
+          lerna run --scope='@pagenote/*' --include-dependencies build
 
       - name: Set Git Identity
         run: |
@@ -70,14 +58,14 @@ jobs:
 
       - name: Lerna Version
         run: |
-          yarn run bump-version
+          npx lerna version --no-private patch --yes
 
       - name: Set npm registry and token
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > ~/.npmrc
 
 
       - name: Publish to NPM
         run: |
-          npx lerna publish from-git --yes
+          npx lerna publish from-git --yes --conventional-commits --conventional-graduate
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
