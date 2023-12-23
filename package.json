@@ -12,6 +12,7 @@
     "build": "lerna run --scope=pagenote-web --include-dependencies build",
     "build-web": "lerna run --scope=pagenote-web --include-dependencies build",
     "build-packages": "lerna run --scope='@pagenote/*' --include-dependencies build",
+    "bump-version": "npx lerna version --no-private patch --yes",
     "lint": "yarn workspaces run lint",
     "publish": "lerna publish from-git --no-private"
   },

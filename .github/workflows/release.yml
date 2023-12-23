@@ -46,7 +46,7 @@ jobs:
 
       - name: Lerna Version
         run: |
-          npx lerna version --yes
+          yarn run bump-version
 
       - name: Publish to NPM
         run: |
