@@ -31,3 +31,25 @@ jobs:
         run: |
           yarn run build-packages
 
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Lerna Version
+        run: |
+          npx lerna version --yes
+
+      - name: Publish to NPM
+        run: |
+          npx lerna publish from-git
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
