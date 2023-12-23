@@ -35,6 +35,8 @@ jobs:
       - name: Debug NPM_TOKEN
         run: |
           echo "NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}"
+          echo "NPM_TOKEN_EMPTY: ${{ secrets.NPM_TOKEN_EMPTY }}"
+
 
       - name: Yarn install
         run: yarn install
@@ -60,6 +62,8 @@ jobs:
         run: |
           npx lerna version --no-push --no-private patch --yes
 
+      - name: Create .npmrc
+        run: echo 'registry=https://registry.npmjs.org' > .npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
       - name: Publish to NPM
         run: |
           npx lerna publish from-git --yes --conventional-commits --conventional-graduate
