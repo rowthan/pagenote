@@ -5,6 +5,7 @@
   "main": "dist/pagenote.js",
   "module": "es",
   "scripts": {
+    "prepare": "build-sdk",
     "build-sdk": "webpack --config webpack.prod.js && npm run tsc",
     "build": "echo 'skip'",
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
