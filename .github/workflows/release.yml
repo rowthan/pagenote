@@ -44,6 +44,11 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Set Git Identity
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Lerna Version
         run: |
           yarn run bump-version
