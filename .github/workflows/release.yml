@@ -32,6 +32,10 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
+      - name: Debug NPM_TOKEN
+        run: |
+          echo "NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}"
+
       - name: Yarn install
         run: yarn install
         env:
@@ -44,6 +48,8 @@ jobs:
       - name: Build Packages
         run: |
           npx lerna exec --scope='@pagenote/*' --include-dependencies yarn build
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Set Git Identity
         run: |
