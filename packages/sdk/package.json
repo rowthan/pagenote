@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@pagenote/sdk",
   "version": "5.4.18",
   "description": "highlight and annotation the webpage",

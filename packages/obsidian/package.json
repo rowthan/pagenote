@@ -1,11 +1,13 @@
 {
   "name": "@pagenote/obsidian",
-  "private": true,
   "version": "0.1.2",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/obsidiant.esm.js",
   "typings": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "src"

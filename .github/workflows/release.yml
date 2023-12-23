@@ -49,7 +49,7 @@ jobs:
 
       - name: Build Packages
         run: |
-          npx lerna exec --scope='@pagenote/*' --include-dependencies yarn build
+          npx lerna exec --scope='@pagenote/*' --no-private --include-dependencies yarn build
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
