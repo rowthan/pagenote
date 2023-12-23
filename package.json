@@ -24,8 +24,10 @@
   ],
   "devDependencies": {
     "husky": "8.0.0",
-    "lerna": "^8.0.1",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "lerna": "^8.0.1"
   },
   "license": "ISC"
 }
