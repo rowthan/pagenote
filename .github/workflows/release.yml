@@ -58,14 +58,14 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Lerna Version
-        run: |
-          npx lerna version --no-push --no-private patch --yes
-
-      - name: Create .npmrc
-        run: echo 'registry=https://registry.npmjs.org' > .npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc
-      - name: Publish to NPM
-        run: |
-          npx lerna publish from-git --yes --conventional-commits --conventional-graduate
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+#      - name: Lerna Version
+#        run: |
+#          npx lerna version --no-push --no-private patch --yes
+#
+#      - name: Create .npmrc
+#        run: echo 'registry=https://registry.npmjs.org' > .npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc
+#      - name: Publish to NPM
+#        run: |
+#          npx lerna publish from-git --yes --conventional-commits --conventional-graduate
+#        env:
+#          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
