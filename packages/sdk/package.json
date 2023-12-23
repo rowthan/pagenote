@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/sdk",
-  "version": "5.4.15",
+  "version": "5.4.16",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "module": "es",
@@ -59,7 +59,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "@pagenote/shared": "^1.14.9",
+    "@pagenote/shared": "^1.14.10",
     "axios": "^0.27.2",
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",
