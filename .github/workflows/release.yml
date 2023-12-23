@@ -50,6 +50,6 @@ jobs:
 
       - name: Publish to NPM
         run: |
-          npx lerna publish from-git
+          npx lerna publish from-git --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
