@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.14.6",
+  "version": "1.14.7",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
