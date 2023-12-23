@@ -11,7 +11,6 @@
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json",
-    "prepublish": "npm run tsc",
     "lint": "echo \"skip\""
   },
   "keywords": [
