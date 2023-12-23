@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/web-component",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A react library developed with dumi",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
