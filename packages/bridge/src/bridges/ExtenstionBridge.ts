@@ -1,18 +1,14 @@
 import type {
-  BaseMessageHeader,
-  BaseMessageRequest,
-  BaseMessageResponse,
-  Communication,
-  CommunicationOption,
-  IBaseSendResponse,
-  IExtenstionMessageListener,
-  IExtenstionMessageProxy,
+    BaseMessageHeader,
+    BaseMessageRequest,
+    BaseMessageResponse,
+    Communication,
+    CommunicationOption,
+    IBaseSendResponse,
+    IExtenstionMessageListener,
+    IExtenstionMessageProxy,
 } from "../base";
-import {
-  DEFAULT_TIMEOUT,
-  RESPONSE_STATUS_CODE,
-  STATUS,
-} from '../base'
+import {DEFAULT_TIMEOUT, RESPONSE_STATUS_CODE, STATUS,} from '../base'
 import {sumSizeMB} from "../utils";
 
 type ExtensionOption = CommunicationOption & {
@@ -125,9 +121,9 @@ export default class ExtensionMessage implements Communication<any>{
       /**
        * 分片请求，等待数据接收完毕，重新组装后调用
        * */
-      if(data===undefined && carrier?.segments?.totalSegments > 0){
-        tempSegmentsMap[type] = tempSegmentsMap[type] || new Array(carrier?.segments.totalSegments).fill(null)
-        tempSegmentsMap[type][carrier?.segments.currentSegment] = carrier?.segments.segmentString;
+      if(data===undefined && (carrier?.segments?.totalSegments || 0) > 0){
+        tempSegmentsMap[type] = tempSegmentsMap[type] || new Array(carrier?.segments?.totalSegments).fill(null)
+        tempSegmentsMap[type][carrier?.segments?.currentSegment|| 0] = carrier?.segments?.segmentString || '';
 
         const isFullSegments = tempSegmentsMap[type].every(function (item) {
           return item!==null;
@@ -249,14 +245,15 @@ export default class ExtensionMessage implements Communication<any>{
     const request: BaseMessageRequest= {
       type: type,
       data: data,
+      //@ts-ignore
       header:{
-        ...header,
+        ...(header || {}),
         targetClientId: header?.targetClientId || this.option.targetClientId || '',
         originClientId: header?.originClientId || this.clientId,
         senderClientId: this.clientId,
         isResponse: false,
         keepConnection: header?.keepConnection,
-        withCatch: header.withCatch,
+        withCatch: header?.withCatch,
       }
     }
 
@@ -265,12 +262,13 @@ export default class ExtensionMessage implements Communication<any>{
     const promise: Promise<BaseMessageResponse<T>> = new Promise(function (resolve,reject) {
       resolveFun = resolve;
       /**如果忽略异常，则直接通过 resolve 响应*/
-      rejectFun = header.withCatch ? reject : resolve;
+      rejectFun = header?.withCatch ? reject : resolve;
     })
 
     const timeout = header?.timeout || this.option.timeout;
     let timer = setTimeout(function () {
       rejectFun({
+        //@ts-ignore
         data: undefined,
         success: false,
         status: RESPONSE_STATUS_CODE.TIMEOUT,
@@ -302,6 +300,7 @@ export default class ExtensionMessage implements Communication<any>{
               status: RESPONSE_STATUS_CODE.UN_REACHED,
               statusText: 'did not find active tab',
               success: false,
+              //@ts-ignore todo
               data: undefined
             })
           }
@@ -309,12 +308,15 @@ export default class ExtensionMessage implements Communication<any>{
       }
     } else{
       if(chrome && chrome.runtime){
+        //@ts-ignore
         sendMessageByExtension(undefined,request,requestCallback);
       }else{
+        //@ts-ignore
         rejectFun({
           status: RESPONSE_STATUS_CODE.UN_REACHED,
           statusText: 'Extension is unavailable. refresh please',
           success: false,
+          //@ts-ignore
           data: undefined
         })
         console.error("connect extension fail")

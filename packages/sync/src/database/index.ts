@@ -1,1 +1,3 @@
-export * from './syncStrategy'
+import SyncStrategy from './syncStrategy'
+
+export default SyncStrategy

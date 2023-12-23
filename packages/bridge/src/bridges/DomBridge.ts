@@ -3,7 +3,8 @@ import {
     BaseMessageRequest,
     BaseMessageResponse,
     Communication,
-    CommunicationOption, DEFAULT_TIMEOUT,
+    CommunicationOption,
+    DEFAULT_TIMEOUT,
     IBaseMessageListener,
     IBaseMessageProxy,
     RESPONSE_STATUS_CODE,
@@ -180,6 +181,7 @@ export default class DomBridge implements Communication<any>{
                 originClientId: this.clientId,
                 targetClientId: '',
                 isResponse: false,
+                //@ts-ignore
                 timeout: header?.timeout || DEFAULT_TIMEOUT
             }
         })

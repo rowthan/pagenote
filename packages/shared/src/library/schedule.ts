@@ -95,8 +95,10 @@ class Schedule {
     public history: TaskMeta[]
     public taskQuen: TaskQuenItem[]
     public status: SCHEDULE_STATUS
+    // @ts-ignore todo
     public taskIdIndex: number
     public taskFunMap: Record<string, Task> = {}
+    // @ts-ignore todo
     public nextTimer: NodeJS.Timeout
     private pauseBefore: number // 在此时间前暂停执行
 
@@ -105,8 +107,9 @@ class Schedule {
         this.retryTimeout = Math.max(
             1,
             Math.min(
-                frequency.duration / frequency.limit,
-                frequency.parallelDuration / frequency.parallel
+                frequency.duration / frequency.limit,            // @ts-ignore todo
+
+            frequency.parallelDuration / frequency.parallel
             )
         )
         this.progressListener = []
@@ -120,7 +123,8 @@ class Schedule {
     // 添加方法
     addFun<T>(fun: Task, options: TaskOption): Promise<T> {
         const {rightNow, block, taskId} = options || {}
-        if (typeof fun !== 'function') {
+        if (typeof fun !== 'function') {            // @ts-ignore todo
+
             return Promise.resolve(null)
         }
         // 根据 taskId 判断是否已经在队列中，避免重复请求
@@ -136,6 +140,8 @@ class Schedule {
         }
 
         // 不存在老方法时，追加task
+        // @ts-ignore todo
+
         if (this.taskFunMap[taskId] === undefined) {
             // 进入运行队列
             if (rightNow) {
@@ -146,6 +152,8 @@ class Schedule {
         }
         // id 递增 避免重复taskid
         this.taskIdIndex++
+
+        // @ts-ignore todo
 
         this.taskFunMap[taskId] = fun
 
@@ -164,6 +172,8 @@ class Schedule {
         if (this.taskQuen.length === 0) {
             this.status = SCHEDULE_STATUS.no_task
             clearTimeout(this.nextTimer)
+            // @ts-ignore todo
+
             this.nextTimer = null
             return false
         }
@@ -190,6 +200,8 @@ class Schedule {
             : SCHEDULE_STATUS.pause
         if (releaseResult) {
             const newHistory: TaskMeta = {
+                // @ts-ignore todo
+
                 taskId: currentTask.options.taskId,
                 startTime: new Date().getTime(),
                 endTime: 0,
@@ -199,6 +211,8 @@ class Schedule {
 
             let currentTaskResult
             try {
+                // @ts-ignore todo
+
                 currentTaskResult = this.taskFunMap[currentTask.options.taskId]()
             } catch (e) {
                 // 即便执行异常 也释放任务，由外部自行决定是否重试
@@ -206,16 +220,24 @@ class Schedule {
                     '传入方法执行错误，不会重试。请在外部 catch 后检查是否需要重新加入任务列表',
                     currentTask
                 )
+                // @ts-ignore todo
+
                 throw new Error(e)
             }
+            // @ts-ignore todo
+
             delete this.taskFunMap[currentTask.options.taskId]
 
             // 释放listener，避免内存溢出
+            // @ts-ignore todo
+
             const listen = this.listener[currentTask.options.taskId]
             typeof listen === 'function' && listen(currentTaskResult)
             this.progressListener.forEach(function (fn) {
                 fn(currentTask.options.taskId)
             })
+            // @ts-ignore todo
+
             delete this.listener[currentTask.options.taskId]
 
             newHistory.endTime = new Date().getTime()

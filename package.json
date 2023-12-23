@@ -9,7 +9,8 @@
     "prepare": "husky install",
     "dev": "yarn workspaces run dev",
     "start": "yarn workspace pagenote-web start",
-    "build": "yarn workspace @pagenote/obsidian run build && yarn install &&  yarn workspace pagenote-web run build",
+    "build": "lerna run build",
+    "build-web": "yarn workspace pagenote-web build",
     "lint": "yarn workspaces run lint"
   },
   "engines": {
@@ -23,6 +24,7 @@
   ],
   "devDependencies": {
     "husky": "8.0.0",
+    "lerna": "^8.0.1",
     "typescript": "^5.3.3"
   },
   "license": "ISC"

@@ -1,4 +1,5 @@
 {
+  "name": "@pagenote/sync",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -32,7 +33,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "sync",
   "author": "rowthan",
   "module": "dist/sync.esm.js",
   "size-limit": [
