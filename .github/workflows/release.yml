@@ -33,7 +33,7 @@ jobs:
             ~/.cache
             ~/node_modules
           key: ${{ runner.os }}-dependencies-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-dependencies-
 
       - name: Debug NPM_TOKEN
         run: |
