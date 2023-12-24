@@ -1,6 +1,6 @@
 {
   "name": "pagenote-web",
-  "version": "0.26.7-alpha.0",
+  "version": "0.26.8-alpha.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
-    "@pagenote/obsidian": "^0.1.3-alpha.0",
+    "@pagenote/obsidian": "^0.1.4-alpha.0",
     "@pagenote/shared": "1.14.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
