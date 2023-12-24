@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import extApi from '@pagenote/shared/lib/pagenote-api'
-import { TableSchemaBasicFields } from '@pagenote/shared/lib/extApi'
+import {TableSchemaBasicFields} from '@pagenote/shared/lib/extApi'
 
 export default function useOfflineHtml() {
   // TODO key 发生变化后， 缓存仍然存在，没有被销毁，有内存泄漏的问题
@@ -31,7 +31,8 @@ export default function useOfflineHtml() {
         }
       )
       .then(function (res) {
-        return res.data
+        return res.data as unknown as
+            Record<string, TableSchemaBasicFields & { name?: string }[]>
       })
   }
 
