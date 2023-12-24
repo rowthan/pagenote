@@ -56,7 +56,7 @@ jobs:
 
       - name: Lerna Version
         run: |
-          npx lerna version --preid beta
+          npx lerna version prepatch --yes
       #          npx lerna version --no-push --no-private patch --yes
 
       - name: Create .npmrc
