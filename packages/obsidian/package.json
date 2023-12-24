@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/obsidiant.esm.js",
+  "module": "dist/obsidian.esm.js",
   "typings": "dist/index.d.ts",
   "type": "module",
   "publishConfig": {
