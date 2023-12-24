@@ -76,6 +76,7 @@ const search:ActionConfig = {
         ],
         description: '点击使用搜索引擎搜索选中内容，如 百度、翻译等',
         clickScript:function (e,target,API,params) {
+            // @ts-ignore todo
             const keyword = encodeURIComponent(target.text);
             const link = params.engine.replace('${keyword}',keyword);
             if(params.new_tab==='1'){

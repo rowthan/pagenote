@@ -1,9 +1,4 @@
-import type {
-    BackupData,
-    Step,
-    WebPage,
-    ContentType,
-} from "./@types/data";
+import type {BackupData, ContentType, Step, WebPage,} from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
     BaseMessageHeader,
@@ -15,7 +10,24 @@ import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";
 import type {BrowserType} from "./utils/browser";
-import {AbstractInfo} from "./library/syncStrategy";
+
+type AbstractInfo = {
+    id: string // 唯一标识，本地、远程联系的唯一ID
+
+    /**本地读写基于的，操作ID*/
+    l_id?: string
+    /**远程读写基于的，操作ID，如文件系统的，文件名路径；数据库系统的 自动生成ID；notion 系统的 page ID*/
+    c_id?: string
+
+    /**1. 文件相关指标，文件指标相同的情况下，可以避免进一步比较文件内容是否相同**/
+    etag?: string // etag hash标识，
+    lastmod?: string // 文件的最后修改时间 GTM 格式
+
+    mtimeMs?: number // 文件系统的最后修改时间，单位 s
+
+    /**2. 数据相关指标*/
+    updateAt: number // 数据的最后更新时间
+}
 
 type ComputeRequestToBackground<Funs extends Record<string, IBaseMessageListener<any, any, any>>> = {
     [fun in keyof Funs]: {
@@ -54,7 +66,7 @@ export type SyncStat = {
 
 
 export namespace lightpage {
-    import OfflineHTML = html.OfflineHTML;
+
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>

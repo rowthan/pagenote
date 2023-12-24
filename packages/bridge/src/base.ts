@@ -11,7 +11,7 @@ export type DataSegment = {
 }
 
 // TODO clientID 统一更名为 bridgeId
-type BaseMessageHeader = {
+export interface BaseMessageHeader {
     originClientId: string, // 源头客户端，用于判断这个请求最初的发起端；可用于服务端响应后，判断是否由自身发起的。
     senderClientId: string, // 当前请求源
     targetClientId: string, // 目标寻址源
@@ -203,7 +203,6 @@ export type {
     IBaseMessageProxy,
     IBaseSendResponse,
 
-    BaseMessageHeader,
     BaseMessageResponse,
     BaseMessageRequest,
 

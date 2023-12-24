@@ -1,5 +1,5 @@
 import React, {FC, PropsWithChildren, ReactNode, useEffect, useState} from "react";
-import classNames from "classNames";
+import classNames from "classnames";
 
 interface Props {
     css?: string

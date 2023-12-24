@@ -13,7 +13,9 @@ const copy:ActionConfig = {
         description: '点击此按钮。将选取内容拷贝至剪切板，并记录在历史中，过期后自动删除',
         formConfig:[],
         clickScript: function (e,target,API) {
+            // @ts-ignore todo
             API.methods.addToClipboards(target.text);
+            // @ts-ignore todo
             API.methods.writeTextToClipboard(target.text);
             API.methods.notification({
                 message: '已拷贝至剪切板'

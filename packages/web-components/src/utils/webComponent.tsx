@@ -4,9 +4,13 @@ export function isUsedAsWebComponent(props: PropsWithChildren<any>) {
     return props.container && props.container.nodeName === '#document-fragment'
 }
 
+/**获取用于节点渲染的 children*/ 
 export function getChildren(props: PropsWithChildren<any>) {
-    return isUsedAsWebComponent(props) ? <slot></slot> : props.children;
+    return isUsedAsWebComponent(props) ? (
+        <slot></slot>
+    ) : props.children;
 }
+
 
 export function getComponentInnerText(props: PropsWithChildren<any>) {
     return isUsedAsWebComponent(props)? props.container.host.textContent : props.children?.toString();
