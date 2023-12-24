@@ -3,7 +3,7 @@ import {BackupData, BackupVersion} from "../@types/data";
 
 export const makeExportString = function (backupData:BackupData):string{
     // version4 不做encode处理，避免增加文件体积
-    if(backupData.version === BackupVersion.version4 || backupData.version > BackupVersion.version4){
+    if(backupData.version === BackupVersion.version4 || (backupData.version || BackupVersion.version1) > BackupVersion.version4){
         return JSON.stringify(backupData)
     }
 

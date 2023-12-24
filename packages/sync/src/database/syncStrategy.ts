@@ -544,6 +544,7 @@ export default class SyncStrategy<T> {
             console.error('resolve error:', e)
             taskDetail.state = TaskState.networkError
         }
+        return
     }
 
     async _resolveTaskMap(task: SyncTaskActionsMap, resolveId?: string):Promise<SyncTaskActionsMap> {

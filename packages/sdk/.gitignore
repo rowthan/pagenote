@@ -70,3 +70,4 @@ extenstion/package-lock.json
 extenstion/dist/scripts
 **/package-lock.json
 *.origin.zip
+dist

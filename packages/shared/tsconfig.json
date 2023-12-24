@@ -1,14 +1,18 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
-        "module": "commonJs",
         "target": "es5",
+        "module": "ES2015",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+
         "allowJs": true,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "declaration": true,
-        "rootDir": "src",
-        "outDir": "lib",
         "lib": [
             "dom",
             "es5",
@@ -19,9 +23,5 @@
     },
     "include": [
         "src/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules/**/*.ts",
-        "test/**/*.spec.ts"
     ]
 }
