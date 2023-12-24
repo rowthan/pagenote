@@ -56,7 +56,8 @@ jobs:
 
       - name: Lerna Version
         run: |
-          npx lerna version --no-push --no-private patch --yes
+          npx lerna version --preid beta
+      #          npx lerna version --no-push --no-private patch --yes
 
       - name: Create .npmrc
         run: echo 'registry=https://registry.npmjs.org' > ~/.npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc

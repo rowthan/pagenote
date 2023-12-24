@@ -5,12 +5,12 @@
   "main": "dist/index.js",
   "module": "dist/obsidiant.esm.js",
   "typings": "dist/index.d.ts",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=18"
