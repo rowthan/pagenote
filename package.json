@@ -5,10 +5,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
+    "test": "yarn workspaces run test",
+    "prepare": "echo 'skip husky install'",
     "dev": "yarn workspaces run dev",
-    "build": "yarn workspaces run build",
+    "dev-web": "lerna run --scope=pagenote-web --include-dependencies dev",
+    "build": "lerna run --scope=pagenote-web --include-dependencies build",
     "lint": "yarn workspaces run lint"
   },
   "engines": {
@@ -21,8 +22,8 @@
     "apps/*"
   ],
   "devDependencies": {
+    "lerna": "^8.0.1",
     "husky": "8.0.0",
-    "next": "^13.5.3",
     "typescript": "^5.3.3"
   },
   "license": "ISC"
