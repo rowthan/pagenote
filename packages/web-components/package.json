@@ -1,6 +1,7 @@
 {
-  "name": "pagenote",
-  "version": "0.0.1",
+  "private": true,
+  "name": "@pagenote/web-component",
+  "version": "0.0.14-alpha.0",
   "description": "A react library developed with dumi",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -44,9 +45,6 @@
       "prettier --parser=typescript --write"
     ]
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "peerDependencies": {
     "react": ">=16.9.0",
     "react-dom": ">=16.9.0"
@@ -59,9 +57,9 @@
     "@umijs/lint": "^4.0.88",
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.8.1",
-    "dumi": "^2.2.14",
+    "dumi": "^2.2.16",
     "eslint": "^8.54.0",
-    "father": "^4.3.7",
+    "father": "^4.3.8",
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
     "node-sass": "^9.0.0",

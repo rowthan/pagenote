@@ -1,4 +1,4 @@
-import { colord } from "colord";
+import {colord} from "colord";
 
 export enum LightStatus {
     un_light=0,
@@ -42,6 +42,7 @@ export function getDefaultBrush(brush: Partial<Brush>={}):Brush {
         shortcut: brush.shortcut || '',
         label: brush.label || '标记',
         level: brush.level || 1,
+        // @ts-ignore todo
         color: color,
         lightType: brush.lightType || LightType.highlight,
         defaultStatus: brush.defaultStatus || LightStatus.full_light

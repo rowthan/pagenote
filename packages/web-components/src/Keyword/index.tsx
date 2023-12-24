@@ -1,13 +1,13 @@
 import React, {FC, PropsWithChildren, useEffect, useRef, useState} from "react";
-import withComponentStyles from "pagenote/HOC";
-import {calculateOptimalPosition} from "pagenote/utils/position";
+import withComponentStyles from "../HOC";
+import {calculateOptimalPosition} from "../utils/position";
 import {getWordInfo} from "../service/request";
-import classNames from 'classNames';
-import {onFocusChange} from "pagenote/utils/focus";
-import Popup from "pagenote/Popup";
-import {getChildren, getComponentInnerText} from "pagenote/utils/webComponent";
-import KeywordCard from "pagenote/Card/KeywordCard";
-import Markdown from "pagenote/Markdown";
+import classNames from 'classnames';
+import {onFocusChange} from "../utils/focus";
+import Popup from "../Popup";
+import {getComponentInnerText} from "../utils/webComponent";
+import KeywordCard from "../Card/KeywordCard";
+import Markdown from "../Markdown";
 /**react组件模式的 css 引入，产物将以单独的文件形式输出 sideEffect*/
 import '../tailwind.css'
 import './index.scss'
@@ -81,7 +81,8 @@ const Keyword:FC<PropsWithChildren<{container?: Document}>> = (props) => {
                 'loaded': state === LoadState.loaded,
                 'fail': state === LoadState.fail
               })}>
-            {getChildren(props)}
+            {/* web component 模式下，不需要保留原 html 节点，原节点用于兜底（如离线化） */}
+            {props.children || keyword}
         </span>
 
         <div ref={popupEl}>

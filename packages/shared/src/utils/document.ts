@@ -11,7 +11,7 @@ function getWebTitle():string {
 
 function getWebDescription():string {
     const title = document.querySelector('meta[name=description]');
-    return title ? title.getAttribute('content') : ''
+    return title ? title.getAttribute('content') || '' : ''
 }
 
 export function getWebKeywords() {

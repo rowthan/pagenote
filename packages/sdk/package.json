@@ -1,16 +1,17 @@
 {
+  "private": true,
   "name": "@pagenote/sdk",
-  "version": "5.4.7",
+  "version": "5.4.20-alpha.0",
   "description": "highlight and annotation the webpage",
   "main": "dist/pagenote.js",
   "module": "es",
   "scripts": {
+    "prepare": "echo 'skip prepare'",
     "build-sdk": "webpack --config webpack.prod.js && npm run tsc",
     "build": "echo 'skip'",
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json",
-    "prepublish": "npm run tsc",
     "lint": "echo \"skip\""
   },
   "keywords": [
@@ -59,8 +60,8 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "@pagenote/shared": "^1.3.16",
-    "axios": "^1.6.0",
+    "@pagenote/shared": "^1.14.14-alpha.0",
+    "axios": "^0.27.2",
     "bigpicture": "^2.5.3",
     "canvas2image": "^1.0.5",
     "draggable": "^4.2.0",
