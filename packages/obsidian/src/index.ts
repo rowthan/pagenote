@@ -1,3 +1,4 @@
+export * from './util'
 interface CommonResponse {
   errorCode?: number,
   message?: string,
