@@ -30,7 +30,7 @@ function createPortKey(target:ServerInfo) {
 
 class ImMessage {
     readonly option: PortOption;
-    connectedPorts: Record<string, Port>
+    connectedPorts: Record<string, Port> = {}
 
     constructor(option:PortOption) {
         this.option = option;
@@ -48,7 +48,7 @@ class ImMessage {
                 that.connectedPorts[port.name] = port;
                 that.option?.onConnect(port.name,port);
                 port.onDisconnect.addListener(function () {
-                    that.connectedPorts[port.name] = undefined
+                    delete that.connectedPorts[port.name]
                     that.option?.onDisConnect(port.name,port);
                 });
                 if(option.listener){
@@ -77,7 +77,7 @@ class ImMessage {
             ...message,
             from: this.option.tabId+'',
         }
-        const path = target ? createPortKey(target) : null
+        const path = target ? createPortKey(target) : ''
 
         for(let i in this.connectedPorts){
             if(i.indexOf(path)>-1 || path === null){

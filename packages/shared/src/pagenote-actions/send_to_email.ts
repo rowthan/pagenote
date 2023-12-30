@@ -11,6 +11,7 @@ const send_to_email:ActionConfig = {
         icon: PREDEFINED_ICON.email,
         clickScript: function (e,target,API,params){
             const subject = encodeURIComponent("[PAGENOTE摘录]"+target.text);
+            // @ts-ignore todo
             const body = encodeURIComponent(target.pre+target.text+target.suffix);
             const mailTo = "mailto:"+params.email+"?cc=pagenote@126.com&bcc=&subject="+subject+"&body="+body;
             const a = document.createElement('a');

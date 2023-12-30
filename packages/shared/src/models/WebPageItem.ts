@@ -35,10 +35,19 @@ class WebPageItem implements IWebPage {
         // 数据兼容处理，将二级数据，迁移至一级
         if(webPage.version !== DataVersion.version4){
             this.data.version = DataVersion.version4;
+            // @ts-ignore todo
+
             this.data.key = this.data.key || webPage.key || webPage.url;
+            // @ts-ignore todo
+
             this.data.url = this.data.url || webPage.url;
+            // @ts-ignore todo
+
             this.data.customTitle = this.data.customTitle || webPage.customTitle || webPage.title;
+            // @ts-ignore todo
+
             this.data.description = this.data.description || webPage.description;
+            // @ts-ignore todo
             this.data.sdkSetting = this.data.sdkSetting || webPage.sdkSetting || webPage.plainData.setting;
         }
 
@@ -104,10 +113,12 @@ class WebPageItem implements IWebPage {
                 return false;
             }
             const {plainData} = this.data;
+            // @ts-ignore todo
             if(!plainData.steps){
                 return false;
             }
-            if(plainData.steps && plainData.steps[0]){
+            // @ts-ignore todo
+            if(plainData.steps && plainData.steps[0]){            // @ts-ignore todo
                 const {bg} = plainData.steps[0];
                 if(!bg){
                     return false
@@ -122,6 +133,7 @@ class WebPageItem implements IWebPage {
 
     isEmpty() {
         const {plainData} = this.data;
+        // @ts-ignore todo
         return !this.isValid() || (plainData?.steps.length === 0 && plainData?.snapshots.length === 0)
     }
 

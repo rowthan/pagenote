@@ -1,9 +1,11 @@
 import {Step} from "../@types/data";
+
 const md5 = require('md5')
 
 
 /**suffix 区分不同用户对同一个位置标记*/
 export function createLightId(item: Step, suffix?: string) {
+    // @ts-ignore todo
     return md5(item.url + (item.wid || item.id) +  + item.text + suffix)
 }
 

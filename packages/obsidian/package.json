@@ -1,0 +1,67 @@
+{
+  "name": "@pagenote/obsidian",
+  "version": "0.1.5",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/obsidian.esm.js",
+  "typings": "dist/index.d.ts",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "tsdx watch",
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "author": "rowthan",
+  "size-limit": [
+    {
+      "path": "dist/obsidian.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/obsidian.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.6",
+    "@size-limit/preset-small-lib": "^11.0.1",
+    "babel-jest": "^29.7.0",
+    "husky": "^8.0.3",
+    "jest-cli": "^29.7.0",
+    "mock-fs": "^5.2.0",
+    "size-limit": "^11.0.1",
+    "ts-jest": "^29.1.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  }
+}
