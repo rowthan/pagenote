@@ -22,6 +22,7 @@ import { SizeIcon } from '@radix-ui/react-icons'
 import { basePath } from '../../const/env'
 import useWhoAmi from '../../hooks/useWhoAmi'
 import Memo from '../editor/Memo'
+import {Button} from "../../@/components/ui/button";
 
 const ICONS = {
   ['path']: <CiLink />,
@@ -100,7 +101,7 @@ export default function PageMemo(props: Props) {
   }
 
   function afterUpdate(change: EditorChangeContent, origin: Partial<Note>) {
-    if (!change.textContent && origin && origin?.key) {
+    if (!change.textContent && change.htmlContent.length < 8 && origin && origin?.key) {
       removeMemo(origin.key).then(function () {
         mutate()
       })
@@ -152,9 +153,16 @@ export default function PageMemo(props: Props) {
   }
 
   const domain = getDomain(url, false)
-  const memos = data.length ? data : [createNewNote(url, 'path')]
+  const memos = data.length ? data : []
   return (
     <div className="mt-3  min-h-10 ">
+      {
+        memos.length === 0 && (
+            <Button variant={'outline'} className={'w-full'} onClick={()=>{createNewMemo('path')}}>
+              添加备忘录
+            </Button>
+        )
+      }
       {!isLoading && (
         <div>
           {memos.map((item, index) => {

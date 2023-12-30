@@ -26,7 +26,7 @@ const extensions = [
   }),
   Placeholder.configure({
     placeholder: () => {
-      return '留下关联备忘录'
+      return '留下备忘录。支持 markdown 语法'
     },
   }),
 ]
