@@ -27,6 +27,10 @@ var util = {
     })
   },
   putCache: function (request, resource) {
+    // 非 http 请求，不支持 cache
+    if(request.url.indexOf('https:') === -1){
+      return;
+    }
     caches.open(util.getCacheKey(request)).then((cache) => {
       cache.put(request, resource)
     })
