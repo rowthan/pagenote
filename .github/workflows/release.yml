@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
-      - 'feat*'
   pull_request:
     branches:
       - main
@@ -71,13 +69,13 @@ jobs:
       - name: Lerna dev Version
         if: github.ref =='refs/heads/dev'
         run: |
-          npx lerna version --no-private patch --yes
+          npx lerna version --loglevel debug --no-private patch --yes
 
       # 正式发布
       - name: Lerna main Version
         if: github.ref == 'refs/heads/main'
         run: |
-          npx lerna version --no-private minor --yes
+          npx lerna version --conventional-commits --no-private minor --yes
 
       - name: Create .npmrc
         run: echo 'registry=https://registry.npmjs.org' > ~/.npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc

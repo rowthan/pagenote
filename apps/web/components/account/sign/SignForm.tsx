@@ -5,8 +5,8 @@ import { authCodeToToken, requestValidate } from '../../../service/account'
 import useVersionValid from '../../../hooks/useVersionValid'
 import useWhoAmi from '../../../hooks/useWhoAmi'
 import 'react-awesome-button/dist/styles.css'
-import { Button } from '../../../@/components/ui/button'
-import { toast } from '../../../@/components/ui/use-toast'
+import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/use-toast'
 
 enum SubmitState {
   unset = 0,

@@ -24,12 +24,16 @@ export default function ImportAndExport(props: Props) {
     const reader = new FileReader()
     reader.onload = function () {
       if (typeof this.result === 'string') {
-        const backupData = resolveImportString(this.result)
-        if (backupData) {
-          setBackupData(backupData)
-          setImportState(true)
-        } else {
-          toast('解析备份文件失败', 'error')
+        try{
+          const backupData = resolveImportString(this.result)
+          if (backupData) {
+            setBackupData(backupData)
+            setImportState(true)
+          } else {
+            toast('解析备份文件失败', 'error')
+          }
+        }catch (e) {
+          toast('解析备份文件失败，请联系管理员', 'error')
         }
       } else {
         toast('解析失败')
