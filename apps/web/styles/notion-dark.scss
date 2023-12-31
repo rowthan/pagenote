@@ -1,5 +1,5 @@
 @media (prefers-color-scheme: dark) {
-  .notion-app.dark-mode {
+  .notion-app.dark-mode,.notion-app.light-mode {
     --fg-color: rgba(255, 255, 255, 0.9);
     --fg-color-0: var(--fg-color);
     --fg-color-1: var(--fg-color);

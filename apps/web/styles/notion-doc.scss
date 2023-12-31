@@ -1,9 +1,5 @@
 /**override default notion style*/
 
-.notion-app.light-mode, .notion-header {
-  background-color: transparent !important;
-}
-
 
 /**删除padding值，会导致网页都出现滚动条- 尽管网页内容并未超过视口。 todo pull a mr */
 .notion > * {
