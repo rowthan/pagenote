@@ -2,8 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, dev, feat*]
   pull_request:
     branches:
       - main
@@ -69,7 +68,7 @@ jobs:
       - name: Lerna dev Version
         if: github.ref =='refs/heads/dev'
         run: |
-          npx lerna version --loglevel debug --no-private patch --yes
+          npx lerna version --conventional-commits --loglevel debug --no-private patch --yes
 
       # 正式发布
       - name: Lerna main Version
