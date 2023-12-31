@@ -82,11 +82,13 @@ var util = {
  * **/
 self.addEventListener('install', function (e) {
   console.log('Service Worker install')
-  // 加载新缓存
-  var cacheOpenPromise = caches.open(preCacheName).then(function (cache) {
-    return cache.addAll(preCacheFiles)
-  })
-  e.waitUntil(cacheOpenPromise)
+  if(preCacheFiles.length){
+    // 加载新缓存
+    var cacheOpenPromise = caches.open(preCacheName).then(function (cache) {
+      return cache.addAll(preCacheFiles)
+    })
+    e.waitUntil(cacheOpenPromise)
+  }
 
   self.skipWaiting()
 })
