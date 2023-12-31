@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BackupData, BackupVersion } from '@pagenote/shared/lib/@types/data'
 import extApi from '@pagenote/shared/lib/pagenote-api'
-import { toast } from '../../../utils/toast'
+import { toast } from '@/components/ui/use-toast'
 import FilterCheckBox from './FilterCheckBox'
 import { Button } from '@/components/ui/button'
 
@@ -62,10 +62,15 @@ export default function ImportFilter(props: {
       .then(function (res) {
         console.log(res, '导入结果')
         if (res.success) {
-          toast('已成功导入')
+          toast({
+            title: '导入成功',
+          })
           props.onSuccess()
         } else {
-          toast(res.error || '导入失败')
+          toast({
+            title: '导入失败',
+            content: res.error,
+          })
         }
         setImportState(ImportState.unset)
       })

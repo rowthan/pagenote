@@ -35,11 +35,11 @@ export default function HelpAside(props: Props) {
         link: 'https://pagenote.cn/question',
         icon: <QuestionMarkCircledIcon className={'fill-current inline'} />,
       },
-      {
-        label: 'VIP',
-        link: 'https://pagenote.cn/pro',
-        icon: <RocketIcon className={'fill-current inline'} />,
-      },
+      // {
+      //   label: 'VIP',
+      //   link: 'https://pagenote.cn/pro',
+      //   icon: <RocketIcon className={'fill-current inline'} />,
+      // },
     ]
     if (pathname.includes('/ext')) {
       asideList.push({
