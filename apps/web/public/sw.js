@@ -168,10 +168,7 @@ self.addEventListener('message', function (e) {
     case 'add_cache':
       if (e.data.values.length) {
         var key = e.data.key || commonCacheName
-        console.log('call add cache',e)
         caches.open(key).then(function (cache) {
-          console.log(cache,key)
-          return;
           return cache.addAll(e.data.values)
         })
       }
