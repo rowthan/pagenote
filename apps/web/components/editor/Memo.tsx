@@ -7,17 +7,20 @@ import extApi from "@pagenote/shared/lib/pagenote-api";
 import {Editor} from "@tiptap/react/src/Editor";
 import TipEditor from "./TipTap";
 import {debounce} from 'lodash'
+import {EditorContentProps} from "@tiptap/react/src/EditorContent";
+import dayjs from "dayjs";
 
 interface Props {
     children?: ReactNode;
     id: string
     className?: string
     afterUpdate?: (change: EditorChangeContent,origin: Partial<Note>) => void
+    afterBlur?:(editor?: Editor)=>void
 }
 
 
-export default function Memo(props: Props) {
-    const { id,className,children,afterUpdate } = props
+export default function Memo(props: Props  & Partial<EditorContentProps>) {
+    const { id,className,children,afterUpdate,afterBlur,...left } = props
     const { data, isLoading, mutate } = useTableQuery<Note>(Collection.note, {
         query: {
             key: id,
@@ -74,13 +77,21 @@ export default function Memo(props: Props) {
         return <div>loading...</div>
     }
     return (
-        <TipEditor
-            ref={ref}
-            className={className}
-            htmlContent={memo?.html || ''}
-            onUpdate={(data) => {
-                onUpdate(data)
-            }}
-        >{children}</TipEditor>
+        <div className={className}>
+            <aside className={'text-xs text-muted-foreground text-center my-1'}>
+                {dayjs(memo?.updateAt || Date.now()).format('YYYY-MM-DD HH:mm:ss')}
+            </aside>
+            <TipEditor
+                {...left}
+                ref={ref}
+                htmlContent={memo?.html || ''}
+                onUpdate={(data) => {
+                    onUpdate(data)
+                }}
+                onBlur={()=>{afterBlur && afterBlur(ref?.current?.editor)}}
+            >
+                {children}
+            </TipEditor>
+        </div>
     );
 }

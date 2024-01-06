@@ -44,26 +44,17 @@ export default function ExportFilter() {
         backupId: `${Date.now()}`,
         backup_at: Date.now(),
 
-        // todo delete
-        // dataType: [
-        //   BackupDataType.pages,
-        //   BackupDataType.light,
-        //   BackupDataType.snapshot,
-        //   BackupDataType.html,
-        //   //@ts-ignore
-        //   'note',
-        // ],
         extension_version: whoAmI?.version,
 
         // todo delete
-        lights: lights,
-        pages: pages,
-        notes: notes,
-        snapshots: snapshots,
-        htmlList: htmlList,
+        lights: [],
+        pages: [],
+        notes: [],
+        snapshots: [],
+        htmlList: [],
         size: 0,
         remark: '',
-        
+
         version: BackupVersion.version7,
         items: [
           {

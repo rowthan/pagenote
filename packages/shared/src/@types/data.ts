@@ -389,11 +389,14 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
+    // @deprecated
     backupId?: string
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
+    // @deprecated
     size?: number,
+    // @deprecated
     remark?: string
 
 

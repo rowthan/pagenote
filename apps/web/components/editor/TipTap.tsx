@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React, { ReactNode } from 'react'
+import {EditorContentProps} from "@tiptap/react/src/EditorContent";
 
 const extensions = [
   Link.configure(),
@@ -40,16 +41,17 @@ export interface EditorChangeContent {
 export interface EditorProps {
   htmlContent: string
   jsonContent?: Object
-  onUpdate: (content: EditorChangeContent) => void
+  onUpdate?: (content: EditorChangeContent) => void
   className?: string
   children?: ReactNode
 }
 
-const TipEditor = React.forwardRef((props: EditorProps, ref) => {
-  const onUpdate = function (data: {
+const TipEditor = React.forwardRef((props: EditorProps & Partial<EditorContentProps>, ref) => {
+  const {children,className,onUpdate,jsonContent,htmlContent,...left} = props;
+  const onUpdateData = function (data: {
     editor: { getHTML: () => any; getJSON: () => any; getText: () => string }
   }) {
-    props.onUpdate({
+    onUpdate && onUpdate({
       htmlContent: data.editor.getHTML(),
       jsonContent: data.editor.getJSON(),
       textContent: data.editor.getText(),
@@ -59,8 +61,8 @@ const TipEditor = React.forwardRef((props: EditorProps, ref) => {
 
   const editor = useEditor({
     extensions: extensions,
-    content: props.htmlContent,
-    onUpdate: onUpdate,
+    content: htmlContent,
+    onUpdate: onUpdateData,
     autofocus: false,
   })
 
@@ -68,8 +70,10 @@ const TipEditor = React.forwardRef((props: EditorProps, ref) => {
     editor: editor,
   }))
 
+
   return (
-    <EditorContent className={props.className} editor={editor}>
+    // @ts-ignore
+    <EditorContent {...left} className={props.className} editor={editor} >
       {props.children}
     </EditorContent>
   )
