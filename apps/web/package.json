@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "echo 'skip'",
     "export": "next build && next export",
     "move-ext": "rm -rf _pages && mv pages _pages && mkdir pages && cp -rf _pages/ext pages/ext && cp _pages/_app.tsx pages/_app.tsx",
     "revert-pages": "rm -rf pages && mv _pages pages",

@@ -14,7 +14,7 @@ function readFilesFromFolder(folderPath:string) {
 }
 
 const obsidian = new Obsidian({
-  token: 'b6a2199915a82fcb347137c3c2b51c9f3bff635e094d75def9f97b744557c9c1',
+  token: '9e00b736cc3f573c623ffef1c1900bc0718643ae9bca6d84194ea4c7bf40c95b',
   host: 'http://127.0.0.1:27123',
 });
 
