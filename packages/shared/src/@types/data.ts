@@ -14,7 +14,9 @@ export enum BackupVersion {
     version5 = 5, // 2023,新增离线HTML文件，区分于资源
     version6 = 6, // 支持 note 备份
 
-    version7 = 7 // 通用型的备份格式，可扩展不指定具体字段 items:[]
+    version7 = 7, // 通用型的备份格式，可扩展不指定具体字段 items:[]
+
+    version8 = 8, // 仅导出 items ，删除一级备份字段
 }
 
 export enum AnnotationStatus {

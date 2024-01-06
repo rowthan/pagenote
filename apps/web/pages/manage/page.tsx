@@ -13,7 +13,7 @@ import BasicLayout from "layouts/BasicLayout";
 
 export default function Page() {
     const [list, setList] = useState<WebPage[]>([])
-    const [pagination, setPagination] = useState<Pagination>({
+    const [pagination, setPagination] = useState({
         page: 0,
         pageSize: 10,
         total: 0,
@@ -67,9 +67,9 @@ export default function Page() {
             if (res.success) {
                 setList((res.data.list || []) as WebPage[])
                 setPagination({
-                    page: res.data.page || 0,
+                    page: pagination.page,
                     total: res.data.total || 0,
-                    pageSize: res.data.pageSize || 10,
+                    pageSize: Math.ceil(res.data.total / (pagination.pageSize|| 10)),
                 })
             }
         })

@@ -25,8 +25,9 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
+    "@pagenote/bridge": "^1.0.2-alpha.0",
     "@pagenote/obsidian": "^0.1.2",
-    "@pagenote/shared": "1.14.0",
+    "@pagenote/shared": "^1.14.22",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",

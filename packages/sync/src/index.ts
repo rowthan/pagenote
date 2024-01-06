@@ -1,4 +1,6 @@
 import SyncStrategy from './database/index'
-
-
-export default SyncStrategy
+import utils from "./utils/index";
+export {
+    SyncStrategy,
+    utils,
+}

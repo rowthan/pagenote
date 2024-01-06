@@ -9,7 +9,7 @@
     "prepare": "echo 'skip husky install'",
     "dev": "yarn workspaces run dev",
     "start": "yarn workspace pagenote-web start",
-    "build": "yarn workspace @pagenote/obsidian run build && yarn install &&  yarn workspace pagenote-web run build",
+    "build": "yarn install && lerna run --scope=pagenote-web --include-dependencies build ",
     "dev-web": "lerna run --scope=pagenote-web --include-dependencies dev",
     "lint": "yarn workspaces run lint"
   },

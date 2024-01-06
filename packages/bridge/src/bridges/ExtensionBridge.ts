@@ -68,8 +68,10 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
 
 
   if(tabId){ // background -》 front
+    // @ts-ignore
     chrome.tabs.sendMessage(tabId,request,requestCallback)
   }else{ // front -> background
+    // @ts-ignore
     chrome.runtime.sendMessage(request,requestCallback)
   }
 }

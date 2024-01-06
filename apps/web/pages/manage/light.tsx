@@ -16,7 +16,7 @@ import ColorLines from "../../components/ColorLines";
 export default function Light() {
     const [list, setList] = useState<WebPage[]>([]);
     const [colors,setColors] = useState<string[]>([])
-    const [pagination, setPagination] = useState<Pagination>({
+    const [pagination, setPagination] = useState({
         page: 0,
         pageSize: 10,
         total: 0,

@@ -7,7 +7,6 @@ import CheckVersion from "../check/CheckVersion";
 import LogInfo = developer.LogInfo;
 import LogLevel = developer.LogLevel;
 import {toast} from "../../utils/toast";
-import {Pagination} from "@pagenote/shared/lib/@types/database";
 
 const COLOR_MAP: Record<LogLevel, string> = {
     debug: "text-gray-500",
@@ -57,9 +56,9 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
             if (res?.success) {
                 setLogs(res.data.list)
                 setPagination({
-                    page: res.data.page,
-                    pageSize: res.data.pageSize,
-                    totalPages: res.data.totalPages,
+                    page: page,
+                    pageSize: pageSize,
+                    totalPages: Math.ceil(res.data.total / pageSize),
                 })
             }
         }).finally(function () {

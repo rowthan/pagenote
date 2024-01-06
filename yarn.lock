@@ -2848,16 +2848,6 @@
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
 
-"@pagenote/shared@1.14.0":
-  version "1.14.0"
-  resolved "https://registry.npmmirror.com/@pagenote/shared/-/shared-1.14.0.tgz#07ae6a66a758b1641f2d17e89afc1cebbcde3615"
-  integrity sha512-JNqc8wh7YzKKBFKLgjCFawLfuFf2e+lEqA48MIuAW+M071IFJPMJzKKABcpMU4B46g1NBJm09OQpwRdwtXZXLA==
-  dependencies:
-    colord "^2.9.3"
-    lodash "^4.17.21"
-    md5 "^2.3.0"
-    mustache "^4.2.0"
-
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmmirror.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
