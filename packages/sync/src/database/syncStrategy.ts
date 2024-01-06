@@ -1,346 +1,13 @@
-
-export enum SYNC_ACTION {
-    /**1. 远程本地存在冲突*/
-    conflict = 'conflict',
-    /**2. 下载服务端至本地*/
-    clientAdd = 'clientAdd',
-    /**3. 删除本地*/
-    clientDelete = "clientDelete",
-    /**4. 下载服务端至本地（覆盖更新）*/
-    clientUpdate = "clientUpdate",
-
-    /**5. 上传本地至服务端*/
-    serverAdd = "serverAdd",
-    /**6. 服务端删除*/
-    serverDelete = "serverDelete",
-    /**7. 上传至服务端（覆盖更新）*/
-    serverUpdate = "serverUpdate",
-}
-
-/**同步任务状态*/
-enum TaskState {
-    pending = "pending",
-    resolving = "resolving",
-    networkError = "networkError",
-    localDataError = "localDataError",
-    success = "success",
-    valid = "valid",
-    decodeError = "decodeError"
-}
-
-export type SyncTaskDetail = {
-    id: string;
-    state: TaskState;
-    localAbstract?: AbstractInfo,
-    cloudAbstract?: AbstractInfo,
-    actionType: SYNC_ACTION;
-};
-
-
-/** 一条数据的摘要信息 */
-export type AbstractInfo = null | {
-    id: string // 唯一标识，本地、远程联系的唯一ID
-
-    /**本地读写基于的，操作ID*/
-    l_id?: string
-    /**远程读写基于的，操作ID，如文件系统的，文件名路径；数据库系统的 自动生成ID；notion 系统的 page ID*/
-    c_id?: string
-
-    /**1. 文件相关指标，文件指标相同的情况下，可以避免进一步比较文件内容是否相同**/
-    etag?: string // etag hash标识，
-    lastmod?: string // 文件的最后修改时间 GTM 格式
-
-    mtimeMs?: number // 文件系统的最后修改时间，单位 s
-
-    /**2. 数据相关指标*/
-    updateAt: number // 数据的最后更新时间
-}
-
-export type Snapshot = Record<string, AbstractInfo>
-
-export enum ChangeFlag {
-    nochange = '0',
-    changed = '1',
-    deleted = '2',
-    created = '3',
-}
-
-// 冲突
-export const CONFLICT_FLAT = [
-    `${ChangeFlag.nochange}${ChangeFlag.nochange}`, // 本地无变化、远程无变化
-    `${ChangeFlag.changed}${ChangeFlag.changed}`, // 本地有变化、远程有变化
-    `${ChangeFlag.changed}${ChangeFlag.created}`, // 本地有变化、远程有新建
-    `${ChangeFlag.created}${ChangeFlag.changed}`, // 本地有新建、远程有变化
-    `${ChangeFlag.created}${ChangeFlag.created}`, // 本地有新建、远程有新建
-]
-
-// 下载
-export const DOWNLOAD_FLAG = [
-    `${ChangeFlag.nochange}${ChangeFlag.changed}`, // 本地无变化、远程有变化
-    `${ChangeFlag.nochange}${ChangeFlag.created}`, // 本地无变化、远程有新建
-]
-
-// 本地删除
-export const CLIENT_DELETE_FLAG = [
-    `${ChangeFlag.nochange}${ChangeFlag.deleted}`, // 本地无变化、远程已删除
-    `${ChangeFlag.changed}${ChangeFlag.deleted}`, // 本地有变化、远程已删除
-    `${ChangeFlag.created}${ChangeFlag.deleted}`, // 本地有新增、远程已删除
-]
-
-// 上传服务端
-export const CLIENT_UPLOAD_FLAG = [
-    `${ChangeFlag.changed}${ChangeFlag.nochange}`, // 本地有变化、远程无变化
-    `${ChangeFlag.created}${ChangeFlag.nochange}`, // 本地已创建、远程无变化
-]
-
-// 服务端删除
-export const SERVER_DELETE_FLAG = [
-    `${ChangeFlag.deleted}${ChangeFlag.nochange}`, // 本地已删除、远程无变化
-    `${ChangeFlag.deleted}${ChangeFlag.changed}`, // 本地已删除、远程已修改
-    `${ChangeFlag.deleted}${ChangeFlag.created}`, // 本地已删除、远程已创建
-]
-
-// 无需操作
-export const NO_ACTION = [`${ChangeFlag.deleted}${ChangeFlag.deleted}`]
-
-// 比较两个摘要是否相同
-export function isSame(current: AbstractInfo, old: AbstractInfo) {
-    const temCurrent: AbstractInfo = current || {id: '', updateAt: 0, l_id: '', c_id:''}
-    const temOld: AbstractInfo = old || {id: '', updateAt: 0, l_id: '', c_id:''}
-    // 按etag比较
-    if (temCurrent?.etag && temCurrent.etag === temOld.etag) {
-        return true
-    }
-    // 按最后修改时间比较
-    if (temCurrent.lastmod && temCurrent.lastmod === temOld.lastmod) {
-        return true
-    }
-
-    if (
-        !isNaN(temCurrent.updateAt) &&
-        temCurrent.updateAt === temOld.updateAt
-    ) {
-        return true
-    }
-
-    // 远程信息和本地数据比较时，webdav 返回的lastmod为GTM字符串，本地存储的可能不是，需要格式化为时间再比较
-    if (temCurrent.lastmod && temOld.lastmod) {
-        const currentLastMod = new Date(temCurrent.lastmod).getTime()
-        const oldLastMod = new Date(temOld.lastmod).getTime()
-        if (currentLastMod === oldLastMod) {
-            return true
-        }
-    }
-
-    return false
-}
-
-
-type ChangeMap = Record<string, ChangeFlag>
-
-// 比较两个快照的差异
-export function diffSnapshot(
-    current: Snapshot = {},
-    old: Snapshot = {}
-): ChangeMap {
-    current = current || {};
-    old = old || {}
-
-    const result: Record<string, ChangeFlag> = {}
-
-    // 遍历当前的快照
-    for (const i in current) {
-        const temCurrent = current[i]
-        const temOld = old[i]
-
-        // 之前不存在该数据，则标记为：新增 created
-        if (temOld === undefined) {
-            result[i] = ChangeFlag.created
-        }
-        // 如果相同，则标记为： 无变化 nochange
-        else if (isSame(temCurrent, temOld)) {
-            result[i] = ChangeFlag.nochange
-        } else {
-            result[i] = ChangeFlag.changed
-        }
-    }
-
-    // 遍历旧快照，新快照没有的对象，则说明变化为 已删除
-    for (const j in old) {
-        if (current[j] === undefined) {
-            result[j] = ChangeFlag.deleted
-        }
-    }
-
-    return result
-}
-
-type SyncTaskInfo = {
-    changeMap: ChangeMap
-    latestSnapshot: Snapshot
-}
-export type SyncTaskMap = Map<string, SyncTaskDetail>
-export type SyncTaskActionsMap = {
-    [key in SYNC_ACTION]: SyncTaskMap
-}
-// 基于 diff 和快照，计算两端的同步任务
-export function computeSyncTask(
-    local: SyncTaskInfo,
-    cloud: SyncTaskInfo
-): SyncTaskActionsMap {
-    const taskGroup: SyncTaskActionsMap = getInitTaskMap();
-    /** 1 */
-    for (const i in local.changeMap) {
-        // 如果远端不存在该变化，则忽略该变化，进入步骤2处理
-        const cloudFlag = cloud.changeMap[i]
-        if (cloudFlag === undefined) {
-            continue
-        }
-        const localFlag = local.changeMap[i]
-        const localInfo = local.latestSnapshot[i]
-        const cloudInfo = cloud.latestSnapshot[i]
-        const same = isSame(localInfo, cloudInfo) // 当前本地和远端是否一致
-        const flag = `${localFlag}${cloudFlag}` // 数据变化标记 01
-
-        let actionType;
-        if (CONFLICT_FLAT.includes(flag)) {
-            if (!same) {
-                actionType = SYNC_ACTION.conflict
-            }
-        } else if (DOWNLOAD_FLAG.includes(flag)) {
-            if (!same) {
-                actionType = SYNC_ACTION.clientUpdate
-            }
-        } else if (CLIENT_DELETE_FLAG.includes(flag)) {
-            actionType = SYNC_ACTION.clientDelete
-        } else if (CLIENT_UPLOAD_FLAG.includes(flag)) {
-            if (!same) {
-                actionType = SYNC_ACTION.serverUpdate
-            }
-        } else if (SERVER_DELETE_FLAG.includes(flag)) {
-            actionType = SYNC_ACTION.serverDelete
-        }
-
-        if (actionType !== undefined) {
-            taskGroup[actionType].set(i,{
-                id: i,
-                state: TaskState.pending,
-                cloudAbstract: cloud.latestSnapshot[i],
-                localAbstract: local.latestSnapshot[i],
-                actionType: actionType,
-            })
-        }
-
-        delete local.changeMap[i]
-        delete cloud.changeMap[i]
-    }
-
-    /** 2 */
-    for (const i in local.changeMap) {
-        const flag = local.changeMap[i]
-        if (
-            [ChangeFlag.nochange, ChangeFlag.changed, ChangeFlag.created].includes(
-                flag
-            )
-        ) {
-            taskGroup[SYNC_ACTION.serverAdd].set(i,{
-                id: i,
-                state: TaskState.pending,
-                cloudAbstract: cloud.latestSnapshot[i],
-                localAbstract: local.latestSnapshot[i],
-                actionType: SYNC_ACTION.serverAdd,
-            })
-        }
-    }
-
-    /** 3 */
-    for (const i in cloud.changeMap) {
-        const flag = cloud.changeMap[i]
-        if (
-            [ChangeFlag.nochange, ChangeFlag.changed, ChangeFlag.created].includes(
-                flag
-            )
-        ) {
-            taskGroup[SYNC_ACTION.clientAdd].set(i,{
-                id: i,
-                state: TaskState.pending,
-                cloudAbstract: cloud.latestSnapshot[i],
-                localAbstract: local.latestSnapshot[i],
-                actionType: SYNC_ACTION.clientAdd,
-            })
-        }
-    }
-    return taskGroup
-}
-
-interface GetSnapshot {
-    (): Promise<Snapshot | null>
-}
-
-export interface ResolveTask {
-    (id: string, task: SyncTaskDetail): Promise<{
-        result: TaskState,
-        abstract: AbstractInfo | null,
-    }>
-}
-
-
-export interface MethodById<T> {
-    (id: string, taskDetail: SyncTaskDetail): Promise<T | null>
-}
-
-export interface ModifyByIdAndData<T> {
-    (id: string, data: T, taskDetail: SyncTaskDetail): Promise<T | null>,
-}
-
-/**增删改查*/
-export type SyncMethods<T> = {
-    /**当前数据源ID标识*/
-    getSourceId: ()=>Promise<string>
-
-    /**增删改查基础方法*/
-    add: ModifyByIdAndData<T>
-    update: ModifyByIdAndData<T>
-    remove: MethodById<T>
-    query: MethodById<T>
-
-    /**全量数据的当前快照信息*/
-    getCurrentSnapshot: GetSnapshot
-
-    /**基于单个数据的全量信息，提取摘要数据*/
-    getAbstractInfo: (data: T | null)=>AbstractInfo
-}
-
-export type CacheMethod = {
-    /**快照信息缓存，至少选择存储到一端。推荐存储在本地*/
-    cache:{
-        storageGet: (cacheId: string) => Promise<Snapshot | null>
-        storageSet: (cacheId: string, snapshot: Snapshot | null) => Promise<void>
-    }
-}
-
-export type Client<T> = {
-    cloud: SyncMethods<T>,
-    local: SyncMethods<T> & CacheMethod
-}
-export interface SyncOption<T> {
-    /**同步任务预估完成时间，加锁时长依据*/
-    lockResolving: number
-    /**本地和远程数据操作的基础方法*/
-    client: Client<T>
-}
-
-function getInitTaskMap(): SyncTaskActionsMap {
-    return {
-        [SYNC_ACTION.clientDelete]: new Map(),
-        [SYNC_ACTION.clientAdd]: new Map(),
-        [SYNC_ACTION.clientUpdate]: new Map(),
-        [SYNC_ACTION.conflict]: new Map(),
-        [SYNC_ACTION.serverAdd]: new Map(),
-        [SYNC_ACTION.serverUpdate]: new Map(),
-        [SYNC_ACTION.serverDelete]: new Map()
-    }
-}
+import { SyncTaskActionsMap } from "./typing";
+import { Client, SyncOption, ResolveTask } from "./typing";
+import { SyncTaskDetail } from "./typing";
+import { Snapshot } from "./typing";
+import { AbstractInfo } from "./typing";
+import { TaskState } from "./typing";
+import { SYNC_ACTION } from "./typing";
+import { getInitTaskMap } from "./utils";
+import { computeSyncTask } from "./utils";
+import { diffSnapshot } from "./utils";
 
 export default class SyncStrategy<T> {
     private readonly client: Client<T>
@@ -367,42 +34,86 @@ export default class SyncStrategy<T> {
         this.client = option.client;
     }
 
-    /**生成同步对ID*/
-    async _getSyncPariId(type:'local'|'cloud'){
-        if(!this.syncPairId){
-            const localId = await this.client.local.getSourceId();
-            const cloudId = await this.client.cloud.getSourceId();
-            this.syncPairId = `${localId}_${cloudId}`;
+    async sync(): Promise<{task?: SyncTaskActionsMap,locked?: boolean,}> {
+        /**锁判断，如果正在同步，则延迟重试*/ 
+        if (this.resolving) {
+            clearTimeout(<NodeJS.Timeout>this.nextTimer)
+            this.nextTimer = setTimeout(() => {
+                return this.sync()
+            }, this.lockResolving / 2)
+            return Promise.resolve({locked: true})
         }
-        return `${this.syncPairId}_${type}`
+        this.resolving = true;
+        /**超时自动解锁；同步可以被中断，不影响下次执行。这里是安全的*/ 
+        setTimeout(() => {
+            this.resolving = false;
+        }, this.lockResolving)
+
+        /**
+         * 计算同步任务，并将同步任务交给执行器，执行同步操作
+         * */
+        const task = await  this.computeDiffTask();
+        return this._resolveTaskMap(task).then(function (res) {
+            return{
+                task: res,
+                locked: false,
+            }
+        })
     }
 
+    /**计算本地与远程客户端的差异，并生成任务，待执行*/ 
+    computeDiffTask(): Promise<SyncTaskActionsMap> {
+        // 初始化任务 map
+        this.syncTaskMap = getInitTaskMap();
+        // 计算差异
+        return Promise.all([
+            /**1. 计算本地基于上次同步后的差异变更**/ 
+            this.computeDiff('local'),
+            /**2. 计算云端基于上次同步后的差异变更*/
+            this.computeDiff('cloud'),
+        ]).then(([localDiff, cloudDiff]) => {
+            /**基于自从上次同步后云端与本地的差异变更*/ 
+            this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
+            return this.syncTaskMap
+        })
+    }
 
-    async _computeDiff(client: 'local'|'cloud'){
+    /**基于上次快照，计算本地或远程的变更*/ 
+    async computeDiff(client: 'local'|'cloud'){
+        /**
+         * 获取当前快照
+         * */ 
         const currentSnapshot = await this.client[client].getCurrentSnapshot() || {};
+        /**
+         * 获取上次快照存储的键值
+        */
         const storeId = await this._getSyncPariId(client);
         const lastSnapshot = await this.client.local.cache.storageGet(storeId) || {};
+        /**
+         * 缓存当下最新的快照信息
+         * */ 
         this.tempNewSnapshot[client] = {
             ...currentSnapshot,
             ...lastSnapshot
         };
-        const diff = diffSnapshot(currentSnapshot,this.tempNewSnapshot[client]);
+        /**
+         * 用当下的快照和历史快照进行对比，得到 diff
+         * */ 
+        const diff = diffSnapshot(currentSnapshot,lastSnapshot);
         return {
             latestSnapshot: currentSnapshot,
             changeMap: diff
         }
     }
 
-    _computeSyncTask(): Promise<SyncTaskActionsMap> {
-        this.syncTaskMap = getInitTaskMap();
-        // 计算差异
-        return Promise.all([
-            this._computeDiff('local'),
-            this._computeDiff('cloud'),
-        ]).then(([localDiff, cloudDiff]) => {
-            this.syncTaskMap = computeSyncTask(localDiff, cloudDiff);
-            return this.syncTaskMap
-        })
+    /**生成同步关系ID，local - cloud*/
+    async _getSyncPariId(type:'local'|'cloud'){
+        if(!this.syncPairId){
+            const localId = await this.client.local.getSourceId();
+            const cloudId = await this.client.cloud.getSourceId();
+            this.syncPairId = `${localId}_${cloudId}`;
+        }
+        return `${this.syncPairId}-${type}`
     }
 
     _getResolveMethod(actionType: SYNC_ACTION): ResolveTask {
@@ -548,6 +259,7 @@ export default class SyncStrategy<T> {
     }
 
     async _resolveTaskMap(task: SyncTaskActionsMap, resolveId?: string):Promise<SyncTaskActionsMap> {
+        /**锁ID*/
         this.resolveId = resolveId || new Date().toString();
 
         /**本地数据更新 start
@@ -589,60 +301,7 @@ export default class SyncStrategy<T> {
             this.resolving = false;
         })
     }
-
-    sync(): Promise<{task?: SyncTaskActionsMap,locked?: boolean,}> {
-        if (this.resolving) {
-            clearTimeout(<NodeJS.Timeout>this.nextTimer)
-            this.nextTimer = setTimeout(() => {
-                return this.sync()
-            }, this.lockResolving / 2)
-            return Promise.resolve({locked: true})
-        }
-        this.resolving = true;
-        // 解锁
-        setTimeout(() => {
-            this.resolving = false;
-        }, this.lockResolving)
-        return this._computeSyncTask().then((task) => {
-            return this._resolveTaskMap(task).then(function (res) {
-                return{
-                    task: res,
-                    locked: false,
-                }
-            })
-        })
-    }
 }
 
 
-interface ScheduleFun<T extends (...args: any)=>Promise<any>> {
-    (...args: Parameters<T>): ReturnType<T>;
-}
-
-/**
- * 对方法添加频控调度处理；防止连续触发导致被限制。执行间隔 n ms
- * */
-export function scheduleWrap<T extends (...args: any)=>Promise<any>>(fun: T,gap: number=100,parallel: number=2): ScheduleFun<T>{
-    let times = -1;
-    return function (...args: any){
-        times++
-
-        // 基于已有执行的任务 times - 可并行的任务 parallel 得到需要延时执行的时长
-        const timeout = Math.max(times - parallel,0) * gap;
-
-        //@ts-ignore
-        const promise: ReturnType<T> = new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                fun(...args).then(function (res) {
-                    resolve(res)
-                }).catch(function (reason) {
-                    reject(reason)
-                })
-                times--
-            }, timeout)
-        })
-
-        return promise;
-    }
-}
 

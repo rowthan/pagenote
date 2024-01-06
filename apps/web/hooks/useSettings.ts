@@ -38,17 +38,11 @@ export default function useSettings(): {
       typeof callback === 'function' && callback()
     }
     setLoading(true)
-    if (newSet === null) {
-      extApi.setting.resetSetting(undefined).then(function () {
-        mutate()
-        callbackFun()
-      })
-    } else {
-      extApi.setting.saveSetting(newSet).then(function () {
-        mutate()
-        callbackFun()
-      })
-    }
+    const newSetting = newSet === null ? getDefaultSdkSetting() : newSet;
+    extApi.setting.saveSetting(newSetting).then(function () {
+      mutate()
+      callbackFun()
+    })
   }
 
   return {
