@@ -1,6 +1,7 @@
 /* Basic editor styles */
 .tiptap {
-  padding: 12px 8px;
+  padding: 6px 8px;
+  margin: 6px auto;
   font-size: 14px;
   line-height: 1.24em;
 
@@ -92,4 +93,8 @@
     pointer-events: none;
     height: 0;
   }
+}
+
+.ProseMirror-focused{
+  outline: none;
 }
