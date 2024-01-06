@@ -20,9 +20,9 @@ import { GiFamilyTree } from 'react-icons/gi'
 import { toast } from '../../@/components/ui/use-toast'
 import { SizeIcon } from '@radix-ui/react-icons'
 import { basePath } from '../../const/env'
-import useWhoAmi from '../../hooks/useWhoAmi'
 import Memo from '../editor/Memo'
 import {Button} from "../../@/components/ui/button";
+import {Editor} from "@tiptap/react/src/Editor";
 
 const ICONS = {
   ['path']: <CiLink />,
@@ -71,6 +71,9 @@ export default function PageMemo(props: Props) {
   const path = getPath(url || '')
   const { data, isLoading, mutate } = useTableQuery<Note>(Collection.note, {
     query: {
+      deleted:{
+        $ne: true,
+      },
       $or: [
         {
           path: path,
@@ -94,15 +97,20 @@ export default function PageMemo(props: Props) {
   })
 
   function removeMemo(key: string = '') {
-    return extApi.table.remove({
+    return extApi.table.update({
       ...dbTableMap[Collection.note],
-      params: [key],
+      params: {
+        keys: [key],
+        data: {
+          deleted: true,
+        },
+      },
     })
   }
 
-  function afterUpdate(change: EditorChangeContent, origin: Partial<Note>) {
-    if (!change.textContent && change.htmlContent.length < 8 && origin && origin?.key) {
-      removeMemo(origin.key).then(function () {
+  function afterUpdate(editor: Editor | undefined, key?: string) {
+    if (!editor?.getText() && key) {
+      removeMemo(key).then(function () {
         mutate()
       })
     }
@@ -112,6 +120,7 @@ export default function PageMemo(props: Props) {
     const updateData = {
       ...data,
       updateAt: Date.now(),
+      deleted: false,
     }
     extApi.table
       .update({
@@ -168,7 +177,7 @@ export default function PageMemo(props: Props) {
           {memos.map((item, index) => {
             return (
               <Memo
-                afterUpdate={(data) => afterUpdate(data, { key: item.key })}
+                afterBlur={(editor) => afterUpdate(editor, item.key)}
                 key={item.key || ''}
                 id={item.key || ''}
                 className={
