@@ -16,6 +16,10 @@ export function getComponentInnerText(props: PropsWithChildren<any>) {
     return isUsedAsWebComponent(props)? props.container.host.textContent : props.children?.toString();
 }
 
+export function getHostRoot(props: PropsWithChildren<any>){
+    return isUsedAsWebComponent(props) ? props.container.host : null
+}
+
 
 export function applyCss(css: string,applyRoot?: Document) {
     if(!css){
