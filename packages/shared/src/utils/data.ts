@@ -13,7 +13,7 @@ export const makeExportString = function (backupData:BackupData):string{
 }
 
 // 还原备份数据
-export const resolveImportString = function (inputStr: string):BackupData {
+export const resolveImportString = function (inputStr: string):BackupData | undefined {
     let data
     try{
         data = JSON.parse(inputStr);

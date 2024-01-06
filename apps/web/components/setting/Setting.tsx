@@ -37,7 +37,12 @@ export default function Setting() {
             path={'/data/backup'}
             element={
               <SettingDetail label={'导入导出'}>
-                <ImportAndExport />
+                <div>
+                    <p className={'py-2 text-sm text-muted-foreground'}>
+                        你可以将本设备的备份数据导入到其他设备，也可以将本设备的备份数据导出到其他设备。
+                    </p>
+                    <ImportAndExport />
+                </div>
               </SettingDetail>
             }
           />

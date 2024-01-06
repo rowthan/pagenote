@@ -52,7 +52,7 @@ export default function Footer() {
               <BiliSvg width={24} height={24} />
             </a>
             <a
-              href="https://github.com/rowthan/developer.pagenote.cn"
+              href="https://github.com/rowthan/pagenote"
               aria-label={'GitHub rowthan'}
             >
               <GithubSvg width={24} height={24} />
