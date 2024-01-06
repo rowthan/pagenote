@@ -109,6 +109,7 @@
     "eslint-config-next": "^13.5.3",
     "eslint-config-prettier": "^8.8.0",
     "lint-staged": "^13.2.2",
+    "lerna": "^8.0.2",
     "notion-types": "^6.16.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
