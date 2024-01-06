@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/obsidian",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/obsidian.esm.js",
