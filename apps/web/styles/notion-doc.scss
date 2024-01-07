@@ -36,6 +36,10 @@
   left: calc(min(96px, 8vw)) !important;
 }
 
+blockquote.notion-quote{
+  font-size: 0.9em;
+}
+
 @media screen and (max-width: 920px) {
   .notion-page-cover-wrapper {
     height: 200px !important;
