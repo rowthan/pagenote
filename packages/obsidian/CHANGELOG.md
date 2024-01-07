@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.15 (2024-01-07)
+
+
+### Features
+
+* auto focus after create ([d17e52d](https://github.com/rowthan/pagenote/commit/d17e52d7279791415aebb5b58c8c792baa1a5606))
+
+
+
+
+
 ## 0.1.14 (2024-01-07)
 
 **Note:** Version bump only for package @pagenote/obsidian
