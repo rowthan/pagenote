@@ -79,7 +79,7 @@ jobs:
 
       # https://github.com/lerna/lerna/tree/main/libs/commands/publish#readme
       - name: Publish to NPM
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' ||  startsWith(github.ref, 'refs/heads/feat')
         run: |
           npx lerna publish from-git --yes
         env:
