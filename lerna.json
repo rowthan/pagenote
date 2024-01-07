@@ -18,7 +18,7 @@
       "allowBranch": ["main","dev","feat*"]
     },
     "version": {
-      "message": "chore(release): publish %s"
+      "message": "chore(release): publish to npm %s"
     }
   }
 }
