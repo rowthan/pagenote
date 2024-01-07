@@ -25,7 +25,9 @@ export default function Footer() {
             />
           </Link>
           <a className="hidden md:block">小而美的网页标记工具.</a>
-          <DeviceInfo />
+          <span className={'badge badge-outline badge-sm'}>
+              <DeviceInfo />
+          </span>
         </div>
         <div className="md:place-self-center md:justify-self-end">
           <div className="grid grid-flow-col gap-4">
