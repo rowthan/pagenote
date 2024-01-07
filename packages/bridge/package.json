@@ -14,9 +14,12 @@
     "dist/**"
   ],
   "devDependencies": {
-    "@types/chrome": "0.0.177"
+    "@types/chrome": "0.0.256"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
 }
