@@ -9,5 +9,6 @@ export {
     ExtensionBridge,
     SessionStorageBridge,
 }
+
 export * from './base'
 export * from './utils'
