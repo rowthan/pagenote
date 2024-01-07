@@ -59,7 +59,7 @@ jobs:
       - name: Lerna feature Version
         if: startsWith(github.ref, 'refs/heads/feat')
         run: |
-          npx lerna version prepatch --preid next --conventional-commits --no-private --conventional-prerelease --yes
+          npx lerna version prerelease --preid next --conventional-commits --no-private --conventional-prerelease --yes
 
       # 修订版本号
       - name: Lerna dev Version
