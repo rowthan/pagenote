@@ -35,12 +35,6 @@ jobs:
           key: ${{ runner.os }}-dependencies-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-dependencies-
 
-      - name: Debug NPM_TOKEN
-        run: |
-          echo "NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}"
-          echo "NPM_TOKEN_EMPTY: ${{ secrets.NPM_TOKEN_EMPTY }}"
-
-
       - name: Yarn install
         run: yarn install
 
@@ -65,7 +59,6 @@ jobs:
       - name: Lerna feature Version
         if: startsWith(github.ref, 'refs/heads/feat')
         run: |
-          npx lerna changed
           npx lerna version prepatch --preid next --amend --conventional-commits --conventional-prerelease --yes
 
       # 修订版本号
