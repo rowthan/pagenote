@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@pagenote/sync",
-  "version": "0.1.15-next.0",
+  "version": "0.1.16-next.0",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/sync.esm.js",
@@ -22,7 +22,6 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"

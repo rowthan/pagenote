@@ -3,8 +3,6 @@ import { QueryValue } from '@pagenote/shared/lib/@types/database'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import set from 'lodash/set'
 import get from 'lodash/get'
-// import { html } from '@pagenote/shared/lib/extApi'
-// import OfflineHTML = html.OfflineHTML
 
 const LIGHT_PLACE_KEY = 'plainData.steps'
 

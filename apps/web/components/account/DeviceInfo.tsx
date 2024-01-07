@@ -17,10 +17,8 @@ export default function DeviceInfo() {
   }
 
   return (
-    <div>
-      <button onClick={onClick} className={'badge badge-outline badge-sm'}>
+      <a onClick={onClick} className={'hover:underline text-xs cursor-pointer'}>
         {whoAmI.version}
-      </button>
-    </div>
+      </a>
   )
 }

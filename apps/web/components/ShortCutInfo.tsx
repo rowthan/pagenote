@@ -1,7 +1,6 @@
 import useShortcut from '../hooks/useShortcut'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import useWhoAmi from '../hooks/useWhoAmi'
-import React from 'react'
 import BasicSettingLine from './setting/BasicSettingLine'
 
 const shortcutTip: Record<string, string> = {
@@ -51,15 +50,12 @@ export default function ShortCutInfo() {
         ))}
         <BasicSettingLine
           label={
-            <div>
-              <a
-                target={'_blank'}
+            <button
                 onClick={openShortCutSetting}
                 className={'text-blue-500'}
-              >
-                修改快捷键
-              </a>
-            </div>
+            >
+              修改快捷键
+            </button>
           }
           right={<div></div>}
         ></BasicSettingLine>

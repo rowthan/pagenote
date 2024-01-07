@@ -78,26 +78,26 @@ export default function Search(props: { keyword: string }) {
           <span>请输入搜索词，在 PAGENOTE 中搜索</span>
         )}
 
-        <div className="my-4 flex items-center">
-          <input
-            type="checkbox"
-            onChange={toggleAll}
-            checked={selectedCnt > 0}
-            className="checkbox mx-1"
-          />
-          <button
-            onClick={() => {
-              setBatchModal(true)
-            }}
-            disabled={selectedCnt === 0}
-            className="btn btn-xs btn-primary mx-2"
-          >
-            批量操作{selectedCnt > 0 ? selectedCnt : ''}
-          </button>
-        </div>
+        {/*<div className="my-4 flex items-center">*/}
+        {/*  <input*/}
+        {/*    type="checkbox"*/}
+        {/*    onChange={toggleAll}*/}
+        {/*    checked={selectedCnt > 0}*/}
+        {/*    className="checkbox mx-1"*/}
+        {/*  />*/}
+        {/*  <button*/}
+        {/*    onClick={() => {*/}
+        {/*      setBatchModal(true)*/}
+        {/*    }}*/}
+        {/*    disabled={selectedCnt === 0}*/}
+        {/*    className="btn btn-xs btn-primary mx-2"*/}
+        {/*  >*/}
+        {/*    批量操作{selectedCnt > 0 ? selectedCnt : ''}*/}
+        {/*  </button>*/}
+        {/*</div>*/}
       </div>
       {/*分组 折叠，搜 pagenote笔记\搜标签页、搜扩展API*/}
-      <ul className={'relative'}>
+      <ul className={'relative mt-2'}>
         {list.slice(0, limit).map((item, index) => (
           <li className={'relative mb-2 border-b border-gray-400'} key={index}>
             <WebPageItem keyword={keyword} webpage={item} />

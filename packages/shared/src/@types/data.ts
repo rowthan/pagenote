@@ -1,8 +1,8 @@
 import {LightStatus, LightType} from "../pagenote-brush";
 import {box, html} from "../extApi";
+import {Query} from "./database";
 import OfflineHTML = html.OfflineHTML;
 import Box = box.Box;
-import {Query} from "./database";
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 export enum BackupVersion {
@@ -310,7 +310,7 @@ export type FeatureItem = {
 
 export interface LinkRule<T> {
     // 关联特征表ID，当前数据的外链匹配管理
-    $links?: string[]
+    // $links?: string[]
 
     //@deprecated 匹配规则，不使用外键 $links 的情况下使用。存储至原始表，不利于查询（源数据量较大时）
     // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>

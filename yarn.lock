@@ -2848,6 +2848,31 @@
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
 
+"@pagenote/bridge@^1.0.7-next.0":
+  version "1.0.7-next.0"
+  resolved "https://registry.yarnpkg.com/@pagenote/bridge/-/bridge-1.0.7-next.0.tgz#4de8453e0657837aa988eca0bb587517af70ce00"
+  integrity sha512-S0c/Y2A12BS7nkUOCM3TSLPzvbOWYvBwpM6v6FLsdLQj5x4efYN+PWmNewQ7D1zG7cM9o505/1bWoH0iUy8oaw==
+
+"@pagenote/obsidian@^0.1.20-next.7":
+  version "0.1.20-next.7"
+  resolved "https://registry.yarnpkg.com/@pagenote/obsidian/-/obsidian-0.1.20-next.7.tgz#814f7758cbc0e4a5e809a77a28d1c8e289250d16"
+  integrity sha512-jEtuo5I+dKLLfpcS+Jsc+tGsihM8NYUC6unWtJ1ttosmpY9+vlCgVhaLQPhGWOvxtfJLskXYkppaJ+2Rz+RW8w==
+  dependencies:
+    axios "^1.6.2"
+    base64-js "^1.5.1"
+    ts-jest "^29.1.1"
+
+"@pagenote/shared@^1.14.28-next.0":
+  version "1.14.28-next.0"
+  resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.14.28-next.0.tgz#1a9ad1b6f610c7898c82a92d9566bf56be5a14b3"
+  integrity sha512-sZjTbZeXZdaWKIMj3bhkJ7mWZndylMB5Tc8noXnO5gJyvmSryenJyPWrG+c7VTtRdDy2PKNSvpJIoavpPXk+Zw==
+  dependencies:
+    "@pagenote/bridge" "^1.0.7-next.0"
+    colord "^2.9.3"
+    lodash "^4.17.21"
+    md5 "^2.3.0"
+    mustache "^4.2.0"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmmirror.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -4306,6 +4331,14 @@
   version "0.0.206"
   resolved "https://registry.npmmirror.com/@types/chrome/-/chrome-0.0.206.tgz#ad1fd9799f368b5993d7c240492d4adaf5efbd8c"
   integrity sha512-fQnTFjghPB9S4UzbfublUB6KmsBkvvJeGXGaaoD5Qu+ZxrDUfgJnKN5egLSzDcGAH5YxQubDgbCdNwwUGewQHg==
+  dependencies:
+    "@types/filesystem" "*"
+    "@types/har-format" "*"
+
+"@types/chrome@0.0.256":
+  version "0.0.256"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.256.tgz#366b52f8f5a2d8119ade9eef2519692e6f987ff8"
+  integrity sha512-NleTQw4DNzhPwObLNuQ3i3nvX1rZ1mgnx5FNHc2KP+Cj1fgd3BrT5yQ6Xvs+7H0kNsYxCY+lxhiCwsqq3JwtEg==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"

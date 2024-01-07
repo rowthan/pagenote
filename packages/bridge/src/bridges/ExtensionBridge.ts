@@ -24,7 +24,7 @@ function isPromise(value:any) {
 }
 
 function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requestCallback?:(data: BaseMessageResponse<T>)=> void) {
-  // TODO 单次请求数据量不能超过 50mb ，否则可能失败，
+  // 单次请求数据量不能超过 50mb ，否则可能失败，
   const data = request.data;
   let dataSizeMB = 0;
   try{
