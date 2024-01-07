@@ -149,7 +149,14 @@ export default function PageMemo(props: Props) {
             description: res.error,
           })
         }
-        mutate()
+        mutate().then(function () {
+          setTimeout(function () {
+            const newMemo = document.querySelector('.tiptap') as HTMLElement;
+            if(newMemo){
+              newMemo.focus()
+            }
+          },10)
+        })
       })
   }
 
