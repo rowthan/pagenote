@@ -151,7 +151,7 @@ export default function ClipboardList() {
             <div key={item.id} className="chat chat-start">
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
-                  <img src={item.icon} />
+                  <img src={item.icon} alt={'list-item'} />
                   <input
                     type="checkbox"
                     onChange={() => {

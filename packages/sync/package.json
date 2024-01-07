@@ -1,13 +1,13 @@
 {
   "private": true,
   "name": "@pagenote/sync",
-  "version": "0.1.14-alpha.0",
+  "version": "0.1.15-next.0",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/sync.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=18"
@@ -16,12 +16,13 @@
     "dev": "tsdx watch",
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "echo 'skip'",
+    "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
+  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -34,7 +35,6 @@
     "trailingComma": "es5"
   },
   "author": "rowthan",
-  "module": "dist/sync.esm.js",
   "size-limit": [
     {
       "path": "dist/sync.cjs.production.min.js",

@@ -75,6 +75,7 @@ export default function LightedTab(props: { tab: Tab; isCurrent: boolean }) {
       ) : (
         <div className={'rounded bg-white border'}>
           <img
+            alt={'icon'}
             width="20px"
             height="20px"
             className={'w-5 h-5'}

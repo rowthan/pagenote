@@ -8,6 +8,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "dumi dev",
+    "test": "echo 'skip'",
     "build": "father build",
     "build:watch": "father dev",
     "docs:build": "dumi build",

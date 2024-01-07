@@ -48,6 +48,7 @@ export default function DonationCard() {
                             className="p-3 border-2 border-slate-300 rounded-xl w-full flex items-center justify-center hover:-translate-y-1 transition-all hover:shadow-xl duration-200"
                         >
                             <img
+                                alt='add'
                                 src="https://raw.githubusercontent.com/bradtraversy/tailwind-course-projects/main/all-project-assets/product-modal/images/weight.png"
                                 className="w-8 mr-4"/>
                             <span>Add to cart</span>
@@ -56,6 +57,7 @@ export default function DonationCard() {
                             className="p-3 border-2 border-slate-300 rounded-xl w-full flex items-center justify-center hover:-translate-y-1 transition-all hover:shadow-xl duration-200"
                         >
                             <img
+                                alt={'add'}
                                 src="https://raw.githubusercontent.com/bradtraversy/tailwind-course-projects/main/all-project-assets/product-modal/images/heart.png"
                                 className="w-8 mr-4"/>
                             <span>Add wish list</span>

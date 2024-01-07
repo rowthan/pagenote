@@ -69,7 +69,7 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
                 navigate('/search')
             }
         }
-    },[tab,config])
+    },[tab,config,onChangeKeyword,navigate])
 
     const isSearchPath = location.pathname === '/search'
     return (

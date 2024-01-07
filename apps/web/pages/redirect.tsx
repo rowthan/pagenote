@@ -19,7 +19,7 @@ export default function Redirect(props: Props) {
         window.location.href = link
       }
     },
-    [query]
+    [query.to]
   )
 
   return <div className="">{children}</div>

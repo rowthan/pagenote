@@ -1,6 +1,6 @@
 import React, {FC, PropsWithChildren, useEffect, useState} from "react";
 import withComponentStyles from "../HOC";
-import {getChildren} from "../utils/webComponent";
+import { getChildren } from "../utils/webComponent";
 
 /**react组件模式的 css 引入，产物将以单独的文件形式输出 sideEffect*/
 import '../tailwind.css'

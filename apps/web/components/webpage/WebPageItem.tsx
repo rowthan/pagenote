@@ -8,7 +8,7 @@ export default function WebPageItem(props:{webpage: Partial<WebPage>, keyword: s
         <div>
             <aside className="inline-block relative max-w-full">
                 <a href={item.url || item.key} target={'_blank'} className={'max-w-full link link-primary text-md inline-block truncate'}>
-                    <img src={item.icon} width={14} height={14} className={'inline-block mr-2'}/>
+                    <img src={item.icon} width={14} height={14} alt={'icon'} className={'inline-block mr-2'}/>
                     <HighLightText hideOnUnMatch={false} keyword={keyword} text={item.title || item.key || ''} />
                 </a>
             </aside>

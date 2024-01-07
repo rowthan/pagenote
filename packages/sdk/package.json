@@ -9,6 +9,7 @@
     "prepare": "echo 'skip prepare'",
     "build-sdk": "webpack --config webpack.prod.js && npm run tsc",
     "build": "echo 'skip'",
+    "test": "echo 'skip'",
     "dev": "devFile=dev.html webpack-dev-server --open --config webpack.dev.js --host 0.0.0.0",
     "init": "npm install",
     "tsc": "tsc -p tsconfig.json",

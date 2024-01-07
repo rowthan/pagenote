@@ -45,7 +45,7 @@ export default function VersionItem(props: { version: Version, initShowAll: bool
                 setLoading(false)
             })
         }
-    }, [showAll])
+    }, [showAll,detail.version])
 
     function toggle() {
         setAll(!showAll)

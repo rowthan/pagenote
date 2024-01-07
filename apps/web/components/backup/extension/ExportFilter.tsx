@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import {
   BackupData,
-  BackupDataType,
   BackupVersion,
   ContentType,
 } from '@pagenote/shared/lib/@types/data'
@@ -43,52 +42,45 @@ export default function ExportFilter() {
       const backup: BackupData = {
         backupId: `${Date.now()}`,
         backup_at: Date.now(),
-
         extension_version: whoAmI?.version,
 
         // todo delete
-        lights: [],
-        pages: [],
-        notes: [],
-        snapshots: [],
-        htmlList: [],
-        size: 0,
-        remark: '',
+        // lights: [],
+        // pages: [],
+        // notes: [],
+        // snapshots: [],
+        // htmlList: [],
+        // size: 0,
+        // remark: '',
 
         version: BackupVersion.version7,
         items: [
           {
             db: 'lightpage',
             table: 'light',
-            remark: `total ${lights.length}`,
-            //@ts-ignore
             list: lights,
           },
           {
             db: 'lightpage',
             table: 'note',
-            remark: `total ${notes.length}`,
             //@ts-ignore
             list: notes,
           },
           {
             db: 'lightpage',
             table: 'snapshot',
-            remark: `total ${snapshots.length}`,
             //@ts-ignore
             list: snapshots,
           },
           {
             db: 'lightpage',
             table: 'webpage',
-            remark: `total ${pages.length}`,
             //@ts-ignore
             list: pages,
           },
           {
             db: 'resource',
             table: 'html',
-            remark: `total ${htmlList.length}`,
             //@ts-ignore
             list: htmlList,
           },
@@ -99,7 +91,7 @@ export default function ExportFilter() {
       })
       const url = URL.createObjectURL(blob)
       const filename = `${dayjs().format('YYYY-MM-DD')}.v${
-        BackupVersion.version7
+        BackupVersion.version8
       }.pagenote.bak`
       extApi.developer
         .chrome({
