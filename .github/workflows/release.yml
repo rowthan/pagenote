@@ -50,6 +50,7 @@ jobs:
       - name: Set Git Identity
         run: |
           git restore yarn.lock
+          git status
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
