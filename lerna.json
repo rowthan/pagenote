@@ -13,6 +13,9 @@
   "command": {
     "publish": {
       "allowBranch": ["main","dev","feat*"]
+    },
+    "version": {
+      "message": "chore(release): publish %s"
     }
   }
 }
