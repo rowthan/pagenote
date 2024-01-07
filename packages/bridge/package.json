@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/bridge",
-  "version": "1.0.7-next.0",
+  "version": "1.0.8-next.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
