@@ -79,7 +79,7 @@ jobs:
       - name: Lerna main Version
         if: github.ref == 'refs/heads/main'
         run: |
-          npx lerna version --no-private minor --yes
+          npx lerna version --conventional-commits --no-private minor --yes
 
       - name: Create .npmrc
         run: echo 'registry=https://registry.npmjs.org' > ~/.npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc
