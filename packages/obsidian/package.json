@@ -1,13 +1,10 @@
 {
-  "private": true,
   "name": "@pagenote/obsidian",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/obsidian.esm.js",
-  "source": "./src/index.ts",
   "typings": "./dist/index.d.ts",
-  "type": "module",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +17,7 @@
   "scripts": {
     "dev": "tsdx watch",
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "tsdx build --format cjs,esm,umd",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",

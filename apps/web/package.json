@@ -26,7 +26,7 @@
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
     "@pagenote/bridge": "^1.0.2-alpha.0",
-    "@pagenote/obsidian": "^0.1.12",
+    "@pagenote/obsidian": "^0.1.13",
     "@pagenote/shared": "^1.14.22",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",

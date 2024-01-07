@@ -36,7 +36,7 @@ export enum ContentType {
   formData = 'multipart/form-data',
 }
 
-export default class Obsidian {
+class Obsidian {
   private readonly token: string;
   private readonly host: string;
   public status: {
@@ -50,9 +50,9 @@ export default class Obsidian {
     error?: string
   } = {}
 
-  constructor(props: { token: string, host: string }) {
+  constructor(props: { token: string, host?: string }) {
     this.token = props.token;
-    this.host = props.host;
+    this.host = props.host || 'http://127.0.0.1:27123';
     this._status().then(r => {});
   }
 
@@ -178,3 +178,9 @@ export default class Obsidian {
     })
   }
 }
+
+export {
+  Obsidian
+}
+
+export default Obsidian
