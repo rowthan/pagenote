@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.5 (2024-01-07)
+
+
+### Bug Fixes
+
+* commonjs -> esm import ([f395fc1](https://github.com/rowthan/pagenote/commit/f395fc1e05b5a80b384780cf4423c9d31d689532))
+
+
+
+
+
 ## 1.0.4 (2024-01-07)
 
 **Note:** Version bump only for package @pagenote/bridge
