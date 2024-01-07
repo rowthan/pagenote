@@ -7,6 +7,7 @@ import CheckVersion from "../check/CheckVersion";
 import LogInfo = developer.LogInfo;
 import LogLevel = developer.LogLevel;
 import {toast} from "../../utils/toast";
+import Link from "next/link";
 
 const COLOR_MAP: Record<LogLevel, string> = {
     debug: "text-gray-500",
@@ -110,7 +111,7 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
                                         onClick={downloadLogs}
                                         className={'btn btn-link'}>下载完整日志</button></CheckVersion>
                                 </code>
-                                        {pageSize < 100 && <a className={'link text-sm'} href="/log">查看更多</a>}
+                                        {pageSize < 100 && <Link className={'link text-sm'} href="/log">查看更多</Link>}
                             </pre>
                                 </div>
                                 :
