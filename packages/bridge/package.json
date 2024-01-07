@@ -3,6 +3,8 @@
   "version": "1.0.8-next.8",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"skip: no test specified\"",
     "build": "rm -rf lib && tsc -p tsconfig.json",
