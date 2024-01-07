@@ -197,7 +197,6 @@ const getDetailWebPage = function () {
         urlSearch:"",
         urlHash:"",
         keywords:[],
-        $links:[],
         browserBookmarks: []
     }
     return webpage

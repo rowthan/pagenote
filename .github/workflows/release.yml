@@ -17,7 +17,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -35,12 +38,6 @@ jobs:
           key: ${{ runner.os }}-dependencies-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-dependencies-
 
-      - name: Debug NPM_TOKEN
-        run: |
-          echo "NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}"
-          echo "NPM_TOKEN_EMPTY: ${{ secrets.NPM_TOKEN_EMPTY }}"
-
-
       - name: Yarn install
         run: yarn install
 
@@ -56,6 +53,7 @@ jobs:
       - name: Set Git Identity
         run: |
           git restore yarn.lock
+          git status
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
@@ -65,8 +63,7 @@ jobs:
       - name: Lerna feature Version
         if: startsWith(github.ref, 'refs/heads/feat')
         run: |
-           npx lerna changed
-#          npx lerna version prepatch --preid next --amend --conventional-commits --conventional-prerelease --yes
+          npx lerna version prerelease --preid next --conventional-commits --no-private --conventional-prerelease --yes
 
       # 修订版本号
       - name: Lerna dev Version
@@ -79,14 +76,14 @@ jobs:
       - name: Lerna main Version
         if: github.ref == 'refs/heads/main'
         run: |
-          npx lerna version --no-private minor --yes
+          npx lerna version --conventional-commits --no-private minor --yes
 
       - name: Create .npmrc
         run: echo 'registry=https://registry.npmjs.org' > ~/.npmrc && echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> ~/.npmrc
 
       # https://github.com/lerna/lerna/tree/main/libs/commands/publish#readme
       - name: Publish to NPM
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' ||  startsWith(github.ref, 'refs/heads/feat')
         run: |
           npx lerna publish from-git --yes
         env:
