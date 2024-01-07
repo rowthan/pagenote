@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@pagenote/obsidian",
-  "version": "0.1.18",
+  "version": "0.1.19-next.0",
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/obsidian.esm.js",

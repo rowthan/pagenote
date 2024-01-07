@@ -1,6 +1,6 @@
 {
   "name": "pagenote-web",
-  "version": "0.28.0",
+  "version": "0.28.1-next.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,9 +25,9 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@notionhq/client": "^2.2.5",
-    "@pagenote/bridge": "^1.0.2-alpha.0",
-    "@pagenote/obsidian": "^0.1.13",
-    "@pagenote/shared": "^1.14.22",
+    "@pagenote/bridge": "^1.0.7-next.0",
+    "@pagenote/obsidian": "^0.1.19-next.0",
+    "@pagenote/shared": "^1.14.28-next.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -108,8 +108,8 @@
     "eslint": "^8.50.0",
     "eslint-config-next": "^13.5.3",
     "eslint-config-prettier": "^8.8.0",
-    "lint-staged": "^13.2.2",
     "lerna": "^8.0.2",
+    "lint-staged": "^13.2.2",
     "notion-types": "^6.16.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
