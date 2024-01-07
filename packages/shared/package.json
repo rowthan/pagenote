@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@pagenote/shared",
   "version": "1.14.29-next.4",
   "description": "",
