@@ -65,8 +65,8 @@ jobs:
       - name: Lerna feature Version
         if: startsWith(github.ref, 'refs/heads/feat')
         run: |
-           npx lerna changed
-#          npx lerna version prepatch --preid next --amend --conventional-commits --conventional-prerelease --yes
+          npx lerna changed
+          npx lerna version prepatch --preid next --amend --conventional-commits --conventional-prerelease --yes
 
       # 修订版本号
       - name: Lerna dev Version
