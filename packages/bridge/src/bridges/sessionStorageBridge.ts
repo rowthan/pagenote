@@ -87,6 +87,9 @@ export default class SessionStorageBridge implements Communication<any> {
         const that = this;
         const {listenKey} = this.option
         const globalListen = async function (event: StorageEvent) {
+            if(that.state === STATUS.STOP){
+                return;
+            }
             let requestData: BaseMessageRequest;
             try {
                 let dataString: string = ''
