@@ -124,7 +124,7 @@ export enum RESPONSE_STATUS_CODE {
 export type RESPONSE_CODE = RESPONSE_STATUS_CODE | number;
 type BaseMessageResponse<T> = {
     success: boolean,
-    data:T,
+    data:T | null,
     error?:any
 
     /**
