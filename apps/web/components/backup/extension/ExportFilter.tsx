@@ -19,7 +19,7 @@ function queryAllData(db: string, table: string) {
       },
     })
     .then(function (res) {
-      return res.data.list
+      return res.data?.list || []
     })
 }
 

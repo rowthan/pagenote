@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 export default function useWebpage(key: string = '') {
   const { cache } = useSWRConfig()
   const swrKey = '/page/detail/' + key
-  const { data, isLoading, mutate } = useSWR<Partial<WebPage> | null>(
+  const { data, isLoading, mutate } = useSWR<Partial<WebPage> | null | undefined>(
     swrKey,
     fetchInfo
   )
