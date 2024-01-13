@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.9](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.8...@pagenote/bridge@1.0.9) (2024-01-13)
+
+
+### Features
+
+* broadcast API for extension ([4732dd8](https://github.com/rowthan/pagenote/commit/4732dd8d53546a19a6a32c0041d5ceea6145e976))
+
+
+
+
+
 ## [1.0.8](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.3...@pagenote/bridge@1.0.8) (2024-01-07)
 
 **Note:** Version bump only for package @pagenote/bridge
