@@ -240,7 +240,6 @@ export namespace action {
         track: IExtenstionMessageListener<[category: string, eventAction: string, eventLabel: string, eventValue: number, page?: string], void>
         report: IExtenstionMessageListener<{ errorInfo: any }, void>
         captureView: IExtenstionMessageListener<CaptureVisibleTabOptions, string>
-        copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
         injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
 

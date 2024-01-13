@@ -68,11 +68,29 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
 
 
   if(tabId){ // background -》 front
-    // @ts-ignore
-    chrome.tabs.sendMessage(tabId,request,requestCallback)
+    try{
+      // @ts-ignore
+      chrome.tabs.sendMessage(tabId,request,requestCallback)
+    }catch (e) {
+      requestCallback && requestCallback({
+        status: RESPONSE_STATUS_CODE.UN_REACHED,
+        statusText: "101",
+        success: false
+      })
+    }
   }else{ // front -> background
-    // @ts-ignore
-    chrome.runtime.sendMessage(request,requestCallback)
+    try{
+      // @ts-ignore
+      chrome.runtime.sendMessage(request,requestCallback)
+    }catch (e) {
+      requestCallback && requestCallback({
+        status: RESPONSE_STATUS_CODE.UN_REACHED,
+        statusText: "101",
+        success: false
+      })
+      console.error(e,'request to background error')
+      // onDisconnect
+    }
   }
 }
 
@@ -302,7 +320,6 @@ export default class ExtensionMessage implements Communication<any>{
               status: RESPONSE_STATUS_CODE.UN_REACHED,
               statusText: 'did not find active tab',
               success: false,
-              data: null
             })
           }
         })
