@@ -45,8 +45,8 @@ export default function useCurrentTab(tabId?: number):{tab: Tab | undefined, win
 
   function getAllWindows() {
     return extApi.commonAction.queryTabs({}).then(function (res) {
-      const windowMap: WindowMap = new Map<number, TabGroups>()
-      res.data.forEach(function (item) {
+      const windowMap: WindowMap = new Map<number, TabGroups>();
+      (res.data || []).forEach(function (item: Tab) {
         const newTabs = (windowMap.get(item.windowId) || []).concat(item)
         windowMap.set(item.windowId, newTabs)
       })

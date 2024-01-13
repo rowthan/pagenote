@@ -49,12 +49,12 @@ export default function Trash() {
             }
         }).then((res) => {
             if (res.success) {
-                setList((res.data.list || []) as WebPage[])
+                setList((res.data?.list || []) as WebPage[])
                 setPagination({
                     pageSize: pagination.pageSize,
                     limit: pagination.limit,
                     page: pagination.page,
-                    total: res.data.total,
+                    total: res.data?.total || 0,
                 })
             }
         })

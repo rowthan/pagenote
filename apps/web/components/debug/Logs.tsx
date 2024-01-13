@@ -55,11 +55,11 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
             }
         }).then(function (res) {
             if (res?.success) {
-                setLogs(res.data.list)
+                setLogs(res.data?.list || [])
                 setPagination({
                     page: page,
                     pageSize: pageSize,
-                    totalPages: Math.ceil(res.data.total / pageSize),
+                    totalPages: Math.ceil((res.data?.total || 0) / pageSize),
                 })
             }
         }).finally(function () {
@@ -70,7 +70,7 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
     function downloadLogs() {
         extApi.developer.downloadLog({}).then(function (res) {
             if (res?.success) {
-                toast('已下载，文件' + res.data.filename)
+                toast('已下载，文件' + res.data?.filename)
             }
         })
     }

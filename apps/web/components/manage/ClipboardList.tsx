@@ -74,7 +74,7 @@ export default function ClipboardList() {
       })
       .then((res) => {
         if (res.success) {
-          setList((res.data.list || []) as Box[])
+          setList((res.data?.list || []) as Box[])
         }
       })
   }

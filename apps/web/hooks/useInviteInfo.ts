@@ -14,7 +14,7 @@ export function fetchInfo() {
         url: '/api/',
         method: "GET"
     }).then(function (res) {
-        return res.data.json
+        return res.data?.json
     })
 }
 

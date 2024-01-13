@@ -65,11 +65,11 @@ export default function Page() {
             }
         }).then((res) => {
             if (res.success) {
-                setList((res.data.list || []) as WebPage[])
+                setList((res.data?.list || []) as WebPage[])
                 setPagination({
                     page: pagination.page,
-                    total: res.data.total || 0,
-                    pageSize: Math.ceil(res.data.total / (pagination.pageSize|| 10)),
+                    total: res.data?.total || 0,
+                    pageSize: Math.ceil(res.data?.total || 0 / (pagination.pageSize|| 10)),
                 })
             }
         })
