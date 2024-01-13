@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.9...@pagenote/bridge@1.0.10) (2024-01-13)
+
+
+### Features
+
+* catch ondisconnect on request ([9b1b3ba](https://github.com/rowthan/pagenote/commit/9b1b3baf0ac0f0465d66e6018d2b1ed023ec0b74))
+
+
+
+
+
 ## [1.0.9](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.8...@pagenote/bridge@1.0.9) (2024-01-13)
 
 
