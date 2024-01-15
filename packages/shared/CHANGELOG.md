@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.34](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.29...@pagenote/shared@1.14.34) (2024-01-15)
+
+
+### Features
+
+* catch ondisconnect on request ([9eec683](https://github.com/rowthan/pagenote/commit/9eec68348dc59a562eeafeb7254034608127f556))
+
+
+
+
+
 ## [1.14.33](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.32...@pagenote/shared@1.14.33) (2024-01-15)
 
 **Note:** Version bump only for package @pagenote/shared

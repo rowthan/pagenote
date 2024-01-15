@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.13](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.8...@pagenote/bridge@1.0.13) (2024-01-15)
+
+
+### Features
+
+* broadcast API for extension ([aa9e1a0](https://github.com/rowthan/pagenote/commit/aa9e1a029ec85e1f0c7c318349bf024ee8e5ece4))
+* catch ondisconnect on request ([9eec683](https://github.com/rowthan/pagenote/commit/9eec68348dc59a562eeafeb7254034608127f556))
+
+
+
+
+
 ## [1.0.12](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.11...@pagenote/bridge@1.0.12) (2024-01-15)
 
 **Note:** Version bump only for package @pagenote/bridge
