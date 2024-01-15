@@ -69,7 +69,6 @@ jobs:
       - name: Lerna dev Version
         if: github.ref =='refs/heads/dev'
         run: |
-          npx lerna changed
           npx lerna version --conventional-commits --loglevel debug --no-private patch --yes
 
       # 正式发布
