@@ -6,6 +6,7 @@ import FilterCheckBox from './FilterCheckBox'
 import { Button } from '@/components/ui/button'
 import {box} from "@pagenote/shared/lib/extApi";
 import Box = box.Box;
+import classNames from "classnames";
 
 enum ImportState {
   unset = 0,
@@ -88,7 +89,9 @@ export default function ImportFilter(props: {
           <tbody>
           {
             backupData.items.map((item,index)=>(
-                <tr key={index}>
+                <tr key={index} className={classNames({
+                  "hide": item.list.length === 0
+                })}>
                   <td>{TableMap[item.table]}</td>
                   <td>{item.list.length}个</td>
                   <td>
