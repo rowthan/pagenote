@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.21](https://github.com/rowthan/pagenote/compare/@pagenote/obsidian@0.1.20...@pagenote/obsidian@0.1.21) (2024-01-15)
+
+**Note:** Version bump only for package @pagenote/obsidian
+
+
+
+
+
 ## [0.1.20](https://github.com/rowthan/pagenote/compare/@pagenote/obsidian@0.1.15...@pagenote/obsidian@0.1.20) (2024-01-07)
 
 **Note:** Version bump only for package @pagenote/obsidian

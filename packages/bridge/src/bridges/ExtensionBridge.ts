@@ -68,11 +68,28 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
 
 
   if(tabId){ // background -》 front
-    // @ts-ignore
-    chrome.tabs.sendMessage(tabId,request,requestCallback)
+    try{
+      // @ts-ignore
+      chrome.tabs.sendMessage(tabId,request,requestCallback)
+    }catch (e) {
+      requestCallback && requestCallback({
+        status: RESPONSE_STATUS_CODE.UN_REACHED,
+        statusText: "101",
+        success: false
+      })
+    }
   }else{ // front -> background
-    // @ts-ignore
-    chrome.runtime.sendMessage(request,requestCallback)
+    try{
+      // @ts-ignore
+      chrome.runtime.sendMessage(request,requestCallback)
+    }catch (e) {
+      requestCallback && requestCallback({
+        status: RESPONSE_STATUS_CODE.UN_REACHED,
+        statusText: "101",
+        success: false
+      })
+      // onDisconnect
+    }
   }
 }
 
@@ -243,7 +260,7 @@ export default class ExtensionMessage implements Communication<any>{
     this.proxy = proxy;
   }
 
-  requestMessage<T>(type: string,data: any,header?:BaseMessageHeader): Promise<BaseMessageResponse<T>> {
+  requestMessage<T>(type: string,data: any,header?:Partial<BaseMessageHeader>): Promise<BaseMessageResponse<T>> {
     const request: BaseMessageRequest= {
       type: type,
       data: data,
@@ -302,8 +319,6 @@ export default class ExtensionMessage implements Communication<any>{
               status: RESPONSE_STATUS_CODE.UN_REACHED,
               statusText: 'did not find active tab',
               success: false,
-              //@ts-ignore todo
-              data: undefined
             })
           }
         })
@@ -329,5 +344,20 @@ export default class ExtensionMessage implements Communication<any>{
 
   responseMessage(type: string, data: any, header?: BaseMessageHeader): void {
     throw new Error(type+" not implemented.");
+  }
+
+  broadcast(type: string, data: any, header?: BaseMessageHeader){
+    if(!this.option.isBackground){
+      throw Error('only background can boardcast')
+    }
+
+    const requestMessage = this.requestMessage;
+    chrome.tabs.query({}, function (tabs) {
+      tabs.forEach(function (tab) {
+        return requestMessage(data.type, data, {
+          targetTabId: tab.id,
+        })
+      })
+    })
   }
 }

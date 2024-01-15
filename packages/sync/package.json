@@ -1,7 +1,6 @@
 {
-  "private": true,
   "name": "@pagenote/sync",
-  "version": "0.1.16-next.0",
+  "version": "0.1.17",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/sync.esm.js",
@@ -9,6 +8,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   },
