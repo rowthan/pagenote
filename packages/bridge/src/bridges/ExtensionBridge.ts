@@ -88,7 +88,6 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
         statusText: "101",
         success: false
       })
-      console.error(e,'request to background error')
       // onDisconnect
     }
   }
