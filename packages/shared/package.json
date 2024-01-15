@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.14.32",
+  "version": "1.14.33",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "lint": "echo \"skip\""
   },
   "dependencies": {
-    "@pagenote/bridge": "^1.0.11",
+    "@pagenote/bridge": "^1.0.12",
     "colord": "^2.9.3",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
