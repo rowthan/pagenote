@@ -10,7 +10,7 @@
     "dev": "yarn workspaces run dev",
     "start": "yarn workspaces run start",
     "build": "lerna run --scope=pagenote-web --include-dependencies build ",
-    "dev-web": "lerna run --scope=pagenote-web --include-dependencies dev",
+    "dev:web": "lerna run --scope=pagenote-web dev",
     "lint": "yarn workspaces run lint"
   },
   "engines": {
