@@ -13,7 +13,6 @@ import type {BrowserType} from "./utils/browser";
 
 type AbstractInfo = {
     id: string // 唯一标识，本地、远程联系的唯一ID
-
     /**本地读写基于的，操作ID*/
     l_id?: string
     /**远程读写基于的，操作ID，如文件系统的，文件名路径；数据库系统的 自动生成ID；notion 系统的 page ID*/
