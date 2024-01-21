@@ -1,0 +1,131 @@
+name: memo to obsidian
+# 流程运行的时机
+on:
+  #  定时任务
+  schedule: 1*
+  # 当插件数据有变化时
+  change:
+    tables:
+      - memo
+
+# 流程运行需要的配置变量
+env:
+  - name: obsidian token 密钥
+    id: obsidianToken
+    key: obsidian.token
+  - name: obsidian host API 地址
+    id: obsidianHost
+    key: obsidian.host
+  - name: 导出为 markdown 文档的模板
+    id: obsidianTemplate
+    default: "{{xxx}}"
+
+jobs:
+  # 任务1 计算上次同步后，插件的数据变化。
+  - name: "读取变更内容"
+    id: "get_change_list"
+    steps:
+#      - name: "请求 obsidian 服务器ID标识"
+#        id: "getObsidianId"
+#        uses: "pagenote/fetch@v1"
+#        with:
+#          url: ${{env.obsidianHost}}/vault/.pagenote/id.text
+#          headers:
+#            token: ${{env.obsidianToken}}
+
+      - name: "或许当前插件内数据"
+        uses: "pagenote/table@v1"
+        id: "getCurrentDataList"
+        with:
+          table: "memo"
+          db: "lightpage"
+          method: "keys"
+
+#      - name: "获取 obsidian 上次同步后的本地快照数据"
+#        uses: "pagenote/table@v1"
+#        id: "getLastSnapshot"
+#        with:
+#          db: "workflow",
+#          table: "snapshot"
+#          method: "get"
+#          params:
+#            query:
+#              id: ${{steps.getObsidianId.outputs}}
+
+#      - name: "获取当前插件的快照信息"
+#        uses: "pagenote/table@v1"
+#        id: "getCurrentSnapshot"
+#        with:
+#          table: "memo"
+#          db: "lightpage"
+#          method: "snapshot"
+#
+#      - name: "计算本地快照数据与上次快照数据对比"
+#        uses: "pagenote/snapshot!v1"
+#        with:
+#          method: "diff"
+#          local: ${{steps.getCurrentSnapshot.outputs}}
+#          cloud: ${{steps.getLastSnapshot.outputs}}
+
+  # 任务2: 数据流出
+  - name: "将本地变更的数据同步至远端"
+    strategy:
+      matrix:
+        # 从上一个 job 中获取获得变更列表作为循环处理的初始值
+        item: ${{jobs.get_change_list.outputs}}
+    steps:
+      - name: "获取本地数据"
+        uses: "pagenote/table@v1"
+        id: "getLocalData"
+        with:
+          table: "memo"
+          db: "lightpage"
+          method: "get"
+          params: ${{matrix.item}}
+
+      - name: "获取远程数据"
+        uses: "pagenote/fetch@v1"
+        id: "getRemoteData"
+        debug: true
+        with:
+          url: ${{env.obsidianHost}}/vault/${{matrix.item}}.md
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+          method: 'get'
+
+      - name: "比较数据"
+        id: "pkData"
+        uses: "pagenote/pick@v1"
+        debug: true
+        with:
+          pkBy:
+            - "updateAt"
+            - "__mtime"
+            - "createAt"
+            - "__ctime"
+          list:
+            - ${{steps.getLocalData.outputs}}
+            - ${{steps.getRemoteData.outputs}}
+
+      - name: "将数据转为markdown格式"
+        if: ${{steps.pkData.outputs.index}} == 1
+        uses: "pagenote/convert@v1"
+        id: 'convertToMarkdown'
+        debug: true
+        with:
+          variables: ${{steps.pkData.outputs.data}}
+          template: "## {{title}} {{markdown}}"
+
+      - name: "更新至 obsidian"
+        if: ${{steps.pkData.outputs}} == 1
+        uses: "pagenote/fetch@v1"
+        id: 'uploadToObsidian'
+        with:
+          url: ${{env.obsidianHost}}/vault/_test_/ci.md
+          headers:
+            Content-Type: "text/markdown"
+            Accept: "application/vnd.olrapi.note+json"
+            Authorization: Bearer ${{env.obsidianToken}}
+          method: 'PUT'
+          body: ${{steps.convertToMarkdown.outputs}}
+

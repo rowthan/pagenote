@@ -1,6 +1,8 @@
 {
+  "name": "@pagenote/actions",
   "version": "0.1.1-next.0",
   "license": "MIT",
+  "private": true,
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -8,7 +10,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -30,7 +32,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "actions",
   "author": "rowthan",
   "module": "dist/actions.esm.js",
   "size-limit": [
@@ -45,10 +46,16 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.0.2",
+    "@types/jest": "^29.5.11",
     "husky": "^8.0.3",
+    "jest": "^29.7.0",
     "size-limit": "^11.0.2",
+    "ts-jest": "^29.1.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
   }
 }
