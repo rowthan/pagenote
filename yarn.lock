@@ -2833,6 +2833,17 @@
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
 
+"@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.34":
+  version "1.14.34"
+  resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.14.34.tgz#65cde3a78de98a988b22d695e323dd1c36463ed1"
+  integrity sha512-4QfDW8Up68rkwVZvc3aR+gEHXyZvlbQFVtaylFvSZmr6AAYm8GKFEI4O8tNO/WbwsJRLoAXCrjaPqcH35Xw4Eg==
+  dependencies:
+    "@pagenote/bridge" "^1.0.13"
+    colord "^2.9.3"
+    lodash "^4.17.21"
+    md5 "^2.3.0"
+    mustache "^4.2.0"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmmirror.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
