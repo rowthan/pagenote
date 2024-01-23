@@ -8,13 +8,13 @@ import TipInfo from 'components/TipInfo'
 import useWhoAmi from 'hooks/useWhoAmi'
 import { basePath } from 'const/env'
 import { appendCss, appendScript } from 'utils/document'
-import LocalHTML from 'components/offline/LocalHTML'
 import RedirectToExt from 'components/RedirectToExt'
 import { contentToFile } from '@pagenote/shared/lib/utils/document'
 import { html } from '@pagenote/shared/lib/extApi'
 import OfflineHTML = html.OfflineHTML
 import useTableQuery from '../../hooks/table/useTableQuery'
 import { Collection } from '../../const/collection'
+import Achieve from "./achieve";
 
 function runScript(root?: Document | null) {
   if (!root) {
@@ -115,6 +115,7 @@ export default function Offline() {
 
           appendScript(
             [
+              `${whoAmI?.origin}/lib/whatsElement.iife.js`,
               `${whoAmI?.origin}/lib/pagenote/5.5.3/pagenote.js`,
               `${whoAmI?.origin}/rollup/pagenote_kit.js`,
             ],
@@ -154,7 +155,7 @@ export default function Offline() {
 
   useEffect(
     function () {
-      fetchResource()
+      fetchResource();
     },
     [query, whoAmI]
   )
@@ -170,7 +171,7 @@ export default function Offline() {
         </Head>
 
         {withoutId ? (
-          <LocalHTML />
+            <Achieve />
         ) : resource ? (
           <div className="alert alert-info shadow-lg">
             <div className={'select-none'}>

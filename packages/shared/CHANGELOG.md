@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.35-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.34...@pagenote/shared@1.14.35-next.0) (2024-01-23)
+
+
+### Bug Fixes
+
+* 修复离线html 不可标记问题 ([fcd5ef9](https://github.com/rowthan/pagenote/commit/fcd5ef9572c2160a7243ba21d1fc45a36baf62dc))
+
+
+
+
+
 ## [1.14.34](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.29...@pagenote/shared@1.14.34) (2024-01-15)
 
 
