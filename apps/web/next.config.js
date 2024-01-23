@@ -52,8 +52,8 @@ module.exports = {
 
     config.externals.push({
       'ali-oss': 'umd OSS',
-      'react':'React',
-      'react-dom': 'ReactDOM',
+      // 'react':'React',
+      // 'react-dom': 'ReactDOM',
     })
 
     return config
