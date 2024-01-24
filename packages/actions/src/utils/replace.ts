@@ -9,7 +9,7 @@ type InputValue = string | InputObject | string[];
 type InputObject = { [key: string]: InputValue };
 type VariablesObject = { [key: string]: any };
 
-function replaceTemplates(input: InputObject, variables: VariablesObject): InputObject {
+function replaceTemplates(input: InputObject, variables: VariablesObject, replaceWhenEmpty?:any): InputObject {
     const replacer = (value: InputValue): InputValue => {
         if (typeof value === 'string') {
             return replaceStringTemplate(value);
@@ -22,23 +22,31 @@ function replaceTemplates(input: InputObject, variables: VariablesObject): Input
     };
 
     const replaceStringTemplate = (str: string): any => {
-        let response: any = str;
+        let response: str | unknown = str;
         const templateMatches = str.match(/\${{\s*([^}]+)\s*}}/g);
-        const remainLastResult = templateMatches && templateMatches.length > 1;
+        const isStringTemplate = templateMatches && templateMatches.length > 1;
         if (templateMatches) {
             for (const match of templateMatches) {
                 const key = match.match(/\${{\s*([^}]+)\s*}}/)?.[1]?.trim();
+                /**变量key ，值替换*/
                 if (key) {
-                    const replacement = getKey(variables, key) || (remainLastResult ? '' : undefined);
-                    if(replacement!==undefined){
-                        if (typeof replacement === 'string') {
-                            response = response.replace(match, replacement !== undefined ? replacement : match);
-                        } else {
-                            response = replacement;
-                        }
-                    }else{
-                        response = undefined
-                    }
+                    let replacement =
+                        getKey(variables, key);
+                    /**如果变量中没有对应的值，则根据配置重新设置值*/
+                   if(replacement === undefined){
+                       replacement = replaceWhenEmpty;
+                   }
+
+                   // 如果没有值，则直接返回
+                   if(replacement !== undefined){
+                       // 如果是字符串模板，以及替换结果是字符串，则直接按照字符串替换变量
+                       if(isStringTemplate || typeof replacement === 'string'){
+                           response = response
+                               .replace(match,replacement);
+                       }else{
+                           response = replacement;
+                       }
+                   }
                 }
             }
         }

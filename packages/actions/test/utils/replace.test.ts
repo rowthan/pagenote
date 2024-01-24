@@ -1,5 +1,15 @@
 import {replaceTemplates} from "../../src/utils/replace";
 
+const variables = {
+    env: {
+        host: "127.0.0.1",
+        id: "123",
+        account: { username: "name" },
+        fun: function () {
+            console.log("Executing function");
+        }
+    }
+};
 
 describe('check replace', () => {
     it('should replace variables', function () {
@@ -19,18 +29,7 @@ describe('check replace', () => {
             i: "${{env.empty}}/get/${{env.id}}",
         };
 
-        const variables = {
-            env: {
-                host: "127.0.0.1",
-                id: "123",
-                account: { username: "name" },
-                fun: function () {
-                    console.log("Executing function");
-                }
-            }
-        };
-
-        const result = replaceTemplates(input, variables);
+        const result = replaceTemplates(input, variables,'');
         expect(result).toEqual({
             a: "127.0.0.1/get/123",
             b: { c: variables.env.id ,
@@ -43,9 +42,20 @@ describe('check replace', () => {
             d: variables.env.fun,
             e: [variables.env.id, variables.env.host],
             f: '127.0.0.1/get/',
-            g: ['123',undefined],
-            h: [undefined,'123'],
+            g: ['123',''],
+            h: ['','123'],
             i: '/get/123'
         })
     });
+
+    it('should keep origin value when replaceWhenEmpty is empty', () => {
+        const input = {
+            a: `$\{{env.id}}/123/$\{{env.emptyKey}}`,
+            g: ["${{env.id}}", "${{env.emptykey}}"],
+        }
+        expect(replaceTemplates(input, variables)).toEqual({
+            a: `${variables.env.id}/123/$\{{env.emptyKey}}`,
+            g: ["123", "${{env.emptykey}}"],
+        })
+    })
 })
