@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.18](https://github.com/rowthan/pagenote/compare/@pagenote/sync@0.1.17...@pagenote/sync@0.1.18) (2024-01-23)
+
+**Note:** Version bump only for package @pagenote/sync
+
+
+
+
+
 ## 0.1.17 (2024-01-15)
 
 
