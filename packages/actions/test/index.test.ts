@@ -21,12 +21,19 @@ describe('workflow and action run', () => {
 
   it('works to write data to database', async () => {
     const database: IAction = await MockRegisterAction('pagenote/table@v1');
-    const initData = genMemoData()
+    const initData = genMemoData('test')
     await database.run({
       table: 'memo',
       db: 'lightpage',
       method: 'put',
       params: initData,
+    })
+
+    await database.run({
+      table: 'memo',
+      db: 'lightpage',
+      method: 'put',
+      params: genMemoData('test2'),
     })
 
     const getDataResponse = await database.run({

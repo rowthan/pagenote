@@ -11,16 +11,6 @@ export function generateMatrixTasks(obj: Record<string, any[]>,groupByField?:str
 interface MatrixObject {
     [key: string]: any
 }
-interface MatrixObject {
-    node: number;
-    version: number;
-    c: number;
-}
-interface MatrixObject {
-    node: number;
-    version: number;
-    c: number;
-}
 
 function generateMatrixCombinations(
     input: Record<string, number[]>,
@@ -48,7 +38,7 @@ function generateMatrixCombinations(
         }
     }
 
-    generateCombinations(0, [{ node: 0, version: 0, c: 0 }]);
+    generateCombinations(0, []);
 
     // Determine the default groupByField as the one with the fewest elements
     if (!groupByField) {

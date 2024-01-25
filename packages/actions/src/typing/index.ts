@@ -59,6 +59,7 @@ export type WorkFlow = {
         key: string,
         id: string,
         name: string
+        default: string | any;
     }[]
     on: {
         change?: {
