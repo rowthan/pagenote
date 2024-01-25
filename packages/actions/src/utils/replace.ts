@@ -6,10 +6,10 @@
  * */
 //@ts-nocheck
 type InputValue = string | InputObject | string[];
-type InputObject = { [key: string]: InputValue };
+type InputObject = Record<string, any>;
 type VariablesObject = { [key: string]: any };
 
-function replaceTemplates(input: InputObject, variables: VariablesObject, replaceWhenEmpty?:any): InputObject {
+function replaceTemplates<T extends InputObject>(input: InputObject, variables: VariablesObject, replaceWhenEmpty?:any): T {
     const replacer = (value: InputValue): InputValue => {
         if (typeof value === 'string') {
             return replaceStringTemplate(value);
@@ -21,7 +21,7 @@ function replaceTemplates(input: InputObject, variables: VariablesObject, replac
         return value;
     };
 
-    const replaceStringTemplate = (str: string): any => {
+    const replaceStringTemplate = (str: string=''): any => {
         let response: str | unknown = str;
         const templateMatches = str.match(/\${{\s*([^}]+)\s*}}/g);
         const isStringTemplate = templateMatches && templateMatches.length > 1;
