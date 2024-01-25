@@ -14,7 +14,7 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
         if (typeof value === 'string') {
             return replaceStringTemplate(value);
         } else if (Array.isArray(value)) {
-            return value.map(replaceStringTemplate);
+            return value.map(typeof value === 'string' ? replaceStringTemplate : replacer);
         } else if (typeof value === 'object' && value !== null) {
             return recursiveReplace(value);
         }

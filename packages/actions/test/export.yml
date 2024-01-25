@@ -8,7 +8,7 @@ on:
     tables:
       - memo
 
-# 流程运行需要的配置变量
+# 流程运行需要的配置变量，要求用户进行配置、隐私数据、个性化数据均在此配置
 env:
   - name: obsidian token 密钥
     id: obsidianToken
@@ -16,9 +16,13 @@ env:
   - name: obsidian host API 地址
     id: obsidianHost
     key: obsidian.host
+  - name: 存放路径
+    id: obsidian.root
+    key: obsidianRoot
+    default: "__test__"
   - name: 导出为 markdown 文档的模板
     id: obsidianTemplate
-    default: "{{xxx}}"
+    default: "---\ncreateAt: {{createAt}}\nupdateAt: {{updateAt}}\ntitle:{{title}}\n---\n{{markdown}}"
 
 jobs:
   # 任务1 计算上次同步后，插件的数据变化。
@@ -69,9 +73,10 @@ jobs:
 
   # 任务2: 数据流出
   - name: "将本地变更的数据同步至远端"
+    id: "sync_to_cloud"
     strategy:
       matrix:
-        # 从上一个 job 中获取获得变更列表作为循环处理的初始值
+        # 从上一个 job 中获取获得变更列表作为循环处理的初始值 todo 如果取不到值，这里有问题。取不到应该默认空数组
         item: ${{jobs.get_change_list.outputs}}
     steps:
       - name: "获取本地数据"
@@ -86,9 +91,8 @@ jobs:
       - name: "获取远程数据"
         uses: "pagenote/fetch@v1"
         id: "getRemoteData"
-        debug: true
         with:
-          url: ${{env.obsidianHost}}/vault/${{matrix.item}}.md
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{matrix.item}}.md
           headers:
             Authorization: Bearer ${{env.obsidianToken}}
           method: 'get'
@@ -105,26 +109,25 @@ jobs:
             - "__ctime"
           list:
             - ${{steps.getLocalData.outputs}}
-            - ${{steps.getRemoteData.outputs}}
+            - ${{steps.getRemoteData.outputs._response}}
 
       - name: "将数据转为markdown格式"
         if: ${{steps.pkData.outputs.index}} == 1
         uses: "pagenote/convert@v1"
         id: 'convertToMarkdown'
-        debug: true
         with:
           variables: ${{steps.pkData.outputs.data}}
-          template: "## {{title}} {{markdown}}"
+          template: ${{env.obsidianTemplate}}
 
       - name: "更新至 obsidian"
         if: ${{steps.pkData.outputs}} == 1
         uses: "pagenote/fetch@v1"
         id: 'uploadToObsidian'
         with:
-          url: ${{env.obsidianHost}}/vault/_test_/ci.md
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{steps.pkData.outputs.data.id}}.md
           headers:
             Content-Type: "text/markdown"
-            Accept: "application/vnd.olrapi.note+json"
+            Accept: "application/json"
             Authorization: Bearer ${{env.obsidianToken}}
           method: 'PUT'
           body: ${{steps.convertToMarkdown.outputs}}

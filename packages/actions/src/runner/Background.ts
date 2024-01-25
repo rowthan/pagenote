@@ -1,9 +1,10 @@
 import jsYaml from 'js-yaml';
-import {TaskState, WorkFlow, WorkFlowState} from "../typing";
+import {Job, Step, TaskState, WorkFlow, WorkFlowState} from "../typing";
 import {IAction} from "../typing/IAction";
 import set from 'lodash/set'
-import get from 'lodash/get'
+import {get} from 'lodash'
 import {replaceTemplates} from "../utils/replace";
+import {generateMatrixTasks} from "../utils/matrix";
 
 interface WorkflowOption {
   yml?: string
@@ -27,7 +28,16 @@ export default class Workflows{
 
   public state : WorkFlowState
 
-  public runtime: Record<string, any> = {};
+  /**
+   * 运行时环境变量
+   * * @type {Record<contextID 上下文ID, Map<string,any>>}
+   * */
+  public runtime: Map<string, Record<string,any>> = new Map<string, {
+    steps: any,
+    jobs: any,
+    matrix: any,
+    [key:string]: any,
+  }>();
 
   private readonly  option: WorkflowOption;
 
@@ -57,8 +67,13 @@ export default class Workflows{
   }
 
 
-  _setRuntime(id: string, value: Record<string, any> = {}){
-    set(this.runtime, id, value)
+  _setRuntime(id: string, value: any = {},contextId: string){
+    const runtime = this.runtime.get(contextId) || this.runtime.set(contextId,{}).get(contextId) || {}
+    set(runtime, id, value)
+  }
+
+  _getRuntime(contextId: string){
+    return this.runtime.get(contextId) || this.runtime.set(contextId,{}).get(contextId);
   }
 
   async _getAction(uses: string){
@@ -70,17 +85,14 @@ export default class Workflows{
     this.actions.set(uses,action);
     return action;
   }
-
-  async runStep(jobIndex: number,stepIndex: number){
-    this.running = [jobIndex,stepIndex]
-    const step = this.workflowInfo?.jobs[jobIndex]?.steps[stepIndex];
+  /**
+   * 执行 step 任务
+   * */
+  async runStep(step: Step,stepsContextId:string){
     if(!step){
       return
     }
     const { uses='' } = step;
-    if(step.debug){
-      debugger
-    }
 
     step._state = TaskState.running;
     const action = await this._getAction(uses);
@@ -88,65 +100,100 @@ export default class Workflows{
       step._state = TaskState.fail;
       throw Error('without action')
     }
-    this._setRuntime(`steps.${step.id || step.name}`)
 
     const variables = {
       env: this.context.env,
-      steps: this.runtime.steps,
-      jobs: this.runtime.jobs,
+      steps: this._getRuntime(stepsContextId)?.steps || {},
+      jobs: this._getRuntime(stepsContextId)?.jobs || {},
+      matrix: this._getRuntime(stepsContextId)?.matrix || {}
     }
 
     const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
     console.log(withArgs)
+    let response;
     try{
-      const response = await action.run(withArgs);
-      this._setRuntime(`steps.${step.id || step.name}.outputs`, response)
+      if(step.debug){
+        debugger
+      }
+      response = await action.run(withArgs);
+      this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
     }catch (e) {
       step._state = TaskState.fail;
       throw e;
     }
     step._state = TaskState.complete;
+    return response;
   }
 
-  async runJob(jobIndex: number){
-    this.running = [jobIndex,-1]
-    const job = this.workflowInfo?.jobs[jobIndex];
+  async _runSteps(steps: Step[],contextId:string){
+    let response;
+    for (let i = 0; i < steps.length; i++) {
+     response = await this.runStep(steps[i],contextId);
+    }
+    return response;
+  }
+
+  /**
+   * 执行 定义的单个 job
+   * */
+  async runJob(job: Job,jobsContextId: string){
     if(!job) return;
-    this._setRuntime(`jobs.${job.id || job.name}`,{});
 
     job._state = TaskState.running;
-    for (let i = 0; i < job.steps.length; i++) {
-      await this.runStep(jobIndex,i);
+    /**
+     * 如果 job 是一个 matrix 任务，则要进行叉乘创建子 job。
+     */
+    const variables = this._getRuntime(jobsContextId) || {};
+    job = replaceTemplates<Job>(job,variables)
+    if(job.strategy?.matrix){
+      const matrixVariables = generateMatrixTasks(job.strategy.matrix);
+      for (let i=0; i<matrixVariables.length; i++){
+        for(let j=0; j<matrixVariables[i].length; j++){
+          const contextId = Date.now()+ (job.id || job.name) + 'matrix'+i+j;
+          const stepVariable = matrixVariables[i][j];
+          this._setRuntime('matrix',stepVariable,contextId)
+          const response = await this._runSteps(job.steps,contextId);
+          this._setRuntime(`jobs.${job.id||job.name}.outputs`,response,jobsContextId)
+        }
+      }
+    } else {
+      for (let i = 0; i < job.steps.length; i++) {
+        const {id='',name='',} = job || {};
+        const contextId = id + name + Date.now();
+        const response = await this._runSteps(job.steps,contextId)
+        this._setRuntime(`jobs.${id||name}.outputs`,response,jobsContextId)
+      }
     }
+
     job._state = TaskState.complete;
   }
 
   async run(){
     this.state = WorkFlowState.running;
-    // 环境变量准备
+    /**1.环境变量准备*/
     const envKeys = (this.workflowInfo?.env || []).map(function (item) {
       return item.key;
     });
     const preparedEnv:Record<string, any> = await this.option.prepareEnv(envKeys) || {};
     const envObject: Record<string, any> = {}
     this.workflowInfo?.env?.forEach(function (item) {
-      set(envObject, item.key, get(preparedEnv, item.key))
+      const value = get(preparedEnv, item.key) || item.default;
+      set(envObject, item.key, value)
       if(item.id){
-        set(envObject, item.id, get(preparedEnv, item.key))
+        set(envObject, item.id, value)
       }
     });
     this.context.env = envObject;
-    console.log(this.context.env,'env')
-    // 运行job
+
+
+    /**2. 运行job*/
     const jobs = this.workflowInfo?.jobs || [];
+    /**所有的 jobs 同一个上下文*/
+    const contextId = Date.now()+ (this.workflowInfo?.name || '')
     for(let i=0; i<jobs.length; i++){
-      await this.runJob(i)
+      await this.runJob(jobs[i],contextId)
     }
     this.state = WorkFlowState.success;
-  }
-
-  _resetState(){
-
   }
 
   check(): Promise<boolean> {

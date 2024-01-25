@@ -58,4 +58,54 @@ describe('check replace', () => {
             g: ["123", "${{env.emptykey}}"],
         })
     })
+
+    it('replace array object', () => {
+        const job = {
+            "steps": [
+                {
+                    "name": "或许当前插件内数据",
+                    "uses": "pagenote/table@v1",
+                    "id": "getCurrentDataList",
+                    "with": {
+                        "table": "memo",
+                        "db": "lightpage",
+                        "method": "keys"
+                    }
+                }
+            ],
+            "_state": 1
+        }
+        const variables = {
+            "jobs": {
+                "get_change_list": {}
+            }
+        }
+        expect(replaceTemplates(job, variables)).toEqual(job)
+    })
+
+
+    it('should replace matrix by jobs outputs',()=>{
+        const input = {
+            "name": "将本地变更的数据同步至远端",
+            "id": "sync_to_cloud",
+            "strategy": {
+                "matrix": {
+                    "item": "${{jobs.get_change_list.outputs}}"
+                }
+            },
+        }
+        const variables = {
+            "jobs": {
+                "get_change_list": {
+                    "outputs": [
+                        "test",
+                        "init_key1706189561513"
+                    ]
+                }
+            }
+        }
+
+        const replaced = replaceTemplates(input, variables)
+        expect(replaced.strategy.matrix.item).toEqual(variables.jobs.get_change_list.outputs)
+    })
 })
