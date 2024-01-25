@@ -47,7 +47,7 @@ export type Job = {
     // 列表运行
     strategy?: {
         matrix: {
-            [key: string]: string | any;
+            [key: string]: any[]
         }
     }
 
