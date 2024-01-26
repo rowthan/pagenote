@@ -1,6 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
+var version = "1"
 
 var cacheRules = {
   whiteList: [],
@@ -81,7 +82,7 @@ var util = {
  * 1. 监听install事件，安装完成后，进行文件缓存
  * **/
 self.addEventListener('install', function (e) {
-  console.log('Service Worker install')
+  console.log('Service Worker install',version)
   if(preCacheFiles.length){
     // 加载新缓存
     var cacheOpenPromise = caches.open(preCacheName).then(function (cache) {
@@ -131,9 +132,9 @@ self.addEventListener('fetch', function (e) {
           .then(function (response) {
             const allowCache = util.checkAllowCache(e.request)
             if (allowCache) {
-              // todo 优化，对于 hash 资源，也不需要重新拉取
-              var needCache = !response || util.checkIsDocument(e.request);
-              if (needCache) {
+              // 如果没有响应或者请求内容为 doc ,则需要保持最新，重新拉取
+              var needRefreshCache = !response || util.checkIsDocument(e.request);
+              if (needRefreshCache) {
                 util.fetchAndCache(e.request)
               }
               if (response) {
