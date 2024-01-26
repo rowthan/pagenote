@@ -6,8 +6,15 @@
   padding: 0 !important;
 }
 
+summary{
+  .notion-h {
+    width: 90% !important;
+  }
+}
+
+
 .notion-h {
-  min-width: 90% !important;
+  width: 100% !important;
 }
 
 
@@ -58,4 +65,18 @@ blockquote.notion-quote{
     left: 40px;
     max-width: calc(50% - 390px);
   }
+}
+
+@keyframes highlightFadeOut {
+  0% {
+    background-color: rgb(214, 196, 93); /* 初始高亮背景颜色 */
+  }
+  100% {
+    background-color: transparent; /* 最终透明背景 */
+  }
+}
+
+.highlight-hash{
+  animation: highlightFadeOut 3s ease-out forwards;
+  outline: 1px solid #fff; 
 }
