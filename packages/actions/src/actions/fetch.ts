@@ -20,7 +20,7 @@ interface Output extends Response{
 
 const FetchAction: IAction = {
     id: 'pagenote/fetch',
-    version: 'v1',
+    version: '1',
     description: "发送网络请求",
     engines: {
         extension: '>=0.28.10'

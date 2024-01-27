@@ -1,20 +1,20 @@
 import {IAction} from "../typing/IAction";
 
-export interface TableProps {
-  method: string
+export interface TableActionProps {
+  method: string | 'keys' | 'get' | 'put'
   "db": string,
   "params": any,
   "table": string
 }
 
 const tableAction: IAction = {
-  id: 'table',
-  version: 'v1',
+  id: 'pagenote/table',
+  version: '1',
   description: '数据库操作',
   engines: {
     extension: '>=0.28.10',
   },
-  run: function (props: TableProps) {
+  run: function (props: TableActionProps) {
     // const table = context.background.db.getTable(props.db,props.table);
     // return table[props.method](props.params)
     return Promise.resolve(props);

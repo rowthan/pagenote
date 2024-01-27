@@ -30,7 +30,8 @@ function pkData<T>(data1asDefault: T, data2: T, compareKeys: Array<keyof T>): [T
 
 const pickAction: IAction = {
     description: "",
-    id: "",
+    id: 'pagenote/pick',
+    version: '1',
     run(args: { pkBy: string[], list: any[] }): Promise<any> {
         const result = pkData(args.list[0], args.list[1], args.pkBy);
         return Promise.resolve({
@@ -38,7 +39,6 @@ const pickAction: IAction = {
             index: result[1],
         });
     },
-    version: ""
 }
 
 export default pickAction;

@@ -2,18 +2,27 @@ import jsYaml from 'js-yaml';
 import {Job, Step, TaskState, WorkFlow, WorkFlowState} from "../typing";
 import {IAction} from "../typing/IAction";
 import set from 'lodash/set'
-import {get} from 'lodash'
-import {replaceTemplates} from "../utils/replace";
-import {generateMatrixTasks} from "../utils/matrix";
+import get from 'lodash/get'
+import {replaceTemplates,generateMatrixTasks} from "../utils";
 
 interface WorkflowOption {
   yml?: string
   registerAction: (actions:string)=>Promise<IAction>;
-  prepareEnv: (keys: string[])=>Promise<Object>
+  prepareEnv: (keys: string[])=>Promise<Object>;
+  hooks?: {
+    beforeJob?: ()=>void,
+    afterJob?: ()=>void,
+    beforeStep?: (step: Step, request: any)=>void,
+    afterStep?: (step: Step, response:any)=>void,
+    beforeTask?: ()=>void,
+    afterTask?: ()=>void,
+    beforeWorkflow?: ()=>void,
+    afterWorkflow?: ()=>void,
+  }
 }
 
 
-export default class Workflows{
+export default class Background{
   public workflowInfo:WorkFlow | null = null
   public context:{
     // 环境变量
@@ -98,7 +107,7 @@ export default class Workflows{
     const action = await this._getAction(uses);
     if(!action){
       step._state = TaskState.fail;
-      throw Error('without action')
+      throw Error('without action::'+ uses)
     }
 
     const variables = {
@@ -109,11 +118,13 @@ export default class Workflows{
     }
 
     const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
-    console.log(withArgs)
     let response;
     try{
       if(step.debug){
         debugger
+      }
+      if(this.option.hooks?.beforeStep){
+        this.option.hooks?.beforeStep(step,withArgs);
       }
       response = await action.run(withArgs);
       this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
@@ -122,6 +133,9 @@ export default class Workflows{
       throw e;
     }
     step._state = TaskState.complete;
+    if(this.option.hooks?.afterStep){
+      this.option.hooks?.afterStep(step,response);
+    }
     return response;
   }
 
@@ -146,7 +160,7 @@ export default class Workflows{
     const variables = this._getRuntime(jobsContextId) || {};
     job = replaceTemplates<Job>(job,variables)
     if(job.strategy?.matrix){
-      const matrixVariables = generateMatrixTasks(job.strategy.matrix);
+      const matrixVariables = generateMatrixTasks(job.strategy.matrix) || [];
       for (let i=0; i<matrixVariables.length; i++){
         for(let j=0; j<matrixVariables[i].length; j++){
           const contextId = Date.now()+ (job.id || job.name) + 'matrix'+i+j;
