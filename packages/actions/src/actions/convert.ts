@@ -7,8 +7,8 @@ Handlebars.registerHelper('lookup', function (obj, key) {
 
 const convert: IAction = {
     description: "",
-    id: "",
-    version: "",
+    id: "pagenote/convert",
+    version: "1",
     run(args: { template: string, variables: any }): Promise<string> {
         const template = Handlebars.compile(args.template,{});
         const replacedString = template(args.variables);
