@@ -21,7 +21,6 @@ export function getPathFromProperties(block?: Block) {
 
 export function highlightTarget(hashId: string){
   const target = document.getElementById(hashId.replace("#",""));
-  console.log('hash id',hashId,target)
   const element = target?.parentElement?.parentElement || target;
 
   if(!element){

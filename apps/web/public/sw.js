@@ -1,7 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "1"
+var version = "2"
 
 var cacheRules = {
   whiteList: [],
@@ -41,16 +41,17 @@ var util = {
       if (request.method !== 'GET') {
         return false
       }
-
-      /**黑名单，不实用缓存*/
-      var blockList = caches.blockList || []
+      /**黑名单，不用缓存*/
+      var blockList = cacheRules.blockList || []
       for (let i in blockList) {
         try {
           var regex = new RegExp(blockList[i])
           if (regex.test(request.url)) {
             return false
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('check error',blockList[i])
+        }
       }
 
       /**静态资源，可安全使用缓存*/
@@ -103,7 +104,7 @@ self.addEventListener('activate', function (e) {
   var cachePromise = caches.keys().then(function (keys) {
     var deleteKey = keys.filter(function (key) {
       // 非白名单缓存 均清空
-      return !['image', 'script', 'font', 'style', preCacheName].includes(key)
+      return !['image', 'script', 'font', 'style'].includes(key)
     })
     return Promise.all(
         deleteKey.map(function (key) {
@@ -174,6 +175,11 @@ self.addEventListener('message', function (e) {
         })
       }
       break
+    case 'add_block':
+      if (e.data.values.length) {
+        cacheRules.blockList = cacheRules.blockList.concat(e.data.values)
+      }
+      break;
     default:
       console.warn('not support ', e.data)
   }

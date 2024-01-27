@@ -34,8 +34,6 @@ export default function Document() {
           content="#4e88e5"
         />
         <meta property="og:image" content="/images/og.svg" />
-        <script src={`${basePath}/react.production.min.js`}></script>
-        <script src={`${basePath}/react-dom.production.min.js`}></script>
       </Head>
       <body>
         <Main />
