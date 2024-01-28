@@ -13,6 +13,7 @@ export enum TaskState {
     complete = 2,
     fail = -1,
     waiting = 0,
+    skip    = 3,
 }
 
 export enum WorkFlowState {
@@ -30,11 +31,7 @@ export type Step = {
     output?: string // 将结果存储为
     debug?: boolean
     // run?: Step[]
-    if?: {
-        input: any,
-        target: any,
-        compare: '=' | ">" | "!=" | "startsWith"
-    }
+    if?: string
     _state: TaskState
 }
 export type Job = {

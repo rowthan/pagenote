@@ -1,8 +1,8 @@
-import fetch from "../../src/actions/fetch";
+import fetchRequest from "../../src/actions/fetch";
 
 describe('fetch get', () => {
     it('get html', async function () {
-        const result = await fetch.run({
+        const result = await fetchRequest({
             method: 'GET',
             url: 'https://baidu.com',
             body: null,
@@ -17,7 +17,7 @@ describe('fetch get', () => {
     });
 
     it('get javascript file', async function () {
-        const result = await fetch.run({
+        const result = await fetchRequest({
             method: 'GET',
             url: 'https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js',
             body: null,
@@ -30,7 +30,7 @@ describe('fetch get', () => {
     });
 
     it('get image', async function () {
-        const result = await fetch.run({
+        const result = await fetchRequest({
             method: 'GET',
             url: 'https://s.cn.bing.net/th?id=OHR.MacaroniPenguins_ZH-CN0600867997_1920x1080.webp&qlt=50',
             body: null,
@@ -47,7 +47,7 @@ describe('fetch get', () => {
 
 
     it('get json', async function () {
-        const result = await fetch.run({
+        const result = await fetchRequest({
             method: 'GET',
             url: 'https://tieba.baidu.com/show/getlivestat',
             body: null,

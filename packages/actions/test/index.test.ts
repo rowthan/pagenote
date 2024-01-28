@@ -5,38 +5,36 @@ import {MockEnv, MockRegisterAction} from "./mock/Mock";
 import {IAction} from "../src/typing/IAction";
 import {genMemoData} from "./data";
 
-const yml = fs.readFileSync(path.join(__dirname, './export.yml'),'utf-8');
-
+const workflow = new Workflows({
+  registerAction: MockRegisterAction,
+  prepareEnv: MockEnv
+});
 
 describe('workflow and action run', () => {
-  const workflow = new Workflows({
-    registerAction: MockRegisterAction,
-    prepareEnv: MockEnv
-  });
-
+  const yml = fs.readFileSync(path.join(__dirname, './export.yml'),'utf-8');
   it('works to transform a yml file', () => {
     workflow._updateYml(yml);
     expect(workflow.workflowInfo?.jobs.length).toBe(2);
   });
 
   it('works to write data to database', async () => {
-    const database: IAction = await MockRegisterAction('pagenote/table@v1');
+    const database= await MockRegisterAction('pagenote/table@v1') as IAction
     const initData = genMemoData('test')
-    await database.run({
+    await database({
       table: 'memo',
       db: 'lightpage',
       method: 'put',
       params: initData,
     })
 
-    await database.run({
+    await database({
       table: 'memo',
       db: 'lightpage',
       method: 'put',
       params: genMemoData('test2'),
     })
 
-    const getDataResponse = await database.run({
+    const getDataResponse = await database({
       table: 'memo',
       db:'lightpage',
       method: 'get',
@@ -55,9 +53,6 @@ describe('workflow and action run', () => {
       prepareEnv: MockEnv,
     });
     await workflow.run();
-
-    console.log(workflow.runtime)
-
     expect(workflow.state).toEqual(2)
   });
 });

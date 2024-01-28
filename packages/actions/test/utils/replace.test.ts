@@ -106,6 +106,17 @@ describe('check replace', () => {
         }
 
         const replaced = replaceTemplates(input, variables)
-        expect(replaced.strategy.matrix.item).toEqual(variables.jobs.get_change_list.outputs)
+        //@ts-ignore
+        expect(replaced?.strategy?.matrix?.item).toEqual(variables.jobs.get_change_list.outputs)
+    })
+
+    it('should replace plain string',()=>{
+        const res = replaceTemplates("hello ${{hello.world}}",{
+            hello: {
+                world: "world"
+            }
+        })
+
+        expect(res).toEqual('hello world')
     })
 })

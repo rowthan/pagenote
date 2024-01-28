@@ -1,5 +1,3 @@
-import {IAction} from "../typing/IAction";
-
 interface Props {
     url: string
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -18,44 +16,36 @@ interface Output extends Response{
     _headers: Record<string, string>,
 }
 
-const FetchAction: IAction = {
-    id: 'pagenote/fetch',
-    version: '1',
-    description: "发送网络请求",
-    engines: {
-        extension: '>=0.28.10'
-    },
-    run: function (args: Props):Promise<Output> {
-        return fetch(args.url,{
-            method: args.method,
-            headers: args.headers,
-            body: args.body,
-        }).then(async function (response) {
-            // @ts-ignore
-            const res: Output = response.clone();
-            res._status = res.status;
-            const contentType = res.headers.get('Content-Type') || res.headers.get('content-type') || '';
-            if(/text|html/.test(contentType)){
-                res._response = await res.text();
-            } else if(/image/.test(contentType)){
-                res._response = await res.blob()
-            } else if(/json/.test(contentType)){
-                res._response = await res.json()
-            } else{
-                res._response = res.body;
-            }
-            res._headers = {} as Record<string,string>;
-            res.headers.forEach((value,key)=>{
-                //@ts-ignore
-                res._headers[key.toLowerCase()] = value;
-            })
-
-            return res;
-        }).catch(function (reason) {
-            throw reason;
+function run(args: Props):Promise<Output> {
+    return fetch(args.url,{
+        method: args.method,
+        headers: args.headers,
+        body: args.body,
+    }).then(async function (response) {
+        // @ts-ignore
+        const res: Output = response.clone();
+        res._status = res.status;
+        const contentType = res.headers.get('Content-Type') || res.headers.get('content-type') || '';
+        if(/text|html/.test(contentType)){
+            res._response = await res.text();
+        } else if(/image/.test(contentType)){
+            res._response = await res.blob()
+        } else if(/json/.test(contentType)){
+            res._response = await res.json()
+        } else{
+            res._response = res.body;
+        }
+        res._headers = {} as Record<string,string>;
+        res.headers.forEach((value,key)=>{
+            //@ts-ignore
+            res._headers[key.toLowerCase()] = value;
         })
-    }
+
+        return res;
+    }).catch(function (reason) {
+        throw reason;
+    })
 }
 
 
-export default FetchAction
+export default run
