@@ -1,13 +1,15 @@
 
-import convert  from './convert';
+import handlebars  from './handlebars';
 import fetch  from './fetch';
-import pick from "./pick";
+import pickData from "./pkData";
 import table from "./table";
+import format from './format'
 
 
 export {
-    convert,
+    handlebars,
     fetch,
-    pick,
+    pickData,
     table,
+    format,
 }

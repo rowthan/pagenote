@@ -44,7 +44,7 @@ jobs:
       - name: Run Packages Tests
         run: |
           ls -la
-#          yarn run test skip
+          yarn run test
 
 #      - name: Build Packages
 #        run: |

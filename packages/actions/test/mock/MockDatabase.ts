@@ -12,6 +12,10 @@ class Table {
         return Promise.resolve()
     }
 
+    query(params:{query:{key: string}}){
+        return this.get(params.query.key)
+    }
+
     delete(id: string) {
         delete this.dataMap[id]
         return Promise.resolve()

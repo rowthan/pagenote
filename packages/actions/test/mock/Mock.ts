@@ -1,35 +1,26 @@
-import FetchAction from '../../src/actions/fetch'
-import {IAction} from "../../src/typing/IAction";
-import {TableProps} from "../../src/actions/table";
+import {TableActionProps} from "../../src/actions/table";
 import MockDatabase from "./MockDatabase";
-import pickAction from "../../src/actions/pick";
-import convert from "../../src/actions/convert";
+import handlebars from "../../src/actions/handlebars";
+import {IAction} from "../../src/typing/IAction";
+import {fetch, format, pickData} from "../../src";
 
 const database = new MockDatabase();
-const MockTableAction: IAction = {
-    description: "",
-    id: "",
-    run(args: TableProps) {
-        const { method,params,table } = args
-        //@ts-ignore
-        return database.getTable(table)[method](params)
-    },
-    version: ""
-
+const MockTableAction = function (args: TableActionProps) {
+    const { method,params,table } = args
+    //@ts-ignore
+    return database.getTable(table)[method](params)
 }
 export function MockRegisterAction(id:string) {
-    switch (id){
-        case 'pagenote/fetch@v1':
-            return Promise.resolve(FetchAction);
-        case 'pagenote/table@v1':
-            return Promise.resolve(MockTableAction);
-        case 'pagenote/pick@v1':
-            return Promise.resolve(pickAction);
-        case 'pagenote/convert@v1':
-            return Promise.resolve(convert);
-        default:
-            throw Error('un support action:' + id)
+    const actionMap: Record<string, IAction> = {
+        'pagenote/fetch@v1': fetch,
+        'pagenote/format@v1': format,
+        'pagenote/pick@v1': pickData,
+        'pagenote/table@v1': MockTableAction,
+        'pagenote/handlebars@v1': handlebars,
     }
+
+    const actionFun = actionMap[id];
+    return Promise.resolve(actionFun);
 }
 
 export function MockEnv(keys: string[]) {

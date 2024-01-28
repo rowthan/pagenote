@@ -4,10 +4,11 @@ import {IAction} from "../typing/IAction";
 import set from 'lodash/set'
 import get from 'lodash/get'
 import {replaceTemplates,generateMatrixTasks} from "../utils";
+import {ifCheck} from "../utils/if";
 
 interface WorkflowOption {
   yml?: string
-  registerAction: (actions:string)=>Promise<IAction>;
+  registerAction: (actions:string)=>Promise<IAction | null>;
   prepareEnv: (keys: string[])=>Promise<Object>;
   hooks?: {
     beforeJob?: ()=>void,
@@ -91,7 +92,9 @@ export default class Background{
       return Promise.resolve(cache);
     }
     const action = await this.option.registerAction(uses||'');
-    this.actions.set(uses,action);
+    if(action){
+      this.actions.set(uses,action);
+    }
     return action;
   }
   /**
@@ -104,11 +107,6 @@ export default class Background{
     const { uses='' } = step;
 
     step._state = TaskState.running;
-    const action = await this._getAction(uses);
-    if(!action){
-      step._state = TaskState.fail;
-      throw Error('without action::'+ uses)
-    }
 
     const variables = {
       env: this.context.env,
@@ -117,16 +115,32 @@ export default class Background{
       matrix: this._getRuntime(stepsContextId)?.matrix || {}
     }
 
+
+    if(step.debug){
+      debugger
+    }
+
+    /**条件检测**/
+    if(step.if){
+      const checkResult = ifCheck(step.if,variables);
+      if(!checkResult){
+        step._state = TaskState.skip;
+        return;
+      }
+    }
+
     const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
     let response;
     try{
-      if(step.debug){
-        debugger
-      }
       if(this.option.hooks?.beforeStep){
         this.option.hooks?.beforeStep(step,withArgs);
       }
-      response = await action.run(withArgs);
+      const action = await this._getAction(uses);
+      if(uses && !action){
+        step._state = TaskState.fail;
+        throw Error('without action::'+ uses)
+      }
+      response = action ? await action(withArgs) : withArgs;
       this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
     }catch (e) {
       step._state = TaskState.fail;

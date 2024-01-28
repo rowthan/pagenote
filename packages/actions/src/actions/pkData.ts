@@ -1,5 +1,3 @@
-import {IAction} from "../typing/IAction";
-
 function pkData<T>(data1asDefault: T, data2: T, compareKeys: Array<keyof T>): [T, number] {
     for (let i = 0; i < compareKeys.length; i++) {
         const compareKey = compareKeys[i];
@@ -28,17 +26,12 @@ function pkData<T>(data1asDefault: T, data2: T, compareKeys: Array<keyof T>): [T
     return [data1asDefault, -1];
 }
 
-const pickAction: IAction = {
-    description: "",
-    id: 'pagenote/pick',
-    version: '1',
-    run(args: { pkBy: string[], list: any[] }): Promise<any> {
-        const result = pkData(args.list[0], args.list[1], args.pkBy);
-        return Promise.resolve({
-            data: result[0],
-            index: result[1],
-        });
-    },
+function run(args: { pkBy: string[], list: any[] }): Promise<any> {
+    const result = pkData(args.list[0], args.list[1], args.pkBy);
+    return Promise.resolve({
+        data: result[0],
+        index: result[1],
+    });
 }
 
-export default pickAction;
+export default run;

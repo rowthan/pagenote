@@ -1,3 +1,4 @@
+import set from "lodash/set";
 
 /**
  * input: {a: "${{env.host}}/get${{env.id}}", b:{ c: "${{env.id}}"},list: ["${{env.account.username}},"${{env.account}}""], d: "${{env.fun}}", e:["${{env.id}}","${{env.host}}"]}
@@ -6,7 +7,7 @@
  * */
 //@ts-nocheck
 type InputValue = string | InputObject | string[];
-type InputObject = Record<string, any>;
+type InputObject = Record<string, any> | string;
 type VariablesObject = { [key: string]: any };
 
 function replaceTemplates<T extends InputObject>(input: InputObject, variables: VariablesObject, replaceWhenEmpty?:any): T {
@@ -22,7 +23,7 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
     };
 
     const replaceStringTemplate = (str: string=''): any => {
-        let response: str | unknown = str;
+        let response: string | any = str;
         const templateMatches = str.match(/\${{\s*([^}]+)\s*}}/g);
         const isStringTemplate = templateMatches && templateMatches.length > 1;
         if (templateMatches) {
@@ -56,19 +57,22 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
     const recursiveReplace = (obj: InputObject) => {
         if (Array.isArray(obj)) {
             return obj.map(replacer);
+        } else if(typeof obj === 'string'){
+            return replacer(obj);
         }
 
         const result: InputObject = {};
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 const value = obj[key];
-                result[key] = replacer(value);
+                set(result,key,replacer(value))
+                // result[key] = replacer(value);
             }
         }
         return result;
     };
 
-    return recursiveReplace(input);
+    return recursiveReplace(input) as T;
 }
 
 function getKey(obj: VariablesObject, key: string): string | (() => any) | VariablesObject {

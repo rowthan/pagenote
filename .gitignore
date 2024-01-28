@@ -76,3 +76,4 @@ dist/pagenote.js.LICENSE.txt
 docs
 /web/out/
 **/node_modules.nosync/*
+.temp

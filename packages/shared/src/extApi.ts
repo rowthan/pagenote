@@ -545,6 +545,7 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**按条件查询数据*/
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
+    get: IExtenstionMessageListener<RequestParamsWithDBInfo<string>, Schema| null>
     /**检索索引枚举值*/
     keys: IExtenstionMessageListener<RequestParamsWithDBInfo<{key: keyof Schema}>, (string | number)[]>
 
