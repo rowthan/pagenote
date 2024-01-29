@@ -4,7 +4,7 @@ import {fetch, format, pickData, TableActionProps,} from '@pagenote/actions/acti
 import {IAction} from "@pagenote/actions/dist/typing/IAction";
 import extApi from "@pagenote/shared/lib/pagenote-api";
 import {Button} from "@/components/ui/button";
-import fileContent from '!!raw-loader!./export.yml';
+import fileContent from '!!raw-loader!./sync_setting.yml';
 
 const tableAction = function (args: TableActionProps){
     const {method,table,db,params,} =args;
@@ -56,7 +56,12 @@ const runner = new Background({
 export default function DataFlow() {
     async function runWorkFlow() {
         runner._updateYml(fileContent)
-        runner.run();
+        runner.runTest().then(function (res) {
+            console.log(res,'连通性测试结果')
+        }).catch(function (err) {
+            console.error(err,'检测不通过')
+        })
+        // runner.run();
     }
     return(
         <BasicLayout>

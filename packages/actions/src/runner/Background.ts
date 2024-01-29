@@ -146,8 +146,7 @@ export default class Background{
 
         if(step.run && step.run.length){
           step.run.forEach(function (terminate) {
-            response = ifCheck(terminate,variables)
-            // new Function('', `return ${terminate}`)();
+            response = exprEval(terminate,variables)
           })
         }else{
           try{

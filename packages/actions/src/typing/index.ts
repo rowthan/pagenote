@@ -29,11 +29,12 @@ export type Step = {
     uses?: USES | string,
     with?: Record<string, any> // uses 的参数配置
     'continue-on-error'?: boolean
-    output?: string // 将结果存储为
     debug?: boolean
+    run?: string[] // 自定义的脚本
     // run?: Step[]
     if?: string
     _state: TaskState
+    exit?: string | number
 }
 export type Job = {
     // 任务id
@@ -71,4 +72,5 @@ export type WorkFlow = {
         }
     },
     jobs: Job[],
+    test?: Job[]
 }
