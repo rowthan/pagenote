@@ -140,7 +140,15 @@ export default class Background{
         step._state = TaskState.fail;
         throw Error('without action::'+ uses)
       }
-      response = action ? await action(withArgs) : withArgs;
+      try{
+        response = action ? await action(withArgs) : withArgs;
+      }catch (e) {
+        if(step['continue-on-error']){
+          step._state = TaskState.fail;
+          console.warn('允许失败跳过')
+        }
+      }
+
       this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
     }catch (e) {
       step._state = TaskState.fail;
