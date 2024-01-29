@@ -1,4 +1,5 @@
 import set from "lodash/set";
+import {format} from "../actions";
 
 /**
  * input: {a: "${{env.host}}/get${{env.id}}", b:{ c: "${{env.id}}"},list: ["${{env.account.username}},"${{env.account}}""], d: "${{env.fun}}", e:["${{env.id}}","${{env.host}}"]}
@@ -28,7 +29,9 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
         const isStringTemplate = templateMatches && templateMatches.length > 1;
         if (templateMatches) {
             for (const match of templateMatches) {
-                const key = match.match(/\${{\s*([^}]+)\s*}}/)?.[1]?.trim();
+                const matchString = match.match(/\${{\s*([^}]+)\s*}}/)?.[1]?.trim();
+                const keyAndModifier = matchString?.split("|");
+                const key = keyAndModifier?.[0]?.trim();
                 /**变量key ，值替换*/
                 if (key) {
                     let replacement =
@@ -40,6 +43,14 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
 
                    // 如果没有值，则直接返回
                    if(replacement !== undefined){
+                       if(keyAndModifier && keyAndModifier?.length > 1){
+                           for(let i=1; i<keyAndModifier.length; i++){
+                               replacement = format({
+                                   data: replacement,
+                                   method: keyAndModifier[i],
+                               })
+                           }
+                       }
                        // 如果是字符串模板，以及替换结果是字符串，则直接按照字符串替换变量
                        if(isStringTemplate || typeof replacement === 'string'){
                            response = response

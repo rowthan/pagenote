@@ -194,7 +194,15 @@ const markdownConvert = {
 /**
  * 数据转换加工
  * */
-type FormatType = "property2markdown"|"markdown2property"|'omit'|'markdown2content' | 'markdown2html';
+type FormatType =
+    "property2markdown"
+    |"markdown2property"
+    |'omit'
+    |'markdown2content'
+    |'markdown2html'
+    |'JSON.stringify'
+    |'JSON.parse'
+    | string
 export default function run(input: {method: FormatType, data: any }) {
     switch (input.method){
         case "property2markdown":
@@ -202,7 +210,6 @@ export default function run(input: {method: FormatType, data: any }) {
         case "markdown2property":
             return markdownConvert.markdownToObject(input.data);
         case "markdown2html":
-            console.log(marked,'marked')
             return marked.parse(input.data);
         case "omit":
             if(Array.isArray(input.data)){
@@ -211,7 +218,8 @@ export default function run(input: {method: FormatType, data: any }) {
                 throw Error('裁剪参数入参应为数组，请检查 with: ')
             }
         default:
-            throw Error('un support target')
+            const dynamicFunction = new Function('a','b', `return ${input.method}(a,b)`);
+            return dynamicFunction(input.data);
     }
 }
 
