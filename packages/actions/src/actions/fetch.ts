@@ -43,6 +43,7 @@ function run(args: Props):Promise<Output> {
 
         return res;
     }).catch(function (reason) {
+        console.error('fetch error', reason)
         throw reason;
     })
 }

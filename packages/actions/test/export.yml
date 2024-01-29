@@ -42,7 +42,7 @@ jobs:
     id: "sync_to_cloud"
     strategy:
       matrix:
-        # 从上一个 job 中获取获得变更列表作为循环处理的初始值 todo 如果取不到值，这里有问题。取不到应该默认空数组
+        # 从上一个 job 中获取获得变更列表作为循环处理的初始值
         item: ${{jobs.get_change_list.outputs.data}}
     steps:
       - name: "获取本地数据"
@@ -75,7 +75,6 @@ jobs:
         with:
           updateAt: ${{steps.getRemoteData.outputs._response.frontmatter.updateAt}}
           createAt: ${{steps.getRemoteData.outputs._response.frontmatter.createAt}}
-          __ctime: ${{steps.getRemoteData.outputs._response.stat.ctime}}
           __mtime: ${{steps.getRemoteData.outputs._response.stat.mtime}}
 
 
@@ -87,7 +86,6 @@ jobs:
             - "updateAt"
             - "createAt"
             - "__mtime"
-            - "__ctime"
           list:
             - ${{steps.getLocalData.outputs.data.list.0}}
             - ${{steps.remoteProperty.outputs}}
@@ -101,9 +99,9 @@ jobs:
           data:
             -  ${{steps.pkData.outputs.data}}
             -
-              - "html"
-              - "markdown"
-              - "tiptap"
+              - html
+              - markdown
+              - tiptap
               - __ctime
               - __utime
               - __utimeDay
@@ -124,7 +122,7 @@ jobs:
           method: 'property2markdown'
           data: ${{steps.removeProperty.outputs}}
 
-      - name: "本地-> 远程：：导出文本 属性 + markdown笔记"
+      - name: "本地-> 远程：：数据准备，导出文本 属性 + markdown笔记"
         if: steps.pkData.outputs.index == 0
         id: "exportDataString"
         with: '${{steps.propertyToMarkdown.outputs}}${{steps.pkData.outputs.data.markdown}}'
