@@ -120,3 +120,15 @@ describe('check replace', () => {
         expect(res).toEqual('hello world')
     })
 })
+
+describe('replace by and modify',()=>{
+    it('should replace by and modify',()=>{
+        const input = "${{env.account | JSON.stringify}}"
+        expect(replaceTemplates(input,variables)).toEqual(JSON.stringify(variables.env.account))
+    })
+
+    it('should replace by multi modify',()=>{
+        const input = "${{env.account | JSON.stringify | JSON.parse}}"
+        expect(replaceTemplates(input,variables)).toEqual(variables.env.account)
+    })
+})
