@@ -3,8 +3,8 @@ import {Job, Step, TaskState, WorkFlow, WorkFlowState} from "../typing";
 import {IAction} from "../typing/IAction";
 import set from 'lodash/set'
 import get from 'lodash/get'
-import {replaceTemplates,generateMatrixTasks} from "../utils";
-import {ifCheck} from "../utils/if";
+import {generateMatrixTasks, replaceTemplates} from "../utils";
+import {exprEval, ifCheck} from "../utils/expr-eval";
 
 interface WorkflowOption {
   yml?: string
@@ -97,6 +97,16 @@ export default class Background{
     }
     return action;
   }
+
+  getContextVariables(contextId: string){
+    const variables = {
+      env: this.context.env,
+      steps: this._getRuntime(contextId)?.steps || {},
+      jobs: this._getRuntime(contextId)?.jobs || {},
+      matrix: this._getRuntime(contextId)?.matrix || {}
+    }
+    return variables
+  }
   /**
    * 执行 step 任务
    * */
@@ -108,55 +118,69 @@ export default class Background{
 
     step._state = TaskState.running;
 
-    const variables = {
-      env: this.context.env,
-      steps: this._getRuntime(stepsContextId)?.steps || {},
-      jobs: this._getRuntime(stepsContextId)?.jobs || {},
-      matrix: this._getRuntime(stepsContextId)?.matrix || {}
-    }
+    const variables = this.getContextVariables(stepsContextId)
 
 
     if(step.debug){
       debugger
     }
+    let response;
 
     /**条件检测**/
     if(step.if){
       const checkResult = ifCheck(step.if,variables);
       if(!checkResult){
         step._state = TaskState.skip;
-        return;
       }
-    }
-
-    const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
-    let response;
-    try{
-      if(this.option.hooks?.beforeStep){
-        this.option.hooks?.beforeStep(step,withArgs);
-      }
-      const action = await this._getAction(uses);
-      if(uses && !action){
-        step._state = TaskState.fail;
-        throw Error('without action::'+ uses)
-      }
+    } else{
+      const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
       try{
-        response = action ? await action(withArgs) : withArgs;
-      }catch (e) {
-        if(step['continue-on-error']){
-          step._state = TaskState.fail;
-          console.warn('允许失败跳过')
+        if(this.option.hooks?.beforeStep){
+          this.option.hooks?.beforeStep(step,withArgs);
         }
+        const action = await this._getAction(uses);
+        if(uses && !action){
+          step._state = TaskState.fail;
+          throw Error('without action::'+ uses)
+        }
+
+        if(step.run && step.run.length){
+          step.run.forEach(function (terminate) {
+            response = ifCheck(terminate,variables)
+            // new Function('', `return ${terminate}`)();
+          })
+        }else{
+          try{
+            response = action ? await action(withArgs) : withArgs;
+          }catch (e) {
+            step._state = TaskState.fail;
+          }
+        }
+
+        this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
+      }catch (e) {
+        step._state = TaskState.fail;
+        throw e;
+      }
+      step._state = TaskState.complete;
+      if(this.option.hooks?.afterStep){
+        this.option.hooks?.afterStep(step,response);
+      }
+    }
+
+    /**由用户自行控制step 退出码*/
+    let exitCode: number | boolean = 0;
+    if(step.exit){
+      if(typeof step.exit === 'number'){
+        exitCode = step.exit;
+      }else{
+        exitCode = exprEval(step.exit,this.getContextVariables(stepsContextId))
       }
 
-      this._setRuntime(`steps.${step.id || step.name}.outputs`, response,stepsContextId)
-    }catch (e) {
-      step._state = TaskState.fail;
-      throw e;
-    }
-    step._state = TaskState.complete;
-    if(this.option.hooks?.afterStep){
-      this.option.hooks?.afterStep(step,response);
+      if(exitCode!==0){
+        step._state = TaskState.fail;
+        throw Error((step.id || step.name) + ' exit code is not equal 0 :' + exitCode);
+      }
     }
     return response;
   }
@@ -164,7 +188,15 @@ export default class Background{
   async _runSteps(steps: Step[],contextId:string){
     let response;
     for (let i = 0; i < steps.length; i++) {
-     response = await this.runStep(steps[i],contextId);
+      try {
+        response = await this.runStep(steps[i],contextId);
+      }catch (e) {
+        if(steps[i]['continue-on-error']){
+          console.warn('允许失败，继续执行',e)
+        }else{
+          throw e;
+        }
+      }
     }
     return response;
   }
@@ -174,7 +206,7 @@ export default class Background{
    * */
   async runJob(job: Job,jobsContextId: string){
     if(!job) return;
-
+    let jobResponse;
     job._state = TaskState.running;
     /**
      * 如果 job 是一个 matrix 任务，则要进行叉乘创建子 job。
@@ -188,25 +220,22 @@ export default class Background{
           const contextId = Date.now()+ (job.id || job.name) + 'matrix'+i+j;
           const stepVariable = matrixVariables[i][j];
           this._setRuntime('matrix',stepVariable,contextId)
-          const response = await this._runSteps(job.steps,contextId);
-          this._setRuntime(`jobs.${job.id||job.name}.outputs`,response,jobsContextId)
+          jobResponse = await this._runSteps(job.steps,contextId);
+          this._setRuntime(`jobs.${job.id||job.name}.outputs`,jobResponse,jobsContextId)
         }
       }
     } else {
-      for (let i = 0; i < job.steps.length; i++) {
-        const {id='',name='',} = job || {};
-        const contextId = id + name + Date.now();
-        const response = await this._runSteps(job.steps,contextId)
-        this._setRuntime(`jobs.${id||name}.outputs`,response,jobsContextId)
-      }
+      const {id='',name='',} = job || {};
+      const contextId = id + name + Date.now();
+      jobResponse = await this._runSteps(job.steps,contextId)
+      this._setRuntime(`jobs.${id||name}.outputs`,jobResponse,jobsContextId)
     }
 
     job._state = TaskState.complete;
+    return jobResponse;
   }
 
-  async run(){
-    this.state = WorkFlowState.running;
-    /**1.环境变量准备*/
+  async prepareEnv() {
     const envKeys = (this.workflowInfo?.env || []).map(function (item) {
       return item.key;
     });
@@ -220,6 +249,12 @@ export default class Background{
       }
     });
     this.context.env = envObject;
+  }
+
+  async run(){
+    this.state = WorkFlowState.running;
+    /**1.环境变量准备*/
+    await this.prepareEnv();
 
 
     /**2. 运行job*/
@@ -230,6 +265,19 @@ export default class Background{
       await this.runJob(jobs[i],contextId)
     }
     this.state = WorkFlowState.success;
+  }
+
+  async runTest(){
+    await this.prepareEnv();
+    const testJobs = this.workflowInfo?.test || [];
+
+    for(let i=0; i<testJobs.length; i++){
+      await this.runJob(testJobs[i],`test${Date.now()}`)
+    }
+
+    return testJobs.every(function (job) {
+      return job._state !== TaskState.fail
+    })
   }
 
   check(): Promise<boolean> {
