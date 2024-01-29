@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { TDK } from 'const/tdk'
 import { DEFAULT_BASE_DOC_PATH, SEO_MAP, SEO_REVERT_MAP } from 'const/notion'
-import { getPathFromProperties } from 'utils/notion'
+import { getPathFromProperties, highlightTarget } from 'utils/notion'
 import { useRouter } from 'next/router'
 import TDKHead from './TDKHead'
 
@@ -70,6 +70,7 @@ export default function NotionDoc(props: NotionDocProp) {
     }
 
     useEffect(function () {
+      highlightTarget((window.location.hash || ""));
       refreshDarkMode()
       return listenDarkMode()
     }, [])
