@@ -28,6 +28,7 @@ export type Step = {
     id?: string, // 唯一，运行获取此 step 的output 的重要参数
     uses?: USES | string,
     with?: Record<string, any> // uses 的参数配置
+    'continue-on-error'?: boolean
     output?: string // 将结果存储为
     debug?: boolean
     // run?: Step[]
