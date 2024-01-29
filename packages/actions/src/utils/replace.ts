@@ -7,7 +7,7 @@ import {format} from "../actions";
  *
  * */
 //@ts-nocheck
-type InputValue = string | InputObject | string[];
+type InputValue = string | InputObject | string[] | boolean | number;
 type InputObject = Record<string, any> | string;
 type VariablesObject = { [key: string]: any };
 
@@ -70,6 +70,10 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
             return obj.map(replacer);
         } else if(typeof obj === 'string'){
             return replacer(obj);
+        } else if(typeof obj === 'number') {
+            return obj
+        } else if(typeof obj === 'boolean'){
+            return obj
         }
 
         const result: InputObject = {};
