@@ -148,7 +148,8 @@ export const generateApi = function (wrapperFun: Wrapper) {
 
     const commonTableMethods: ComputeRequestApiMapDefine<table.request> = {
         ...implementTableMethods,
-        keys: true
+        keys: true,
+        get: true,
     }
 
     return {
