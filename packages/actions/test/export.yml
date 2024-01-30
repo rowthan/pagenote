@@ -57,7 +57,7 @@ jobs:
               key: ${{matrix.item}}
 
       - name: "获取远程数据"
-        uses: "pagenote/fetch@v1"
+        uses: "pagenote/http@v1"
         id: "getRemoteData"
         with:
           url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{matrix.item}}.md
@@ -129,7 +129,7 @@ jobs:
 
       - name: "本地-> 远程：：更新至 obsidian"
         if: steps.pkData.outputs.index == 0
-        uses: "pagenote/fetch@v1"
+        uses: "pagenote/http@v1"
         id: 'uploadToObsidian'
         with:
           url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{steps.pkData.outputs.data.key}}.md

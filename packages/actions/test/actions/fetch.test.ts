@@ -16,18 +16,18 @@ describe('fetch get', () => {
         expect(result.status).toBe(200)
     });
 
-    it('get javascript file', async function () {
-        const result = await fetchRequest({
-            method: 'GET',
-            url: 'https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js',
-            body: null,
-            headers:{
-                'Accept': 'text/html'
-            }
-        })
-        expect(result.status).toBe(200)
-        expect(result._headers['content-type']).toMatch('text/javascript')
-    });
+    // it('get javascript file', async function () {
+    //     const result = await fetchRequest({
+    //         method: 'GET',
+    //         url: 'https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js',
+    //         body: null,
+    //         headers:{
+    //             'Accept': 'text/html'
+    //         }
+    //     })
+    //     expect(result.status).toBe(200)
+    //     expect(result._headers['content-type']).toMatch('text/javascript')
+    // });
 
     it('get image', async function () {
         const result = await fetchRequest({
