@@ -54,6 +54,10 @@ export type Job = {
 }
 export type WorkFlow = {
     name: string,
+    id?: string,
+    icon?:string
+    template?: string
+    description?: string
     env: {
         key: string,
         id: string,

@@ -1,4 +1,4 @@
-import fetchRequest from "../../src/actions/fetch";
+import fetchRequest from "../../src/actions/http";
 
 describe('fetch get', () => {
     it('get html', async function () {

@@ -1,6 +1,6 @@
 
 import handlebars  from './handlebars';
-import fetch  from './fetch';
+import http  from './http';
 import pickData from "./pkData";
 import table from "./table";
 import format from './format'
@@ -8,7 +8,7 @@ import format from './format'
 
 export {
     handlebars,
-    fetch,
+    http,
     pickData,
     table,
     format,
