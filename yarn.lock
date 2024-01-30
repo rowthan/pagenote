@@ -389,6 +389,8 @@
   version "7.8.3"
   resolved "https://registry.npmmirror.com/@babel/plugin-syntax-bigint/-/plugin-syntax-bigint-7.8.3.tgz#4c9a6f669f5d0cdf1b90a1671e9a146be5300cea"
   integrity sha512-wnTnFlG+YxQm3vDxpGE57Pj0srRU4sHE/mDkt1qv2YJJSeUAec2ma4WLUnUPeKjyrfntVwe/N6dCXpU+zL3Npg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.8.0"
 
 "@babel/plugin-syntax-class-properties@^7.12.13", "@babel/plugin-syntax-class-properties@^7.8.3":
   version "7.12.13"
@@ -3105,6 +3107,17 @@
   integrity sha512-D4iHGTdAnEEVsB8fl95m1hiz7D5YiRdQ9b/OEb3BYRVwbLsGHcRVPz+u+BgRLNk0Q0/4iZCBqDN96j2XNxfXrA==
   dependencies:
     "@octokit/openapi-types" "^18.0.0"
+
+"@pagenote/shared@^1.14.28-next.0":
+  version "1.14.35"
+  resolved "https://registry.npmmirror.com/@pagenote/shared/-/shared-1.14.35.tgz#f0663ae36ab91f4f9e2b0271bc8fde87f794b29c"
+  integrity sha512-pDixWuZIdkzbVYQD60Ajer0t8I6EbT79Ln9UX3p7zyGUk6qyeV3iSZCIo2kFhsKLMFiELum0cRJzA/2oiUbyXQ==
+  dependencies:
+    "@pagenote/bridge" "^1.0.14"
+    colord "^2.9.3"
+    lodash "^4.17.21"
+    md5 "^2.3.0"
+    mustache "^4.2.0"
 
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
@@ -9875,6 +9888,9 @@ domutils@^1.7.0:
   version "1.7.0"
   resolved "https://registry.npmmirror.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
   integrity sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==
+  dependencies:
+    dom-serializer "0"
+    domelementtype "1"
 
 domutils@^2.5.2, domutils@^2.8.0:
   version "2.8.0"

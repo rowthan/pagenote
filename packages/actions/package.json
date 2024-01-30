@@ -1,11 +1,14 @@
 {
   "name": "@pagenote/actions",
-  "version": "0.1.1-next.0",
+  "version": "0.1.1-next.2",
   "license": "MIT",
-  "private": true,
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "source": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "src"
@@ -13,7 +16,10 @@
   "exports": {
     ".": "./dist/index.js",
     "./utils": "./dist/utils/index.js",
-    "./actions": "./dist/actions/index.js",
+    "./method":{
+      "import":  "./dist/actions/index.js",
+      "types":  "./dist/actions/index.d.ts"
+    },
     "./runner": "./dist/runner/index.js"
   },
   "engines": {
