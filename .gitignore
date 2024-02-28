@@ -77,3 +77,4 @@ docs
 /web/out/
 **/node_modules.nosync/*
 .temp
+.parcel-cache
