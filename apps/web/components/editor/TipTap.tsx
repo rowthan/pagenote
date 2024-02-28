@@ -1,6 +1,8 @@
 import { Color } from '@tiptap/extension-color'
 import Placeholder from '@tiptap/extension-placeholder'
 import ListItem from '@tiptap/extension-list-item'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
@@ -12,6 +14,10 @@ import {Hashtag} from './extension/HashTag'
 import suggestion from './suggestion'
 
 const extensions = [
+  TaskList,
+  TaskItem.configure({
+    nested: true,
+  }),
   Link.configure(),
   Image.configure(),
   Color.configure({ types: [TextStyle.name, ListItem.name] }),

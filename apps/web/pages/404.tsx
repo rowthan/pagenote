@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 import { getNotionDocDetail } from '../service/server/doc'
 import { SEO_REVERT_MAP } from '../const/notion'
-import NotionDoc, { NotionDocProp } from '../components/NotionDoc'
+import NotionDoc, { NotionDocProp } from '../components/notion/NotionDoc'
 
 const redirectMap: Record<string, string> = {
   '/log': '/developer/log',
