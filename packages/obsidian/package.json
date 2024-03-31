@@ -2,9 +2,9 @@
   "name": "@pagenote/obsidian",
   "version": "0.1.2",
   "license": "MIT",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
-  "typings": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/obsidiant.esm.js",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -51,6 +51,7 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.0.1",
+    "@babel/preset-env": "^7.23.6",
     "babel-jest": "^29.7.0",
     "husky": "^8.0.3",
     "size-limit": "^11.0.1",
@@ -59,7 +60,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.23.6",
     "axios": "^1.6.2",
     "base64-js": "^1.5.1",
     "ts-jest": "^29.1.1"
