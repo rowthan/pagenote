@@ -1,3 +1,4 @@
+export * from './util'
 interface CommonResponse {
   errorCode?: number,
   message?: string,
@@ -35,13 +36,24 @@ export enum ContentType {
   formData = 'multipart/form-data',
 }
 
-export default class Obsidian {
+class Obsidian {
   private readonly token: string;
   private readonly host: string;
+  public status: {
+    authenticated?: boolean,
+    service?: string,
+    status?: string,
+    versions?:{
+      obsidian: string,
+      self: string
+    },
+    error?: string
+  } = {}
 
-  constructor(props: { token: string, host: string }) {
+  constructor(props: { token: string, host?: string }) {
     this.token = props.token;
-    this.host = props.host;
+    this.host = props.host || 'http://127.0.0.1:27123';
+    this._status().then(r => {});
   }
 
   _fetch(path: string, params:{
@@ -82,7 +94,9 @@ export default class Obsidian {
       if(res.status !== 204){
         return res.json()
       }
-      return {}
+      return {
+        errorCode: undefined,
+      }
     })
   }
 
@@ -104,6 +118,9 @@ export default class Obsidian {
   getFileBlob(file: string): Promise<Blob | null>{
     return this._fetch('/vault/'+file,{
       method: 'GET',
+      headers:{
+        Accept: AcceptType.json,
+      },
     }).then(async function (res) {
       if(res.status === 200){
         return res.blob()
@@ -111,7 +128,6 @@ export default class Obsidian {
       return null;
     })
   }
-
 
   listFiles(dir: string = ''):Promise<FilesResponse>{
     return this._fetch('/vault/'+dir,{
@@ -124,7 +140,21 @@ export default class Obsidian {
     })
   }
 
-
+  _status(){
+    return this._fetch('/',{
+      method: 'GET',
+      headers:{
+        Accept: AcceptType.json,
+      },
+    }).then(async (res)=> {
+       this.status = await res.json() || {};
+       this.status.error = this.status?.authenticated ? '' : 'unauthenticated, check the token please'
+       return this.status
+    }).catch( (reason)=> {
+       this.status.error = reason.message || ''
+        return this.status
+    })
+  }
 
 
   appendFile(file: string,data:{
@@ -148,3 +178,9 @@ export default class Obsidian {
     })
   }
 }
+
+export {
+  Obsidian
+}
+
+export default Obsidian

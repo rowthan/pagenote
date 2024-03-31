@@ -4,6 +4,7 @@ import useDataStat from '../hooks/useDataStat'
 import CheckVersion from './check/CheckVersion'
 import WhoAmIBoard from './WhoAmIBoard'
 import { useState } from 'react'
+import Link from "next/link";
 
 export default function ExtensionInfos() {
   const [whoAmI] = useWhoAmi()
@@ -42,10 +43,10 @@ export default function ExtensionInfos() {
           <div className="stat-title">今日标记</div>
           <div className="stat-value">↗︎ {stat?.todayNewLights}</div>
           <div className="stat-desc">
-            <a href="/manage/page">网页{stat?.pagesCnt}</a>;
-            <a href="/manage/light">标记{stat?.lightsCnt}</a>; 截图
+            <Link href="/manage/page">网页{stat?.pagesCnt}</Link>;
+            <Link href="/manage/light">标记{stat?.lightsCnt}</Link>; 截图
             {stat?.snapshotsCnt}；
-            <a href="/ext/popup#/clipboard">剪切板{stat?.clipboardCnt}</a>;
+            <Link href="/ext/popup#/clipboard">剪切板{stat?.clipboardCnt}</Link>;
             {/*↘︎ 90 (14%)*/}
           </div>
         </div>

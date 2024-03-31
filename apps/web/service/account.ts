@@ -13,6 +13,9 @@ export function requestValidate(
                 mutation: `mutation{requestValidate(uid:${uid || 0},email:"${email.trim()}",publicText:"${publicText.trim()}",validateType:"${validateType}"){validateEmail,publicText,validateStatus}}`,
             },
         },
+        {
+            timeout: 10000,
+        }
     )
 }
 
@@ -28,6 +31,9 @@ export function confirmValidate(
         mutation: `mutation{confirmValidate(publicText:"${publicText.trim()}",validateText:"${validateText.trim()}"){validateStatus}}`,
       },
     },
+      {
+          timeout: 10000,
+      }
   )
 }
 

@@ -1,12 +1,6 @@
-export const sum = (a: number, b: number) => {
-  if ('development' === process.env.NODE_ENV) {
-    console.log('boop');
-  }
-  return a + b;
-};
-
-import SyncStrategy from './database/syncStrategy'
-
+import SyncStrategy from './database/index'
+import utils from "./utils/index";
 export {
-  SyncStrategy
+    SyncStrategy,
+    utils,
 }

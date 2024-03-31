@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { BackupData, BackupVersion } from '@pagenote/shared/lib/@types/data'
 import extApi from '@pagenote/shared/lib/pagenote-api'
-import { toast } from '../../../utils/toast'
+import { toast } from '@/components/ui/use-toast'
 import FilterCheckBox from './FilterCheckBox'
 import { Button } from '@/components/ui/button'
+import {box} from "@pagenote/shared/lib/extApi";
+import Box = box.Box;
+import classNames from "classnames";
 
 enum ImportState {
   unset = 0,
@@ -11,49 +14,40 @@ enum ImportState {
   importing = 2,
 }
 
+const TableMap:Record<string, string> = {
+  'webpage': '网页',
+  'note': '备忘录',
+  'light': '标记',
+  'snapshot': '截图',
+  'html': '离线网页',
+  'clipboard':"剪切板"
+}
+
 export default function ImportFilter(props: {
-  backupData: BackupData
+  backupData: Omit<BackupData, 'pages'|'light'|'box'|'snapshots'|'notes'|'htmlList'>
   onSuccess: () => void
 }) {
   const { backupData } = props
-  const {
-    pages = [],
-    lights = [],
-    snapshots = [],
-    htmlList = [],
-    //@ts-ignore
-    notes = [],
-  } = backupData || {}
   const [importState, setImportState] = useState<ImportState>(ImportState.unset)
-  const [selected, setSelected] = useState([
-    'html',
-    'page',
-    'light',
-    'snapshot',
-    'note',
-  ])
+  const [blockedIndex, setBlockedIndex] = useState<number[]>([])
 
-  function toggleSelect(key: string) {
-    const index = selected.indexOf(key)
-    if (index === -1) {
-      selected.push(key)
+  function toggleSelect(key: number) {
+    const index = blockedIndex.indexOf(key)
+    if (index > -1) {
+      blockedIndex.splice(index,1)
     } else {
-      selected.splice(index, 1)
+      blockedIndex.push(index)
     }
-    setSelected([...selected])
+    setBlockedIndex([...blockedIndex])
   }
 
   async function doImport() {
     setImportState(ImportState.importing)
-    const importData = {
-      ...backupData,
-      //@ts-ignore
-      notes: backupData.notes || backupData.note || [],
-    }
+
     extApi.lightpage
       .importBackup(
         {
-          backupData: importData,
+          backupData: backupData,
         },
         {
           timeout: 90 * 1000,
@@ -62,47 +56,20 @@ export default function ImportFilter(props: {
       .then(function (res) {
         console.log(res, '导入结果')
         if (res.success) {
-          toast('已成功导入')
+          toast({
+            title: '导入成功',
+          })
           props.onSuccess()
         } else {
-          toast(res.error || '导入失败')
+          toast({
+            title: '导入失败',
+            content: res.error,
+          })
         }
         setImportState(ImportState.unset)
       })
   }
 
-  let pageCnt,
-    lightCnt,
-    snapshotCnt,
-    noteCnt,
-    htmlCnt = 0
-  if ((backupData.version || 0) >= BackupVersion.version7) {
-    backupData.items.forEach(function (item) {
-      switch (item.table) {
-        case 'webpage':
-          pageCnt = item.list?.length || 0
-          break
-        case 'light':
-          lightCnt = item.list?.length || 0
-          break
-        case 'snapshot':
-          snapshotCnt = item.list?.length || 0
-          break
-        case 'note':
-          noteCnt = item.list?.length || 0
-          break
-        case 'html':
-          htmlCnt = item.list?.length || 0
-          break
-      }
-    })
-  } else {
-    pageCnt = pages.length
-    lightCnt = lights.length
-    snapshotCnt = snapshots.length
-    noteCnt = notes.length
-    htmlCnt = htmlList.length
-  }
 
   const importIng = importState === ImportState.importing
 
@@ -120,61 +87,22 @@ export default function ImportFilter(props: {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>网页</td>
-              <td>{pageCnt}个</td>
-              <td>
-                <FilterCheckBox
-                  field={'page'}
-                  selected={selected}
-                  onChange={toggleSelect}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>标记</td>
-              <td>{lightCnt}个</td>
-              <td>
-                <FilterCheckBox
-                  field={'light'}
-                  selected={selected}
-                  onChange={toggleSelect}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>截图</td>
-              <td>{snapshotCnt}个</td>
-              <td>
-                <FilterCheckBox
-                  field={'snapshot'}
-                  selected={selected}
-                  onChange={toggleSelect}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>离线网页</td>
-              <td>{htmlCnt}个</td>
-              <td>
-                <FilterCheckBox
-                  field={'html'}
-                  selected={selected}
-                  onChange={toggleSelect}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>备忘录</td>
-              <td>{noteCnt}个</td>
-              <td>
-                <FilterCheckBox
-                  field={'note'}
-                  selected={selected}
-                  onChange={toggleSelect}
-                />
-              </td>
-            </tr>
+          {
+            backupData.items.map((item,index)=>(
+                <tr key={index} className={classNames({
+                  "hide": item.list.length === 0
+                })}>
+                  <td>{TableMap[item.table]}</td>
+                  <td>{item.list.length}个</td>
+                  <td>
+                    <input type="checkbox"
+                           onChange={(e)=>{toggleSelect(index)}}
+                           checked={!blockedIndex.includes(index)}
+                           className="checkbox checkbox-xs"/>
+                  </td>
+                </tr>
+            ))
+          }
           </tbody>
         </table>
       </div>

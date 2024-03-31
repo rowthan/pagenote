@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { WebPage } from '@pagenote/shared/lib/@types/data'
 import { useLazyEffect } from '../../hooks/userLazyEffect'
-import { batchExportByPageKeys, searchInExt } from 'service/ext'
+import {  searchInExt } from 'service/ext'
 import WebPageItem from '../webpage/WebPageItem'
-import Modal from '../Modal'
 
 export default function Search(props: { keyword: string }) {
   const { keyword = '' } = props
@@ -47,9 +46,6 @@ export default function Search(props: { keyword: string }) {
     setSelected([...selected])
   }
 
-  function batchExport() {
-    batchExportByPageKeys(selected)
-  }
 
   useLazyEffect(search, [keyword], 400)
 
@@ -82,37 +78,37 @@ export default function Search(props: { keyword: string }) {
           <span>请输入搜索词，在 PAGENOTE 中搜索</span>
         )}
 
-        <div className="my-4 flex items-center">
-          <input
-            type="checkbox"
-            onChange={toggleAll}
-            checked={selectedCnt > 0}
-            className="checkbox mx-1"
-          />
-          <button
-            onClick={() => {
-              setBatchModal(true)
-            }}
-            disabled={selectedCnt === 0}
-            className="btn btn-xs btn-primary mx-2"
-          >
-            批量操作{selectedCnt > 0 ? selectedCnt : ''}
-          </button>
-        </div>
+        {/*<div className="my-4 flex items-center">*/}
+        {/*  <input*/}
+        {/*    type="checkbox"*/}
+        {/*    onChange={toggleAll}*/}
+        {/*    checked={selectedCnt > 0}*/}
+        {/*    className="checkbox mx-1"*/}
+        {/*  />*/}
+        {/*  <button*/}
+        {/*    onClick={() => {*/}
+        {/*      setBatchModal(true)*/}
+        {/*    }}*/}
+        {/*    disabled={selectedCnt === 0}*/}
+        {/*    className="btn btn-xs btn-primary mx-2"*/}
+        {/*  >*/}
+        {/*    批量操作{selectedCnt > 0 ? selectedCnt : ''}*/}
+        {/*  </button>*/}
+        {/*</div>*/}
       </div>
       {/*分组 折叠，搜 pagenote笔记\搜标签页、搜扩展API*/}
-      <ul className={'relative'}>
+      <ul className={'relative mt-2'}>
         {list.slice(0, limit).map((item, index) => (
           <li className={'relative mb-2 border-b border-gray-400'} key={index}>
             <WebPageItem keyword={keyword} webpage={item} />
-            <input
-              type="checkbox"
-              onChange={() => {
-                toggleSelected(item.key || '')
-              }}
-              checked={selected.includes(item.key || '')}
-              className="checkbox checkbox-info absolute left-1 top-2 bg-white bg-opacity-50"
-            />
+            {/*<input*/}
+            {/*  type="checkbox"*/}
+            {/*  onChange={() => {*/}
+            {/*    toggleSelected(item.key || '')*/}
+            {/*  }}*/}
+            {/*  checked={selected.includes(item.key || '')}*/}
+            {/*  className="checkbox checkbox-info absolute left-1 top-2 bg-white bg-opacity-50"*/}
+            {/*/>*/}
           </li>
         ))}
       </ul>
@@ -133,24 +129,24 @@ export default function Search(props: { keyword: string }) {
         </div>
       )}
 
-      <Modal open={batchModal} keepNode={false} toggleOpen={setBatchModal}>
-        <>
-          <h2>
-            批量操作 {selectedCnt} 个网页
-            <br />
-            及关联的标记、截图、存档HTML等相关信息
-          </h2>
-          <div className="my-2 text-right">
-            {/*<button onClick={batchUpdate} className={'btn btn-sm btn-error'}>删除</button>*/}
-            <button
-              onClick={batchExport}
-              className={'btn btn-sm btn-primary ml-2'}
-            >
-              备份
-            </button>
-          </div>
-        </>
-      </Modal>
+      {/*<Modal open={batchModal} keepNode={false} toggleOpen={setBatchModal}>*/}
+      {/*  <>*/}
+      {/*    <h2>*/}
+      {/*      批量操作 {selectedCnt} 个网页*/}
+      {/*      <br />*/}
+      {/*      及关联的标记、截图、存档HTML等相关信息*/}
+      {/*    </h2>*/}
+      {/*    <div className="my-2 text-right">*/}
+      {/*      /!*<button onClick={batchUpdate} className={'btn btn-sm btn-error'}>删除</button>*!/*/}
+      {/*      <button*/}
+      {/*        onClick={batchExport}*/}
+      {/*        className={'btn btn-sm btn-primary ml-2'}*/}
+      {/*      >*/}
+      {/*        备份*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*  </>*/}
+      {/*</Modal>*/}
     </div>
   )
 }

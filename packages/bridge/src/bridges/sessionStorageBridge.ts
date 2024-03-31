@@ -7,11 +7,7 @@ import type {
     IBaseMessageListener,
     IBaseMessageProxy,
 } from "../base";
-import {
-    DEFAULT_TIMEOUT,
-    STATUS,
-    RESPONSE_STATUS_CODE,
-} from '../base'
+import {DEFAULT_TIMEOUT, RESPONSE_STATUS_CODE, STATUS,} from '../base'
 import {createURLForJSON, sumSizeMB} from "../utils";
 
 
@@ -91,6 +87,9 @@ export default class SessionStorageBridge implements Communication<any> {
         const that = this;
         const {listenKey} = this.option
         const globalListen = async function (event: StorageEvent) {
+            if(that.state === STATUS.STOP){
+                return;
+            }
             let requestData: BaseMessageRequest;
             try {
                 let dataString: string = ''
@@ -189,6 +188,7 @@ export default class SessionStorageBridge implements Communication<any> {
             rejectFun({
                 success: false,
                 error: 'timeout',
+                //@ts-ignore
                 data: undefined,
                 status: RESPONSE_STATUS_CODE.TIMEOUT,
                 statusText: 'timeout'

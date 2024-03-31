@@ -1,0 +1,29 @@
+{
+  "name": "@pagenote/component",
+  "private": "true",
+  "version": "1.0.0",
+  "main": "dist/components.js",
+  "author": "rowthan",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c --bundleConfigAsCjs",
+    "start": "rollup -c --watch --bundleConfigAsCjs",
+    "dev": "rollup -c --watch --bundleConfigAsCjs",
+    "test": "echo 'skip'"
+  },
+  "dependencies": {
+    "@pagenote/shared": "1.14.36-next.1",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "react-icons": "^5.0.1",
+    "rollup": "^4.9.6",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-string": "^3.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/canvas-confetti": "^1.6.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "typescript": "^5.3.3"
+  }
+}

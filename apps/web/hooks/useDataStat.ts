@@ -51,10 +51,10 @@ export default function useDataStat(): [StatInfo | undefined, () => void] {
 
     return {
       lightsCnt: lights.data.total,
-      pagesCnt: pages.data.total,
+      pagesCnt: pages.data?.total || 0,
       snapshotsCnt: snapshots.data.total,
       todayNewLights: todayLights.data.total,
-      clipboardCnt: clipboards.data,
+      clipboardCnt: clipboards.data || 0,
     }
   }
 

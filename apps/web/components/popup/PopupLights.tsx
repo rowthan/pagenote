@@ -25,7 +25,7 @@ export default function PopupLights(props:{tab: Tab}) {
 
     useEffect(function () {
         fetchWebpage()
-    }, [tab])
+    }, [tab,fetchWebpage])
 
     return(
         <div>

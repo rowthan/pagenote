@@ -29,7 +29,3 @@ npm run build-ext
 * [组件库 shadcn](https://ui.shadcn.com/)
 * [图标库1](https://www.radix-ui.com/icons)
 * [图标库2](https://react-icons.github.io/react-icons/search?q=link)
-
-## todo
-
-[-] 所有页面内存占用控制在 120MB以内 

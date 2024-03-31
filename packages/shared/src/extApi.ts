@@ -1,9 +1,4 @@
-import type {
-    BackupData,
-    Step,
-    WebPage,
-    ContentType,
-} from "./@types/data";
+import type {BackupData, ContentType, Step, WebPage,} from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
     BaseMessageHeader,
@@ -73,7 +68,7 @@ export type SyncStat = {
 
 
 export namespace lightpage {
-    import OfflineHTML = html.OfflineHTML;
+
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>
@@ -247,8 +242,7 @@ export namespace action {
         track: IExtenstionMessageListener<[category: string, eventAction: string, eventLabel: string, eventValue: number, page?: string], void>
         report: IExtenstionMessageListener<{ errorInfo: any }, void>
         captureView: IExtenstionMessageListener<CaptureVisibleTabOptions, string>
-        copyToClipboard: IExtenstionMessageListener<ClipboardItem, ClipboardItem>
-        injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
+        // injectToFrontPage: IExtenstionMessageListener<{ url: string, isIframe: boolean }, string>
         usage: IExtenstionMessageListener<void, { storageSize: number }>
 
         getMemoryRuntime: IExtenstionMessageListener<string, any>
@@ -553,6 +547,7 @@ export type CommonTableApi<Schema extends TableSchemaBasicFields> = {
     /**按条件查询数据*/
     query: IExtenstionMessageListener<RequestParamsWithDBInfo<Find<Schema>>, FindResponse<Partial<Schema>>>
 
+    get: IExtenstionMessageListener<RequestParamsWithDBInfo<string>, Schema| null>
     /**检索索引枚举值*/
     keys: IExtenstionMessageListener<RequestParamsWithDBInfo<{key: keyof Schema}>, (string | number)[]>
 

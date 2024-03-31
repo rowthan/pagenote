@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "npmClient": "yarn",
+  "ignoreChanges": [
+    "**/__fixtures__/**",
+    "**/__tests__/**",
+    "**/*.md",
+    "yarn.lock",
+    "**/package.json",
+    "**/*.yml"
+  ],
+  "command": {
+    "publish": {
+      "allowBranch": ["main","dev","feat*"]
+    }
+  }
+}

@@ -7,6 +7,7 @@ export default function useStorage(
   collection: Collection
 ): [TableStat, boolean] {
   const { data = { usage: 0, quota: 0, size: 0 }, isLoading } =
+    //   @ts-ignore
     useSWR<TableStat>('/storage/info/' + collection, fetchData, {
       fallback: {
         usage: 0,

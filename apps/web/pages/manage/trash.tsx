@@ -6,16 +6,16 @@ import * as React from "react";
 import CheckVersion from "../../components/check/CheckVersion";
 import Table from "../../components/Table";
 import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
-import {Pagination} from "@pagenote/shared/lib/@types/database";
 import BasicLayout from "../../layouts/BasicLayout";
 
 
 export default function Trash() {
     const [list, setList] = useState<WebPage[]>([])
-    const [pagination, setPagination] = useState<Pagination>({
+    const [pagination, setPagination] = useState({
         limit: 100,
         total: 0,
-        page: 0
+        page: 0,
+        pageSize: 10,
     })
 
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -49,11 +49,12 @@ export default function Trash() {
             }
         }).then((res) => {
             if (res.success) {
-                setList((res.data.list || []) as WebPage[])
+                setList((res.data?.list || []) as WebPage[])
                 setPagination({
+                    pageSize: pagination.pageSize,
                     limit: pagination.limit,
                     page: pagination.page,
-                    total: res.data.total,
+                    total: res.data?.total || 0,
                 })
             }
         })
@@ -61,6 +62,7 @@ export default function Trash() {
 
     function changePagination(page: number, limit: number) {
         setPagination({
+            pageSize: limit,
             limit: limit,
             page: page,
             total: pagination.total

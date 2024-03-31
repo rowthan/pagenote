@@ -1,11 +1,16 @@
 {
-  "version": "0.1.0",
+  "name": "@pagenote/sync",
+  "version": "0.1.18",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/sync.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   },
@@ -19,7 +24,6 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -31,9 +35,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "sync",
   "author": "rowthan",
-  "module": "dist/sync.esm.js",
   "size-limit": [
     {
       "path": "dist/sync.cjs.production.min.js",

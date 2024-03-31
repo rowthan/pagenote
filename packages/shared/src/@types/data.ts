@@ -1,8 +1,8 @@
 import {LightStatus, LightType} from "../pagenote-brush";
 import {box, html} from "../extApi";
+import {Query} from "./database";
 import OfflineHTML = html.OfflineHTML;
 import Box = box.Box;
-import {Query} from "./database";
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 export enum BackupVersion {
@@ -14,7 +14,9 @@ export enum BackupVersion {
     version5 = 5, // 2023,新增离线HTML文件，区分于资源
     version6 = 6, // 支持 note 备份
 
-    version7 = 7 // 通用型的备份格式，可扩展不指定具体字段 items:[]
+    version7 = 7, // 通用型的备份格式，可扩展不指定具体字段 items:[]
+
+    version8 = 8, // 仅导出 items ，删除一级备份字段
 }
 
 export enum AnnotationStatus {
@@ -308,7 +310,7 @@ export type FeatureItem = {
 
 export interface LinkRule<T> {
     // 关联特征表ID，当前数据的外链匹配管理
-    $links?: string[]
+    // $links?: string[]
 
     //@deprecated 匹配规则，不使用外键 $links 的情况下使用。存储至原始表，不利于查询（源数据量较大时）
     // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>
@@ -389,11 +391,14 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
+    // @deprecated
     backupId?: string
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
+    // @deprecated
     size?: number,
+    // @deprecated
     remark?: string
 
 

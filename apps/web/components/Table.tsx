@@ -9,7 +9,7 @@ interface Props<T> {
     renderTDS: (item: T, index: number) => ReactElement,
     footerTR?: ReactElement,
     footerTD?: ReactElement,
-    pagination: Pagination
+    pagination: {total: number, pageSize: number, page: number}
     onPaginationChange: (page: number, pageSize: number) => void
     selectedIds: Set<string>,
     onSelectIds: (newSelected: Set<string>) => void,

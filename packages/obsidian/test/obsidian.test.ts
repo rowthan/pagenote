@@ -6,6 +6,7 @@ global.FormData = require('form-data');
 // global.File = require('fs');
 const fs = require('fs');
 import {Blob} from 'buffer';
+// const mock = require('mock-fs');
 
 // 读取指定文件夹的文件
 function readFilesFromFolder(folderPath:string) {
@@ -13,10 +14,26 @@ function readFilesFromFolder(folderPath:string) {
 }
 
 const obsidian = new Obsidian({
-  token: 'b6a2199915a82fcb347137c3c2b51c9f3bff635e094d75def9f97b744557c9c1',
+  token: '9e00b736cc3f573c623ffef1c1900bc0718643ae9bca6d84194ea4c7bf40c95b',
   host: 'http://127.0.0.1:27123',
 });
 
+describe('Obsidian connect', () => {
+  it('should connect to the obsidian', async () => {
+    const status = await obsidian._status();
+    expect(status?.authenticated).toBe(true);
+  });
+
+  it('should un-connect to the obsidian', async () => {
+    const unAuthObsidian = new Obsidian({
+      token: 'xxxx',
+      host: 'http://127.0.0.1:27123',
+    });
+    const status = await unAuthObsidian._status();
+    expect(status?.authenticated).toBe(false);
+  });
+
+})
 
 // 测试用例
 describe('Content Upload Test', () => {
@@ -47,79 +64,35 @@ describe('Content Upload Test', () => {
 // 测试用例
 // describe('File Upload Test', () => {
 //   const folderPath = path.resolve(__dirname, './files');
+//   // const files = readFilesFromFolder(folderPath);
+//
+//   // mock({
+//   //   '/tmp': mock.load(folderPath, {recursive: false, lazy:false}),
+//   // });
+//   mock({
+//     'test.txt': 'content here by mock',
+//     'files/test.png': mock.load(path.resolve(__dirname, './files/test.png'), {recursive: false, lazy:false}),
+//   })
+//
+//   jest.mock('fs', () => ({
+//     readFileSync: jest.fn().mockImplementation((path) => {
+//       return mock.readFileSync(path);
+//     })
+//   }));
+//
+//   // const realFilePath = './files/test.png';
+//   // console.log('read data',realFilePath)
+//   // const myData = mock.bypass(() => fs.readFileSync(realFilePath));
+//   // console.log('data::',myData)
+//
+//   const myData = mock.readFileSync('test.text');
 //
 //   it('should upload files to the obsidian', async () => {
-//     const files = readFilesFromFolder(folderPath);
-//     for (const file of files) {
-//       const filePath = `_test_/${file}`;
-//
-//       const data = fs.readFileSync(folderPath+'/'+file,);
-//       // const blob = new Blob([data], {type: 'image/png'});
-//
-//       // const fileObject = new File([data], file);
-//       const response = await obsidian.putFile(filePath, data);
-//       console.log(response.message)
-//       expect(response.errorCode).toBe(0);
-//     }
-//   });
-// });
-
-// describe('file test', () => {
-//
-//
-//   it('put a markdown file success', async () => {
-//     const result = await obsidian.putFile('brain/test.md',{
-//       data: `## test from sdk \n create at ${new Date().toLocaleString()}`
-//     })
-//     expect(result.errorCode).toEqual(0);
-//   });
-//
-//   it('put a markdown file fail without dir exists', async () => {
-//     const result = await obsidian.putFile(`test/test2.md`,{
-//       data: `文件夹与文件同名时，应该报错。已经存在 名为 test 的文件`
-//     })
-//     console.log(result.message)
-//     expect(result.errorCode).toEqual(50000);
-//   });
-//
-//   it('put a png file', async () => {
-//     const result = await obsidian.putFile('test2.png',{
-//       data: {
-//         object: 1
-//       }
-//     })
-//     expect(result.errorCode).toEqual(0);
-//   });
-//
-//
-//   it('put a html file', async () => {
-//     const result = await obsidian.putFile('test3.json',{
-//       data: `
-//         <html lang="en">
-//           <head>
-//             <title>test</title>
-//             <style>
-//               h1 {
-//                   color: red;
-//                 }
-//             </style>
-//           </head>
-//           <body>
-//             <h1>test</h1>
-//           </body>
-//         </html>
-//       `
-//     })
-//     expect(result.errorCode).toEqual(0);
-//   });
-//
-//
-//   it('put a json file', async () => {
-//     const result = await obsidian.putFile('test.json',{
-//       data: {
-//         test: 1
-//       }
-//     })
-//     expect(result.errorCode).toEqual(0);
+//     const fileObject = new File([myData], 'test.png',{
+//       type: 'image/png',
+//     });
+//     const response = await obsidian.putFile('__test__/test.png', fileObject);
+//     console.log('response. message',response)
+//     expect(response.errorCode).toBe(0);
 //   });
 // });

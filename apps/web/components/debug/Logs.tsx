@@ -7,7 +7,7 @@ import CheckVersion from "../check/CheckVersion";
 import LogInfo = developer.LogInfo;
 import LogLevel = developer.LogLevel;
 import {toast} from "../../utils/toast";
-import {Pagination} from "@pagenote/shared/lib/@types/database";
+import Link from "next/link";
 
 const COLOR_MAP: Record<LogLevel, string> = {
     debug: "text-gray-500",
@@ -55,11 +55,11 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
             }
         }).then(function (res) {
             if (res?.success) {
-                setLogs(res.data.list)
+                setLogs(res.data?.list || [])
                 setPagination({
-                    page: res.data.page,
-                    pageSize: res.data.pageSize,
-                    totalPages: res.data.totalPages,
+                    page: page,
+                    pageSize: pageSize,
+                    totalPages: Math.ceil((res.data?.total || 0) / pageSize),
                 })
             }
         }).finally(function () {
@@ -70,7 +70,7 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
     function downloadLogs() {
         extApi.developer.downloadLog({}).then(function (res) {
             if (res?.success) {
-                toast('已下载，文件' + res.data.filename)
+                toast('已下载，文件' + res.data?.filename)
             }
         })
     }
@@ -111,7 +111,7 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
                                         onClick={downloadLogs}
                                         className={'btn btn-link'}>下载完整日志</button></CheckVersion>
                                 </code>
-                                        {pageSize < 100 && <a className={'link text-sm'} href="/log">查看更多</a>}
+                                        {pageSize < 100 && <Link className={'link text-sm'} href="/log">查看更多</Link>}
                             </pre>
                                 </div>
                                 :

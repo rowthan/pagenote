@@ -3,8 +3,6 @@ import { QueryValue } from '@pagenote/shared/lib/@types/database'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import set from 'lodash/set'
 import get from 'lodash/get'
-// import { html } from '@pagenote/shared/lib/extApi'
-// import OfflineHTML = html.OfflineHTML
 
 const LIGHT_PLACE_KEY = 'plainData.steps'
 
@@ -309,65 +307,6 @@ export async function searchInExt(
 
   //     })
   // })
-}
-
-export type PageGroup = {
-  groupName: string
-  groupCnt: number
-}
-
-export function groupPages(groupType: keyof WebPage) {
-  return extApi.page
-    .group({
-      groupBy: groupType,
-    })
-    .then(function (res8) {
-      const data = res8.data
-      const group: PageGroup[] = []
-      for (let i in data) {
-        group.push({
-          groupName: i,
-          groupCnt: data[i].length,
-        })
-      }
-      return group
-    })
-}
-
-export function batchExportByPageKeys(pageKeys: string[]) {
-  const pageKey = {
-    $in: pageKeys,
-  }
-  return extApi.lightpage.exportBackup({
-    htmlFilter: {
-      relatedPageKey: pageKey,
-    },
-    pageFilter: {
-      key: pageKey,
-    },
-    lightFilter: {
-      pageKey: pageKey,
-    },
-    snapshotFilter: {
-      pageKey: pageKey,
-    },
-  })
-}
-
-export async function batchUpdate(
-  pageKeys: string[],
-  update: { deleted: boolean }
-) {
-  // todo 删除 page 关联的其他数据，如 light 等
-  const result = await extApi.page.update({
-    query: {
-      key: {
-        $in: pageKeys,
-      },
-    },
-    data: update,
-  })
-  return result
 }
 
 export function getPageDetail(key: string) {

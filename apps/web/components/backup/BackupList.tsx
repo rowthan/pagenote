@@ -91,9 +91,9 @@ export default function BackupList() {
       })
       .then(async (res) => {
         if (res.success) {
-          pages = pages.concat(res.data.list)
+          pages = pages.concat(res.data?.list || [])
           console.log('pages:', res)
-          if (res.data.has_more) {
+          if (res.data?.has_more) {
             const result = await getAllPages(page + 1)
             pages = pages.concat(result)
           }

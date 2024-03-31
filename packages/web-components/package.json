@@ -1,12 +1,14 @@
 {
+  "private": true,
   "name": "@pagenote/web-component",
-  "version": "0.0.1",
+  "version": "0.0.15-next.0",
   "description": "A react library developed with dumi",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "npm run dev",
     "dev": "dumi dev",
+    "test": "echo 'skip'",
     "build": "father build",
     "build:watch": "father dev",
     "docs:build": "dumi build",
@@ -43,9 +45,6 @@
       "eslint --fix",
       "prettier --parser=typescript --write"
     ]
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "peerDependencies": {
     "react": ">=16.9.0",

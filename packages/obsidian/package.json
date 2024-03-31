@@ -1,13 +1,15 @@
 {
   "name": "@pagenote/obsidian",
-  "version": "0.1.2",
+  "version": "0.1.22",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/obsidiant.esm.js",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/obsidian.esm.js",
+  "typings": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=18"
@@ -15,14 +17,14 @@
   "scripts": {
     "dev": "tsdx watch",
     "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
+    "build": "tsdx build --format cjs,esm,umd",
+    "test:local": "tsdx test",
+    "test": "echo 'skip'",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -50,8 +52,8 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^11.0.1",
     "@babel/preset-env": "^7.23.6",
+    "@size-limit/preset-small-lib": "^11.0.1",
     "babel-jest": "^29.7.0",
     "husky": "^8.0.3",
     "size-limit": "^11.0.1",

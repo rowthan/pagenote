@@ -1,4 +1,5 @@
 import LocalFileSystem, {PathStat} from './localFileSystem'
+
 const md5 = require('md5')
 
 type AbstractInfo = null | {
@@ -88,6 +89,7 @@ export default class DirDatabaseTable<T> {
 
     /**查询文件*/
     query(filePath: string,):Promise<T|null>{
+        // @ts-ignore todo
         return this.localFileSystem.readFile(this._getFilePath(filePath)).then(function (res) {
             return parseFileContentAsJSON<T>(res)
         })
@@ -154,8 +156,9 @@ export default class DirDatabaseTable<T> {
                             if (!json) {
                                 return
                             }
+                            // @ts-ignore todo
                             const abstract = getAbstractInfo(json,stat);
-                            if (!abstract.id) {
+                            if (!abstract?.id) {
                                 console.error(json,tempFile)
                                 throw Error(`${i} 文件异常，读取失败`)
                             }

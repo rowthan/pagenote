@@ -3,30 +3,40 @@ import useVersionValid from 'hooks/useVersionValid'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import useCurrentTab from 'hooks/useCurrentTab'
 import { useRouter } from 'next/router'
-import dayjs from 'dayjs'
+import useWhoAmi from 'hooks/useWhoAmi'
+import useFrequency from "hooks/useFrequency";
 
 interface Props {
   children?: ReactNode
 }
 
-const LOG_CLOSE_ON_INSTALLED = 'log_close_on_installed'
 export default function CloseOnInstalled(props: Props) {
   const { children } = props
   const router = useRouter()
-  const { valid } = useVersionValid(
-    router.query?.version?.toString() || '0.27.0'
-  )
-  const { tab } = useCurrentTab()
+  const [whoAmI] = useWhoAmi();
+  // 版本控制
+  const { valid } = useVersionValid('0.28.15')
+  // 频率控制，7天显示一次
+  const [validate] = useFrequency('close-on-installed', 14);
+  const { tab } = useCurrentTab();
+
+  useEffect(function(){
+    if(whoAmI && whoAmI.extensionPlatform === "360" && validate){
+      extApi.developer.chrome({
+        "namespace":"tabs",
+        type: "create",
+        args: [{
+          url: "https://pagenote.cn/360"
+        }]
+      })
+    }
+  },[whoAmI])
 
   useEffect(
     function () {
-      const flag = localStorage.getItem(LOG_CLOSE_ON_INSTALLED)
-      // 一天最多只提示一次
-      const today = dayjs().format('YYYY-MM-DD')
-      const closeMe = flag === today || (router.query && valid && tab?.id)
-
-      if (closeMe) {
-        localStorage.setItem(LOG_CLOSE_ON_INSTALLED, today)
+      const closeMe = valid && tab?.id
+      // 满足关闭页面条件，自动关闭，避免打扰用户
+      if (closeMe || validate===false) {
         extApi.developer.chrome({
           namespace: 'tabs',
           type: 'remove',
@@ -34,7 +44,8 @@ export default function CloseOnInstalled(props: Props) {
         })
       }
     },
-    [valid, tab, router.query]
+    [valid,validate,tab,router]
   )
+
   return <div className="">{children}</div>
 }

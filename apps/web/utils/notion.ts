@@ -18,3 +18,24 @@ export function getPathFromProperties(block?: Block) {
     }
   }
 }
+
+export function highlightTarget(hashId: string){
+  const target = document.getElementById(hashId.replace("#",""));
+  const element = target?.parentElement?.parentElement || target;
+
+  if(!element){
+    return;
+  }
+
+
+
+  element.scrollIntoView({
+    behavior: "smooth",
+  })
+
+  const className = 'highlight-hash'
+  element.classList.add(className);
+  setTimeout(function(){
+    element.classList.remove(className)
+  },4000)
+}

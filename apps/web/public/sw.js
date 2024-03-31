@@ -1,6 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
+var version = "2"
 
 var cacheRules = {
   whiteList: [],
@@ -27,6 +28,10 @@ var util = {
     })
   },
   putCache: function (request, resource) {
+    // 非 http 请求，不支持 cache
+    if(request.url.indexOf('https:') === -1){
+      return;
+    }
     caches.open(util.getCacheKey(request)).then((cache) => {
       cache.put(request, resource)
     })
@@ -36,16 +41,17 @@ var util = {
       if (request.method !== 'GET') {
         return false
       }
-
-      /**黑名单，不实用缓存*/
-      var blockList = caches.blockList || []
+      /**黑名单，不用缓存*/
+      var blockList = cacheRules.blockList || []
       for (let i in blockList) {
         try {
           var regex = new RegExp(blockList[i])
           if (regex.test(request.url)) {
             return false
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('check error',blockList[i])
+        }
       }
 
       /**静态资源，可安全使用缓存*/
@@ -77,12 +83,14 @@ var util = {
  * 1. 监听install事件，安装完成后，进行文件缓存
  * **/
 self.addEventListener('install', function (e) {
-  console.log('Service Worker install')
-  // 加载新缓存
-  var cacheOpenPromise = caches.open(preCacheName).then(function (cache) {
-    return cache.addAll(preCacheFiles)
-  })
-  e.waitUntil(cacheOpenPromise)
+  console.log('Service Worker install',version)
+  if(preCacheFiles.length){
+    // 加载新缓存
+    var cacheOpenPromise = caches.open(preCacheName).then(function (cache) {
+      return cache.addAll(preCacheFiles)
+    })
+    e.waitUntil(cacheOpenPromise)
+  }
 
   self.skipWaiting()
 })
@@ -96,7 +104,7 @@ self.addEventListener('activate', function (e) {
   var cachePromise = caches.keys().then(function (keys) {
     var deleteKey = keys.filter(function (key) {
       // 非白名单缓存 均清空
-      return !['image', 'script', 'font', 'style', preCacheName].includes(key)
+      return !['image', 'script', 'font', 'style'].includes(key)
     })
     return Promise.all(
         deleteKey.map(function (key) {
@@ -125,9 +133,9 @@ self.addEventListener('fetch', function (e) {
           .then(function (response) {
             const allowCache = util.checkAllowCache(e.request)
             if (allowCache) {
-              // todo 优化，对于 hash 资源，也不需要重新拉取
-              var needCache = !response || util.checkIsDocument(e.request);
-              if (needCache) {
+              // 如果没有响应或者请求内容为 doc ,则需要保持最新，重新拉取
+              var needRefreshCache = !response || util.checkIsDocument(e.request);
+              if (needRefreshCache) {
                 util.fetchAndCache(e.request)
               }
               if (response) {
@@ -167,6 +175,11 @@ self.addEventListener('message', function (e) {
         })
       }
       break
+    case 'add_block':
+      if (e.data.values.length) {
+        cacheRules.blockList = cacheRules.blockList.concat(e.data.values)
+      }
+      break;
     default:
       console.warn('not support ', e.data)
   }

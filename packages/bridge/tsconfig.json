@@ -1,20 +1,13 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
-        "module": "commonJs",
         "target": "es5",
-        "allowJs": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
+        "module": "ES2015",
+        "strict": true,
         "declaration": true,
-        "rootDir": "src",
-        "outDir": "lib",
-        "lib": [
-            "dom",
-            "es5",
-            "scripthost",
-            "es2015.promise",
-            "es2016"
-        ]
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "rootDir": "./src"
     }
 }

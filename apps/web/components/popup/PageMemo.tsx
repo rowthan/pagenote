@@ -20,8 +20,9 @@ import { GiFamilyTree } from 'react-icons/gi'
 import { toast } from '../../@/components/ui/use-toast'
 import { SizeIcon } from '@radix-ui/react-icons'
 import { basePath } from '../../const/env'
-import useWhoAmi from '../../hooks/useWhoAmi'
 import Memo from '../editor/Memo'
+import {Button} from "../../@/components/ui/button";
+import {Editor} from "@tiptap/react/src/Editor";
 
 const ICONS = {
   ['path']: <CiLink />,
@@ -70,6 +71,9 @@ export default function PageMemo(props: Props) {
   const path = getPath(url || '')
   const { data, isLoading, mutate } = useTableQuery<Note>(Collection.note, {
     query: {
+      deleted:{
+        $ne: true,
+      },
       $or: [
         {
           path: path,
@@ -93,15 +97,20 @@ export default function PageMemo(props: Props) {
   })
 
   function removeMemo(key: string = '') {
-    return extApi.table.remove({
+    return extApi.table.update({
       ...dbTableMap[Collection.note],
-      params: [key],
+      params: {
+        keys: [key],
+        data: {
+          deleted: true,
+        },
+      },
     })
   }
 
-  function afterUpdate(change: EditorChangeContent, origin: Partial<Note>) {
-    if (!change.textContent && origin && origin?.key) {
-      removeMemo(origin.key).then(function () {
+  function afterUpdate(editor: Editor | undefined, key?: string) {
+    if (!editor?.getText() && key) {
+      removeMemo(key).then(function () {
         mutate()
       })
     }
@@ -111,6 +120,7 @@ export default function PageMemo(props: Props) {
     const updateData = {
       ...data,
       updateAt: Date.now(),
+      deleted: false,
     }
     extApi.table
       .update({
@@ -139,7 +149,14 @@ export default function PageMemo(props: Props) {
             description: res.error,
           })
         }
-        mutate()
+        mutate().then(function () {
+          setTimeout(function () {
+            const newMemo = document.querySelector('.tiptap') as HTMLElement;
+            if(newMemo){
+              newMemo.focus()
+            }
+          },10)
+        })
       })
   }
 
@@ -152,15 +169,22 @@ export default function PageMemo(props: Props) {
   }
 
   const domain = getDomain(url, false)
-  const memos = data.length ? data : [createNewNote(url, 'path')]
+  const memos = data.length ? data : []
   return (
     <div className="mt-3  min-h-10 ">
+      {
+        memos.length === 0 && (
+            <Button variant={'outline'} className={'w-full'} onClick={()=>{createNewMemo('path')}}>
+              添加备忘录
+            </Button>
+        )
+      }
       {!isLoading && (
         <div>
           {memos.map((item, index) => {
             return (
               <Memo
-                afterUpdate={(data) => afterUpdate(data, { key: item.key })}
+                afterBlur={(editor) => afterUpdate(editor, item.key)}
                 key={item.key || ''}
                 id={item.key || ''}
                 className={

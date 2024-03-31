@@ -1,17 +1,19 @@
 /**override default notion style*/
 
-.notion-app.light-mode, .notion-header {
-  background-color: transparent !important;
-}
-
 
 /**删除padding值，会导致网页都出现滚动条- 尽管网页内容并未超过视口。 todo pull a mr */
 .notion > * {
   padding: 0 !important;
 }
 
+summary{
+  .notion-h {
+    width: 90% !important;
+  }
+}
+
+
 .notion-h {
-  display: block !important;
   width: 100% !important;
 }
 
@@ -40,6 +42,10 @@
   left: calc(min(96px, 8vw)) !important;
 }
 
+blockquote.notion-quote{
+  font-size: 0.9em;
+}
+
 @media screen and (max-width: 920px) {
   .notion-page-cover-wrapper {
     height: 200px !important;
@@ -59,4 +65,18 @@
     left: 40px;
     max-width: calc(50% - 390px);
   }
+}
+
+@keyframes highlightFadeOut {
+  0% {
+    background-color: rgb(214, 196, 93); /* 初始高亮背景颜色 */
+  }
+  100% {
+    background-color: transparent; /* 最终透明背景 */
+  }
+}
+
+.highlight-hash{
+  animation: highlightFadeOut 3s ease-out forwards;
+  outline: 1px solid #fff; 
 }

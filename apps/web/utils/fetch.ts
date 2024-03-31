@@ -4,7 +4,7 @@ import FetchRequest = network.FetchRequest
 import {
   BaseMessageHeader,
   RESPONSE_STATUS_CODE,
-} from '@pagenote/shared/lib/communication/base'
+} from '@pagenote/bridge'
 
 let byExtFlag: boolean | null = null
 

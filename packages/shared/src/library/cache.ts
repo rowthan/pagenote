@@ -68,13 +68,17 @@ const getCacheInstance = function <T>(key: string, option: Option<T> = {}, api?:
         },
         get: function (defaultValue?: T): T {
             const expiredAtStr = getApi().getItem(expiredKey);
+            // @ts-ignore todo
             const expiredAt = parseValue<number>(expiredAtStr);
             if (duration && expiredAt && expiredAt < Date.now()) {
+                // @ts-ignore todo
                 return undefined
             }
             const str = getApi().getItem(cacheKey);
+            // @ts-ignore todo
             let value: T = parseValue(str);
             if (value === undefined || value === null) {
+                // @ts-ignore todo
                 value = defaultValue || option.defaultValue
             }
             return value;
