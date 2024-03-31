@@ -1,4 +1,4 @@
-import NotionDoc, { NotionDocProp } from 'components/NotionDoc'
+import NotionDoc, { NotionDocProp } from 'components/notion/NotionDoc'
 import { getNotionDocDetail } from 'service/server/doc'
 import { SEO_REVERT_MAP } from '../const/notion'
 

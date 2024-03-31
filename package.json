@@ -13,6 +13,7 @@
     "build:packages": "npx lerna exec --scope='@pagenote/*' --no-private --include-dependencies yarn build",
     "build:ext-web": "yarn run build:packages && lerna run --scope=pagenote-web build-ext ",
     "dev:web": "lerna run --scope=pagenote-web --include-dependencies dev",
+    "build-all": "lerna run build ",
     "lint": "yarn workspaces run lint"
   },
   "engines": {

@@ -62,13 +62,13 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
         if(!tab){
             return
         }
-        if(config?.searchEngines?.length){
-            const searchKey = getSearchKeyFormUrl(tab?.url,config.searchEngines);
-            if(searchKey){
-                onChangeKeyword(searchKey)
-                navigate('/search')
-            }
-        }
+        // if(config?.searchEngines?.length){
+        //     const searchKey = getSearchKeyFormUrl(tab?.url,config.searchEngines);
+        //     if(searchKey){
+        //         onChangeKeyword(searchKey)
+        //         navigate('/search')
+        //     }
+        // }
     },[tab,config,onChangeKeyword,navigate])
 
     const isSearchPath = location.pathname === '/search'
