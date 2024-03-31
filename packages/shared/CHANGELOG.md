@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.36](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.35...@pagenote/shared@1.14.36) (2024-03-31)
+
+
+### Features
+
+* sync note success ([41e7053](https://github.com/rowthan/pagenote/commit/41e70539c69b7e7d821a506b4d31cf0ec055ec04))
+
+
+
+
+
 ## [1.14.35](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.35-next.0...@pagenote/shared@1.14.35) (2024-01-23)
 
 **Note:** Version bump only for package @pagenote/shared
