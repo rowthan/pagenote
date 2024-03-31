@@ -10,7 +10,9 @@
     "test":"echo 'skip'"
   },
   "dependencies": {
-    "@pagenote/component":"1.0.0"
+    "@pagenote/component":"1.0.0",
+    "@pagenote/shared":"^1.14.36-next.1",
+    "@pagenote/actions":"^0.1.1-next.2"
   },
   "devDependencies": {
     "parcel": "^2.11.0"

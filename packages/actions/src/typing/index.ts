@@ -1,3 +1,4 @@
+import {IAction} from "./IAction";
 enum USES {
     ARTIFACTV3 = 'pagenote/table@v1', // 使用缓存保存信息表
     FETCH = 'pagenote/fetch@v1', // 请求服务端数据
@@ -77,4 +78,20 @@ export type WorkFlow = {
     },
     jobs: Job[],
     test?: Job[]
+}
+
+export interface WorkflowOption {
+    yml?: string
+    registerAction: (actions:string)=>Promise<IAction | null>;
+    prepareEnv: (keys: string[])=>Promise<Object>;
+    hooks?: {
+        beforeJob?: ()=>void,
+        afterJob?: ()=>void,
+        beforeStep?: (step: Step, request: any)=>void,
+        afterStep?: (step: Step, response:any)=>void,
+        beforeTask?: ()=>void,
+        afterTask?: ()=>void,
+        beforeWorkflow?: ()=>void,
+        afterWorkflow?: ()=>void,
+    }
 }

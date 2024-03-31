@@ -1,43 +1,24 @@
 import jsYaml from 'js-yaml';
-import {Job, Step, TaskState, WorkFlow, WorkFlowState} from "../typing";
-import {IAction} from "../typing/IAction";
+import {Job, Step, TaskState, WorkFlow, WorkflowOption, WorkFlowState} from "../typing";
 import set from 'lodash/set'
 import get from 'lodash/get'
 import {generateMatrixTasks, replaceTemplates} from "../utils";
 import {exprEval, ifCheck} from "../utils/expr-eval";
 
-interface WorkflowOption {
-  yml?: string
-  registerAction: (actions:string)=>Promise<IAction | null>;
-  prepareEnv: (keys: string[])=>Promise<Object>;
-  hooks?: {
-    beforeJob?: ()=>void,
-    afterJob?: ()=>void,
-    beforeStep?: (step: Step, request: any)=>void,
-    afterStep?: (step: Step, response:any)=>void,
-    beforeTask?: ()=>void,
-    afterTask?: ()=>void,
-    beforeWorkflow?: ()=>void,
-    afterWorkflow?: ()=>void,
-  }
-}
-
-
+/**
+ * 适用于后台运行的运行器（service worker or nodejs，不依赖 DOM 结构）
+ * */
 export default class Background{
+  /** 运行信息，基于配置文件解析的对象结构*/
   public workflowInfo:WorkFlow | null = null
+  /** 全局的上下文变量，记录配置项、流水线的基础运行信息（触发源、时间、环境等信息）） */
   public context:{
     // 环境变量
     env: Object,
-    trigger:{
-
-    },
+    trigger:{},
   }
-
-  private actions: Map<string, IAction> = new Map();
-
-
+  /** 流水线的全局状态*/
   public state : WorkFlowState
-
   /**
    * 运行时环境变量
    * * @type {Record<contextID 上下文ID, Map<string,any>>}
@@ -49,10 +30,12 @@ export default class Background{
     [key:string]: any,
   }>();
 
+  /**运行期的配置信息*/
   private readonly  option: WorkflowOption;
 
   public running: [number,number] = [-1,-1]
 
+  /** 初始化*/
   constructor(option:WorkflowOption) {
     this.option = option;
     this._updateYml(option?.yml || '');
@@ -77,27 +60,24 @@ export default class Background{
   }
 
 
+  /**
+   * 设置上下文空间的变量信息
+   * */
   _setRuntime(id: string, value: any = {},contextId: string){
     const runtime = this.runtime.get(contextId) || this.runtime.set(contextId,{}).get(contextId) || {}
     set(runtime, id, value)
   }
 
+  /**
+   * 获取上下文空间的变量信息
+   * */
   _getRuntime(contextId: string){
     return this.runtime.get(contextId) || this.runtime.set(contextId,{}).get(contextId);
   }
 
-  async _getAction(uses: string){
-    const cache = this.actions.get(uses);
-    if(cache){
-      return Promise.resolve(cache);
-    }
-    const action = await this.option.registerAction(uses||'');
-    if(action){
-      this.actions.set(uses,action);
-    }
-    return action;
-  }
-
+  /**
+   * 获取 job/step 下可被读取的上下文内容
+   * */
   getContextVariables(contextId: string){
     const variables = {
       env: this.context.env,
@@ -108,7 +88,7 @@ export default class Background{
     return variables
   }
   /**
-   * 执行 step 任务
+   * 执行单个 step 任务
    * */
   async runStep(step: Step,stepsContextId:string){
     if(!step){
@@ -138,7 +118,7 @@ export default class Background{
         if(this.option.hooks?.beforeStep){
           this.option.hooks?.beforeStep(step,withArgs);
         }
-        const action = await this._getAction(uses);
+        const action = await this.option.registerAction(uses || '');
         if(uses && !action){
           step._state = TaskState.fail;
           throw Error('without action::'+ uses)
@@ -184,6 +164,9 @@ export default class Background{
     return response;
   }
 
+  /**
+   * 执行多个任务组；用于控制并发、串行、失败控制等
+   * */
   async _runSteps(steps: Step[],contextId:string){
     let response;
     for (let i = 0; i < steps.length; i++) {
@@ -234,7 +217,8 @@ export default class Background{
     return jobResponse;
   }
 
-  async prepareEnv() {
+  /** 开始前的 环境变量准备*/
+  async _prepareEnv() {
     const envKeys = (this.workflowInfo?.env || []).map(function (item) {
       return item.key;
     });
@@ -250,12 +234,13 @@ export default class Background{
     this.context.env = envObject;
   }
 
+  /**
+   * 运行 workflow
+   * */
   async run(){
     this.state = WorkFlowState.running;
     /**1.环境变量准备*/
-    await this.prepareEnv();
-
-
+    await this._prepareEnv();
     /**2. 运行job*/
     const jobs = this.workflowInfo?.jobs || [];
     /**所有的 jobs 同一个上下文*/
@@ -266,8 +251,11 @@ export default class Background{
     this.state = WorkFlowState.success;
   }
 
+  /**
+   * 配置的测试用例，用于反馈配置是否合法，避免在正式运行时出现一些错误
+   * */
   async runTest(){
-    await this.prepareEnv();
+    await this._prepareEnv();
     const testJobs = this.workflowInfo?.test || [];
 
     for(let i=0; i<testJobs.length; i++){
