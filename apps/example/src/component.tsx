@@ -7,7 +7,6 @@ const rootElement = document.getElementById('root');
 const App = () => {
   return (
     <div>
-      react component
       <LetMeKnow></LetMeKnow>
       <Highlight>
         内容<h2>h2</h2>

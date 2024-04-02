@@ -2,7 +2,7 @@
   "name": "@pagenote/component",
   "private": "true",
   "version": "1.0.0",
-  "main": "dist/components.js",
+  "main": "dist/index.js",
   "author": "rowthan",
   "license": "MIT",
   "scripts": {
@@ -11,10 +11,14 @@
     "dev": "rollup -c --watch --bundleConfigAsCjs",
     "test": "echo 'skip'"
   },
+  "exports":{
+    "./webComponents":"./dist/webComponents.js"
+  },
   "dependencies": {
     "@pagenote/shared": "^1.14.36-next.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "canvas-confetti": "^1.9.2",
     "react-icons": "^5.0.1",
     "rollup": "^4.9.6",
     "rollup-plugin-babel": "^4.4.0",

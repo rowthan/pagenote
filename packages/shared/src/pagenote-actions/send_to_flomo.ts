@@ -5,7 +5,7 @@ import {PREDEFINED_ICON} from "../icons";
 const version = '0.2.0'
 const send_to_flomo:ActionConfig = {
     define:{
-        name:'Send to flomo',
+        name:'Send to flomo/catnote',
         actionType: ACTION_TYPES.send_to_flomo,
         version: version,
         icon: PREDEFINED_ICON.flomo,
@@ -21,7 +21,7 @@ const send_to_flomo:ActionConfig = {
                         data: data
                     }).then(function(result){
                         API.methods.notification({
-                            message: result.json.message
+                            message: result.json.message || result.json.msg || result.json.error
                         })
                         console.log(result,'result')
                     }).catch(function(e){
@@ -51,7 +51,7 @@ const send_to_flomo:ActionConfig = {
                 }]
             }
         ],
-        description:"将选中内容发送到 Flomo 平台。",
+        description:"将选中内容发送到 Flomo/catnote 等平台。",
         scenes: [ACTION_SCENE.text]
     },
     initData:{

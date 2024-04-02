@@ -4,10 +4,11 @@ import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import typescript from '@rollup/plugin-typescript';
 
-/**多入口打包*/ 
+/**多入口打包*/
 const INPUTS = [
-  'components',
-  'pagenote'
+  'webComponents',
+  'pagenote',
+  'index',
 ]
 
 const configList = INPUTS.map(function(filename){

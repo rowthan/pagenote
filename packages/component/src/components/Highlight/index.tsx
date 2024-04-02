@@ -1,6 +1,5 @@
 import React, {FC, PropsWithChildren,useEffect,Fragment,useRef} from "react";
 import {withComponentStyles} from '../HOC'
-import ReactDOM from "react-dom";
 
 const Highlight:FC<PropsWithChildren<{container:Document,_isWebComponent?: boolean}>> = (props) => {
   const highlightText = '内容'
@@ -28,7 +27,7 @@ const Highlight:FC<PropsWithChildren<{container:Document,_isWebComponent?: boole
       <div ref={rootRef}>
         {props.children}
       </div>
-    ) 
+    )
   }
 }
 

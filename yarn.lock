@@ -8883,6 +8883,11 @@ caniuse-lite@^1.0.30001587:
   resolved "https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001591.tgz#16745e50263edc9f395895a7cd468b9f3767cf33"
   integrity sha512-PCzRMei/vXjJyL5mJtzNiUCKP59dm8Apqc3PH8gJkMnMXZGox93RbE76jHsmLwmIo6/3nsYIpJtx0O7u5PqFuQ==
 
+canvas-confetti@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.npmmirror.com/canvas-confetti/-/canvas-confetti-1.9.2.tgz#c9f74098c7fdf66dd9d1aab5d381061cf74e48f0"
+  integrity sha512-6Xi7aHHzKwxZsem4mCKoqP6YwUG3HamaHHAlz1hTNQPCqXhARFpSXnkC9TWlahHY5CG6hSL5XexNjxK8irVErg==
+
 canvas2image@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmmirror.com/canvas2image/-/canvas2image-1.0.5.tgz#676a094b4363888a2b7662e58b9ce5d3bfbc9d14"
