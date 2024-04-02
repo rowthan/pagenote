@@ -1,3 +1,4 @@
+import {BaseMessageRequest, CommunicationClient} from "./base";
 
 
 /**
@@ -25,4 +26,28 @@ export function createURLForJSON(input: Object) {
     const blob = stringToBlob(JSON.stringify(input))
     const url = URL.createObjectURL(blob);
     return url;
+}
+
+/**
+ * 检测是否要需要
+ * 1. 处理当前接收到的请求
+ * 2. 是否需要相应请求
+ * */
+export function shouldResolveRequest(request: BaseMessageRequest, client: CommunicationClient){
+    const result = {
+        resolveResponse: false,
+        resolveRequest: false,
+    }
+
+    const {targetClientId} = request.header;
+    const {clientId} = client;
+    // 判断目标明确匹配
+    const matched = Boolean(targetClientId) && targetClientId===clientId;
+
+    if(targetClientId===null || matched){
+        result.resolveRequest = true;
+    }
+
+    result.resolveResponse = matched;
+    return result;
 }

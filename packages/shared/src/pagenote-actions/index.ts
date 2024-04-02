@@ -25,6 +25,25 @@ export const publicActionStores = [create_new_light,search,copy,send_to_email,se
 
 export default defaultActionMap
 
+
+interface Props {
+    url: string
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    headers?: {
+        Accept?:  string,
+        'content-type'?: string,
+    } & Record<string, string>,
+    body?: any,
+}
+
+interface Output extends Response{
+    /**基于场景的返回数据封装**/
+    _response?: string | Blob | Object | any
+    _status?: number,
+    /**返回的 headers 无法直接通过 key 值获取，故这里封装一下*/
+    _headers: Record<string, string>,
+}
+
 export interface ActionAPI {
     methods:{
         // 创建一个标记
@@ -35,12 +54,17 @@ export interface ActionAPI {
         writeTextToClipboard: (text:string)=>void,
         // toast提示
         notification: (tip:{message: string,})=>void,
-        // 发送网络请求
+        // 发送网络请求 @deprecated
         fetch: (request: FetchRequest)=>Promise<FetchResponse>,
+
+        // 逐步替换 fetch 为 http 调用
+        http: (input: Props)=> Promise<Output>
+
         // 弹窗
         popupwindow: (url:string, title:string, w?:number, h?:number)=>void,
         // 弹窗对数据进行二次编辑数据
         editConfirm: (data:string,callback:(confirmed:boolean,data:string)=>void)=>void
+
     }
 }
 

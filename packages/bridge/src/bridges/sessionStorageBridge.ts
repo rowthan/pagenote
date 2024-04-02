@@ -234,4 +234,9 @@ export default class SessionStorageBridge implements Communication<any> {
     stopListen(): void {
         this.state = STATUS.STOP
     }
+
+    broadcast(type: string, data: any, header?: BaseMessageHeader) {
+        console.info(type,data,header)
+        throw Error('broadcast not support')
+    }
 }
