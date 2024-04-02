@@ -1,0 +1,151 @@
+name: 同步设置至 obsidian
+description: 将 PAGENOTE 的设置同步存储至 obsidian。如果你的 obsidian 数据可以在不同设备之间同步，那么 PAGENOTE 的设置也可以随之同步。
+id: sync_setting_by_obsidian
+template: sync_setting_by_obsidian
+# 流程运行的时机
+on:
+  # 浏览器打开时
+  window: [open]
+  # 触发时机，当插件数据有变化时
+  change:
+    tables:
+      - config
+    dbs:
+      - setting
+
+# 流程运行需要的配置变量，要求用户进行配置、隐私数据、个性化数据均在此配置
+env:
+  - name: obsidian token 密钥
+    id: obsidianToken
+    key: obsidian.token
+  - name: obsidian host API 地址
+    id: obsidianHost
+    key: obsidian.host
+    default: http://localhost:27123
+  - name: 存放路径
+    id: obsidian.root
+    key: obsidianRoot
+    default: "pagenote"
+
+test:
+  - name: "测试连通性"
+    id: "test"
+    steps:
+      - name: "写请求"
+        uses: "pagenote/http@v1"
+        id: "test_put"
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/test.md
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+          method: 'put'
+          body: "连通性检测文件，你可以放心删除本文件"
+        exit: "steps.test_put.outputs._status == 204 ? 0 : 1"
+
+      - name: "读请求"
+        uses: "pagenote/http@v1"
+        id: "test_get"
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/test.md
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+            Accept: "application/vnd.olrapi.note+json"
+          method: 'get'
+        exit: "steps.test_get.outputs._status == 200 ? 0 : 1"
+
+      - name: "删请求"
+        uses: "pagenote/http@v1"
+        id: "test_delete"
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/test.md
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+            Accept: "application/vnd.olrapi.note+json"
+          method: 'delete'
+        exit: "steps.test_delete.outputs._status == 204 ? 0 : 1"
+
+
+jobs:
+  # 任务1 计算上次同步后，插件的数据变化。
+  - name: "读取变更内容"
+    id: "get_local_settings"
+    steps:
+      - name: "或许当前插件内数据"
+        uses: "pagenote/table@v1"
+        id: "getCurrentSettings"
+        with:
+          db: "setting"
+          table: "config"
+          method: "keys"
+          params:
+            key: "key"
+  # 任务2: 数据交换流出
+  - name: "将本地变更的数据同步至远端"
+    id: "sync_to_cloud"
+    strategy:
+      matrix:
+        item: ${{jobs.get_local_settings.outputs.data}}
+    steps:
+      - name: "获取本地数据"
+        uses: "pagenote/table@v1"
+        id: "getLocalData"
+        with:
+          db: "setting"
+          table: "config"
+          method: "query"
+          params:
+            query:
+              key: ${{matrix.item}}
+
+      - name: "获取远程数据"
+        uses: "pagenote/http@v1"
+        id: "getRemoteData"
+        continue-on-error: true
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/config/${{matrix.item}}.json
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+            Accept: "application/json"
+          method: 'get'
+
+      - name: "远程配置变量"
+        id: remoteData
+        with: ${{steps.getRemoteData.outputs._response}}
+
+      - name: "比较数据"
+        id: "pkData"
+        uses: "pagenote/pick@v1"
+        with:
+          pkBy:
+            - "updateAt"
+            - "createAt"
+          list:
+            - ${{steps.getLocalData.outputs.data.list.0}}
+            - ${{steps.remoteData.outputs}}
+
+      - name: "本地-> 远程"
+        if: steps.pkData.outputs.index == 0
+        uses: "pagenote/http@v1"
+        id: 'uploadToCloud'
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/config/${{matrix.item}}.json
+          headers:
+            Content-Type: "application/json; charset=utf-8"
+            Accept: "application/json"
+            Authorization: Bearer ${{env.obsidianToken}}
+          method: 'PUT'
+          body: ${{steps.pkData.outputs.data | JSON.stringify}}
+
+      - name: "远程-> 本地"
+        if: steps.pkData.outputs.index == 1
+        id: "downloadToLocal"
+        uses: 'pagenote/table@v1'
+        with:
+          db: "setting"
+          table: "config"
+          method: "update"
+          params:
+            data: ${{steps.pkData.outputs.data}}
+            keys:
+              - ${{matrix.item}}
+

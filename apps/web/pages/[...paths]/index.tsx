@@ -1,4 +1,4 @@
-import NotionDoc, { NotionDocProp } from 'components/NotionDoc'
+import NotionDoc, { NotionDocProp } from 'components/notion/NotionDoc'
 import {
   computeStaticPaths,
   getNotionDocDetail,

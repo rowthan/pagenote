@@ -8,11 +8,14 @@
     "test": "yarn workspaces run test",
     "prepare": "echo 'skip husky install'",
     "dev": "yarn workspaces run dev",
+    "dev:web": "lerna run --scope=pagenote-web --include-dependencies dev",
+    "dev:component": "lerna run --scope=@pagenote/component dev & lerna run --scope=example dev",
+    "dev:example": " lerna run --scope=example dev",
     "start": "yarn workspaces run start",
     "build": "lerna run --scope=pagenote-web --include-dependencies build ",
     "build:packages": "npx lerna exec --scope='@pagenote/*' --no-private --include-dependencies yarn build",
     "build:ext-web": "yarn run build:packages && lerna run --scope=pagenote-web build-ext ",
-    "dev:web": "lerna run --scope=pagenote-web --include-dependencies dev",
+    "build-all": "lerna run build ",
     "lint": "yarn workspaces run lint"
   },
   "engines": {

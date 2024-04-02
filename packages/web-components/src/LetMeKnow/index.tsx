@@ -1,6 +1,5 @@
 import React, {FC, PropsWithChildren, useEffect, useState} from "react";
 import withComponentStyles, { withoutReAction } from "../HOC";
-import { getChildren } from "../utils/webComponent";
 
 /**react组件模式的 css 引入，产物将以单独的文件形式输出 sideEffect*/
 import '../tailwind.css'
@@ -30,7 +29,6 @@ export default Keyword
 
 
 const WebComponent = withoutReAction(withComponentStyles(Keyword,css))
-// const WebComponent = withComponentStyles(Keyword,css)
 
 export {
     WebComponent

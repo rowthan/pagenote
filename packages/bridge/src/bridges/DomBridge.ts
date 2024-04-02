@@ -186,4 +186,9 @@ export default class DomBridge implements Communication<any>{
             }
         })
     }
+
+    broadcast(type: string, data: any, header?: BaseMessageHeader) {
+        console.info(type,data,header)
+        throw Error('broadcast not support')
+    }
 }

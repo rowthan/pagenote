@@ -1,15 +1,20 @@
 import type {
-    BaseMessageHeader,
-    BaseMessageRequest,
-    BaseMessageResponse,
-    Communication,
-    CommunicationOption,
-    IBaseSendResponse,
-    IExtenstionMessageListener,
-    IExtenstionMessageProxy,
+  BaseMessageHeader,
+  BaseMessageRequest,
+  BaseMessageResponse,
+  Communication,
+  CommunicationOption,
+  IBaseSendResponse,
+  IExtenstionMessageListener,
+  IExtenstionMessageProxy,
 } from "../base";
-import {DEFAULT_TIMEOUT, RESPONSE_STATUS_CODE, STATUS,} from '../base'
-import {sumSizeMB} from "../utils";
+import {
+  CommunicationClient,
+  DEFAULT_TIMEOUT,
+  RESPONSE_STATUS_CODE,
+  STATUS,
+} from '../base'
+import {shouldResolveRequest, sumSizeMB} from "../utils";
 
 type ExtensionOption = CommunicationOption & {
   isBackground: boolean
@@ -95,7 +100,8 @@ function sendMessageByExtension<T>(tabId:number,request: BaseMessageRequest,requ
 
 
 export default class ExtensionMessage implements Communication<any>{
-  clientId: string; // 当前信使的ID
+  clientId: string; // 当前信使的ID todo remove property
+  client: CommunicationClient;
   proxy: IExtenstionMessageProxy; // 所有消息的监听代理
   listeners: Record<string, IExtenstionMessageListener<any, any>> = {} // 指定事件的监听
   state: STATUS
@@ -112,6 +118,7 @@ export default class ExtensionMessage implements Communication<any>{
       isBackground: true,
     };
     this.clientId = id;
+    this.client = new CommunicationClient(id,this.option)
     this.state = STATUS.UN_READY
     this.proxy = function () {
       return false
@@ -130,13 +137,30 @@ export default class ExtensionMessage implements Communication<any>{
     const that = this;
     const tempSegmentsMap: Record<string, string[]> = {}
     // TODO 对 sendResponse 进行包装处理，当数据量大于限制时，background-front 无法发送完整数据
-    const globalMessageListener = function (request:BaseMessageRequest,sender: chrome.runtime.MessageSender,sendResponse:IBaseSendResponse<any>):boolean {
+    const globalMessageListener = function (request:BaseMessageRequest,sender: chrome.runtime.MessageSender,callResponse:IBaseSendResponse<any>):boolean {
       if(that.state!==STATUS.READY){
         return false;
       }
 
       const { data,type,header} = request;
-      const {carrier} = header;
+      const {carrier,targetClientId} = header;
+
+      const resolveCheck = shouldResolveRequest(request,that.client)
+
+      /***通信不匹配，不需要处理请求*/
+      if(!resolveCheck.resolveRequest){
+        return false;
+      }
+      function sendResponse(data:BaseMessageResponse<any>){
+        /**需要响应时，响应 response*/
+        if(resolveCheck.resolveResponse){
+          callResponse(data)
+        } else {
+          return;
+        }
+      }
+
+
       /**
        * 分片请求，等待数据接收完毕，重新组装后调用
        * */
@@ -178,7 +202,7 @@ export default class ExtensionMessage implements Communication<any>{
       }
 
 
-      const { senderClientId,originClientId,targetClientId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
+      const { senderClientId,originClientId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
 
       // 1. 单线模式，只监听某个目标对象的请求。 非目标请求源，事件、代理均不响应
       if(that.option.targetClientId && senderClientId && senderClientId!==that.option.targetClientId){
@@ -348,14 +372,17 @@ export default class ExtensionMessage implements Communication<any>{
 
   broadcast(type: string, data: any, header?: BaseMessageHeader){
     if(!this.option.isBackground){
-      throw Error('only background can boardcast')
+      throw Error('only background can broadcast')
     }
 
     const requestMessage = this.requestMessage;
+    // 对每一个标签页发送请求
     chrome.tabs.query({}, function (tabs) {
       tabs.forEach(function (tab) {
-        return requestMessage(data.type, data, {
+        return requestMessage(type, data, {
+          ...(header || {}),
           targetTabId: tab.id,
+          targetClientId: null, // 无指定目标服务节点
         })
       })
     })

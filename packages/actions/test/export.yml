@@ -1,0 +1,167 @@
+name: memo to obsidian
+# 流程运行的时机
+on:
+  #  定时任务
+  schedule: 1*
+  # 当插件数据有变化时
+  change:
+    tables:
+      - memo
+
+# 流程运行需要的配置变量，要求用户进行配置、隐私数据、个性化数据均在此配置
+env:
+  - name: obsidian token 密钥
+    id: obsidianToken
+    key: obsidian.token
+    default: 9e00b736cc3f573c623ffef1c1900bc0718643ae9bca6d84194ea4c7bf40c95b
+  - name: obsidian host API 地址
+    id: obsidianHost
+    key: obsidian.host
+    default: http://localhost:27123
+  - name: 存放路径
+    id: obsidian.root
+    key: obsidianRoot
+    default: "__test__"
+
+jobs:
+  # 任务1 计算上次同步后，插件的数据变化。
+  - name: "读取变更内容"
+    id: "get_change_list"
+    steps:
+      - name: "或许当前插件内数据"
+        uses: "pagenote/table@v1"
+        id: "getCurrentDataList"
+        with:
+          table: "note"
+          db: "lightpage"
+          method: "keys"
+          params:
+            key: key
+  # 任务2: 数据交换流出
+  - name: "将本地变更的数据同步至远端"
+    id: "sync_to_cloud"
+    strategy:
+      matrix:
+        # 从上一个 job 中获取获得变更列表作为循环处理的初始值
+        item: ${{jobs.get_change_list.outputs.data}}
+    steps:
+      - name: "获取本地数据"
+        uses: "pagenote/table@v1"
+        id: "getLocalData"
+        with:
+          table: "note"
+          db: "lightpage"
+          method: "query"
+          params:
+            query:
+              key: ${{matrix.item}}
+
+      - name: "获取远程数据"
+        uses: "pagenote/http@v1"
+        id: "getRemoteData"
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{matrix.item}}.md
+          headers:
+            Authorization: Bearer ${{env.obsidianToken}}
+            Accept: "application/vnd.olrapi.note+json"
+          method: 'get'
+
+      - name: "远程数据文本"
+        id: remoteMarkdown
+        with: ${{steps.getRemoteData.outputs._response.content}}
+
+      - name: "远程数据属性 property"
+        id: remoteProperty
+        with:
+          updateAt: ${{steps.getRemoteData.outputs._response.frontmatter.updateAt}}
+          createAt: ${{steps.getRemoteData.outputs._response.frontmatter.createAt}}
+          __mtime: ${{steps.getRemoteData.outputs._response.stat.mtime}}
+
+
+      - name: "比较数据"
+        id: "pkData"
+        uses: "pagenote/pick@v1"
+        with:
+          pkBy:
+            - "updateAt"
+            - "createAt"
+            - "__mtime"
+          list:
+            - ${{steps.getLocalData.outputs.data.list.0}}
+            - ${{steps.remoteProperty.outputs}}
+
+      - name: "本地-> 远程：：移除不需要的字段"
+        if: steps.pkData.outputs.index == 0
+        id: "removeProperty"
+        uses: 'pagenote/format@v1'
+        with:
+          method: "omit"
+          data:
+            -  ${{steps.pkData.outputs.data}}
+            -
+              - html
+              - markdown
+              - tiptap
+              - __ctime
+              - __utime
+              - __utimeDay
+              - __ctimeDay
+              - __v
+              - __byte
+              - createAtDay
+              - updateAtDay
+              - hash
+              - did
+              - deleted
+
+      - name: "本地-> 远程：：文档属性转换为markdown格式"
+        if: steps.pkData.outputs.index == 0
+        id: "propertyToMarkdown"
+        uses: 'pagenote/format@v1'
+        with:
+          method: 'property2markdown'
+          data: ${{steps.removeProperty.outputs}}
+
+      - name: "本地-> 远程：：数据准备，导出文本 属性 + markdown笔记"
+        if: steps.pkData.outputs.index == 0
+        id: "exportDataString"
+        with: '${{steps.propertyToMarkdown.outputs}}${{steps.pkData.outputs.data.markdown}}'
+
+      - name: "本地-> 远程：：更新至 obsidian"
+        if: steps.pkData.outputs.index == 0
+        uses: "pagenote/http@v1"
+        id: 'uploadToObsidian'
+        with:
+          url: ${{env.obsidianHost}}/vault/${{env.obsidian.root}}/${{steps.pkData.outputs.data.key}}.md
+          headers:
+            Content-Type: "text/markdown"
+            Accept: "application/json"
+            Authorization: Bearer ${{env.obsidianToken}}
+          method: 'PUT'
+          body: ${{steps.exportDataString.outputs}}
+
+
+      - name: "解析远程数据的文档内容"
+        if: steps.pkData.outputs.index == 1
+        uses: 'pagenote/format@v1'
+        id: "toPropertyWithContent"
+        with:
+          method: "markdown2property"
+          data: "${{steps.remoteMarkdown.outputs}}"
+
+      - name: "远程-> 本地：：更新至本地"
+        if: steps.pkData.outputs.index == 1
+        id: "updateMarkdown"
+        uses: 'pagenote/table@v1'
+        with:
+          table: "note"
+          db: "lightpage"
+          method: "update"
+          params:
+            data:
+              updateAt: ${{steps.remoteProperty.outputs.updateAt}}
+              createAt: ${{steps.remoteProperty.outputs.createAt}}
+              markdown: ${{steps.toPropertyWithContent.outputs.__content}}
+            keys:
+              - ${{matrix.item}}
+

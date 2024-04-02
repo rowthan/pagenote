@@ -1,6 +1,7 @@
 import { NotionRenderer } from 'react-notion-x'
 import Doc from 'layouts/Doc'
 import Footer from 'components/Footer'
+import Code from 'components/notion/Code';
 import { ExtendedRecordMap, SearchParams } from 'notion-types'
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -10,11 +11,8 @@ import { TDK } from 'const/tdk'
 import { DEFAULT_BASE_DOC_PATH, SEO_MAP, SEO_REVERT_MAP } from 'const/notion'
 import { getPathFromProperties, highlightTarget } from 'utils/notion'
 import { useRouter } from 'next/router'
-import TDKHead from './TDKHead'
+import TDKHead from '../TDKHead'
 
-const Code = dynamic(() =>
-  import('react-notion-x/build/third-party/code').then((m) => m.Code)
-)
 const Collection = dynamic(() =>
   import('react-notion-x/build/third-party/collection').then(
     (m) => m.Collection
