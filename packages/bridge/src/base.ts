@@ -14,7 +14,7 @@ export type DataSegment = {
 export interface BaseMessageHeader {
     originClientId: string, // 源头客户端，用于判断这个请求最初的发起端；可用于服务端响应后，判断是否由自身发起的。
     senderClientId: string, // 当前请求源
-    targetClientId: string, // 目标寻址源
+    targetClientId: null | string, // 目标寻址源。null，无明确目标源，广播至所有源
     timeout: number // 超时时间
     isResponse: boolean // 区分请求类型，请求/响应
     withCatch?: boolean // false，默认全部都在 then 中返回，由业务方自行处理异常；true , 异常将通过 reject 抛出，并由使用方在catch 中捕获 TODO 统一后删除
@@ -166,6 +166,29 @@ interface CommunicationOption {
     targetClientId?: string, // 连线的目标对象
     element?: HTMLElement|null, // domBridge 监听的 DOM 节点
     listenKey?: string, // sessionStorageBridge 监听的key值
+    allowFrameOrigins?: string[] // iframe 通信的域名白名单监听对象
+}
+
+// 通信客户端
+export class CommunicationClient {
+    // 客户端ID
+    readonly clientId: string;
+    // 是否作为服务端，监听请求
+    readonly asServer: boolean;
+    // 默认超时时间
+    readonly defaultTimeout: number;
+    // 连线的目标 client id，仅接收来列表中的客户端请求（全局广播不受限制）
+    readonly connectClientIds: string[];
+    // sessionStorageBridge 模式下监听的key值（目标、服务端需要约定一个通信通道）
+    readonly sessionKeys?: string[]
+
+    constructor(clientId: string,props: CommunicationOption) {
+        this.clientId = clientId;
+        this.asServer = props.asServer;
+        this.defaultTimeout = props.timeout;
+        this.connectClientIds = props.targetClientId ? [props.targetClientId] : [];
+        this.sessionKeys = props.listenKey ? [props.listenKey] : [];
+    }
 }
 
 export enum STATUS {
@@ -176,20 +199,24 @@ export enum STATUS {
 
 interface Communication<SENDER extends BaseMessageSender> {
     option: CommunicationOption
-    proxy: IBaseMessageProxy<BaseMessageRequest, SENDER, any>,
+    proxy?: IBaseMessageProxy<BaseMessageRequest, SENDER, any>,
     listeners: Record<string, IBaseMessageListener<any, SENDER, any>>
     state: STATUS
     clientId: string
-    // constructor (clientId:string,option:CommunicationOption):void
 
     startListen():void
     stopListen():void
     addListener(type:string,fun:IBaseMessageListener<any, BaseMessageSender, any>):()=>void
     addProxy(proxy: IBaseMessageProxy<any, BaseMessageSender, any>): void
 
+    /**发送请求*/
     requestMessage(type:string,data: any, header?: BaseMessageHeader,callback?:(data:BaseMessageResponse<any>)=>void):Promise<BaseMessageResponse<any>>
 
+    /**响应请求*/
     responseMessage(type:string,data: any, header?: BaseMessageHeader):void
+
+    /**全局广播请求**/
+    broadcast(type:string,data: any, header?: BaseMessageHeader):void
 }
 
 type ListenerResponse = Promise<any> | void | boolean // 返回promise不关闭连接，无返回则立即关闭连接
