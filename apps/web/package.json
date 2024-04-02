@@ -28,7 +28,7 @@
     "@pagenote/actions": "^0.1.1-next.2",
     "@pagenote/bridge": "^1.0.13",
     "@pagenote/obsidian": "^0.1.21",
-    "@pagenote/shared": "^1.14.36-next.1",
+    "@pagenote/shared": "latest",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
