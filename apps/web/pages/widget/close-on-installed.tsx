@@ -5,6 +5,7 @@ import useCurrentTab from 'hooks/useCurrentTab'
 import { useRouter } from 'next/router'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useFrequency from "hooks/useFrequency";
+import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
 
 interface Props {
   children?: ReactNode
@@ -32,18 +33,25 @@ export default function CloseOnInstalled(props: Props) {
     }
   },[whoAmI])
 
+  function checkClose() {
+    const isPagenoteWeb = tab?.url?.includes('pagenote.cn');
+    const closeMe = valid && tab?.id
+    // 满足关闭页面条件，自动关闭，避免打扰用户
+    if (isPagenoteWeb && (closeMe || validate===false)) {
+      extApi.developer.chrome({
+        namespace: 'tabs',
+        type: 'remove',
+        args: [tab?.id],
+      })
+    }
+  }
+
   useEffect(
     function () {
-      const isPagenoteWeb = tab?.url?.includes('pagenote.cn');
-      const closeMe = valid && tab?.id
-      // 满足关闭页面条件，自动关闭，避免打扰用户
-      if (isPagenoteWeb && (closeMe || validate===false)) {
-        extApi.developer.chrome({
-          namespace: 'tabs',
-          type: 'remove',
-          args: [tab?.id],
-        })
-      }
+      checkClose();
+      return onVisibilityChange(function () {
+        checkClose();
+      })
     },
     [valid,validate,tab,router]
   )

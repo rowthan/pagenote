@@ -25,6 +25,9 @@ var util = {
       }
       util.putCache(request, response.clone())
       return response
+    }).catch(function (reason) {
+      console.error('fetchAndCache error', reason, request.url)
+      throw reason
     })
   },
   putCache: function (request, resource) {
