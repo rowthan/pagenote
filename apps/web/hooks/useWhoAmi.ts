@@ -1,7 +1,12 @@
 import { user } from '@pagenote/shared/lib/extApi'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import useSWR from 'swr'
-import WhoAmI = user.WhoAmI
+import Tab = chrome.tabs.Tab;
+type WhoAmI = user.WhoAmI & {
+  sender?: {
+    tab: Tab
+  }
+}
 
 export default function useWhoAmi(
   initVersion: string = '0.0.0'
