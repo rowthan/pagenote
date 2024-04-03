@@ -34,9 +34,10 @@ export default function CloseOnInstalled(props: Props) {
 
   useEffect(
     function () {
+      const isPagenoteWeb = tab?.url?.includes('pagenote.cn');
       const closeMe = valid && tab?.id
       // 满足关闭页面条件，自动关闭，避免打扰用户
-      if (closeMe || validate===false) {
+      if (isPagenoteWeb && (closeMe || validate===false)) {
         extApi.developer.chrome({
           namespace: 'tabs',
           type: 'remove',
