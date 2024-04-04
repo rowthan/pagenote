@@ -24,6 +24,32 @@ env:
     default: "__test__"
 
 jobs:
+  - name: "测试写入数据"
+    id: "write test data"
+    steps:
+      - name: "写入1"
+        uses: "pagenote/table@v1"
+        id: "write1"
+        with:
+          table: "note"
+          db: "lightpage"
+          method: "put"
+          params:
+            id: id1
+            url: https://www.baidu.com
+            createAt: 1
+      - name: "写入2"
+        uses: "pagenote/table@v1"
+        id: "write1"
+        with:
+          table: "note"
+          db: "lightpage"
+          method: "put"
+          params:
+            id: id2
+            url: https://www.baidu.com/2
+            createAt: 2
+
   # 任务1 计算上次同步后，插件的数据变化。
   - name: "读取变更内容"
     id: "get_change_list"
@@ -43,7 +69,7 @@ jobs:
     strategy:
       matrix:
         # 从上一个 job 中获取获得变更列表作为循环处理的初始值
-        item: ${{jobs.get_change_list.outputs.data}}
+        item: ${{jobs.get_change_list.outputs}}
     steps:
       - name: "获取本地数据"
         uses: "pagenote/table@v1"

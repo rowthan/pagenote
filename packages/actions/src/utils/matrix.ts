@@ -17,6 +17,9 @@ function generateMatrixCombinations(
     groupByField?: string
 ): MatrixObject[][] {
     const keys: string[] = Object.keys(input);
+    if(keys.length===0){
+        return []
+    }
     const combinations: MatrixObject[][] = [];
 
     function generateCombinations(index: number, currentCombination: MatrixObject[]): void {
