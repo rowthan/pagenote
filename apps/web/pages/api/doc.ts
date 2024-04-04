@@ -7,7 +7,7 @@ import {
   getUnOfficialNotion,
 } from '../../service/server/notion'
 import { writeCacheFile } from '../../service/server/cache'
-import { SEO_REVERT_MAP } from '../../const/notion'
+import {databaseList, SEO_REVERT_MAP} from '../../const/notion'
 
 
 /**
@@ -20,11 +20,28 @@ async function fetchDocByPath(path: string): Promise<string | null> {
     console.error('未初始化 Notion 客户端')
     return null
   }
+  for(let i=0; i<databaseList.length; i++){
+    const id = await queryIdByPathInDatabase(databaseList[i],path);
+    if(id){
+      return id;
+    }
+  }
+
   const { results } = await officialNotion.search({
     filter: {
       property: 'object',
       value: 'database',
     },
+    sort:{
+      timestamp: "last_edited_time",
+      direction: "descending",
+    },
+    page_size: 20,
+  })
+  console.log(results.length,'database')
+  results.forEach(function (item) {
+    // @ts-ignore
+    console.log('database::',item.url)
   })
 
   for (let i = 0; i < results.length; i++) {
@@ -33,8 +50,21 @@ async function fetchDocByPath(path: string): Promise<string | null> {
     if (!properties.path) {
       continue
     }
+    const queryResult = await queryIdByPathInDatabase(id,path);
+    return queryResult;
+  }
+
+  return null
+}
+
+async function queryIdByPathInDatabase(databaseId: string, path: string) {
+  const officialNotion = getOfficialNotion();
+  if(!officialNotion){
+    return null;
+  }
+  try{
     const queryResult = await officialNotion.databases.query({
-      database_id: id,
+      database_id: databaseId,
       filter: {
         or: [
           {
@@ -62,12 +92,16 @@ async function fetchDocByPath(path: string): Promise<string | null> {
       },
       page_size: 1,
     })
-    if (queryResult.results[0]) {
-      return queryResult.results[0].id
+    if (queryResult.results && queryResult.results[0]) {
+      return queryResult.results[0].id || null;
     }
+  }catch (e) {
+    console.error(e)
+    console.error('error query notion id by path in database ', databaseId)
+    return null
   }
 
-  return null
+  return null;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -97,6 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
   } catch (e) {
+    console.error(e,'fetch recordMap error')
     return res.status(200).json(null)
   }
   /**
