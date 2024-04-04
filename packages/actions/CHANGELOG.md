@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.1...@pagenote/actions@0.1.2) (2024-04-04)
+
+
+### Features
+
+* components & action files ([d4b4432](https://github.com/rowthan/pagenote/commit/d4b4432b11a0419658fa6e2d133db3cd1b6e7590))
+
+
+
+
+
 ## 0.1.1 (2024-03-31)
 
 
