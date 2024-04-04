@@ -165,7 +165,10 @@ export default class DomBridge implements Communication<any>{
         this.proxy = fun;
     }
 
-    startListen(): void {
+    startListen() {
+        return function () {
+
+        }
     }
 
     stopListen(): void {

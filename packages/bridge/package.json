@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"skip: no test specified\"",
