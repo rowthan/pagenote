@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.16](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.15...@pagenote/bridge@1.0.16) (2024-04-04)
+
+
+### Bug Fixes
+
+* 修复通信 key & newValue 空值消息传递 ([5b81318](https://github.com/rowthan/pagenote/commit/5b813184bdbffd5ccb60f20d646be23b3a86dff3))
+
+
+
+
+
 ## [1.0.15](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.14...@pagenote/bridge@1.0.15) (2024-04-04)
 
 
