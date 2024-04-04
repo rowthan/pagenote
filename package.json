@@ -11,6 +11,7 @@
     "dev:web": "lerna run --scope=pagenote-web dev",
     "dev:component": "lerna run --scope=@pagenote/component dev & lerna run --scope=example dev",
     "dev:bridge": " lerna run --scope=@pagenote/bridge dev & yarn run dev:example",
+    "dev:action": " lerna run --scope=@pagenote/actions dev & yarn run dev:example",
     "dev:example": " lerna run --scope=example dev",
     "start": "yarn workspaces run start",
     "build": "lerna run --scope=pagenote-web --include-dependencies build ",
@@ -29,8 +30,8 @@
     "apps/*"
   ],
   "devDependencies": {
-    "lerna": "^8.0.2",
     "husky": "8.0.0",
+    "lerna": "^8.0.2",
     "typescript": "^5.3.3"
   },
   "license": "ISC"

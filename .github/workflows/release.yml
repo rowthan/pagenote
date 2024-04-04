@@ -6,9 +6,9 @@ on:
       - main
       - dev
       - 'feat*'
-  pull_request:
-    branches:
-      - main
+#  pull_request:
+#    branches:
+#      - main
 
 jobs:
   build:
@@ -83,6 +83,8 @@ jobs:
       - name: Publish to NPM
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' ||  startsWith(github.ref, 'refs/heads/feat')
         run: |
+          npm config set registry https://registry.npmjs.org
+          npm whoami
           npx lerna publish from-git --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

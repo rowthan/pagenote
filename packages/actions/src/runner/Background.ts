@@ -211,6 +211,7 @@ export default class Background{
 
 
     if(step.debug){
+      console.debug('debug',step)
       debugger
     }
     let response;
