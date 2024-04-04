@@ -60,7 +60,7 @@ const clients = {
         asServer: true,
         listenKey: "test-bridge",
         timeout: 1000,
-        targetClientId: 'ClientA'
+        targetClientId: 'clientA'
     }),
 
     localStorageClientA:getLocalStorageBridge('clientA',{

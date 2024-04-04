@@ -145,25 +145,31 @@ export default class BridgeByStorage implements Communication<any>{
                 return;
             }
             const {header, type} = requestData || {};
+            that._debug('receive message', requestData)
             if (!header || !type) {
+                that._debug('invalid request data')
                 return;
             }
             // 请求来自自身，忽略
             if (header.senderClientId === that.clientId) {
+                that._debug('ignore self message ',that.clientId)
                 return;
             }
             // 请求方指定目标服务器，不是当前服务器，则忽略
             if(header.targetClientId && header.targetClientId !== that.clientId){
+                that._debug('target client not matched')
                 return;
             }
             // 请求类型 且 配置不作为服务器，则不接受请求
-            if (header.isResponse === false && that.option.asServer !== true) {
+            if (header.isResponse === false && that.option.asServer === false) {
+                that._debug('as server false')
                 return;
             }
-            // 自身只监听特定客户端的请求，则忽略其他客户端的消息
-            if(that.option.targetClientId && header.senderClientId !== that.option.targetClientId){
-                return;
-            }
+            // // 自身只监听特定客户端的请求，则忽略其他客户端的消息 插件发送的时候会指定 targetClientId todo 将其删除，通过 namespace 来区分处理后，可以打开，否则会被拦截如 user.getWhoAmI
+            // if(that.option.targetClientId && header.senderClientId !== that.option.targetClientId){
+            //     that._debug(`sender client(${header.senderClientId}) is not config target client::`, that.option)
+            //     return;
+            // }
             // 响应类型，但非目标客户端，则忽略
             if(header.isResponse && header.targetClientId!==that.clientId){
                 that._debug('response message ignore not target client',requestData)
@@ -235,8 +241,8 @@ export default class BridgeByStorage implements Communication<any>{
         this.option.sendRequest(key,dataString)
     }
 
-    _debug(...args:any){
-        console.debug(...args)
+    _debug(..._args:any){
+        // console.warn(..._args)
     }
 
     stopListen(): void {

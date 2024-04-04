@@ -7,7 +7,8 @@ interface BridgeOption extends CommunicationOption {
 }
 
 
-const EVENT_NAME = 'custom_session_storage';
+// todo 修改监听事件名称
+const EVENT_NAME = 'storage';
 function setSessionStorageRequest(key:string,value:string) {
     try {
         window.sessionStorage.setItem(key, value);
@@ -16,11 +17,6 @@ function setSessionStorageRequest(key:string,value:string) {
     }
 
     const event = new Event(EVENT_NAME);
-    // @ts-ignore
-    event.key = key;
-    // @ts-ignore
-    event.newValue = value
-    // session storage 没有官方的全局监听事件，故通过自定义事件触发
     window.dispatchEvent(event)
 }
 
@@ -34,8 +30,8 @@ export function getSessionStorageBridge(id:string,option:BridgeOption) {
         storageChangeListener(callback: (data: BaseMessageRequest) => void) {
             function changeListener(event:any) {
                 try {
-                    // 通道判断
-                    if(event.key !== option.listenKey){
+                    // 通道判断，过滤业务的读写storage事件
+                    if(event.key && event.key !== option.listenKey){
                         return;
                     }
                     let dataString: string = ''
