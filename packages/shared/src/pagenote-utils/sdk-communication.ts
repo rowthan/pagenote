@@ -1,4 +1,4 @@
-import {SessionStorageBridge,RESPONSE_STATUS_CODE} from "@pagenote/bridge";
+import {BridgeByStorage, getSessionStorageBridge, RESPONSE_STATUS_CODE} from "@pagenote/bridge";
 
 
 enum SDK_WORK_TYPE {
@@ -19,10 +19,10 @@ const EVENT = {
 
 // 多 SDK 锁：  运行冲突沟通，SDK运行前，应使用SDK进行通讯，确保无响应再运行。
 class PagenoteSdkManage {
-    private bridge: SessionStorageBridge
+    private bridge: BridgeByStorage
     private readonly sdkInfo: SDK_RUNNING_INFO
     constructor(id:string,sdkInfo: SDK_RUNNING_INFO) {
-        this.bridge = new SessionStorageBridge(id,{
+        this.bridge = getSessionStorageBridge(id,{
             listenKey: 'pagenote_sdk_manage_listen_key',
             asServer: true,
             timeout: 200
