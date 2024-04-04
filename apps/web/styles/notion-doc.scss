@@ -1,5 +1,9 @@
 /**override default notion style*/
 
+/**修复 inline page table 重复渲染 title 问题，如 /author 文章列表*/
+.notion-list-item-property .notion-property-title{
+  display: none;
+}
 
 /**删除padding值，会导致网页都出现滚动条- 尽管网页内容并未超过视口。 todo pull a mr */
 .notion > * {
@@ -78,5 +82,5 @@ blockquote.notion-quote{
 
 .highlight-hash{
   animation: highlightFadeOut 3s ease-out forwards;
-  outline: 1px solid #fff; 
+  outline: 1px solid #fff;
 }
