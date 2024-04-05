@@ -217,11 +217,9 @@ export default class Background{
     let response;
 
     /**条件检测**/
-    if(step.if){
-      const checkResult = ifCheck(step.if,variables);
-      if(!checkResult){
-        step._state = TaskState.skip;
-      }
+    const ifCheckResult = step.if ? ifCheck(step.if,variables) : true;
+    if(!ifCheckResult){
+      step._state = TaskState.skip;
     } else{
       const withArgs = step.with ? replaceTemplates(step.with,variables) : undefined
       try{
@@ -244,7 +242,7 @@ export default class Background{
             response = action ? await action(withArgs) : withArgs;
           }catch (e) {
             step._state = TaskState.fail;
-            throw Error('action run error')
+            throw e;
           }
         }
 
