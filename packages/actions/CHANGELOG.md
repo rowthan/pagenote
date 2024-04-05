@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.3...@pagenote/actions@0.1.4-next.0) (2024-04-05)
+
+
+### Bug Fixes
+
+* 修复 if check 通过不执行任务问题 ([3a1d153](https://github.com/rowthan/pagenote/commit/3a1d153e3bdbc37268ab7059559c685dc09fd819))
+
+
+
+
+
 ## [0.1.3](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.2...@pagenote/actions@0.1.3) (2024-04-04)
 
 **Note:** Version bump only for package @pagenote/actions
