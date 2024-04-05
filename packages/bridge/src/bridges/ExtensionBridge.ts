@@ -145,15 +145,18 @@ export default class ExtensionMessage implements Communication<any>{
       const { data,type,header} = request;
       const {carrier,targetClientId} = header;
 
-      const resolveCheck = shouldResolveRequest(request,that.client)
+      const resolveResponse = true;
+      // todo 是否处理请求 & 是否响应请求判断。待开放，目前 targetClientId 为 作为namespace 使用，待迁移后可开放监测
+      // const resolveCheck = shouldResolveRequest(request,that.client)
+      //
+      // /***通信不匹配，不需要处理请求*/
+      // if(!resolveCheck.resolveRequest){
+      //   return false;
+      // }
 
-      /***通信不匹配，不需要处理请求*/
-      if(!resolveCheck.resolveRequest){
-        return false;
-      }
       function sendResponse(data:BaseMessageResponse<any>){
         /**需要响应时，响应 response*/
-        if(resolveCheck.resolveResponse){
+        if(resolveResponse){
           callResponse(data)
         } else {
           return;
