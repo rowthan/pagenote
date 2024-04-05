@@ -41,7 +41,7 @@ function App() {
     const textRef = useRef<HTMLTextAreaElement>()
 
     useEffect(() => {
-        workflow._updateYml(localStorage.getItem('yaml'))
+        workflow.updateYml(localStorage.getItem('yaml'))
         textRef.current.value = localStorage.getItem('yaml')
     }, []);
 
@@ -54,7 +54,7 @@ function App() {
     function save() {
         const yaml = textRef.current.value;
         localStorage.setItem('yaml',yaml);
-       workflow._updateYml(yaml)
+       workflow.updateYml(yaml)
        console.log(workflow);
     }
     return(

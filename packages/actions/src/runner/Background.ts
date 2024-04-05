@@ -31,13 +31,15 @@ export default class Background{
     [key:string]: any,
   }>();
 
+  public log: Map<string, any> = new Map<string, any>();
+
   /**运行期的配置信息*/
   private readonly  option: WorkflowOption;
 
 
   constructor(option:WorkflowOption) {
     this.option = option;
-    this._updateYml(option?.yml || '');
+    this.updateYml(option?.yml || '');
     this.context = {
       env:{},
       trigger:{},
@@ -50,9 +52,9 @@ export default class Background{
    * yml to object
    * https://nodeca.github.io/js-yaml/
    * */
-  _updateYml(yml?: string){
+  updateYml(yml: string | WorkFlow){
     try{
-      this.workflowInfo = yml ? jsYaml.load(yml) as WorkFlow : null;
+      this.workflowInfo = typeof yml === 'string' ? jsYaml.load(yml) as WorkFlow : yml;
     }catch (e) {
       throw e
     }
@@ -65,6 +67,7 @@ export default class Background{
   _setRuntime(id: string, value: any = {},contextId: string){
     const runtime = this.runtime.get(contextId) || this.runtime.set(contextId,{}).get(contextId) || {}
     set(runtime, id, value)
+    this.log.set(id,value);
   }
 
   /**
@@ -150,11 +153,13 @@ export default class Background{
     const variables = this._getRuntime(jobsContextId) || {};
     job = replaceTemplates<Job>(job,variables)
     let markSuccess = true;
+    // todo runjob 支持if 判断
+    // todo jobs 之间取值？
     if(job.strategy?.matrix){
       const matrixVariables = generateMatrixTasks(job.strategy.matrix) || [];
       for (let i=0; i<matrixVariables.length; i++){
         for(let j=0; j<matrixVariables[i].length; j++){
-          const contextId = Date.now()+ (job.id || job.name) + 'matrix'+i+j;
+          const contextId = (job.id || job.name) + 'matrix'+i+j;
           const stepVariable = matrixVariables[i][j];
           this._setRuntime('matrix',stepVariable,contextId)
           // 每一个 matrix 相互不受影响运行
@@ -168,7 +173,7 @@ export default class Background{
       }
     } else {
       const {id='',name='',} = job || {};
-      const contextId = id + name + Date.now();
+      const contextId = 'job_'+id + name // + Date.now();
       jobResponse = await this._runSteps(job.steps,contextId)
       this._setRuntime(`jobs.${id||name}.outputs`,jobResponse,jobsContextId)
     }
@@ -184,6 +189,7 @@ export default class Background{
     let response;
     for (let i = 0; i < steps.length; i++) {
       try {
+        // steps 集合的最终返回，取决于最后一个任务的执行结果
         response = await this._runStep(steps[i],contextId);
       }catch (e) {
         if(steps[i]['continue-on-error']){
@@ -214,7 +220,7 @@ export default class Background{
       console.debug('debug',step)
       debugger
     }
-    let response;
+    let response = null;
 
     /**条件检测**/
     const ifCheckResult = step.if ? ifCheck(step.if,variables) : true;
