@@ -43,6 +43,7 @@ export default class Background{
     this.context = {
       env:{},
       trigger:{},
+    //   todo 系统变量，如当前时间获取
     }
 
     this.state = WorkFlowState.waiting

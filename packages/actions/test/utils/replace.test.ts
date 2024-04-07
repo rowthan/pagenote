@@ -55,7 +55,7 @@ describe('check replace', () => {
         }
         expect(replaceTemplates(input, variables)).toEqual({
             a: `${variables.env.id}/123/$\{{env.emptyKey}}`,
-            g: ["123", "${{env.emptykey}}"],
+            g: ["123", undefined],
         })
     })
 
@@ -130,5 +130,16 @@ describe('replace by and modify',()=>{
     it('should replace by multi modify',()=>{
         const input = "${{env.account | JSON.stringify | JSON.parse}}"
         expect(replaceTemplates(input,variables)).toEqual(variables.env.account)
+    })
+})
+
+describe('特殊字符替换',()=>{
+    it('should replace null',()=>{
+        const input = "${{null}}"
+        expect(replaceTemplates(input,variables)).toEqual(null)
+    })
+    it('should replace undefined',()=>{
+        const input = "${{undefined}}"
+        expect(replaceTemplates(input,variables)).toEqual(undefined)
     })
 })

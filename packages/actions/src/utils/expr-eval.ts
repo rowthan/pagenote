@@ -5,6 +5,7 @@ export function ifCheck(input: string,context?: any) {
     try{
         return parser.evaluate(input,context)
     }catch (e) {
+        console.error(e);
         return false;
     }
 }
