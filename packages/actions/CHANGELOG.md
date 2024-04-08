@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4-next.2](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.1...@pagenote/actions@0.1.4-next.2) (2024-04-08)
+
+**Note:** Version bump only for package @pagenote/actions
+
+
+
+
+
 ## [0.1.4-next.1](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.0...@pagenote/actions@0.1.4-next.1) (2024-04-08)
 
 
