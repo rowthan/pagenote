@@ -1,13 +1,23 @@
 import {Parser} from 'expr-eval'
+import lodash from "lodash";
+import dayjs from "dayjs";
 
 export function ifCheck(input: string,context?: any) {
-    const parser = new Parser();
+    let result;
+    /**
+     * 对于非判断，则先进行正向判断后再逆转结果。
+     * 因为如果直接逆向判断，执行 exprEval 异常时，恒为 false.
+     * 如 !value==2 当value 变量不存在时预期结果应该为 true，，但由于表达式报错，进入 catch ，结果为 false.
+     * 故，不推荐 != 的用法。应该优先使用： !(value==2) 而不是 value!=2
+     * */
+    const isConvertCheck = input[0] === '!';
+    const operator = isConvertCheck ? input.slice(1) : input;
     try{
-        return parser.evaluate(input,context)
+        result = Boolean(exprEval(operator,context));
     }catch (e) {
-        console.error(e);
-        return false;
+        result = false;
     }
+    return isConvertCheck ? !result : result;
 }
 const parser = new Parser({
     operators:{
@@ -31,7 +41,14 @@ parser.functions.parse = function (input: string) {
 
 parser.functions.JSON = {
     stringify: parser.functions.string,
-    parse: parser.functions.parse
+    parse: parser.functions.parse,
+}
+
+parser.functions = {
+    ...parser.functions,
+    lodash: lodash,
+    dayjs: dayjs,
+    Date: Date
 }
 
 /**

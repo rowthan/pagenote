@@ -152,6 +152,7 @@ export default class Background{
      * 如果 job 是一个 matrix 任务，则要进行叉乘创建子 job。
      */
     const variables = this._getRuntime(jobsContextId) || {};
+    // todo 仅替换 job ，不处理 step，step 运行时再替换，避免初始化时 step 需要的变量还未生成
     job = replaceTemplates<Job>(job,variables)
     let markSuccess = true;
     // todo runjob 支持if 判断

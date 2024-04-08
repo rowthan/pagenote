@@ -2,6 +2,17 @@ import {ifCheck,exprEval} from "../../src/utils/expr-eval";
 
 
 describe('if', () => {
+    const context = {
+        steps:{
+            test_put: {
+                outputs: {
+                    _status: 204
+                }
+            }
+        },
+        number:22,
+    }
+
     it('if equal', async () => {
         const result = ifCheck('1==1');
         expect(result).toBe(true);
@@ -16,25 +27,22 @@ describe('if', () => {
         expect(result).toBe(true);
     });
 
-    it('if operator', async () => {
-        const result = ifCheck(`steps.test_put.outputs._status == 204 ? 0 : 1`,{
-            steps:{
-                test_put: {
-                    outputs: {
-                        _status: 204
-                    }
-                }
-            }
-        });
-        expect(result).toBe(0);
+    it('if operator 三元表达式', async () => {
+        const result = ifCheck(`steps.test_put.outputs._status == 204 ? 0 : 1`,context);
+        expect(result).toBe(false);
+
+        const result2 = ifCheck(`number==22 ? 1 : 0`,context);
+        expect(result2).toBe(true);
+        expect(ifCheck('number==22',context)).toBe(true);
+        expect(ifCheck('numbers==22',context)).toBe(false);
     });
 
-    it('if operator', async () => {
-        const result = ifCheck(`number==22 ? 0 : 1`,{
-            number: 22
-        });
-        expect(result).toBe(0);
-    });
+    it('非判断',()=>{
+        expect(ifCheck('number!=24',context)).toBe(true);
+        expect(ifCheck('!(numbers==22)',context)).toBe(true);
+        expect(ifCheck('!(number==22)',context)).toBe(false);
+    })
+
 })
 
 const variables = {
@@ -82,8 +90,18 @@ describe('exprEval', () => {
         expect(exprEval(`parse('${string}')`,variables)).toEqual(object)
     })
 
-    // it('关键字字符串',()=>{
-    //
-    // })
+    it('运行时生成变量',()=>{
+        const result = exprEval('Date.now()');
+        expect(result).toEqual(Date.now())
+    })
 
+})
+
+describe('复杂运算', () => {
+    it('方法 + 比较运算',()=>{
+        const context = {
+            a: [1,2,2]
+        }
+        expect(exprEval('length(a)',context)).toBe(context.a.length)
+    })
 })

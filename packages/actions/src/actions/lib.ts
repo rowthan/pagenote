@@ -6,6 +6,7 @@ const libs = {
     lodash: lodash,
 }
 
+// @deprecated 删除此 actions。使用 表达式运算
 export default function run(args: { method: string, lib: string |  object, arguments?: any[] }) {
     const {method,lib} = args;
     // @ts-ignore
