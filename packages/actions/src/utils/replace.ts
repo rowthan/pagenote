@@ -1,5 +1,5 @@
 import set from "lodash/set";
-import {format} from "../actions";
+import {exprEval} from "./expr-eval";
 
 /**
  * input: {a: "${{env.host}}/get${{env.id}}", b:{ c: "${{env.id}}"},list: ["${{env.account.username}},"${{env.account}}""], d: "${{env.fun}}", e:["${{env.id}}","${{env.host}}"]}
@@ -12,10 +12,9 @@ type InputObject = Record<string, any> | string;
 type VariablesObject = { [key: string]: any };
 
 /**
- * todo 对于数组 .length 计算异常
- * ${{steps.lights_keys.outputs}} 对于没有的值，设置初始默认值
+ *
  * */
-function replaceTemplates<T extends InputObject>(input: InputObject, variables: VariablesObject,replaceWhenEmpty?: any): T {
+function replaceTemplates<T extends InputObject>(input: InputObject, variables: VariablesObject): T {
     const replacer = (value: InputValue): InputValue => {
         if (typeof value === 'string') {
             return replaceStringTemplate(value);
@@ -28,54 +27,57 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
     };
 
     const replaceStringTemplate = (str: string=''): any => {
-        let response: string | any = str;
-        const templateMatches = str.match(/\${{\s*([^}]+)\s*}}/g);
-        const isStringTemplate = templateMatches && templateMatches.length > 1;
-        if (templateMatches) {
-            for (const match of templateMatches) {
-                const matchString = match.match(/\${{\s*([^}]+)\s*}}/)?.[1]?.trim();
-                // 修饰符，对输出结果，进行二次加工处理
-                const keyAndModifier = matchString?.split("|");
-                const key = keyAndModifier?.[0]?.trim();
-                /**变量key ，值替换*/
-                if (key) {
-                    let replacement;
-                    // 特殊字符串直接返回
-                    if('null' === key){
-                        replacement = null;
-                    } else {
-                        replacement = getKey(variables, key)
-                    }
+        // 定义默认返回为源字符串
+        // 提取变量组
+        const templateMatches = str.match(/\${{\s*([^}]+)\s*}}/g) || []
+        if(templateMatches.length===0){
+            return str;
+        }
+        const leftStr = str.replaceAll(/\${{\s*([^}]+)\s*}}/g,'');
+        /**
+         * 判断是否当作纯字符串处理
+         * 变量模板替换后，没有任何其他字符时，可以认为是单一变量替换
+         * */
+        const isStringTemplate = templateMatches.length > 1 || leftStr.trim().length > 0;
 
-                    if(replacement === undefined){
-                        replacement = replaceWhenEmpty;
+        // 循环遍历查找变量值
+        const responseArray = [];
+        let responseStr = str;
+        for (const match of templateMatches) {
+            // 提取变量key
+            const key = match.match(/\${{\s*([^}]+)\s*}}/)?.[1]?.trim() //keyAndModifier?.[0]?.trim();
+            // 初始化本次替换值
+            let variableValue:unknown = "${{"+key+"}}";
+            if (key) {
+                // 特殊字符串直接返回
+                if('null' === key){
+                    variableValue = null;
+                }else if('undefined' === key){ // 外层的判断不可删除
+                    variableValue = undefined
+                } else {
+                    // 如果variables 缺少变量，则可能替换异常,异常情况，不做任何修改
+                    try{
+                        const evalValue = exprEval(key,variables)
+                        if(evalValue!==undefined){
+                            variableValue = evalValue;
+                        }
+                    }catch (e) {
+                        console.warn(e)
                     }
-
-                   // 如果没有值，则直接返回
-                   if(replacement !== undefined){
-                       if(keyAndModifier && keyAndModifier?.length > 1){
-                           for(let i=1; i<keyAndModifier.length; i++){
-                               replacement = format({
-                                   data: replacement,
-                                   method: keyAndModifier[i],
-                               })
-                           }
-                       }
-                       // 如果是字符串模板，以及替换结果是字符串，则直接按照字符串替换变量
-                       if(isStringTemplate || typeof replacement === 'string'){
-                           response = response
-                               .replace(match,replacement);
-                       }else{
-                           response = replacement;
-                       }
-                   }
                 }
             }
+            responseArray.push(variableValue)
+            if(isStringTemplate){
+                responseStr = responseStr.replace(match,variableValue as string);
+            }
         }
-        if(response===str && templateMatches && templateMatches.length===1){
-            return undefined
+
+        // 字符串模板，则拼接字符串返回。单一变量则直接返回结果
+        if(isStringTemplate){
+            return responseStr
+        }else{
+            return responseArray[0];
         }
-        return response;
     };
 
     /**
@@ -108,11 +110,6 @@ function replaceTemplates<T extends InputObject>(input: InputObject, variables: 
     };
 
     return recursiveReplace(input) as T;
-}
-
-function getKey(obj: VariablesObject, key: string): string | (() => any) | VariablesObject {
-    const keys = key.split('.');
-    return keys.reduce((acc, currentKey) => acc && acc[currentKey], obj);
 }
 
 export {

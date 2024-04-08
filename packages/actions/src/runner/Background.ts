@@ -265,7 +265,7 @@ export default class Background{
     }
 
     /**由用户自行控制step 退出码*/
-    let exitCode: number | boolean = 0;
+    let exitCode: unknown = 0;
     if(step.exit){
       if(typeof step.exit === 'number'){
         exitCode = step.exit;

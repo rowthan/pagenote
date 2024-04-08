@@ -210,6 +210,7 @@ export default function run(input: {method: FormatType, data: any }) {
         case "markdown2property":
             return markdownConvert.markdownToObject(input.data);
         case "markdown2html":
+            console.warn('use pagenote/lib@v1 instead marked.parse')
             return marked.parse(input.data);
         case "omit":
             if(Array.isArray(input.data)){
