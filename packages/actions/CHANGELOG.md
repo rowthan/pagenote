@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4-next.1](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.0...@pagenote/actions@0.1.4-next.1) (2024-04-08)
+
+
+### Features
+
+* replace 特殊字符 ([fb6c044](https://github.com/rowthan/pagenote/commit/fb6c044fcfe4b7872b02ae40681a78e592784255))
+* support lib actions ([176289d](https://github.com/rowthan/pagenote/commit/176289d776bbc68040226efe2021feecc6919152))
+
+
+
+
+
 ## [0.1.4-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.3...@pagenote/actions@0.1.4-next.0) (2024-04-05)
 
 
