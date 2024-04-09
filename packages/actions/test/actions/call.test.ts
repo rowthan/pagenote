@@ -1,23 +1,5 @@
-import run from '../../src/actions/lib'
+import run from '../../src/actions/call'
 
-describe('lib dayjs test', () => {
-    test('lib dayjs test', () => {
-        const date = '2023-01-01 12:12:12';
-        const format = 'YYYY-MM-DD HH:mm:ss'
-        const dayjsData = run({
-            lib: 'dayjs',
-            method: '',
-            arguments: [new Date(date)]
-        })
-        const timeString = run({
-            lib: dayjsData,
-            method: 'format',
-            arguments: [format]
-        })
-
-        expect(timeString).toBe(date)
-    })
-})
 
 
 describe('lib lodash test', () => {
