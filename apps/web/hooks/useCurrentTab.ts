@@ -5,42 +5,48 @@ import Tab = chrome.tabs.Tab;
 type TabGroups = Tab[];
 type WindowMap = Map<number, TabGroups>
 let lastTab: undefined | Tab = undefined
-export default function useCurrentTab(tabId?: number):{tab: Tab | undefined, windows: TabGroups[] | undefined} {
+export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroups[] | undefined} {
   const { data: tab } = useSWR<Tab | undefined>(
-    `/tab/currentTab/${tabId}`,
+    `/tab/currentTab/`,
     getTabInfo
   )
   const { data: windowTabs } = useSWR<TabGroups[]>(
-    `/tab/windows/${tabId}`,
+    `/tab/windows/`,
     getAllWindows,
     {
       fallbackData: [],
     }
   )
 
-  function getTabInfo() {
-    if (tabId) {
-      return extApi.developer
+  async function getTabInfo() {
+    let currentTabId: number|undefined;
+    if(!currentTabId){
+      const result = await extApi.user.getWhoAmI();
+      // @ts-ignore;
+      const tab = result.data?.sender?.tab as Tab;
+      currentTabId = tab?.id;
+    }
+
+    if(!currentTabId){
+      const res = await extApi.developer
+          .chrome({
+            type: 'query',
+            namespace: 'tabs',
+            args: [{ active: true, lastFocusedWindow: true }],
+          });
+      lastTab = (res.data || [])[0] || lastTab
+      currentTabId = lastTab?.id;
+    }
+
+    return extApi.developer
         .chrome({
           type: 'get',
           namespace: 'tabs',
-          args: [tabId],
+          args: [currentTabId],
         })
         .then(function (res) {
           return res.data as Tab
         })
-    }
-
-    return extApi.developer
-      .chrome({
-        type: 'query',
-        namespace: 'tabs',
-        args: [{ active: true, lastFocusedWindow: true }],
-      })
-      .then(function (res) {
-        lastTab = (res.data || [])[0] || lastTab
-        return lastTab
-      })
   }
 
   function getAllWindows() {

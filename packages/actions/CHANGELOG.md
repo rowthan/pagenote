@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4-next.2](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.1...@pagenote/actions@0.1.4-next.2) (2024-04-08)
+
+**Note:** Version bump only for package @pagenote/actions
+
+
+
+
+
+## [0.1.4-next.1](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.0...@pagenote/actions@0.1.4-next.1) (2024-04-08)
+
+
+### Features
+
+* replace 特殊字符 ([fb6c044](https://github.com/rowthan/pagenote/commit/fb6c044fcfe4b7872b02ae40681a78e592784255))
+* support lib actions ([176289d](https://github.com/rowthan/pagenote/commit/176289d776bbc68040226efe2021feecc6919152))
+
+
+
+
+
+## [0.1.4-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.3...@pagenote/actions@0.1.4-next.0) (2024-04-05)
+
+
+### Bug Fixes
+
+* 修复 if check 通过不执行任务问题 ([3a1d153](https://github.com/rowthan/pagenote/commit/3a1d153e3bdbc37268ab7059559c685dc09fd819))
+
+
+
+
+
+## [0.1.3](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.2...@pagenote/actions@0.1.3) (2024-04-04)
+
+**Note:** Version bump only for package @pagenote/actions
+
+
+
+
+
+## [0.1.2](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.1...@pagenote/actions@0.1.2) (2024-04-04)
+
+
+### Features
+
+* components & action files ([d4b4432](https://github.com/rowthan/pagenote/commit/d4b4432b11a0419658fa6e2d133db3cd1b6e7590))
+
+
+
+
+
 ## 0.1.1 (2024-03-31)
 
 

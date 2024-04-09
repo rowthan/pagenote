@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.40-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.39...@pagenote/shared@1.14.40-next.0) (2024-04-05)
+
+**Note:** Version bump only for package @pagenote/shared
+
+
+
+
+
+## [1.14.39](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.38...@pagenote/shared@1.14.39) (2024-04-05)
+
+**Note:** Version bump only for package @pagenote/shared
+
+
+
+
+
+## [1.14.38](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.37...@pagenote/shared@1.14.38) (2024-04-04)
+
+**Note:** Version bump only for package @pagenote/shared
+
+
+
+
+
+## [1.14.37](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.36...@pagenote/shared@1.14.37) (2024-04-04)
+
+
+### Features
+
+* component & web-component ([a249b9a](https://github.com/rowthan/pagenote/commit/a249b9a146d96d85b7dcaaf057f877712b4d6bb6))
+* parcel debug bridges ([bc3fc2f](https://github.com/rowthan/pagenote/commit/bc3fc2fa8ef4d1706786acfa956e5ffbf2122eb9))
+
+
+
+
+
 ## [1.14.36](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.35...@pagenote/shared@1.14.36) (2024-03-31)
 
 

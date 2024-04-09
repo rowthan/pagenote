@@ -1,0 +1,26 @@
+name: if check
+
+env:
+  - name: checkA
+    id: checkA
+    default: 1
+  - name: checkB
+    id: checkB
+    default: 0
+
+jobs:
+  - name: "if check"
+    id: "if_check"
+    steps:
+      - name: "checkA"
+        id: "checkA"
+        if: env.checkA >= 1
+        with: true
+      - name: "checkB"
+        id: "checkB"
+        if: env.checkB >= 1
+        with: true
+      - name: "checkC"
+        id: "checkC"
+        if: env.checkB == 0
+        with: true

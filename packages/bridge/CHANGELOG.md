@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.18-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.17...@pagenote/bridge@1.0.18-next.0) (2024-04-05)
+
+**Note:** Version bump only for package @pagenote/bridge
+
+
+
+
+
+## [1.0.17](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.16...@pagenote/bridge@1.0.17) (2024-04-05)
+
+**Note:** Version bump only for package @pagenote/bridge
+
+
+
+
+
+## [1.0.16](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.15...@pagenote/bridge@1.0.16) (2024-04-04)
+
+
+### Bug Fixes
+
+* 修复通信 key & newValue 空值消息传递 ([5b81318](https://github.com/rowthan/pagenote/commit/5b813184bdbffd5ccb60f20d646be23b3a86dff3))
+
+
+
+
+
+## [1.0.15](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.14...@pagenote/bridge@1.0.15) (2024-04-04)
+
+
+### Features
+
+* bridge by storage ([5d8a266](https://github.com/rowthan/pagenote/commit/5d8a2667924f0f46f9fc6d2333452cc23161d42a))
+
+
+
+
+
 ## [1.0.14](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.13...@pagenote/bridge@1.0.14) (2024-01-23)
 
 **Note:** Version bump only for package @pagenote/bridge

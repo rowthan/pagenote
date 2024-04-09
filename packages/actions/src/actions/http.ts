@@ -1,4 +1,4 @@
-interface Props {
+export interface HttpRequest {
     url: string
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     headers?: {
@@ -8,22 +8,23 @@ interface Props {
     body?: any,
 }
 
-interface Output extends Response{
+interface HttpResponse extends Response{
     /**基于场景的返回数据封装**/
     _response?: string | Blob | Object | any
-    _status?: number,
+    _status: number,
     /**返回的 headers 无法直接通过 key 值获取，故这里封装一下*/
     _headers: Record<string, string>,
 }
 
-function run(args: Props):Promise<Output> {
-    return fetch(args.url,{
-        method: args.method,
-        headers: args.headers,
-        body: args.body,
+function run(args: HttpRequest):Promise<HttpResponse> {
+    const {headers,method,url,body} = args;
+    return fetch(url,{
+        method: method,
+        headers: headers,
+        body: body,
     }).then(async function (response) {
         // @ts-ignore
-        const res: Output = response.clone();
+        const res: HttpResponse = response.clone();
         res._status = res.status;
         const contentType = res.headers.get('Content-Type') || res.headers.get('content-type') || '';
         if(/text|html/.test(contentType)){
@@ -43,7 +44,7 @@ function run(args: Props):Promise<Output> {
 
         return res;
     }).catch(function (reason) {
-        console.error('fetch error', reason)
+        console.error(args.url,'fetch error', reason)
         throw reason;
     })
 }

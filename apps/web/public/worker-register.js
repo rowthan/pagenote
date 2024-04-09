@@ -16,7 +16,8 @@ navigator.serviceWorker
             navigator.serviceWorker.controller.postMessage({
                 type: 'add_block',
                 values: [
-                    "worker-register.js"
+                    "worker-register.js",
+                    "/expired",
                 ]
             })
         })

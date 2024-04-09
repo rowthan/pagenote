@@ -1,5 +1,5 @@
 import {generateApi} from "./core";
-import {BaseMessageHeader, DEFAULT_TIMEOUT, ExtensionBridge, SessionStorageBridge} from "@pagenote/bridge";
+import {BaseMessageHeader, DEFAULT_TIMEOUT, ExtensionBridge, getSessionStorageBridge} from "@pagenote/bridge";
 
 export const PAGENOTE_SESSION_LISTEN_KEY = 'pagenote-message'
 
@@ -20,7 +20,7 @@ export const defaultWrapper = function (method: string, targetId: string, client
                     targetClientId: targetId,
                 })
             } else {
-                bridge = new SessionStorageBridge(clientId, {
+                bridge = getSessionStorageBridge(clientId, {
                     asServer: true,
                     listenKey: PAGENOTE_SESSION_LISTEN_KEY,
                     timeout: DEFAULT_TIMEOUT,

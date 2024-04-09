@@ -1,8 +1,6 @@
 import {TableActionProps} from "../../src/actions/table";
 import MockDatabase from "./MockDatabase";
-import handlebars from "../../src/actions/handlebars";
 import {IAction} from "../../src/typing/IAction";
-import {http, format, pickData} from "../../src";
 
 const database = new MockDatabase();
 const MockTableAction = function (args: TableActionProps) {
@@ -12,11 +10,7 @@ const MockTableAction = function (args: TableActionProps) {
 }
 export function MockRegisterAction(id:string) {
     const actionMap: Record<string, IAction> = {
-        'pagenote/http@v1': http,
-        'pagenote/format@v1': format,
-        'pagenote/pick@v1': pickData,
         'pagenote/table@v1': MockTableAction,
-        'pagenote/handlebars@v1': handlebars,
     }
 
     const actionFun = actionMap[id];

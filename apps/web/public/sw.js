@@ -1,7 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "2"
+var version = "5"
 
 var cacheRules = {
   whiteList: [],
@@ -10,6 +10,9 @@ var cacheRules = {
 var util = {
   checkIsDocument: function (request) {
     return request.destination === 'document'
+  },
+  checkIsHttp(request){
+    return /^https/.test(request.url)
   },
   getCacheKey: function (request) {
     if (request.destination) {
@@ -25,11 +28,14 @@ var util = {
       }
       util.putCache(request, response.clone())
       return response
+    }).catch(function (reason) {
+      console.error('fetchAndCache error', reason, request.url)
+      throw reason
     })
   },
   putCache: function (request, resource) {
     // 非 http 请求，不支持 cache
-    if(request.url.indexOf('https:') === -1){
+    if(!util.checkIsHttp(request)){
       return;
     }
     caches.open(util.getCacheKey(request)).then((cache) => {
@@ -39,6 +45,10 @@ var util = {
   checkAllowCache: function (request) {
     try {
       if (request.method !== 'GET') {
+        return false
+      }
+      // 只缓存 http 请求
+      if(!util.checkIsHttp(request)){
         return false
       }
       /**黑名单，不用缓存*/
@@ -99,7 +109,7 @@ self.addEventListener('install', function (e) {
  * 2. 当前版本sw.js 激活后，通过cache的key来判断是否更新cache中的静态资源
  * */
 self.addEventListener('activate', function (e) {
-  console.log('Service Worker 状态： activate')
+  console.log('Service Worker 状态： activate',version)
   // 清空上一个版本的旧缓存
   var cachePromise = caches.keys().then(function (keys) {
     var deleteKey = keys.filter(function (key) {

@@ -18,10 +18,10 @@ export enum TaskState {
 }
 
 export enum WorkFlowState {
-   waiting = 0,
-   running = 1,
-   success = 2,
-   fail = -1,
+   waiting = 'waiting',
+   running = 'running',
+   finished = 'finished',
+   fail = 'fail',
 }
 
 export type Step = {

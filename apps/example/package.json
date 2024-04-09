@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "parcel index.html",
+    "dev": "parcel ./*.html",
     "test":"echo 'skip'"
   },
   "dependencies": {

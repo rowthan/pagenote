@@ -78,7 +78,7 @@ export interface BaseMessageHeader {
 
     hostname?: string // session bridge 请求时携带当前URL信息
 
-    senderURL: string // 请求方网页地址
+    senderURL?: string // 请求方网页地址
 
     // [key: string]: string | boolean | number | any
 }
@@ -165,7 +165,7 @@ interface CommunicationOption {
     timeout: number,
     targetClientId?: string, // 连线的目标对象
     element?: HTMLElement|null, // domBridge 监听的 DOM 节点
-    listenKey?: string, // sessionStorageBridge 监听的key值
+    listenKey?: string, // StorageBridge 监听的key值 // todo rename channel，通信信道
     allowFrameOrigins?: string[] // iframe 通信的域名白名单监听对象
 }
 
@@ -204,13 +204,13 @@ interface Communication<SENDER extends BaseMessageSender> {
     state: STATUS
     clientId: string
 
-    startListen():void
+    startListen():()=>void
     stopListen():void
     addListener(type:string,fun:IBaseMessageListener<any, BaseMessageSender, any>):()=>void
     addProxy(proxy: IBaseMessageProxy<any, BaseMessageSender, any>): void
 
     /**发送请求*/
-    requestMessage(type:string,data: any, header?: BaseMessageHeader,callback?:(data:BaseMessageResponse<any>)=>void):Promise<BaseMessageResponse<any>>
+    requestMessage(type:string,data: any, header?: BaseMessageHeader):Promise<BaseMessageResponse<any>>
 
     /**响应请求*/
     responseMessage(type:string,data: any, header?: BaseMessageHeader):void

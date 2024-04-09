@@ -145,15 +145,18 @@ export default class ExtensionMessage implements Communication<any>{
       const { data,type,header} = request;
       const {carrier,targetClientId} = header;
 
-      const resolveCheck = shouldResolveRequest(request,that.client)
+      const resolveResponse = true;
+      // todo 是否处理请求 & 是否响应请求判断。待开放，目前 targetClientId 为 作为namespace 使用，待迁移后可开放监测
+      // const resolveCheck = shouldResolveRequest(request,that.client)
+      //
+      // /***通信不匹配，不需要处理请求*/
+      // if(!resolveCheck.resolveRequest){
+      //   return false;
+      // }
 
-      /***通信不匹配，不需要处理请求*/
-      if(!resolveCheck.resolveRequest){
-        return false;
-      }
       function sendResponse(data:BaseMessageResponse<any>){
         /**需要响应时，响应 response*/
-        if(resolveCheck.resolveResponse){
+        if(resolveResponse){
           callResponse(data)
         } else {
           return;
@@ -263,6 +266,9 @@ export default class ExtensionMessage implements Communication<any>{
 
     chrome.runtime.onMessage.addListener(globalMessageListener);
     this.state = STATUS.READY
+    return function () {
+      chrome.runtime.onMessage.removeListener(globalMessageListener);
+    }
   }
 
   // 停止监听
@@ -375,16 +381,24 @@ export default class ExtensionMessage implements Communication<any>{
       throw Error('only background can broadcast')
     }
 
-    const requestMessage = this.requestMessage;
-    // 对每一个标签页发送请求
-    chrome.tabs.query({}, function (tabs) {
-      tabs.forEach(function (tab) {
-        return requestMessage(type, data, {
-          ...(header || {}),
-          targetTabId: tab.id,
-          targetClientId: null, // 无指定目标服务节点
-        })
-      })
-    })
+    // 通过 storage 广播存储消息，由接收方自行选择是否接听
+    chrome.storage.local.set({
+      [type]: {
+        data: data,
+        header: header,
+      }
+    });
+
+    // const requestMessage = this.requestMessage;
+    // // 对每一个标签页发送请求
+    // chrome.tabs.query({}, function (tabs) {
+    //   tabs.forEach(function (tab) {
+    //     return requestMessage(type, data, {
+    //       ...(header || {}),
+    //       targetTabId: tab.id,
+    //       targetClientId: null, // 无指定目标服务节点
+    //     })
+    //   })
+    // })
   }
 }
