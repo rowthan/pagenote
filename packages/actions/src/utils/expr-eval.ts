@@ -39,6 +39,14 @@ parser.functions.parse = function (input: string) {
     }
 }
 
+parser.functions.contains = function (input: string,keyword: string) {
+    return input.indexOf(keyword) > -1;
+}
+
+parser.functions.startsWith = function (input: string, keyword: string) {
+    return input.startsWith(keyword)
+}
+
 parser.functions.JSON = {
     stringify: parser.functions.string,
     parse: parser.functions.parse,
@@ -90,6 +98,7 @@ export function exprEval(input: string,context?: any):unknown {
         try{
             result = parser.evaluate(variableString.trim(),context || {})
         }catch (e) {
+            console.error(e,'parse error',variableString)
             result = undefined;
         }
     }
