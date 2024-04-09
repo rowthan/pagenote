@@ -5,7 +5,8 @@ export interface HttpRequest {
         Accept?:  string,
         'content-type'?: string,
     } & Record<string, string>,
-    body?: any,
+    body?: any, // 请求体，POST PUT 请求使用
+    params?: Record<string, string>,
 }
 
 interface HttpResponse extends Response{
@@ -17,11 +18,31 @@ interface HttpResponse extends Response{
 }
 
 function run(args: HttpRequest):Promise<HttpResponse> {
-    const {headers,method,url,body} = args;
-    return fetch(url,{
-        method: method,
+    const {headers,method='GET',url,body,params} = args;
+    const requestContentType = headers?.['content-type'] || headers?.['Content-Type'] || '';
+    const requestMethod = method.toUpperCase();
+
+    /**POST 参数格式化 application/json 数据需要序列化 */
+    const checkSendBody = ['POST','PUT'].includes(requestMethod);
+    const isJSONrequest = requestContentType.includes('application/json');
+    const requestBody = (isJSONrequest && typeof body === 'object') ? JSON.stringify(body) : body;
+
+    /**GET 请求参数格式化*/
+    const requestURL = new URL(url);
+    if(params){
+        for(let i in params){
+            requestURL.searchParams.set(i,params[i])
+        }
+    } else if(requestMethod==='GET' && typeof body === 'object'){
+        for(let i in body){
+            requestURL.searchParams.set(i,body[i])
+        }
+    }
+
+    return fetch(requestURL.toString(),{
+        method: requestMethod,
         headers: headers,
-        body: body,
+        body: checkSendBody ? requestBody : undefined,
     }).then(async function (response) {
         // @ts-ignore
         const res: HttpResponse = response.clone();
