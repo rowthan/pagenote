@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.18-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.17...@pagenote/bridge@1.0.18-next.0) (2024-04-05)
+
+**Note:** Version bump only for package @pagenote/bridge
+
+
+
+
+
 ## [1.0.17](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.16...@pagenote/bridge@1.0.17) (2024-04-05)
 
 **Note:** Version bump only for package @pagenote/bridge

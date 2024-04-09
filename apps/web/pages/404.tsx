@@ -67,7 +67,7 @@ export default function Custom404(props: NotionDocProp) {
                   <circle cx="113" cy="113" fill="none" r="109" stroke="#6E6E96" strokeWidth="8"/></svg>
               <div className=" tracking-widest mt-4">
                   <span className="text-gray-500 text-6xl block"><span>4  0  4</span></span>
-                  <span className="text-gray-500 text-xl">抱歉, 无法找到页面!</span>
+                  <span className="text-gray-500 text-xl">抱歉, 无法找到页面!或许，需要安装 <a href="/download">PAGENOTE</a> 可见此页面。</span>
               </div>
           </center>
           <center className="mt-6">

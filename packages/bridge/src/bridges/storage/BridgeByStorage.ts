@@ -157,8 +157,8 @@ export default class BridgeByStorage implements Communication<any>{
             }
             // 请求方指定目标服务器，不是当前服务器，则忽略
             if(header.targetClientId && header.targetClientId !== that.clientId){
-                that._debug('target client not matched')
-                return;
+                that._debug('target client not matched',header.targetClientId,that.clientId)
+                //   todo 拦截此类请求 open api 代理转发时，客户端 id 进行来重写，导致身份错误
             }
             // 请求类型 且 配置不作为服务器，则不接受请求
             if (header.isResponse === false && that.option.asServer === false) {
