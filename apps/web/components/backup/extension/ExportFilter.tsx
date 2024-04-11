@@ -43,16 +43,6 @@ export default function ExportFilter() {
         backupId: `${Date.now()}`,
         backup_at: Date.now(),
         extension_version: whoAmI?.version,
-
-        // todo delete
-        // lights: [],
-        // pages: [],
-        // notes: [],
-        // snapshots: [],
-        // htmlList: [],
-        // size: 0,
-        // remark: '',
-
         version: BackupVersion.version7,
         items: [
           {
