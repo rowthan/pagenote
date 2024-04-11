@@ -35,12 +35,12 @@ export default function PopupPage() {
 
   useEffect(
     function () {
-      if (whoAmi?.version) {
-        extApi.commonAction.setPersistentValue({
-          key: 'popup_version',
-          value: whoAmi?.version,
-        })
-      }
+      // if (whoAmi?.version) {
+      //   extApi.commonAction.setPersistentValue({
+      //     key: 'popup_version',
+      //     value: whoAmi?.version,
+      //   })
+      // }
     },
     [whoAmi]
   )
