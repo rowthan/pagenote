@@ -328,7 +328,11 @@ export namespace developer {
         /**代理执行浏览器插件方法*/
         chrome: IExtenstionMessageListener<{
             namespace: string,
-            type: string,
+            // @deprecated 使用 method 代替
+            type?: string,
+            method: string,
+            arguments: any[],
+            // @deprecated 使用 arguments 代替
             args?: any[]
         }, any>
 
@@ -469,21 +473,23 @@ export namespace network {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
 
-        notion: IExtenstionMessageListener<{
-            namespace: string,
-            method: string,
-            args: any[]
-        }, any>
+        // notion: IExtenstionMessageListener<{
+        //     namespace: string,
+        //     method: string,
+        //     args: any[]
+        // }, any>
 
-        uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
+        // uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
 
         /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
         openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        // todo 设置为 http actions
+        http: IExtenstionMessageListener<FetchRequest, FetchResponse>
 
-        state: IExtenstionMessageListener<void, {
-            online: boolean
-            google: boolean
-        }>
+        // state: IExtenstionMessageListener<void, {
+        //     online: boolean
+        //     google: boolean
+        // }>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -535,7 +541,7 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 
 
 type RequestParamsWithDBInfo<params> = {
-    db: string,
+    db?: string,
     table: string
     params: params
 }
