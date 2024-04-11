@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-#      - 'feat*'
+      - 'feat*'
 #    tags:
 #      - 'v[0-9]+.[0-9]+.[0-9]+'
 
@@ -44,6 +44,19 @@ jobs:
       - name: build ext-web
         run: |
           yarn run build:ext-web
+          rm -rf apps/web/out/yml
+          rm -rf apps/web/out/404.html
+          rm -rf apps/web/out/ads.txt
+          rm -rf apps/web/out/base_default_page_data.json
+          rm -rf apps/web/out/changelog.json
+          rm -rf apps/web/out/favicon.ico
+          rm -rf apps/web/out/markdown.css
+          rm -rf apps/web/out/markdown2.css
+          rm -rf apps/web/out/robots.txt
+          rm -rf apps/web/out/sitemap.xml
+          rm -rf apps/web/out/sw.js
+          rm -rf apps/web/out/version.json
+          rm -rf apps/web/out/worker-register.js
 
       - name: Upload build web Artifact
         uses: actions/upload-artifact@v3
