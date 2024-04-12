@@ -18,7 +18,6 @@ export default function PopupPage() {
   const [keyword, setKeyword] = useState<string>('')
   const [whoAmi] = useWhoAmi()
   const mounted = useMountedState()
-  const { tab } = useCurrentTab()
 
   useEffect(function () {
     setKeyword(localStorage.getItem(CACHE_SEARCH_KEY) || '')

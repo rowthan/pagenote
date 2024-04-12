@@ -3,7 +3,7 @@ import extApi from '@pagenote/shared/lib/pagenote-api'
 import { useEffect } from 'react'
 
 function fetchStatus(tabId?: number) {
-  // @ts-ignore
+  // 当标签页无法访问时，如 chrome://newtab，会导致错误日志
   return extApi.developer
     .requestFront({
       type: 'fetchStatus',

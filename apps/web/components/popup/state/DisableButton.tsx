@@ -3,27 +3,8 @@ import useSettings from 'hooks/useSettings'
 import { refreshTab } from 'utils/popup'
 import useTabPagenoteState from 'hooks/useTabPagenoteState'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select'
-import { BiHighlight } from 'react-icons/bi'
-import { TbHighlightOff } from 'react-icons/tb'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   ChevronDownIcon,
-  CircleIcon,
   PlusIcon,
-  StarIcon,
   SwitchIcon,
 } from '@radix-ui/react-icons'
 import { Button } from '../../../@/components/ui/button'
@@ -33,7 +14,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -48,6 +28,16 @@ enum EnableType {
   enable = 'enable',
   disableDomain = 'disable-domain',
   disableUrl = 'disable-url',
+  unknown = 'unknown',
+  unValid = 'un-valid',
+}
+
+const label: Record<EnableType, string> = {
+  [EnableType.enable]: '已启用',
+  [EnableType.disableDomain]: '禁用域名',
+  [EnableType.disableUrl]: '禁用网页',
+  [EnableType.unknown]: '未联通插件，请刷新网页后重试',
+  [EnableType.unValid]:'无法在此类网站上运行',
 }
 
 export default function DisableButton() {
@@ -58,11 +48,7 @@ export default function DisableButton() {
   const navigate = useNavigate()
 
   const url = tab?.url || ''
-  const disabled =
-    url &&
-    disabledList.some(function (item) {
-      return checkDisabled(item, url)
-    })
+
 
   const set = new Set(disabledList)
 
@@ -118,14 +104,20 @@ export default function DisableButton() {
         break
     }
   }
-
-  let value = ''
+  const disabled =
+      url &&
+      disabledList.some(function (item) {
+        return checkDisabled(item, url)
+      })
+  let value = disabled ? EnableType.disableUrl : EnableType.unknown;
   if (tabState?.active) {
     value = EnableType.enable
   } else if (set.has(disableDomain)) {
     value = EnableType.disableDomain
   } else if (set.has(url)) {
     value = EnableType.disableUrl
+  } else if(!url){
+    value = EnableType.unValid
   }
 
   const enabled = value === EnableType.enable
@@ -144,7 +136,7 @@ export default function DisableButton() {
           }}
         >
           <SwitchIcon color={enabled ? 'green' : 'red'} className="mr-2 h-4" />
-          {enabled ? '已启用' : '已禁用'}
+          {label[value]}
         </Button>
       </KeyboardTip>
 
