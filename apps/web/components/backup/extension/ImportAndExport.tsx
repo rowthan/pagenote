@@ -43,15 +43,14 @@ export default function ImportAndExport(props: Props) {
     }
 
     readFiles(files).then(function (list) {
-      let mergeBackupData: BackupData | null = null
+      const mergeBackupData: BackupData  = {
+        items: []
+      }
       for(let i = 0; i < list.length; i++){
         try{
           const backupData = resolveImportString(list[i])
           if (backupData) {
             console.log(backupData,'backupdata')
-            if(!mergeBackupData){
-              mergeBackupData = cloneDeep(backupData);
-            }
             // 格式初始化
             mergeBackupData.items = mergeBackupData.items || []
             // 继承 items 数据
@@ -79,7 +78,7 @@ export default function ImportAndExport(props: Props) {
                     })
                     page.plainData.steps = [];
                   }
-
+                  // 低版本的数据兼容处理
                   if(page.plainData?.snapshots && page.plainData.snapshots.length > 0){
                     page.plainData.snapshots.forEach(function (item) {
                       snapshots.push({
