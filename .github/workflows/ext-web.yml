@@ -49,7 +49,6 @@ jobs:
           rm -rf apps/web/out/ads.txt
           rm -rf apps/web/out/base_default_page_data.json
           rm -rf apps/web/out/changelog.json
-          rm -rf apps/web/out/favicon.ico
           rm -rf apps/web/out/markdown.css
           rm -rf apps/web/out/markdown2.css
           rm -rf apps/web/out/robots.txt

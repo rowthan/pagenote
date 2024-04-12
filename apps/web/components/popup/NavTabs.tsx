@@ -5,7 +5,6 @@ import CloseSvg from 'assets/svg/close.svg'
 import React, { useEffect, useRef } from 'react'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useCurrentTab from '../../hooks/useCurrentTab'
-import { getSearchKeyFormUrl } from '../../utils/search-engine'
 import useConfig from '../../hooks/useConfig'
 
 interface Tab {
