@@ -268,6 +268,8 @@ export namespace action {
 }
 
 export namespace developer {
+    import TabGroup = chrome.tabGroups.TabGroup;
+    import Tab = chrome.tabs.Tab;
     export const id = 'developer'
 
     export enum LogLevel {
@@ -329,6 +331,9 @@ export namespace developer {
             type: string,
             args?: any[]
         }, any>
+
+        /**打开标签页*/
+        openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }

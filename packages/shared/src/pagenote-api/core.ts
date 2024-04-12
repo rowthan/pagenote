@@ -130,7 +130,8 @@ export const generateApi = function (wrapperFun: Wrapper) {
         permissionList: true,
         requestBack: true,
         requestFront: true,
-        requestPermission: true
+        requestPermission: true,
+        openTab: true,
     }
 
 
