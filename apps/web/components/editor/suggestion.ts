@@ -1,40 +1,23 @@
 // @ts-nocheck
 import { ReactRenderer } from '@tiptap/react'
 import tippy from 'tippy.js'
-
 import MentionList from './node/MentionList'
+import extApi from "@pagenote/shared/lib/pagenote-api";
 
 export default {
   items: ({ query }) => {
-    return [
-      'Lea Thompson',
-      'Cyndi Lauper',
-      'Tom Cruise',
-      'Madonna',
-      'Jerry Hall',
-      'Joan Collins',
-      'Winona Ryder',
-      'Christina Applegate',
-      'Alyssa Milano',
-      'Molly Ringwald',
-      'Ally Sheedy',
-      'Debbie Harry',
-      'Olivia Newton-John',
-      'Elton John',
-      'Michael J. Fox',
-      'Axl Rose',
-      'Emilio Estevez',
-      'Ralph Macchio',
-      'Rob Lowe',
-      'Jennifer Grey',
-      'Mickey Rourke',
-      'John Cusack',
-      'Matthew Broderick',
-      'Justine Bateman',
-      'Lisa Bonet',
-    ]
-      .filter(item => item.toLowerCase().startsWith(query.toLowerCase()))
+    return extApi.table.keys({
+      table: 'webpage',
+      db: "lightpage",
+      params:{
+        key: "categories",
+      }
+    }).then(function (res) {
+      const keys = res.data  || [];
+      keys.push(query)
+      return keys.filter(item => item.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, 5)
+    })
   },
 
   render: () => {
@@ -86,8 +69,8 @@ export default {
       },
 
       onExit() {
-        popup[0].destroy()
-        component.destroy()
+        popup[0]?.destroy()
+        component?.destroy()
       },
     }
   },

@@ -14,6 +14,12 @@ import {Hashtag} from './extension/HashTag'
 import suggestion from './suggestion'
 
 const extensions = [
+  Hashtag.configure({
+    HTMLAttributes: {
+      class: 'hashtag bg-blue-100 rounded text-sm',
+    },
+    suggestion
+  }),
   TaskList,
   TaskItem.configure({
     nested: true,
@@ -24,6 +30,9 @@ const extensions = [
   // @ts-ignore
   TextStyle.configure({ types: [ListItem.name] }),
   StarterKit.configure({
+    heading:{
+      levels: [2,3,4]
+    },
     bulletList: {
       keepMarks: true,
       keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
@@ -38,12 +47,7 @@ const extensions = [
       return '留下备忘录。支持 markdown 语法'
     },
   }),
-  Hashtag.configure({
-    HTMLAttributes: {
-      class: 'hashtag bg-blue-100 rounded text-sm',
-    },
-    suggestion
-  })
+
   // Suggestion.configure({
   //   matcher: {
   //     char: '@', // 匹配 @ 符号
