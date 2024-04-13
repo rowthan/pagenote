@@ -10,6 +10,8 @@ export const databaseList = [
     'fd2ef32a46bb42a69711f826cb70a267', // 地图
     '5c0aa83127014f3791e9c66ce70687dc', // 发布历史
 ]
+
+export const WRITER_ID = process.env.NOTION_WRITER || '7c55490e-52d4-4bf9-8b86-dc9b51162224'
 export const SEO_REVERT_MAP: Record<string, string> = {}
 
 for(let i in SEO_MAP){

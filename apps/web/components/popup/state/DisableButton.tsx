@@ -34,8 +34,8 @@ enum EnableType {
 
 const label: Record<EnableType, string> = {
   [EnableType.enable]: '已启用',
-  [EnableType.disableDomain]: '禁用域名',
-  [EnableType.disableUrl]: '禁用网页',
+  [EnableType.disableDomain]: '域名被禁用',
+  [EnableType.disableUrl]: '网页被禁用',
   [EnableType.unknown]: '未联通插件，请刷新网页后重试',
   [EnableType.unValid]:'无法在此类网站上运行',
 }
