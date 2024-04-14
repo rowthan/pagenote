@@ -8,6 +8,7 @@ import { basePath, isDev, isExt } from 'const/env'
 import Head from 'next/head'
 import { TDK } from 'const/tdk'
 import { StrictMode } from 'react'
+import {Toaster} from "@/components/ui/toaster";
 
 // 运行在客户端
 function ClientApp({ Component, pageProps }: AppProps) {
@@ -22,6 +23,7 @@ function ClientApp({ Component, pageProps }: AppProps) {
       <Script src={`${basePath}/components.js`} />
       <Script src={`${basePath}/lib/aliyun-oss-sdk.min.js`} />
       {!isExt && <Script src={`/worker-register.js`} />}
+      <Toaster />
     </StrictMode>
   )
 }
