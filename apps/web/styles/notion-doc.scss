@@ -1,4 +1,7 @@
 /**override default notion style*/
+main.notion-full-page{
+  padding-bottom: calc(max(5vh, 60px));
+}
 
 /**修复 inline page table 重复渲染 title 问题，如 /author 文章列表*/
 .notion-list-item-property .notion-property-title{
@@ -48,6 +51,25 @@ summary{
 
 blockquote.notion-quote{
   font-size: 0.9em;
+}
+
+ //动画
+.notion-page-link {
+  .notion-page-title-text{
+    background-position: 50% 100%;
+    background-size: 0 0.1rem;
+  }
+  &:focus,&:hover{
+    .notion-page-title-text{
+      border-bottom-color: transparent;
+      background-image: linear-gradient(90.68deg, #39b3df .26%, #3357e5 102.37%);
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: 100% .1rem;
+      transition-property: background-position,background-size;
+      transition-duration: .3s;
+    }
+  }
 }
 
 @media screen and (max-width: 920px) {
