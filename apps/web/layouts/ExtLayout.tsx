@@ -3,6 +3,7 @@ import Head from 'next/head'
 import ErrorBoundary from '../components/debug/ErrorBound'
 import Error from 'components/debug/ErrorTip'
 import HelpAside from '../components/HelpAside'
+import {basePath} from "../const/env";
 
 export default function ExtLayout(
   props: PropsWithChildren<{
@@ -32,7 +33,7 @@ export default function ExtLayout(
                     <meta property="og:title" content={meta.title}/>
                     <link
                         rel="shortcut icon"
-                        href="https://pagenote.cn/favicon.ico"
+                        href={`${basePath}/favicon.ico`}
                         type="image/x-icon"
                     />
                 </Head>

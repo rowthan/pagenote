@@ -7,8 +7,7 @@ import {
   getUnOfficialNotion,
 } from '../../service/server/notion'
 import { writeCacheFile } from '../../service/server/cache'
-import {databaseList, SEO_REVERT_MAP} from '../../const/notion'
-
+import {databaseList, SEO_REVERT_MAP, WRITER_ID} from '../../const/notion'
 
 /**
  * SEO 优化处理：
@@ -130,6 +129,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
+    if(!recordMap.notion_user[WRITER_ID]){
+      console.log(recordMap.notion_user)
+      recordMap = null;
+    }
   } catch (e) {
     console.error(e,'fetch recordMap error')
     return res.status(200).json(null)
@@ -139,7 +142,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 非 page 类不做查询，如 collection-page-view
    * */
   let notionPage = null
-  if (recordMap.block[notionId]?.value.type === 'page' && getOfficialNotion()) {
+  if (recordMap && recordMap.block[notionId]?.value.type === 'page' && getOfficialNotion()) {
     notionPage = await getOfficialNotion()
       ?.pages.retrieve({
         page_id: notionId,
@@ -172,7 +175,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   /**只有本地运行才有 fs 的写入能力；线上服务器不具备写文件能力*/
-  writeCacheFile(notionIdOrUrlPath, responseData)
+  if(recordMap){
+    writeCacheFile(notionIdOrUrlPath, responseData)
+  }
 
+  // 增加缓存相应头
+  const cacheTime = 60 * 30;
+  res.setHeader('Cache-Control', `max-age=${cacheTime},public`);
   res.status(200).json(responseData)
 }

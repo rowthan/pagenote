@@ -268,6 +268,8 @@ export namespace action {
 }
 
 export namespace developer {
+    import TabGroup = chrome.tabGroups.TabGroup;
+    import Tab = chrome.tabs.Tab;
     export const id = 'developer'
 
     export enum LogLevel {
@@ -329,6 +331,9 @@ export namespace developer {
             type: string,
             args?: any[]
         }, any>
+
+        /**打开标签页*/
+        openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -592,6 +597,7 @@ export namespace config {
 
 export namespace html {
     export type OfflineHTML = {
+        dataVersion: number, // 数据格式版本标识 1: 已将重要property 写入 html meta 中
         resourceId?: string, // 插件本地获取该资源的唯一标识
 
         name?: string, // 文件名
@@ -603,8 +609,8 @@ export namespace html {
         originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
         onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
 
-        contentType: ContentType, // 文件类型
-        contentLength?: number, // 资源size
+        contentType?: ContentType, // 文件类型
+        // contentLength?: number, // 资源size
         lastModified?: string,
         ETag?: string,
         data: string, // 资源内容，只支持字符串存储，不支持二进制数据
@@ -613,7 +619,7 @@ export namespace html {
         relatedPageUrl?: string // 关联的网址
 
         deleted: boolean,
-        size?: number
+        // size?: number
         domain?: string
         thumb?: string // 快照缩略图
         // 数据资源的存储时间信息

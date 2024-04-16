@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
-import { basePath } from 'const/env'
-import RedirectToExt from '../../components/RedirectToExt'
+import React from 'react'
+import ImportAndExport from "components/backup/extension/ImportAndExport";
 
 export default function Data() {
-  useEffect(() => {
-    window.location.href = basePath + '/ext/setting.html#/setting/data'
-  }, [])
   return (
-    <RedirectToExt>
-      <div>前往新页面</div>
-    </RedirectToExt>
+      <div>
+        <div className={'max-w-md m-auto mt-20'}>
+          <div>
+            <ImportAndExport exportBy={'extension'} />
+          </div>
+        </div>
+      </div>
   )
 }

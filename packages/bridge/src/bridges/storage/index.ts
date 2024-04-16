@@ -1,4 +1,4 @@
-import BridgeByStorage from "./BridgeByStorage";
+import BridgeByStorage, {CommonBridgeOption} from "./BridgeByStorage";
 import type {BaseMessageRequest, CommunicationOption} from "../../base";
 import StorageChange = chrome.storage.StorageChange;
 
@@ -6,27 +6,29 @@ interface BridgeOption extends CommunicationOption {
     listenKey: string
 }
 
-
-// todo 修改监听事件名称
+// todo 这里修改 storage 事件的event name，区分 local&session storage
 const EVENT_NAME = 'storage';
-function setSessionStorageRequest(key:string,value:string) {
-    try {
-        window.sessionStorage.setItem(key, value);
-    } catch (e) {
-        console.error('data oversize', e)
-    }
 
-    const event = new Event(EVENT_NAME);
-    window.dispatchEvent(event)
+// 全局广播事件，但不携带任何数据，接收方需要从共享空间中自取数据，防止 local/session/其他监听串台。
+function triggerGlobalStorageEvent() {
+    const newEvent = new Event(EVENT_NAME);
+    window.dispatchEvent(newEvent)
 }
 
 /**
- * session bridge 单个页面的会话通信
+ * session bridge 同一个窗口内的会话通信
+ * iframe 之间共享 sessionStorage。
+ * storage 值变更事件，自身不会收到 storage 事件，只会对外发送 storage 事件
  * */
-export function getSessionStorageBridge(id:string,option:BridgeOption) {
+export function getSessionStorageBridge(id:string,option: Partial<CommonBridgeOption> & {listenKey:string} ) {
     return new BridgeByStorage(id, {
         ...option,
-        sendRequest: setSessionStorageRequest,
+        asServer: option.asServer || false,
+        timeout: option.timeout || 4000,
+        sendRequest: function (key, value) {
+            sessionStorage.setItem(key,value);
+            triggerGlobalStorageEvent()
+        },
         storageChangeListener(callback: (data: BaseMessageRequest) => void) {
             function changeListener(event:any) {
                 try {
@@ -70,11 +72,14 @@ export function getLocalStorageBridge(id:string,option:BridgeOption) {
             function changeListener(event: StorageEvent) {
                 try {
                     // 通道判断
-                    if(event.key !== option.listenKey){
+                    if(event.key && event.key !== option.listenKey){
                         return;
                     }
-                    let dataString: string = ''
-                    dataString = event?.newValue || localStorage.getItem(option.listenKey) || '';
+                    /**
+                     * localStorage 通信不需要从 storage 中取数，直接从 event 事件中取数更加准确，避免自定义 custom storage 事件的混淆
+                     * 避免和 sessionStorage 通信异常
+                     * */
+                    const dataString = event?.newValue || '';
                     if (!dataString) {
                         return;
                     }

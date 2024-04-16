@@ -42,7 +42,12 @@ export default function Gallery() {
     const width = item.width || window.innerWidth
     // @ts-ignore
     const height = item.height || window.innerHeight
-    const src = item.uri || item.url || ''
+    let src = item.uri || item.url || '';
+    // 缩略图样式
+    if(src.startsWith('http')){
+      const [url] = src.split('?');
+      src = url + '?x-oss-process=style/thumb'
+    }
     return {
       key: item.key,
       src: src,

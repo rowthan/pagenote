@@ -11,7 +11,6 @@ import {
   Step
 } from '@pagenote/shared/lib/@types/data'
 import {toast} from 'utils/toast'
-import {resolveImportString} from '@pagenote/shared/lib/utils/data'
 import {Button} from "@/components/ui/button";
 import {
   Dialog,
@@ -22,17 +21,17 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import {UploadIcon} from '@radix-ui/react-icons'
-import {readFiles} from "../../../utils/file";
-import {cloneDeep} from "lodash";
+import {readFiles, resolveImportString} from "../../../utils/file";
 import {LightFormatFromWebPage} from "../../../utils/backup";
 import md5 from "md5";
 
 interface Props {
   children?: ReactNode
+  exportBy?: 'web' | 'extension'
 }
 
 export default function ImportAndExport(props: Props) {
-  const { children } = props
+  const { children,exportBy = 'web' } = props
   const [backupData, setBackupData] = useState<BackupData | null>(null)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
 
@@ -43,15 +42,13 @@ export default function ImportAndExport(props: Props) {
     }
 
     readFiles(files).then(function (list) {
-      let mergeBackupData: BackupData | null = null
+      const mergeBackupData: BackupData  = {
+        items: []
+      }
       for(let i = 0; i < list.length; i++){
         try{
-          const backupData = resolveImportString(list[i])
+          const backupData = resolveImportString(list[i].text, list[i].type)
           if (backupData) {
-            console.log(backupData,'backupdata')
-            if(!mergeBackupData){
-              mergeBackupData = cloneDeep(backupData);
-            }
             // 格式初始化
             mergeBackupData.items = mergeBackupData.items || []
             // 继承 items 数据
@@ -79,7 +76,7 @@ export default function ImportAndExport(props: Props) {
                     })
                     page.plainData.steps = [];
                   }
-
+                  // 低版本的数据兼容处理
                   if(page.plainData?.snapshots && page.plainData.snapshots.length > 0){
                     page.plainData.snapshots.forEach(function (item) {
                       snapshots.push({
@@ -165,7 +162,7 @@ export default function ImportAndExport(props: Props) {
             toast('解析备份文件失败', 'error')
           }
         }catch (e) {
-          toast('解析备份文件失败，请联系管理员', 'error')
+          toast('部分文件解析失败', 'error')
         }
       }
 
@@ -202,12 +199,11 @@ export default function ImportAndExport(props: Props) {
           <DialogContent className="">
             <DialogHeader>
               <DialogTitle>导出数据</DialogTitle>
-              <DialogDescription>保存为单个备份文件，你可以导入到其他设备以实现数据交换</DialogDescription>
+              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换</DialogDescription>
             </DialogHeader>
-            <ExportFilter />
+            <ExportFilter exportBy={exportBy}  />
           </DialogContent>
         </Dialog>
-
 
         <div className={'mt-6 p-4 rounded border-2 border-dashed border-gray-300'}>
           <label
@@ -222,7 +218,12 @@ export default function ImportAndExport(props: Props) {
 
             <div className="flex flex-col items-center justify-center gap-2">
               <p className="text-sm text-center text-muted-foreground">
-                拖入文件至此处，或选择文件
+                点击选择文件，或将文件拖入至此处
+                <br/>
+                支持多个文件导入
+              </p>
+              <p>
+                支持 .pagenote、.bak、.json、.zip 文件类型
               </p>
             </div>
             <input

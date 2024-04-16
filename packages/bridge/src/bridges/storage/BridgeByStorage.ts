@@ -20,9 +20,10 @@ type SessionSender = {
     header: SessionHeader
 }
 
-interface Option extends CommunicationOption{
+export interface CommonBridgeOption extends CommunicationOption{
     storageChangeListener: (callback: (data: BaseMessageRequest)=>void)=>()=>void
     sendRequest: (key: string, value: string)=>void
+    debug?: boolean
 }
 
 /**
@@ -34,11 +35,10 @@ export default class BridgeByStorage implements Communication<any>{
     proxy: IBaseMessageProxy<any, SessionSender, any> = function () {
         return false
     };
-    option: Option;
+    option: CommonBridgeOption;
     state: STATUS;
 
-
-    constructor(id: string, option: Option) {
+    constructor(id: string, option: CommonBridgeOption) {
         this.clientId = id;
         this.option = option;
         this.listeners = {};
@@ -59,6 +59,7 @@ export default class BridgeByStorage implements Communication<any>{
     }
 
     broadcast(type: string, data: any, header?: BaseMessageHeader) {
+        // 增加协议版本号 todo
         this.requestMessage(type, data, {
             ...(header || {}),
             targetClientId: null, // 通过指定 targetClient null 指定广播
@@ -147,7 +148,7 @@ export default class BridgeByStorage implements Communication<any>{
             const {header, type} = requestData || {};
             that._debug('receive message', requestData)
             if (!header || !type) {
-                that._debug('invalid request data')
+                that._debug('invalid request data, header & type is required',requestData)
                 return;
             }
             // 请求来自自身，忽略
@@ -159,10 +160,11 @@ export default class BridgeByStorage implements Communication<any>{
             if(header.targetClientId && header.targetClientId !== that.clientId){
                 that._debug('target client not matched',header.targetClientId,that.clientId)
                 //   todo 拦截此类请求 open api 代理转发时，客户端 id 进行来重写，导致身份错误
+                // return; todo 待开启
             }
             // 请求类型 且 配置不作为服务器，则不接受请求
             if (header.isResponse === false && that.option.asServer === false) {
-                that._debug('as server false')
+                that._debug('ignore request message as server is false')
                 return;
             }
             // // 自身只监听特定客户端的请求，则忽略其他客户端的消息 插件发送的时候会指定 targetClientId todo 将其删除，通过 namespace 来区分处理后，可以打开，否则会被拦截如 user.getWhoAmI
@@ -242,7 +244,9 @@ export default class BridgeByStorage implements Communication<any>{
     }
 
     _debug(..._args:any){
-        // console.warn(..._args)
+        if(this.option.debug){
+            console.warn(..._args)
+        }
     }
 
     stopListen(): void {

@@ -19,7 +19,7 @@ export default function DataBackup() {
         <SettingSection>
           <BasicSettingLine
             label={<span>图片优化</span>}
-            subLabel={<span>可减少本机截图空间占用</span>}
+            subLabel={<span>可减少本机图片空间占用</span>}
             right={
               <div className={'flex items-center text-color-400'}>
                 <div className={'text-xs'}>

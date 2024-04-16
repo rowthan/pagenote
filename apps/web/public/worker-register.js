@@ -8,6 +8,8 @@ navigator.serviceWorker
                 type: 'add_cache',
                 key: 'document',
                 values: [
+                    "/widget/close-on-installed",
+                    "/sitemap",
                     "/signin",
                     "/pro-plan"
                 ]
@@ -16,12 +18,18 @@ navigator.serviceWorker
             navigator.serviceWorker.controller.postMessage({
                 type: 'add_block',
                 values: [
+                    "localhost",
                     "worker-register.js",
                     "/expired",
                 ]
             })
-        })
 
+            navigator.serviceWorker.addEventListener('message', function (event) {
+                sessionStorage.setItem('worker-message', JSON.stringify(event.data))
+                var newEvent = new Event('storage');
+                window.dispatchEvent(newEvent)
+            });
+        })
     })
     .catch(function (err) {
         console.log(err)

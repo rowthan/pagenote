@@ -5,6 +5,7 @@ import BasicSettingLine from './setting/BasicSettingLine'
 
 const shortcutTip: Record<string, string> = {
   _execute_browser_action: '激活扩展/弹窗',
+  _execute_action: '激活扩展/弹窗',
 }
 export default function ShortCutInfo() {
   const [commands = []] = useShortcut()

@@ -17,43 +17,45 @@ export const HashtagPluginKey = new PluginKey('hashtag')
 export const Hashtag = Node.create<HashtagOptions>({
   name: 'hashtag',
 
-  defaultOptions: {
-    HTMLAttributes: {},
-    renderLabel({ options, node }) {
+  addOptions(){
+    return {
+      HTMLAttributes: {},
+      renderLabel({ options, node }) {
       return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
     },
-    suggestion: {
-      char: '#',
-      pluginKey: HashtagPluginKey,
-      command: ({ editor, range, props }) => {
-        // increase range.to by one when the next node is of type "text"
-        // and starts with a space character
-        const nodeAfter = editor.view.state.selection.$to.nodeAfter
-        const overrideSpace = nodeAfter?.text?.startsWith(' ')
+      suggestion: {
+        char: '#',
+            pluginKey: HashtagPluginKey,
+            command: ({ editor, range, props }) => {
+          // increase range.to by one when the next node is of type "text"
+          // and starts with a space character
+          const nodeAfter = editor.view.state.selection.$to.nodeAfter
+          const overrideSpace = nodeAfter?.text?.startsWith(' ')
 
-        if (overrideSpace) {
-          range.to += 1
-        }
+          if (overrideSpace) {
+            range.to += 1
+          }
 
-        editor
-          .chain()
-          .focus()
-          .insertContentAt(range, [
-            {
-              type: 'hashtag',
-              attrs: props,
-            },
-            {
-              type: 'text',
-              text: ' ',
-            },
-          ])
-          .run()
+          editor
+              .chain()
+              .focus()
+              .insertContentAt(range, [
+                {
+                  type: 'hashtag',
+                  attrs: props,
+                },
+                {
+                  type: 'text',
+                  text: ' ',
+                },
+              ])
+              .run()
+        },
+            allow: ({ editor, range }) => {
+          return editor.can().insertContentAt(range, { type: 'hashtag' })
+        },
       },
-      allow: ({ editor, range }) => {
-        return editor.can().insertContentAt(range, { type: 'hashtag' })
-      },
-    },
+    }
   },
 
   group: 'inline',

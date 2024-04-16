@@ -18,7 +18,6 @@ export default function PopupPage() {
   const [keyword, setKeyword] = useState<string>('')
   const [whoAmi] = useWhoAmi()
   const mounted = useMountedState()
-  const { tab } = useCurrentTab()
 
   useEffect(function () {
     setKeyword(localStorage.getItem(CACHE_SEARCH_KEY) || '')
@@ -35,12 +34,12 @@ export default function PopupPage() {
 
   useEffect(
     function () {
-      if (whoAmi?.version) {
-        extApi.commonAction.setPersistentValue({
-          key: 'popup_version',
-          value: whoAmi?.version,
-        })
-      }
+      // if (whoAmi?.version) {
+      //   extApi.commonAction.setPersistentValue({
+      //     key: 'popup_version',
+      //     value: whoAmi?.version,
+      //   })
+      // }
     },
     [whoAmi]
   )
