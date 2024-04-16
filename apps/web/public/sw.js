@@ -1,18 +1,18 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "6"
+var version = "10"
 
 var cacheRules = {
   whiteList: [],
-  blockList: ['localhost', '127.0.0.1'],
+  blockList: ['worker-register.js'],
 }
 var util = {
   checkIsDocument: function (request) {
     return request.destination === 'document'
   },
   checkIsHttp(request){
-    return /^https/.test(request.url)
+    return /^http/.test(request.url)
   },
   getCacheKey: function (request) {
     if (request.destination) {
@@ -29,7 +29,7 @@ var util = {
       util.putCache(request, response.clone())
       return response
     }).catch(function (reason) {
-      console.error('fetchAndCache error', reason, request.url)
+      console.error(request.url,'worker fetch error', reason)
       throw reason
     })
   },
@@ -51,6 +51,9 @@ var util = {
       if(!util.checkIsHttp(request)){
         return false
       }
+      if(request.url.indexOf('disable_cache')> -1){
+        return false;
+      }
       /**黑名单，不用缓存*/
       var blockList = cacheRules.blockList || []
       for (let i in blockList) {
@@ -71,7 +74,7 @@ var util = {
         return true
       }
 
-      /**白名单，可缓存*/
+      /**白名单的其他 API 请求，可缓存*/
       for (let i in cacheRules.whiteList) {
         try {
           var whiteRegex = new RegExp(cacheRules.whiteList[i])
@@ -86,6 +89,23 @@ var util = {
       console.error('check error', e)
       return false
     }
+  },
+  /**service worker 主动向页面发送消息*/
+  sendMessageToDocument: function (data) {
+    self.clients.matchAll().then(function (clients) {
+      clients.forEach(function (client) {
+        client.postMessage(data)
+      })
+    })
+  },
+  /**response 是否相同比对*/
+  checkSameResponse(oldResponse, newResponse) {
+    var OldEtag = (oldResponse && oldResponse.headers)
+        ? (oldResponse.headers.get('Etag') || oldResponse.headers.get('etag'))
+        : '';
+    var newEtag = newResponse.headers.get('Etag') || newResponse.headers.get('etag')
+
+    return OldEtag === newEtag
   },
 }
 
@@ -139,25 +159,46 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   e.respondWith(
       caches
-          .match(e.request)
-          .then(function (response) {
-            const allowCache = util.checkAllowCache(e.request)
-            if (allowCache) {
-              // 如果没有响应或者请求内容为 doc ,则需要保持最新，重新拉取
-              var needRefreshCache = !response || util.checkIsDocument(e.request);
-              if (needRefreshCache) {
-                util.fetchAndCache(e.request)
-              }
-              if (response) {
-                return response
-              }
-            }
-            return fetch(e.request)
-          })
-          .catch(function (err) {
-            console.error('sw fetch', err)
-            return fetch(e.request)
-          })
+      .match(e.request)
+      .then(function (response) {
+        const allowCache = util.checkAllowCache(e.request)
+        if (allowCache) {
+          // 如果没有响应或者请求内容为 doc ,则需要保持最新，重新拉取
+          var isDoc = util.checkIsDocument(e.request);
+          var needRefreshCache = !response || isDoc;
+          if (needRefreshCache) {
+            // 如果是 document 请求，则传入 etag 标签，比较前后的差异
+            setTimeout(function () {
+              util.fetchAndCache(e.request).then(function (newResponse) {
+                // 如果是 document 请求，则比较 etag 标签，判断是否需要更新，并通知主页面，提示用户
+                if(isDoc){
+                  var responseChanged = !util.checkSameResponse(response, newResponse)
+                  if(responseChanged){
+                    util.sendMessageToDocument({
+                      type: 'out_of_date',
+                      time: Date.now(),
+                      header:{
+                        senderURL: e.request.url,
+                      },
+                      data: {
+                        url: e.request.url,
+                      }
+                    })
+                  }
+                }
+              })
+            },1000)
+          }
+          if (response) {
+            return response
+          }
+        }
+        return fetch(e.request)
+      })
+      .catch(function (err) {
+        console.error('sw fetch', err)
+        return fetch(e.request)
+      })
   )
 })
 
