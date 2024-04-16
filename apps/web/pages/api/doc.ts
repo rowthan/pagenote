@@ -179,5 +179,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     writeCacheFile(notionIdOrUrlPath, responseData)
   }
 
+  // 增加缓存相应头
+  const cacheTime = 60 * 30;
+  res.setHeader('Cache-Control', `max-age=${cacheTime},public`);
   res.status(200).json(responseData)
 }
