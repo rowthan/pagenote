@@ -23,13 +23,13 @@ function queryAllData(db: string, table: string) {
     })
 }
 
-export default function ExportFilter() {
+export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
   const [downloading, setDownloading] = useState(false)
   const [whoAmI] = useWhoAmi()
 
   async function exportData() {
     setDownloading(true)
-    const localDownload = true //whoAmI?.browserType===BrowserType.Firefox TODO v3升级时 Firefox不支持，需兼容
+    const localDownload = props.exportBy === 'web' //whoAmI?.browserType===BrowserType.Firefox TODO v3升级时 Firefox不支持，需兼容
     if (localDownload) {
       const [lights, notes, snapshots, pages, htmlList] = await Promise.all([
         queryAllData('lightpage', 'light'),
@@ -100,6 +100,11 @@ export default function ExportFilter() {
           setDownloading(false)
         })
     } else {
+      extApi.lightpage.exportBackup([],{
+        timeout: 1000 * 60
+      }).then(function(){
+        setDownloading(false)
+      })
     }
   }
 
@@ -107,6 +112,7 @@ export default function ExportFilter() {
     <div>
       <Button
         disabled={downloading}
+        loading={downloading}
         className={'btn btn-sm'}
         onClick={exportData}
       >

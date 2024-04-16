@@ -20,7 +20,7 @@ const redirectMap: Record<string, string> = {
   '/webpage': '/pagenote',
   '/post': '/sitemap',
   '/data': '/ext/setting#/setting/data',
-  '/backup': '/ext/setting#/setting/backup',
+  '/backup': '/ext/setting#/setting/data/backup',
   '/install':'/download',
 }
 

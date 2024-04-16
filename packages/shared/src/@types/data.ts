@@ -17,6 +17,8 @@ export enum BackupVersion {
     version7 = 7, // 通用型的备份格式，可扩展不指定具体字段 items:[]
 
     version8 = 8, // 仅导出 items ，删除一级备份字段
+
+    version9 = 9, // 用于压缩包的导出类型
 }
 
 export enum AnnotationStatus {

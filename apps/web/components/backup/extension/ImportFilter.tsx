@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { BackupData, BackupVersion } from '@pagenote/shared/lib/@types/data'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import { toast } from '@/components/ui/use-toast'
-import FilterCheckBox from './FilterCheckBox'
 import { Button } from '@/components/ui/button'
-import {box} from "@pagenote/shared/lib/extApi";
-import Box = box.Box;
 import classNames from "classnames";
+import {ToastAction} from "../../../@/components/ui/toast";
+import useWhoAmi from "../../../hooks/useWhoAmi";
 
 enum ImportState {
   unset = 0,
@@ -30,7 +29,7 @@ export default function ImportFilter(props: {
   const { backupData } = props
   const [importState, setImportState] = useState<ImportState>(ImportState.unset)
   const [blockedIndex, setBlockedIndex] = useState<number[]>([])
-
+  const [whoAmi] = useWhoAmi()
   function toggleSelect(key: number) {
     const index = blockedIndex.indexOf(key)
     if (index > -1) {
@@ -39,6 +38,14 @@ export default function ImportFilter(props: {
       blockedIndex.push(index)
     }
     setBlockedIndex([...blockedIndex])
+  }
+
+  function goHome(){
+    extApi.commonAction.openTab({
+      url: `${whoAmi?.origin}/pagenote.html`,
+      reUse: true,
+      tab:{}
+    })
   }
 
   async function doImport() {
@@ -58,6 +65,9 @@ export default function ImportFilter(props: {
         if (res.success) {
           toast({
             title: '导入成功',
+            action: (
+                <ToastAction altText="reload page" onClick={goHome}>查看</ToastAction>
+            )
           })
           props.onSuccess()
         } else {
@@ -78,43 +88,37 @@ export default function ImportFilter(props: {
       <h3 className="font-bold text-lg">请确认你的备份文件</h3>
       <div className="py-4">
         <p>如果插件已有你导入的数据，将自动合并采用更新版本的数据。</p>
+        <div className="modal-action flex justify-center mb-4">
+          <Button
+              disabled={importIng}
+              className={`btn btn-primary ${importIng ? 'loading' : ''}`}
+              onClick={doImport}
+          >
+            确定导入
+          </Button>
+        </div>
         <table className="table table-compact w-full">
           <thead>
-            <tr>
-              <th>数据类型</th>
-              <th>数量</th>
-              <th>筛选</th>
-            </tr>
+          <tr>
+            <th>数据类型</th>
+            <th>数量</th>
+          </tr>
           </thead>
           <tbody>
           {
-            backupData.items.map((item,index)=>(
+            backupData.items.map((item, index) => (
                 <tr key={index} className={classNames({
                   "hide": item.list.length === 0
                 })}>
                   <td>{TableMap[item.table]}</td>
                   <td>{item.list.length}个</td>
-                  <td>
-                    <input type="checkbox"
-                           onChange={(e)=>{toggleSelect(index)}}
-                           checked={!blockedIndex.includes(index)}
-                           className="checkbox checkbox-xs"/>
-                  </td>
                 </tr>
             ))
           }
           </tbody>
         </table>
       </div>
-      <div className="modal-action">
-        <Button
-          disabled={importIng}
-          className={`btn btn-primary ${importIng ? 'loading' : ''}`}
-          onClick={doImport}
-        >
-          确定导入
-        </Button>
-      </div>
+
     </div>
   )
 }
