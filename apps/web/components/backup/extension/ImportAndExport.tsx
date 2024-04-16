@@ -11,7 +11,6 @@ import {
   Step
 } from '@pagenote/shared/lib/@types/data'
 import {toast} from 'utils/toast'
-import {resolveImportString} from '@pagenote/shared/lib/utils/data'
 import {Button} from "@/components/ui/button";
 import {
   Dialog,
@@ -22,7 +21,7 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import {UploadIcon} from '@radix-ui/react-icons'
-import {readFiles} from "../../../utils/file";
+import {readFiles, resolveImportString} from "../../../utils/file";
 import {LightFormatFromWebPage} from "../../../utils/backup";
 import md5 from "md5";
 
@@ -48,7 +47,7 @@ export default function ImportAndExport(props: Props) {
       }
       for(let i = 0; i < list.length; i++){
         try{
-          const backupData = resolveImportString(list[i])
+          const backupData = resolveImportString(list[i].text, list[i].type)
           if (backupData) {
             // 格式初始化
             mergeBackupData.items = mergeBackupData.items || []
