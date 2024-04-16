@@ -5,9 +5,10 @@ import {getIframeBridge, getLocalStorageBridge, getSessionStorageBridge} from '@
 
 const rootElement = document.getElementById('root');
 const sessionBridgeClientA = getSessionStorageBridge('clientA',{
-    asServer: true,
     listenKey: "test-bridge",
-    timeout: 1000
+    timeout: 1000,
+    debug: true,
+    asServer: true
 });
 
 const sessionBridgeClientB = getSessionStorageBridge('clientB',{
@@ -56,11 +57,11 @@ const clients = {
     sessionBridgeClientA,
     sessionBridgeClientB,
     sessionBridgeClientC,
-    sessionBridgeClientCTOA: getSessionStorageBridge('clientD',{
+    sessionBridgeClientC_B: getSessionStorageBridge('clientD',{
         asServer: true,
         listenKey: "test-bridge",
         timeout: 1000,
-        targetClientId: 'clientA'
+        targetClientId: 'clientB',
     }),
 
     localStorageClientA:getLocalStorageBridge('clientA',{
@@ -87,12 +88,14 @@ const App = () => {
                     }
                 })
 
-                callback({
-                    success: true,
-                    statusText: 'response by '+ clientName,
-                    status: 0,
-                    data: '0K',
-                })
+                setTimeout(function () {
+                    callback({
+                        success: true,
+                        statusText: 'response by '+ clientName,
+                        status: 0,
+                        data: '0K',
+                    })
+                },1000)
             })
         })
     }, []);
