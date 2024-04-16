@@ -73,6 +73,12 @@ blockquote.notion-quote{
 }
 
 @media screen and (max-width: 920px) {
+  .notion-collection{
+    max-width: 100%;
+  }
+  .notion-property-select, .notion-property.notion-property-multi_select{
+    flex-wrap: nowrap;
+  }
   .notion-page-cover-wrapper {
     height: 200px !important;
     max-height: 200px !important;
