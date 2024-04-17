@@ -34,3 +34,11 @@ navigator.serviceWorker
     .catch(function (err) {
         console.log(err)
     })
+
+navigator.serviceWorker
+    .register('/sw.resource.js',{
+        scope: '/file'
+    })
+    .then(function (registration) {
+        registration.update();
+    })

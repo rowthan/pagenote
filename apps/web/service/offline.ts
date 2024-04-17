@@ -3,8 +3,26 @@ import {html} from "@pagenote/shared";
 import OfflineHTML = html.OfflineHTML;
 import {basePath} from "../const/env";
 
-export function openHtml(id?:string) {
-    window.open(`${basePath}/ext/offline.html?id=${id}`)
+export function openHtml(id?:string,html?:string) {
+    // if(html){
+    //     // const blob = new Blob([html], {type: 'text/html'});
+    //
+    //     extApi.developer.requestBack({
+    //         namespace: "developer",
+    //         params: {
+    //             type: 'text/html',
+    //             data: html,
+    //         },
+    //         type: "getBlobUrl"
+    //     }).then(function(res){
+    //         console.log(res,'---')
+    //         const url = res?.data;
+    //         return window.open(url)
+    //     })
+    //     return;
+    // }
+
+    window.open(`${basePath}/file/${id}.html`)
     return;
 
     // if(isExt){
