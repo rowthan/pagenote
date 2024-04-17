@@ -23,7 +23,6 @@ export default function useTableKeys<T>(
                 },
             })
             .then(function (res) {
-                console.log(res,'---permission-')
                 return ( res.data || []) as string[]
             })
     }

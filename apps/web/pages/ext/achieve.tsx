@@ -28,6 +28,7 @@ function SnapshotItem(props:{url:string}) {
             name: 1,
             description: 1,
             resourceId: 1,
+            createAt: 1,
         }
     })
 
