@@ -42,10 +42,10 @@ export default function EnableCheck() {
     <div className={'mx-auto '}>
       <div className={'p-3'}>
         <Bookmark />
-        <PageMemo url={tab?.url || ''} />
+        <PageMemo url={tabState?.pageUrl || tab?.url || ''} />
 
         <div className={'my-4'}>
-          <Tagfy pageKey={tab?.url || ''} />
+          <Tagfy pageKey={tabState?.pageUrl || tab?.url || ''} />
         </div>
       </div>
 

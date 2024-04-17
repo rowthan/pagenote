@@ -13,6 +13,7 @@ import IconButton from '../../button/IconButton'
 import { Collection } from '../../../const/collection'
 import OfflineHTML = html.OfflineHTML
 import { BiHighlight } from 'react-icons/bi'
+import useTabPagenoteState from "../../../hooks/useTabPagenoteState";
 
 function Item(props: {
   left: ReactNode
@@ -34,12 +35,11 @@ function Item(props: {
   )
 }
 
-export function PageInfo() {
-  const { tab } = useCurrentTab()
+export function PageInfo(props:{pageUrl: string}) {
   const { data: resourceList } = useTableQuery<OfflineHTML>(Collection.html, {
     limit: 9,
     query: {
-      relatedPageUrl: tab?.url,
+      relatedPageUrl: props.pageUrl,
     },
     projection: {
       resourceId: 1,
@@ -94,12 +94,11 @@ export function PageInfo() {
   )
 }
 
-export function LightInfo() {
-  const { tab } = useCurrentTab()
+export function LightInfo(props:{pageUrl: string}) {
   const { data: lights } = useTableQuery<Step>(Collection.light, {
     limit: 999,
     query: {
-      pageKey: tab?.url,
+      pageKey: props.pageUrl,
     },
     projection: {
       lightId: 1,
