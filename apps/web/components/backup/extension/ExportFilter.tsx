@@ -27,9 +27,9 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
   const [downloading, setDownloading] = useState(false)
   const [whoAmI] = useWhoAmi()
 
-  async function exportData() {
+  async function exportData(type=props.exportBy) {
     setDownloading(true)
-    const localDownload = props.exportBy === 'web' //whoAmI?.browserType===BrowserType.Firefox TODO v3升级时 Firefox不支持，需兼容
+    const localDownload = type === 'web';
     if (localDownload) {
       const [lights, notes, snapshots, pages, htmlList] = await Promise.all([
         queryAllData('lightpage', 'light'),
@@ -114,9 +114,17 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
         disabled={downloading}
         loading={downloading}
         className={'btn btn-sm'}
-        onClick={exportData}
+        onClick={()=>{exportData('extension')}}
       >
-        保存至本地
+        导出为压缩包（推荐）
+      </Button>
+      <Button
+          disabled={downloading}
+          loading={downloading}
+          className={'btn btn-sm ml-2'}
+          onClick={()=>{exportData('web')}}
+      >
+        导出为当个文件
       </Button>
     </div>
   )

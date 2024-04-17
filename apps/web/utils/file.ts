@@ -25,6 +25,7 @@ export function readFiles(files: FileList):Promise<FileParse[]> {
             }else{
                 const reader = new FileReader()
                 reader.onload = function () {
+                    console.log(this)
                     result.push({
                         text: this.result as string,
                         type: file.type,
@@ -52,11 +53,10 @@ export async function unzipFile(zipFileBlob: Blob):Promise<FileParse[]> {
         // const encrypted = Boolean(entries.find(entry => entry.encrypted));
         for (const entry of entries) {
             const helloWorldWriter = new TextWriter();
-            console.log(entry.filename)
             // 遍历 entry.extraField
-            entry.extraField?.forEach((value, key) => {
-                console.log(key, value);
-            });
+            // entry.extraField?.forEach((value, key) => {
+            //     console.log(key, value);
+            // });
             // entry.extraField?.keys().next();
             if(entry &&  entry.getData && !entry.directory){
                 const data = await entry.getData(helloWorldWriter)
