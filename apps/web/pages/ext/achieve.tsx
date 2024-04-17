@@ -29,6 +29,7 @@ function SnapshotItem(props:{url:string}) {
             description: 1,
             resourceId: 1,
             createAt: 1,
+            data: 1,
         }
     })
 
@@ -57,7 +58,7 @@ function SnapshotItem(props:{url:string}) {
                     {
                         data.map((item,index)=>(
                             <div key={item.resourceId || index} className={'mx-1'}>
-                                <Button size={'sm'} variant="outline" onClick={()=>{openHtml(item.resourceId)}}>
+                                <Button size={'sm'} variant="outline" onClick={()=>{openHtml(item.resourceId,item.data)}}>
                                     {dayjs(item.createAt).format('YYYY-MM-DD HH:mm:ss')}
                                 </Button>
                             </div>
