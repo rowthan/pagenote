@@ -22,7 +22,7 @@ export function openHtml(id?:string,html?:string) {
     //     return;
     // }
 
-    window.open(`${basePath}/file/${id}.html`)
+    window.open(`https://pagenote.cn/file/${id}.html`)
     return;
 
     // if(isExt){

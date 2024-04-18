@@ -8,10 +8,7 @@ navigator.serviceWorker
                 type: 'add_cache',
                 key: 'document',
                 values: [
-                    "/widget/close-on-installed",
-                    "/sitemap",
-                    "/signin",
-                    "/pro-plan"
+                    "/widget/close-on-installed"
                 ]
             })
 
@@ -24,6 +21,7 @@ navigator.serviceWorker
                 ]
             })
 
+            // 广播 service worker 消息。
             navigator.serviceWorker.addEventListener('message', function (event) {
                 sessionStorage.setItem('worker-message', JSON.stringify(event.data))
                 var newEvent = new Event('storage');
