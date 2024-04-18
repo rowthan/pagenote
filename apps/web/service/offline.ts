@@ -4,6 +4,8 @@ import OfflineHTML = html.OfflineHTML;
 import {basePath} from "../const/env";
 
 export function openHtml(id?:string,html?:string) {
+    window.open(`${basePath}/ext/offline.html?id=${id}`)
+    return;
     // if(html){
     //     // const blob = new Blob([html], {type: 'text/html'});
     //
