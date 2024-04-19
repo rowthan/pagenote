@@ -172,7 +172,7 @@ export default function DisableButton() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              navigate('/setting/disable')
+              navigate('/disable')
             }}
           >
             <PlusIcon className="mr-2 h-4 w-4" />

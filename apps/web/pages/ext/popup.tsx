@@ -2,10 +2,8 @@ import BasicLayout from 'layouts/BasicLayout'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import NavTabs from 'components/popup/NavTabs'
-import extApi from '@pagenote/shared/lib/pagenote-api'
 import useWhoAmi from 'hooks/useWhoAmi'
 import { useMountedState } from 'react-use'
-import useCurrentTab from '../../hooks/useCurrentTab'
 
 const ClipboardList = lazy(() => import('components/manage/ClipboardList'))
 const Search = lazy(() => import('components/popup/Search'))
@@ -30,18 +28,6 @@ export default function PopupPage() {
       }
     },
     [keyword]
-  )
-
-  useEffect(
-    function () {
-      // if (whoAmi?.version) {
-      //   extApi.commonAction.setPersistentValue({
-      //     key: 'popup_version',
-      //     value: whoAmi?.version,
-      //   })
-      // }
-    },
-    [whoAmi]
   )
 
   return (
@@ -94,7 +80,7 @@ export default function PopupPage() {
                   path="*"
                   element={
                     <Suspense>
-                      <CurrentTab />
+                        <Setting />
                     </Suspense>
                   }
                 />

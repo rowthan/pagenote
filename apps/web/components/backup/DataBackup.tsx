@@ -28,7 +28,7 @@ export default function DataBackup() {
                 <SettingMoreSvg className={'fill-current '} />
               </div>
             }
-            path={'/setting/data/image-cloud'}
+            path={'/image-cloud'}
           />
         </SettingSection>
         {/*<BasicSettingLine*/}

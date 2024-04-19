@@ -25,11 +25,11 @@ const tabs: Tab[] = [
     outlink: '',
     link: '/clipboard',
   },
-  {
-    label: '设置',
-    outlink: '',
-    link: '/setting',
-  },
+  // {
+  //   label: '设置',
+  //   outlink: '',
+  //   link: '/setting',
+  // },
 ]
 export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyword: string) => void }) {
     const [whoAmi] = useWhoAmi();

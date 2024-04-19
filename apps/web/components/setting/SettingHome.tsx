@@ -8,7 +8,7 @@ export default function SettingHome() {
     const isFirefox = whoAmI?.browserType === BrowserType.Firefox
 
     function gotoSetting() {
-        const url = whoAmI?.origin + '/web/ext/setting.html#/setting/light'
+        const url = whoAmI?.origin + '/web/ext/setting.html#/light'
         window.open(url, 'setting')
         window.close()
     }
@@ -16,20 +16,20 @@ export default function SettingHome() {
     return (
         <>
             <SettingSection>
-                <BasicSettingLine label={'存储空间'} path={'/setting/data'}/>
+                <BasicSettingLine label={'存储空间'} path={'/data'}/>
 
                 <BasicSettingLine
                     label={'画笔设置'}
-                    path={isFirefox ? '' : '/setting/light'}
+                    path={isFirefox ? '' : '/light'}
                     onClick={isFirefox ? gotoSetting : undefined}
                 />
 
-                <BasicSettingLine label={'快捷键'} path={'/setting/shortcut'}/>
+                <BasicSettingLine label={'快捷键'} path={'/shortcut'}/>
 
             </SettingSection>
 
             <SettingSection className={'my-4'}>
-                <BasicSettingLine label={'隐私与安全'} path={'/setting/safety'}/>
+                <BasicSettingLine label={'隐私与安全'} path={'/safety'}/>
             </SettingSection>
 
 

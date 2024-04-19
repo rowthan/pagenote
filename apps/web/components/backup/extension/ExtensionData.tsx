@@ -8,7 +8,7 @@ import { basePath } from 'const/env'
 export default function ExtensionData() {
   const [whoAmI] = useWhoAmi()
   function onClick() {
-    const url = `${basePath}/ext/setting.html#/setting/data/backup`
+    const url = `${basePath}/ext/setting.html#/backup`
     if (checkIsInPopup()) {
       window.open(url)
       window.close()

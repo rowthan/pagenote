@@ -9,14 +9,14 @@ export default function Setting() {
   const mounted = useMountedState()
 
   return (
-    <BasicLayout nav={false} footer={true} title={'设置'} full={true}>
+    <BasicLayout nav={false} footer={true} title={'设置· PAGENOTE 个性化'} full={true}>
       <RedirectToExt>
         <div className={'popup w-basic p-4 min-h-fill relative'}>
           {mounted() && (
             <Router>
               <Routes>
                 <Route path="/" element={<SettingCom />} />
-                <Route path="/setting/*" element={<SettingCom />} />
+                  <Route path="/*" element={<SettingCom />} />
               </Routes>
             </Router>
           )}
