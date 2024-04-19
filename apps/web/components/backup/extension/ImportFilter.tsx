@@ -19,7 +19,8 @@ const TableMap:Record<string, string> = {
   'light': '标记',
   'snapshot': '截图',
   'html': '离线网页',
-  'clipboard':"剪切板"
+  'clipboard':"剪切板",
+  'config':'配置'
 }
 
 export default function ImportFilter(props: {

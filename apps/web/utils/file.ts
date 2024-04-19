@@ -1,40 +1,80 @@
 import JSZip from 'jszip';
 import {BackupData} from "@pagenote/shared/lib/@types/data";
+//@ts-ignore
+import piexifjs from 'piexifjs';
 
 type FileParse = {
     text: string,
-    type: string
+    type: string,
+    properties?: Object
 }
 
+function checkIsImage(type: string) {
+    return type.startsWith('image') || ['jpeg','jpg','png'].includes(type)
+}
+
+/**
+ * 将图片文件解析为 base64 字符
+ * */
+function readFileAsBase64(file: File):Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function () {
+            resolve(this.result as string)
+        }
+        reader.readAsDataURL(file)
+    })
+}
+
+/**
+ * 解析文件为字符串
+ * */
+function readFileAsString(file: File):Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = function () {
+            resolve(this.result as string)
+        }
+        reader.readAsText(file)
+    })
+}
+
+/**
+ * 解析多个文件，支持zip、文本、字符等各类
+ * */
 export function readFiles(files: FileList):Promise<FileParse[]> {
     // 循环读取文件，并将文件内容读取到result list 中，全部读取完毕后，返回一个 promise，该 promise 成功时，result list 就是所有文件的内容
     return new Promise(async (resolve, reject) => {
         const result: FileParse[] = []
         for (let i = 0; i < files.length; i++) {
             const file = files[i]
-            if(file.type === 'application/zip'){
-               const result = await unzipFile(file);
-               return resolve(result)
-            }else{
-                const reader = new FileReader()
-                reader.onload = function () {
-                    console.log(this)
-                    result.push({
-                        text: this.result as string,
-                        type: file.type,
-                    })
-                    if (result.length === files.length) {
-                        resolve(result)
-                    }
-                }
-                reader.readAsText(file)
+            const fileType = file.type;
+            if(checkIsImage(fileType)){
+                const base64Image = await readFileAsBase64(file)
+                result.push({
+                    text: base64Image,
+                    type: fileType,
+                })
+            }else if(fileType === 'application/zip'){
+                const zipFileList = await unzipFile(file);
+                result.push(...zipFileList);
+            } else{
+                const fileText = await readFileAsString(file)
+                result.push({
+                    text: fileText,
+                    type: fileType,
+                })
             }
         }
+        console.log(result.length,'文件数量')
+        resolve(result)
     })
 }
 
-
-export async function unzipFile(zipFileBlob: Blob):Promise<FileParse[]> {
+/**
+ * 解压zip文件
+ * */
+async function unzipFile(zipFileBlob: Blob):Promise<FileParse[]> {
     const textList:FileParse[] = [];
 
     const jsZip = new JSZip();
@@ -42,17 +82,51 @@ export async function unzipFile(zipFileBlob: Blob):Promise<FileParse[]> {
     for(let i in zip.files){
         const file = zip.files[i];
         if(!file.dir){
-            const string = await file.async('string');
             const type = i.split('.').pop() || 'text';
-            textList.push({
-                text: string,
-                type: type,
-            })
+            // console.log(file.comment,'zip comment')
+            if(checkIsImage(type)){
+                const base64Image = 'data:image/jpeg;base64,'+ await file.async('base64')
+                textList.push({
+                    type: type,
+                    text: base64Image,
+                })
+            }else{
+                const string = await file.async('string');
+                textList.push({
+                    text: string,
+                    type: type,
+                })
+            }
+
         }
     }
     return textList;
 }
 
+
+function resolveImage(base64:string){
+    let properties = {};
+    try{
+        // 从图片信息中提取附加属性
+        const extr = piexifjs.load(base64);
+        properties = JSON.parse(extr.Exif[37500])
+    }catch (e) {
+
+    }
+    const data = {
+        items: [
+            {
+                db: 'lightpage',
+                table: 'snapshot',
+                list: [{
+                    url: base64,
+                    ...(properties || {}),
+                }]
+            }
+        ]
+    }
+    return data;
+}
 
 export const resolveImportString = function (inputStr: string, type: string):BackupData | undefined {
     let data: BackupData | undefined;
@@ -63,6 +137,9 @@ export const resolveImportString = function (inputStr: string, type: string):Bac
         console.warn('低版本数据，二次解码处理中。不推荐使用，请使用最新版本导出数据')
     }
 
+    /**
+     * 非 json 文件的二次解析。
+     * */
     // 单个 html 文件解析
     if(type && type.indexOf('html')>-1){
         data = {
@@ -78,6 +155,8 @@ export const resolveImportString = function (inputStr: string, type: string):Bac
             ]
         }
         return data;
+    } else if(checkIsImage(type)){
+        return resolveImage(inputStr);
     }
 
     try{

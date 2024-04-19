@@ -80,6 +80,7 @@
     "next-themes": "^0.2.1",
     "notion-client": "^6.16.0",
     "notion-utils": "^6.16.0",
+    "piexifjs": "^1.0.6",
     "react": "^18.2.0",
     "react-awesome-button": "^7.0.5",
     "react-dom": "^18.2.0",
