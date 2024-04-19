@@ -38,6 +38,7 @@ export default function BasicSettingLine(props: {
     ...left
   } = props
   const [expand, setExpand] = useState(false)
+  // todo 优化
   const navigate = useNavigate()
 
   const Right = loading ? (
@@ -57,6 +58,7 @@ export default function BasicSettingLine(props: {
   function onClickRoot() {
     if (path) {
       navigate(path)
+      // history.pushState({}, '', window.location.pathname +'#' +path)
     }
     onClick && onClick()
   }

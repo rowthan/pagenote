@@ -10,6 +10,8 @@ import SettingDetail from './SettingDetail'
 import Shortcut from './Shortcut'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import DisabledDetail from './DisabledDetail'
+import Safety from "./Safety";
+import PermissionList from "../permission/PermissionList";
 
 export default function Setting() {
   function onClickUser() {
@@ -32,7 +34,14 @@ export default function Setting() {
           <Route path={'/light'} element={<LightSetting />} />
           <Route path={'/disable'} element={<DisabledDetail />} />
           <Route path={'/shortcut'} element={<Shortcut />} />
-          <Route path={'/data'} element={<DataBackup />} />
+            <Route path={'/safety'} element={<Safety />} />
+            <Route path={'/permission'} element={
+                <SettingDetail label={'权限管理'}>
+                    <PermissionList />
+                </SettingDetail>
+            } />
+
+            <Route path={'/data'} element={<DataBackup />} />
           <Route
             path={'/data/backup'}
             element={

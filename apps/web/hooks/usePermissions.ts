@@ -4,8 +4,8 @@ import {isExt} from "../const/env";
 
 interface Permission {origins?: string[],permissions?: string[]}
 
-export default function usePermissions(): [Permission | undefined,()=>void] {
-    const {data,mutate} = useSWR<Permission>('permissions',listPermissions)
+export default function usePermissions(): [Permission | undefined,(permission:Permission)=>void] {
+    const {data={},mutate} = useSWR<Permission>('permissions',listPermissions)
 
     async function listPermissions() {
         const res = await extApi.developer.chrome({
@@ -13,14 +13,15 @@ export default function usePermissions(): [Permission | undefined,()=>void] {
             type: "getAll"
         });
         console.log(res, 'permissions');
-        return (res.data || {}) as Permission;
+        return (res?.data || {
+            permissions: [],
+            origins: []
+        }) as Permission;
     }
 
-    function requestPermission() {
+    function requestPermission(permission:Permission) {
         if(isExt){
-            chrome.permissions.request({
-                origins: ["<all_urls>"]
-            },function (granted) {
+            chrome.permissions.request(permission,function (granted) {
                 console.log('res',granted)
                 mutate();
             })
