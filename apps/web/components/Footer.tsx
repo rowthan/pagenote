@@ -7,17 +7,19 @@ import DeviceInfo from './account/DeviceInfo'
 import { RiVipFill } from "react-icons/ri";
 import Image from 'next/image'
 import Link from 'next/link'
+import {isExt} from "../const/env";
 
 export default function Footer() {
+  const homePath = isExt ? '/index.html' : '/'
   return (
     <>
       <footer
           className="footer gap-y-1 px-4 py-4 border-t bg-accent text-base-content border-base-300 flex md:justify-center">
         <div className="items-center grid-flow-col">
-          <Link href="/">
+          <Link href={homePath}>
             <h2>PAGENOTE</h2>
           </Link>
-          <Link href="/">
+          <Link href={homePath}>
             <img
                 src="/images/light-64.png"
                 width={24}

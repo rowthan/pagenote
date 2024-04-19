@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useCurrentTab from '../../hooks/useCurrentTab'
 import useConfig from '../../hooks/useConfig'
+import {openUrlInGroup} from "../../utils/url";
 
 interface Tab {
   label: string
@@ -117,7 +118,9 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
           )}
         </div>
         <a
-          href={`${whoAmi?.origin}/pagenote.html`}
+          onClick={()=>{
+              openUrlInGroup(`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay`)
+          }}
           target={'_blank'}
           data-tip={'前往管理页'}
           className={`link absolute right-5 top-1 tooltip tooltip-left flex`}
