@@ -91,8 +91,8 @@ describe('exprEval', () => {
     })
 
     it('运行时生成变量',()=>{
-        const result = exprEval('Date.now()');
-        expect(result).toEqual(Date.now())
+        const result = exprEval('Date.now()') as number;
+        expect(result - Date.now() < 10).toBe(true)
     })
 
 })

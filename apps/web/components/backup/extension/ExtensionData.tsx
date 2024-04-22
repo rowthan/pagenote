@@ -4,11 +4,12 @@ import BasicSettingLine, {SettingSection} from '../../setting/BasicSettingLine'
 import { checkIsInPopup } from 'utils/check'
 import useWhoAmi from 'hooks/useWhoAmi'
 import { basePath } from 'const/env'
+import CheckVersion from "../../check/CheckVersion";
 
 export default function ExtensionData() {
   const [whoAmI] = useWhoAmi()
   function onClick() {
-    const url = `${basePath}/ext/setting.html#/setting/data/backup`
+    const url = `${basePath}/ext/setting.html#/backup`
     if (checkIsInPopup()) {
       window.open(url)
       window.close()
@@ -33,9 +34,12 @@ export default function ExtensionData() {
         <StorageInfo />
         <BasicSettingLine
           className={ 'cursor-pointer'}
-          label={'管理插件数据'}
-          onClick={onClick}
+          label={'本地备份'}
+          path={'/data/backup'}
         />
+        <CheckVersion requireVersion={'0.30.0'} fallback={<div></div>}>
+          <BasicSettingLine label={'云备份'} path={'/data/cloud-backup'}/>
+        </CheckVersion>
       </SettingSection>
     </div>
   )

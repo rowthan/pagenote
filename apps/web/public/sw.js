@@ -187,7 +187,7 @@ self.addEventListener('fetch', function (e) {
                   }
                 }
               })
-            },1000)
+            },4000)
           }
           if (response) {
             return response

@@ -1,7 +1,9 @@
 import useShortcut from '../hooks/useShortcut'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import useWhoAmi from '../hooks/useWhoAmi'
-import BasicSettingLine from './setting/BasicSettingLine'
+import BasicSettingLine, {BasicSettingTitle, SettingMoreButton, SettingSection} from './setting/BasicSettingLine'
+import {Button} from "../@/components/ui/button";
+import {openUrlInGroup} from "../utils/url";
 
 const shortcutTip: Record<string, string> = {
   _execute_browser_action: '激活扩展/弹窗',
@@ -21,22 +23,16 @@ export default function ShortCutInfo() {
   // })
 
   function openShortCutSetting() {
-    const link = whoAmI?.extensionShortcutUrl || whoAmI?.extensionDetailUrl
-
-    extApi.developer.chrome({
-      namespace: 'tabs',
-      type: 'create',
-      args: [
-        {
-          url: link,
-        },
-      ],
-    })
+    const link = whoAmI?.extensionShortcutUrl || whoAmI?.extensionDetailUrl || 'https://pagenote.cn/shortcuts'
+    openUrlInGroup(link)
   }
 
   return (
     <>
-      <div>
+        <BasicSettingTitle>
+            系统快捷键
+        </BasicSettingTitle>
+      <SettingSection>
         {commands.map((command) => (
           <BasicSettingLine
             key={command.name}
@@ -46,21 +42,23 @@ export default function ShortCutInfo() {
               command.name ||
               '-'
             }
-            right={<kbd>{command.shortcut}</kbd>}
+            right={
+                (
+                    <div className={'flex'} onClick={openShortCutSetting}>
+                        <SettingMoreButton>{command.shortcut ?
+                            <kbd>{command.shortcut}</kbd>
+                            : '-'
+                        }</SettingMoreButton>
+                    </div>
+                )
+            }
           ></BasicSettingLine>
         ))}
-        <BasicSettingLine
-          label={
-            <button
-                onClick={openShortCutSetting}
-                className={'text-blue-500'}
-            >
-              修改快捷键
-            </button>
-          }
-          right={<div></div>}
-        ></BasicSettingLine>
-      </div>
+      </SettingSection>
+
+      <BasicSettingTitle className={'mt-10'}>
+          <a className={'link'} onClick={()=>{openUrlInGroup(`${whoAmI?.origin}/pagenote.html#setting`)}}>插件快捷键</a>
+      </BasicSettingTitle>
     </>
   )
 }

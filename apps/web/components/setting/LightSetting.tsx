@@ -22,10 +22,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import useWhoAmi from "../../hooks/useWhoAmi";
 
 export default function LightSetting() {
   const { data: setting, update: updateSetting } = useSettings()
-
+  const [whoAmI] = useWhoAmi()
   const { keyupTimeout, showBarTimeout } = setting
 
   return (
@@ -77,7 +78,7 @@ export default function LightSetting() {
           <BasicSettingLine
             label={'禁用规则'}
             className={'cursor-pointer'}
-            path={'/setting/disable'}
+            path={'/light/disable'}
             subLabel={
               <div>
                 {setting?.disableList?.length
@@ -90,7 +91,7 @@ export default function LightSetting() {
 
         <div>
           <a
-            href="/pagenote.html#setting"
+            href={`${whoAmI?.origin}/pagenote.html#setting`}
             target={'_blank'}
             className={'mt-10 block '}
           >
