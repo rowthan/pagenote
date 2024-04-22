@@ -119,7 +119,7 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
           )}
         </div>
           <a className={'link absolute right-14 top-2 text-lg '} onClick={()=>{
-              openUrlInGroup(`${whoAmi?.origin}/web/ext/id.html`)
+              openUrlInGroup(`${whoAmi?.origin}/web/ext/setting.html#id`)
           }}>
               <FaRegUserCircle  className={'fill-current'}/>
           </a>
