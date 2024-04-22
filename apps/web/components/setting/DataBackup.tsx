@@ -27,7 +27,7 @@ export default function DataBackup() {
                           right={
                               <div className={'flex items-center text-color-400'}>
                                   <div className={'text-xs'}>
-                                      {enabled ? (connected ? '开启' : '关闭') : '禁用'}
+                                      {enabled ? (connected ? '已开启' : '未开启') : '禁用'}
                                   </div>
                               </div>
                           }
