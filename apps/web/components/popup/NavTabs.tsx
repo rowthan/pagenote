@@ -7,6 +7,7 @@ import useWhoAmi from 'hooks/useWhoAmi'
 import useCurrentTab from '../../hooks/useCurrentTab'
 import useConfig from '../../hooks/useConfig'
 import {openUrlInGroup} from "../../utils/url";
+import { FaRegUserCircle } from "react-icons/fa";
 
 interface Tab {
   label: string
@@ -117,6 +118,11 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
             </span>
           )}
         </div>
+          <a className={'link absolute right-14 top-2 text-lg '} onClick={()=>{
+              openUrlInGroup(`${whoAmi?.origin}/web/ext/id.html`)
+          }}>
+              <FaRegUserCircle  className={'fill-current'}/>
+          </a>
         <a
           onClick={()=>{
               openUrlInGroup(`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay`)

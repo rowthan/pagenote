@@ -4,6 +4,9 @@ import React from 'react'
 import BasicLayout from 'layouts/BasicLayout'
 import RedirectToExt from '../../components/RedirectToExt'
 import { useMountedState } from 'react-use'
+import IdHome from "../../components/account/id/IdHome";
+
+
 
 export default function Setting() {
   const mounted = useMountedState()
@@ -16,6 +19,7 @@ export default function Setting() {
             <Router>
               <Routes>
                 <Route path="/" element={<SettingCom />} />
+                  <Route path="/id*" element={<IdHome basePath={'/id'} />} />
                   <Route path="/*" element={<SettingCom />} />
               </Routes>
             </Router>

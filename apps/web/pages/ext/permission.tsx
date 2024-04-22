@@ -7,7 +7,7 @@ interface Props {
 
 export default function Permission() {
     useEffect(() => {
-        window.location.href = `${basePath}/ext/setting.html#setting/permission`
+        window.location.href = `${basePath}/ext/setting.html#/safety/permission`
     }, []);
     return (
         <RedirectToExt>

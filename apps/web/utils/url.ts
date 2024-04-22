@@ -31,7 +31,7 @@ export function openUrlInGroup(url: string,groupInfo:{
 }) {
     const timer = setTimeout(function () {
         window.open(url);
-    },1000)
+    },2000)
     extApi.commonAction.openTab({
         url: url,
         tab:{
@@ -39,7 +39,7 @@ export function openUrlInGroup(url: string,groupInfo:{
         },
         reUse: true,
     },{
-        timeout: 500
+        timeout: 1000
     }).then(function(res){
         if(res.success){
             clearTimeout(timer)

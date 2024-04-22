@@ -9,7 +9,7 @@ export default function Safety() {
         <SettingSection>
           <BasicSettingLine
             label={'权限管理'}
-            path={'/permission'}
+            path={'/safety/permission'}
           ></BasicSettingLine>
         </SettingSection>
       </div>

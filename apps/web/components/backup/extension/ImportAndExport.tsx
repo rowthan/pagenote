@@ -201,15 +201,16 @@ export default function ImportAndExport(props: Props) {
         <Dialog >
           <DialogTrigger asChild>
             <Button variant={'outline'} className={'w-full block'}>
-              备份全部数据
+              备份并下载
             </Button>
           </DialogTrigger>
           <DialogContent className="">
             <DialogHeader>
               <DialogTitle>导出数据</DialogTitle>
-              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换</DialogDescription>
+              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换
+              </DialogDescription>
             </DialogHeader>
-            <ExportFilter exportBy={exportBy}  />
+            <ExportFilter exportBy={exportBy}/>
           </DialogContent>
         </Dialog>
 
