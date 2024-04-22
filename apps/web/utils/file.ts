@@ -1,11 +1,4 @@
-import {
-    BlobReader,
-    BlobWriter,
-    TextReader,
-    TextWriter,
-    ZipReader,
-    ZipWriter,
-} from "@zip.js/zip.js";
+import JSZip from 'jszip';
 import {BackupData} from "@pagenote/shared/lib/@types/data";
 
 type FileParse = {
@@ -25,6 +18,7 @@ export function readFiles(files: FileList):Promise<FileParse[]> {
             }else{
                 const reader = new FileReader()
                 reader.onload = function () {
+                    console.log(this)
                     result.push({
                         text: this.result as string,
                         type: file.type,
@@ -41,36 +35,21 @@ export function readFiles(files: FileList):Promise<FileParse[]> {
 
 
 export async function unzipFile(zipFileBlob: Blob):Promise<FileParse[]> {
-    const zipFileReader = new BlobReader(zipFileBlob);
-    const zipReader = new ZipReader(zipFileReader);
-    // will be written in the `writable` property.
-    // const helloWorldStream = new TransformStream();
-    const entries = await zipReader.getEntries();
     const textList:FileParse[] = [];
-    if (entries && entries.length) {
-        // const filenamesUTF8 = Boolean(!entries.find(entry => !entry.filenameUTF8));
-        // const encrypted = Boolean(entries.find(entry => entry.encrypted));
-        for (const entry of entries) {
-            const helloWorldWriter = new TextWriter();
-            console.log(entry.filename)
-            // 遍历 entry.extraField
-            entry.extraField?.forEach((value, key) => {
-                console.log(key, value);
-            });
-            // entry.extraField?.keys().next();
-            if(entry &&  entry.getData && !entry.directory){
-                const data = await entry.getData(helloWorldWriter)
-                // todo 这里准确的获取文件类型
-                const type = entry.filename.split('.').pop() || 'text';
-                textList.push({
-                    text: data,
-                    type: type,
-                })
-            }
+
+    const jsZip = new JSZip();
+    const zip = await jsZip.loadAsync(zipFileBlob);
+    for(let i in zip.files){
+        const file = zip.files[i];
+        if(!file.dir){
+            const string = await file.async('string');
+            const type = i.split('.').pop() || 'text';
+            textList.push({
+                text: string,
+                type: type,
+            })
         }
     }
-    await zipReader.close();
-
     return textList;
 }
 

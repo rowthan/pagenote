@@ -23,6 +23,8 @@ type TabState = {
   enabledCopy: false
   keywords?: string[]
   description?: string
+  pageUrl?: string
+  pageKey?: string
 }
 export default function useTabPagenoteState(
   tabId?: number
