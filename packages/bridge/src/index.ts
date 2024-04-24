@@ -8,5 +8,5 @@ export {
 
 export * from './base'
 export * from './utils'
-export * from './bridges/storage/index';
+export * from './bridges/common/index';
 
