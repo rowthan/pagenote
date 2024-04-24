@@ -67,7 +67,9 @@ export default function Gallery() {
   })
 
   function onClickAlbum(index: number) {
-    window.open(`${basePath}/ext/img.html?id=${imageList[index].key}`)
+    window.open(process.env.WEB_HOST+`/file/${imageList[index].key}.jpeg`)
+
+    // window.open(`${basePath}/ext/img.html?id=${imageList[index].key}`)
   }
 
   function batchDownload() {
@@ -79,25 +81,22 @@ export default function Gallery() {
       <Head>
         <title>网页截图</title>
       </Head>
-      <RedirectToExt>
-        <div className="bg-gray-200 p-4">
-          <Button className={'hidden'} onClick={batchDownload}>批量下载</Button>
-
-          <PhotoAlbum
+      <div className="bg-gray-200 p-4">
+        <Button className={'hidden'} onClick={batchDownload}>批量下载</Button>
+        <PhotoAlbum
             layout="rows"
             photos={imageList}
-            onClick={({ index }) => onClickAlbum(index)}
-          />
-          <Lightbox
+            onClick={({index}) => onClickAlbum(index)}
+        />
+        <Lightbox
             slides={imageList}
             open={index >= 0}
             index={index}
             close={() => setIndex(-1)}
             // enable optional lightbox plugins
             plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
-          />
-        </div>
-      </RedirectToExt>
+        />
+      </div>
     </>
   )
 }

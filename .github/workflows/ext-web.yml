@@ -58,6 +58,7 @@ jobs:
           rm -rf apps/web/out/sw.js
           rm -rf apps/web/out/version.json
           rm -rf apps/web/out/worker-register.js
+          rm -rf apps/web/out/sw.resource.js
 
       - name: Upload build web Artifact
         uses: actions/upload-artifact@v3
