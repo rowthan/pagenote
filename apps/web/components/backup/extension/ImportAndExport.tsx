@@ -1,4 +1,10 @@
 import React, {type ReactNode, useState} from 'react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import CloseSvg from 'assets/svg/close.svg'
 import ImportFilter from './ImportFilter'
 import ExportFilter from './ExportFilter'
@@ -24,6 +30,8 @@ import {UploadIcon} from '@radix-ui/react-icons'
 import {readFiles, resolveImportString} from "../../../utils/file";
 import {LightFormatFromWebPage} from "../../../utils/backup";
 import md5 from "md5";
+import TipInfo from "../../TipInfo";
+import TipInfoSvg from "../../../assets/svg/info.svg";
 
 interface Props {
   children?: ReactNode
@@ -193,37 +201,56 @@ export default function ImportAndExport(props: Props) {
         <Dialog >
           <DialogTrigger asChild>
             <Button variant={'outline'} className={'w-full block'}>
-              备份
+              备份并下载
             </Button>
           </DialogTrigger>
           <DialogContent className="">
             <DialogHeader>
               <DialogTitle>导出数据</DialogTitle>
-              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换</DialogDescription>
+              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换
+              </DialogDescription>
             </DialogHeader>
-            <ExportFilter exportBy={exportBy}  />
+            <ExportFilter exportBy={exportBy}/>
           </DialogContent>
         </Dialog>
 
-        <div className={'mt-6 p-4 rounded border-2 border-dashed border-gray-300'}>
+        <div className={'mt-10 p-4 rounded border-2 border-dashed border-gray-300'}>
           <label
               htmlFor={'backup-input'}
               className={'text-center cursor-pointer'}
               onDropCapture={onDrop}
               onDragOver={onDragOver}
           >
-            <div className={'flex justify-center'}>
+            <div className={'flex justify-center mb-4'}>
               <UploadIcon className={'h-8 w-8'} />
             </div>
 
             <div className="flex flex-col items-center justify-center gap-2">
-              <p className="text-sm text-center text-muted-foreground">
+              <div className="text-sm text-center text-muted-foreground">
                 点击选择文件，或将文件拖入至此处
                 <br/>
-                支持多个文件导入
-              </p>
+                支持一次导入多个文件
+                <br/>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className={'text-green-500'}>
+                        数据导入是安全的
+                        <TipInfoSvg className={'inline fill-current'} />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        滞后的数据不会写入插件内。
+                        <br/>
+                        如果备份文件和当前插件内都存在同一条标记数据，则会保留最后修改的一条
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <p>
-                支持 .pagenote、.bak、.json、.zip 文件类型
+                支持 .pagenote、.bak、.json、.html、.jpeg、<b className={'text-green-500'}>.zip</b>
               </p>
             </div>
             <input

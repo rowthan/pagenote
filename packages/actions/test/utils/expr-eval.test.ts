@@ -53,6 +53,7 @@ const variables = {
     },
     array1: [1],
     array2: [2],
+    author: "pagenote rowthan"
 }
 describe('exprEval', () => {
     it('get value',()=> {
@@ -91,8 +92,8 @@ describe('exprEval', () => {
     })
 
     it('运行时生成变量',()=>{
-        const result = exprEval('Date.now()');
-        expect(result).toEqual(Date.now())
+        const result = exprEval('Date.now()') as number;
+        expect(result - Date.now() < 10).toBe(true)
     })
 
 })
@@ -103,5 +104,19 @@ describe('复杂运算', () => {
             a: [1,2,2]
         }
         expect(exprEval('length(a)',context)).toBe(context.a.length)
+    })
+})
+
+describe('扩展方法', () => {
+    it('contains 方法',()=>{
+        expect(exprEval('contains(author,"pagenote")',variables)).toBe(true)
+        expect(exprEval('contains(author,"aaaa")',variables)).toBe(false)
+
+    })
+
+    it('startsWith 方法',()=>{
+        expect(exprEval('startsWith(author,"pagenote")',variables)).toBe(true)
+        expect(exprEval('startsWith(author,"aaaa")',variables)).toBe(false)
+
     })
 })

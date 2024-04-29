@@ -34,7 +34,7 @@ export default function ExtensionInfos() {
         <div className="stat place-items-center">
           <div className="stat-title">登录信息</div>
           <div className="stat-value text-lg">
-            {user?.profile?.nickname || '未登录'}
+            {user?.profile?.nickname || '请登录'}
           </div>
           <div className="stat-desc">{/*↗︎ 40 (2%)*/}</div>
         </div>

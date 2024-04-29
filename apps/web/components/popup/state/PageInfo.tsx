@@ -111,23 +111,23 @@ export function LightInfo(props:{pageUrl: string}) {
 
 interface Props {
   children?: ReactNode
-  pageKey?: string
+  pageKey: string
+  pageUrl: string
 }
 
 export function CaptureButton(props: Props) {
-  const { children, pageKey } = props
+  const { pageKey,pageUrl } = props
   const { tab } = useCurrentTab()
-  const key = pageKey || tab?.url
   const { data: snapshots = [], mutate: refresh } =
     useTableQuery<SnapshotResource>(Collection.snapshot, {
       limit: 100,
       query: {
         $or: [
           {
-            pageKey: key,
+            pageKey: pageKey,
           },
           {
-            pageUrl: key,
+            pageUrl: pageUrl,
           },
         ],
       },
@@ -168,7 +168,7 @@ export function CaptureButton(props: Props) {
 
   function gotoImg() {
     window.open(
-      `${basePath}/ext/gallery.html?pageKey=${encodeURIComponent(key || '')}`
+      `${basePath}/ext/gallery.html?pageKey=${encodeURIComponent(pageKey || '')}`
     )
   }
 

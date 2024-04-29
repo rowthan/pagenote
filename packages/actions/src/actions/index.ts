@@ -4,7 +4,7 @@ import http  from './http';
 import pickData from "./pkData";
 import table from "./table";
 import format from './format'
-import lib from './lib';
+import call from './call';
 import {IAction} from "../typing/IAction";
 
 
@@ -17,7 +17,8 @@ export {
 }
 
 const actionMap: Record<string, IAction> = {
-    'pagenote/lib@v1': lib,
+    'pagenote/lib@v1': call,
+    'pagenote/call@v1': call,
 }
 
 /**

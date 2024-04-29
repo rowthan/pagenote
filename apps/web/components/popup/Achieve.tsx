@@ -12,7 +12,7 @@ export default function Achieve() {
     <div className="">
       <div className={'flex gap-4 items-center justify-between'}>
         <div className={'flex gap-4 items-center'}>
-          <CaptureButton pageKey={content?.pageKey || tab?.url} />
+          <CaptureButton pageUrl={content?.pageUrl || tab?.url || ''} pageKey={content?.pageKey || content?.pageUrl || tab?.url || ''} />
           <PageInfo pageUrl={content?.pageUrl || tab?.url || ''} />
           <LightInfo pageUrl={content?.pageUrl || tab?.url || ''} />
         </div>

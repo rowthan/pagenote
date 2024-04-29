@@ -35,4 +35,12 @@
   border-color: hsl(var(--border))
 }
 
+a.more{
+ color: #4682e3;
+  //text-decoration: underline;
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
 

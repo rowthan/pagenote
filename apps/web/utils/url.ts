@@ -1,3 +1,5 @@
+import extApi from "@pagenote/shared/lib/pagenote-api";
+
 export function replaceHttpToExt(origin?: string) {
     const isHttp = /^https/.test(window.location.protocol);
     if (isHttp) {
@@ -19,4 +21,28 @@ export function replaceHttpToExt(origin?: string) {
             window.location.href = url.href;
         }
     }
+}
+
+
+export function openUrlInGroup(url: string,groupInfo:{
+    title: string
+}={
+    title: 'PAGENOTE'
+}) {
+    const timer = setTimeout(function () {
+        window.open(url);
+    },2000)
+    extApi.commonAction.openTab({
+        url: url,
+        tab:{
+            groupInfo: groupInfo,
+        },
+        reUse: true,
+    },{
+        timeout: 1000
+    }).then(function(res){
+        if(res.success){
+            clearTimeout(timer)
+        }
+    })
 }

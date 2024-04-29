@@ -16,7 +16,6 @@ interface Props {
 
 export default function ImageCloud(props: Props) {
   const [cloudConfig, setCloudConfig] = useUserConfig('cloud')
-  const [user] = useUserInfo()
   const [oss, loading, connected] = useOssKey('private')
   const enabled = !!get(cloudConfig, 'enable')
   return (

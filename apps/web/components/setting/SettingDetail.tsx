@@ -1,36 +1,44 @@
-import { useNavigate } from 'react-router-dom'
+import {useLocation, useNavigate, useRoutes} from 'react-router-dom'
 import BackSvg from '../../assets/svg/back.svg'
 import React, { ReactElement } from 'react'
+import Head from "next/head";
 
 export default function SettingDetail(props: {
   children: ReactElement
   label: string | ReactElement
 }) {
   const { children, label } = props
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  const location = useLocation();
   function back() {
-    if (history.length > 1) {
-      history.back()
-    } else {
-      navigate('/setting')
+    console.log(location,'location')
+    const pathList = location.pathname.split('/');
+    if(pathList.length>2){
+      navigate(pathList.slice(0,pathList.length-1).join('/'))
+      return
     }
+
+    navigate('/')
   }
 
   return (
-    <div className={''}>
-      <div className={'flex px-1 items-center py-2 mb-8'}>
-        <aside
-          onClick={back}
-          className={
-            'flex items-center justify-center w-8 h-8 rounded-full hover:bg-base-300 cursor-pointer'
-          }
-        >
-          <BackSvg className={'fill-current'} />
-        </aside>
-        <div className={'text-md ml-2'}>{label}</div>
+      <div className={''}>
+        <Head>
+          <title>{label}</title>
+        </Head>
+        <div className={'detail-nav flex items-center py-2 mb-8'}>
+          <aside
+              onClick={back}
+              className={
+                'flex items-center justify-center w-8 h-8 rounded-full hover:bg-base-300 cursor-pointer'
+              }
+          >
+            <BackSvg className={'fill-current'}/>
+          </aside>
+          <div className={'text-md ml-2'}>{label}</div>
+        </div>
+
+        {children}
       </div>
-      <div className={''}>{children}</div>
-    </div>
   )
 }

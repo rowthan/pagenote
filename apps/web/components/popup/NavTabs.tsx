@@ -6,6 +6,8 @@ import React, { useEffect, useRef } from 'react'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useCurrentTab from '../../hooks/useCurrentTab'
 import useConfig from '../../hooks/useConfig'
+import {openUrlInGroup} from "../../utils/url";
+import { FaRegUserCircle } from "react-icons/fa";
 
 interface Tab {
   label: string
@@ -24,11 +26,11 @@ const tabs: Tab[] = [
     outlink: '',
     link: '/clipboard',
   },
-  {
-    label: '设置',
-    outlink: '',
-    link: '/setting',
-  },
+  // {
+  //   label: '设置',
+  //   outlink: '',
+  //   link: '/setting',
+  // },
 ]
 export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyword: string) => void }) {
     const [whoAmi] = useWhoAmi();
@@ -116,8 +118,15 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
             </span>
           )}
         </div>
+          <a className={'link absolute right-14 top-2 text-lg '} onClick={()=>{
+              openUrlInGroup(`${whoAmi?.origin}/web/ext/setting.html#id`)
+          }}>
+              <FaRegUserCircle  className={'fill-current'}/>
+          </a>
         <a
-          href={`${whoAmi?.origin}/pagenote.html`}
+          onClick={()=>{
+              openUrlInGroup(`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay`)
+          }}
           target={'_blank'}
           data-tip={'前往管理页'}
           className={`link absolute right-5 top-1 tooltip tooltip-left flex`}
