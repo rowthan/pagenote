@@ -106,17 +106,15 @@ export default function Logs(props: { levels?: LogLevel[], initPageSize?: number
                                         })
                                     }
                                     <pre data-prefix=">" className="text-success">
-                                <code>
-                                    <CheckVersion requireVersion={'0.24.0'} label={'下载日志'}><button
-                                        onClick={downloadLogs}
-                                        className={'btn btn-link'}>下载完整日志</button></CheckVersion>
-                                </code>
                                         {pageSize < 100 && <Link className={'link text-sm'} href="/log">查看更多</Link>}
-                            </pre>
+                                     </pre>
                                 </div>
                                 :
                                 <pre data-prefix="$" className="text-warning"><code>暂无日志</code></pre>
                         }
+                        <CheckVersion requireVersion={'0.24.0'} label={'下载日志'}><button
+                            onClick={downloadLogs}
+                            className={'btn btn-link'}>下载完整日志</button></CheckVersion>
                     </div>
                     <div className={'sticky bottom-0 h-10'}>
                         <div className="btn-group absolute right-10">
