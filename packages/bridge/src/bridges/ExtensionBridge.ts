@@ -388,17 +388,5 @@ export default class ExtensionMessage implements Communication<any>{
         header: header,
       }
     });
-
-    // const requestMessage = this.requestMessage;
-    // // 对每一个标签页发送请求
-    // chrome.tabs.query({}, function (tabs) {
-    //   tabs.forEach(function (tab) {
-    //     return requestMessage(type, data, {
-    //       ...(header || {}),
-    //       targetTabId: tab.id,
-    //       targetClientId: null, // 无指定目标服务节点
-    //     })
-    //   })
-    // })
   }
 }

@@ -25,7 +25,7 @@ export const AuthConfig: Record<
     icon: 'https://pagenote-public.oss-cn-beijing.aliyuncs.com/_static/notion.ico',
     platformUrl: 'https://www.notion.so/my-integrations',
     redirectUri: function () {
-      return window.location.origin + '/oauth/callback_notion'
+      return  'https://pagenote.cn/oauth/callback_notion'
     },
   },
   webdav: {
@@ -36,7 +36,7 @@ export const AuthConfig: Record<
       return ''
     },
     getAuthLInk: function () {
-      return `/oauth/webdav`
+      return `https://pagenote.cn/oauth/webdav`
     },
   },
   github: {
@@ -47,18 +47,18 @@ export const AuthConfig: Record<
     icon: 'https://github.githubassets.com/favicons/favicon.svg',
     platformUrl: 'https://github.com/settings/installations',
     redirectUri: function () {
-      return window.location.origin + '/oauth/callback_github'
+      return 'https://pagenote.cn/oauth/callback_github'
     },
   },
   email: {
     label: '邮箱验证',
-    icon: '/img/email.webp',
+    icon: 'https://pagenote.cn/img/email.webp',
     platformUrl: '',
     redirectUri: function () {
       return ''
     },
     getAuthLInk: function () {
-      return `/oauth/email`
+      return `https://pagenote.cn/oauth/email`
     },
   },
 }

@@ -1,7 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "11"
+var version = "12"
 
 var cacheRules = {
   whiteList: [],
@@ -68,7 +68,7 @@ var util = {
       }
 
       /**静态资源，可安全使用缓存*/
-      var isStatic = /\.(js|css|png|jpg|svg|woff)/.test(request.url)
+      var isStatic = /\.(js|css|png|jpg|svg|woff|jpeg)/.test(request.url)
       var isDoucment = util.checkIsDocument(request)
       if (isStatic || isDoucment) {
         return true
@@ -134,7 +134,7 @@ self.addEventListener('activate', function (e) {
   var cachePromise = caches.keys().then(function (keys) {
     var deleteKey = keys.filter(function (key) {
       // 非白名单缓存 均清空
-      return !['image', 'script', 'font', 'style'].includes(key)
+      return !['image', 'script', 'font', 'style','file'].includes(key)
     })
     return Promise.all(
         deleteKey.map(function (key) {

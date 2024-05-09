@@ -19,7 +19,7 @@ export default function Setting() {
             <Router>
               <Routes>
                 <Route path="/" element={<SettingCom />} />
-                  <Route path="/id*" element={<IdHome basePath={'/id'} />} />
+                  <Route path="/id/*" element={<IdHome basePath={'/id'} />} />
                   <Route path="/*" element={<SettingCom />} />
               </Routes>
             </Router>
