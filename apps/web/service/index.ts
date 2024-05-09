@@ -15,11 +15,19 @@ export function createOrder(price?: number) {
 
 export function bindTransition(record: string, amount: number) {
   const recordId = record || dayjs().format('YYYYMMDD_HH')
-  fetchUserInfo(false, 1000 * 180)
+  fetchUserInfo(true, 1000 * 180)
   return extApi.network.pagenote({
-    url: '/api/user',
+    url: '/api/graph/book',
     data: {
-      mutation: `mutation{bindTransition(recordId:"${recordId}",recordType:"${3}",amount:${amount}){status}}`,
+      mutation: `mutation params($transition:Transition!){bindTransition(transition:$transition){status}}`,
+      variables:{
+          transition:{
+              recordId:recordId,
+              amount:amount,
+              remark:"custom",
+              payTime: `${Date.now()}`
+          }
+      }
     },
     method: 'POST',
   })

@@ -30,7 +30,7 @@ export function openUrlInGroup(url: string,groupInfo:{
     title: 'PAGENOTE'
 }) {
     const timer = setTimeout(function () {
-        window.open(url);
+        window.location.href = url;
     },2000)
     extApi.commonAction.openTab({
         url: url,

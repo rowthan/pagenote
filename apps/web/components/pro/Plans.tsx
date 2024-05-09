@@ -26,7 +26,7 @@ export default function Plans(props: Props) {
   }
   useEffect(
     function () {
-      fetchUserInfo(true)
+      fetchUserInfo(true, 1000 * 30)
       if (plan) {
         createOrder(plan?.price)
       }
