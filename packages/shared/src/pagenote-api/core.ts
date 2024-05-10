@@ -113,6 +113,7 @@ export const generateApi = function (wrapperFun: Wrapper) {
     }
 
     const networkMethod: ComputeRequestApiMapDefine<network.request> = {
+        http: true,
         state: true,
         notion: true,
         fetch: true,

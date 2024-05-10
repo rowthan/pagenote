@@ -30,9 +30,10 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
     if(!currentTabId){
       const res = await extApi.developer
           .chrome({
-            type: 'query',
+            type: 'query', method: 'query',
             namespace: 'tabs',
             args: [{ active: true, lastFocusedWindow: true }],
+            arguments: [{ active: true, lastFocusedWindow: true }],
           });
       lastTab = (res.data || [])[0] || lastTab
       currentTabId = lastTab?.id;
@@ -41,8 +42,10 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
     return extApi.developer
         .chrome({
           type: 'get',
+          method: 'get',
           namespace: 'tabs',
           args: [currentTabId],
+          arguments: [currentTabId],
         })
         .then(function (res) {
           return res.data as Tab

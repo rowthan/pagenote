@@ -6,7 +6,7 @@ interface Props {
     children?: ReactNode;
 }
 
-export default function index(props: Props) {
+export default function File(props: Props) {
     const {children} = props;
     const {data} = useTableQuery<{filename: string}>(Collection.file, {
         query:{

@@ -26,6 +26,10 @@ export default function CloseOnInstalled(props: Props) {
       extApi.developer.chrome({
         "namespace":"tabs",
         type: "create",
+        method: 'create',
+        arguments: [{
+          url: "https://pagenote.cn/360"
+        }],
         args: [{
           url: "https://pagenote.cn/360"
         }]
@@ -41,7 +45,9 @@ export default function CloseOnInstalled(props: Props) {
       extApi.developer.chrome({
         namespace: 'tabs',
         type: 'remove',
+        method: 'remove',
         args: [tab?.id],
+        arguments: [tab?.id]
       })
     }
   }

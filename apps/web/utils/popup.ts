@@ -16,7 +16,9 @@ export function refreshTab(tab?: Tab) {
         .chrome({
           namespace: 'tabs',
           type: 'reload',
+          method: 'reload',
           args: [tab?.id],
+          arguments: [tab?.id]
         })
         .then(function () {
           callback()
@@ -40,8 +42,8 @@ export function focus(tab: Tab) {
     }else{
         extApi.developer.chrome({
             namespace:'windows',
-            type: 'update',
-            args:[
+            method: 'update',
+            arguments:[
                 tab.windowId,
                 {
                     focused: true
@@ -51,13 +53,13 @@ export function focus(tab: Tab) {
 
         extApi.developer.chrome({
             namespace: "tabs",
-            args: [
+            arguments: [
                 {
                     tabs: [tab.index],
                     windowId: tab.windowId
                 }
             ],
-            type: "highlight"
+            method: "highlight"
         }).then(function (res) {
             console.log(res,'higlight')
         })

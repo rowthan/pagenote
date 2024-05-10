@@ -87,6 +87,14 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
         .chrome({
           namespace: 'downloads',
           type: 'download',
+          method: "download",
+          arguments: [
+            {
+              saveAs: true,
+              url: url,
+              filename: filename,
+            },
+          ],
           args: [
             {
               saveAs: true,

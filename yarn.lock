@@ -3200,11 +3200,6 @@
     lodash "^4.17.21"
     marked "^11.2.0"
 
-"@pagenote/bridge@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/@pagenote/bridge/-/bridge-1.0.17.tgz"
-  integrity sha512-YreEYZocpU3NR1cpG6XclASevgv8t8gIcmRMEW1RUoeGvImwwQJpGSJQmhfG7kbRLDS6lIbhRKukEURQ8kO4DA==
-
 "@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.36-next.0", "@pagenote/shared@^1.14.36-next.1":
   version "1.14.39"
   resolved "https://registry.npmjs.org/@pagenote/shared/-/shared-1.14.39.tgz"
