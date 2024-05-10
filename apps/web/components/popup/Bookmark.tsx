@@ -7,6 +7,7 @@ import {Separator} from '@/components/ui/separator'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import useTabPagenoteState from '../../hooks/useTabPagenoteState'
 import Achieve from './Achieve'
+import {openUrlInGroup} from "../../utils/url";
 
 export function Bookmark() {
   const {tab} = useCurrentTab()
@@ -25,7 +26,7 @@ export function Bookmark() {
 
         <div className=" relative">
           <div className=" text-sm font-medium font-['Inter'] overflow-hidden overflow-ellipsis line-clamp-1">
-            <a target={'_blank'} href={content?.pageUrl || content?.pageKey || tab?.url} className={''}>{tab?.title || '--'}</a>
+            <a target={'_blank'} onClick={()=>{openUrlInGroup(content?.pageUrl || content?.pageKey || tab?.url || '')}} className={''}>{tab?.title || '--'}</a>
           </div>
           <div className="mt-1 text-muted-foreground text-xs font-normal overflow-hidden overflow-ellipsis line-clamp-2">
             {content?.description || ''}
