@@ -8,6 +8,7 @@ import {getAction} from "../actions";
 
 /**
  * 适用于后台运行的运行器（service worker or nodejs，不依赖 DOM 结构）
+ * todo 返回 flow 的运行覆盖率统计
  * */
 export default class Background{
   /** 运行信息，基于配置文件解析的对象结构*/
@@ -16,7 +17,7 @@ export default class Background{
   public context:{
     // 环境变量
     env: Object,
-    trigger:{},
+    trigger:Record<string, any>,
   }
   /** 流水线的全局状态*/
   public state : WorkFlowState
@@ -55,6 +56,7 @@ export default class Background{
    * */
   updateYml(yml: string | WorkFlow){
     try{
+      // todo 检查输入是否合法，ID是否冲突
       this.workflowInfo = typeof yml === 'string' ? jsYaml.load(yml) as WorkFlow : yml;
     }catch (e) {
       throw e
@@ -191,14 +193,11 @@ export default class Background{
     let response;
     for (let i = 0; i < steps.length; i++) {
       try {
-        // steps 集合的最终返回，取决于最后一个任务的执行结果
+        // steps 集合的最终返回，取决于最后一个任务的执行结果 steps 如果异常，则整个 job 抛出异常不再执行，但 if 判断不受影响
         response = await this._runStep(steps[i],contextId);
       }catch (e) {
-        if(steps[i]['continue-on-error']){
-          console.warn('允许失败，继续执行',e)
-        }else{
-          throw e;
-        }
+        // step 必须按顺序成功，一个失败即终止整个 job
+        throw e;
       }
     }
     return response;
@@ -250,6 +249,7 @@ export default class Background{
             response = action ? await action(withArgs) : withArgs;
           }catch (e) {
             step._state = TaskState.fail;
+            console.error(e)
             throw e;
           }
         }
