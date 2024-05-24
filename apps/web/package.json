@@ -84,7 +84,7 @@
     "react": "^18.2.0",
     "react-awesome-button": "^7.0.5",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.40.0",
+    "react-hook-form": "^7.51.4",
     "react-icons": "^4.11.0",
     "react-image-crop": "^10.0.9",
     "react-notion-x": "^6.16.0",
