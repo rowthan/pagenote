@@ -4,7 +4,10 @@ import {replaceHttpToExt} from "utils/url";
 export default function RedirectToExt(props:{children: ReactElement}) {
     const [whoAmI] = useWhoAmi();
     useEffect(function () {
-        replaceHttpToExt(whoAmI?.origin)
+        const preventRedirect = window.location.origin.includes('developer');
+        if(!preventRedirect){
+            replaceHttpToExt(whoAmI?.origin)
+        }
     },[whoAmI])
     return (props.children)
 }
