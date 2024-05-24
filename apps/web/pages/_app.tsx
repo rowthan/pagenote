@@ -24,7 +24,7 @@ function ClientApp({ Component, pageProps }: AppProps) {
             if(data.url!==window.self.location.href){
                 return
             }
-            console.log('需要刷新:',window.self.location.href)
+            // console.log('需要刷新:',window.self.location.href)
             // toast({
             //     title: "网页有更新",
             //     description: "正在访问的网页有更新版本，请点击刷新按钮",

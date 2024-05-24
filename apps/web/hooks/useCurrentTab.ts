@@ -1,12 +1,13 @@
 import extApi from "@pagenote/shared/lib/pagenote-api";
 import useSWR from "swr";
 import Tab = chrome.tabs.Tab;
+import {useEffect} from "react";
 
 type TabGroups = Tab[];
 type WindowMap = Map<number, TabGroups>
 let lastTab: undefined | Tab = undefined
 export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroups[] | undefined} {
-  const { data: tab } = useSWR<Tab | undefined>(
+  const { data: tab,mutate } = useSWR<Tab | undefined>(
     `/tab/currentTab/`,
     getTabInfo
   )
@@ -17,6 +18,14 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
       fallbackData: [],
     }
   )
+
+  useEffect(function () {
+      if(chrome && chrome.tabs){
+          chrome.tabs.onActivated.addListener(function () {
+              mutate();
+          })
+      }
+  },[])
 
   async function getTabInfo() {
     let currentTabId: number|undefined;

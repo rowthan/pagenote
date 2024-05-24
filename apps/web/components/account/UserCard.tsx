@@ -24,7 +24,7 @@ export default function UserCard(props: Props) {
   const [bookInfo] = useBooks()
   const [whoAmI] = useWhoAmi()
   const [openProfileModal, setProfileModal] = useState(false)
-  const editable = props.editable && data?.profile.uid
+  const editable = props.editable && data?.profile?.uid
 
   const endAt = bookInfo.expiredAt
   const endDay = endAt ? dayjs(endAt).format('YYYY-MM-DD') : ''

@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
-import useUserConfig from '../../../hooks/useUserConfig'
+import useSettingConfig from '../../../hooks/table/useSettingConfig'
 import classNames from 'classnames'
 import Modal from '../../Modal'
 import { useForm } from 'react-hook-form'
@@ -26,7 +26,7 @@ const labelMap: Record<ConnectState, string> = {
 export default function CloudStatus(props: Props) {
   const { cloudServer } = props
   const [open, setOpen] = useState(false)
-  const [config, update] = useUserConfig<OssCloudConfig>(cloudServer)
+  const [config, update] = useSettingConfig<OssCloudConfig>(cloudServer)
   const [state, setState] = useState<ConnectState>(ConnectState.un_check)
 
   const { setValue, register, handleSubmit } = useForm({

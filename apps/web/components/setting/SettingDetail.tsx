@@ -11,13 +11,15 @@ export default function SettingDetail(props: {
   const navigate = useNavigate();
   const location = useLocation();
   function back() {
-    console.log(location,'location')
     const pathList = location.pathname.split('/');
-    if(pathList.length>2){
-      navigate(pathList.slice(0,pathList.length-1).join('/'))
-      return
+    if(pathList.length>1){
+        const path = pathList.slice(0,pathList.length-1).join('/') || '/';
+        return navigate(path)
+    }else{
+        if(Number(history.state.idx)>1){
+            return history.go(-1)
+        }
     }
-
     navigate('/')
   }
 

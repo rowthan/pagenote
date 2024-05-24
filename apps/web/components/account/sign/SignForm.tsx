@@ -184,7 +184,7 @@ export default function SignForm(props: { onFinished?: () => void, validateType:
         </Button>
       </div>
 
-      <div className={'text-error text-sm'}>{tip}</div>
+      <div className={'text-error text-sm'} dangerouslySetInnerHTML={{__html:tip}}></div>
     </form>
   )
 }

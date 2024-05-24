@@ -95,7 +95,7 @@ export namespace lightpage {
 
 
         /**导入备份文件**/
-        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, {
+        importBackup: IExtenstionMessageListener<{backupData: BackupData } | {filePath: string}, {
             db: string
             table: string,
             keys: string[]
@@ -267,6 +267,18 @@ export namespace action {
     export type request = ComputeRequestToBackground<response>
 }
 
+export namespace actions{
+    export const id = 'actions'
+    export type response = {
+        runYaml: IExtenstionMessageListener<{ yaml: string } | {id: string}, { run_names: string[] }>
+        callAction: IExtenstionMessageListener<{
+            uses: string,
+            with: any
+        }, any>
+    }
+    export type request = ComputeRequestToBackground<response>
+}
+
 export namespace developer {
     import TabGroup = chrome.tabGroups.TabGroup;
     import Tab = chrome.tabs.Tab;
@@ -336,6 +348,9 @@ export namespace developer {
             args?: any[]
         }, any>
 
+        store: IExtenstionMessageListener<{ key: string,value: string }, void>
+        watch: IExtenstionMessageListener<{ event: 'storage' | string, key: string }, {key: string, value: string}>
+
         /**打开标签页*/
         openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
 
@@ -364,6 +379,7 @@ export namespace user {
         name?: string,
         version?: string,
         mainVersion?: string,// 主要版本
+        latestVersion?: string //
         short_name?: string,
         browserType?: BrowserType,
         browserVersion?: string,
@@ -376,6 +392,7 @@ export namespace user {
         isCN?: boolean,
         isMac?: boolean,
         isFirefox?: boolean, // Firefox 浏览器判断，需要做兼容性处理
+        isEdge?: boolean
         isTest?: boolean,
         did?: string, // 客户端的标识 did 不可变更
         sec_did?: string
@@ -479,7 +496,6 @@ export namespace network {
         //     args: any[]
         // }, any>
 
-        // uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
 
         /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
         openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>

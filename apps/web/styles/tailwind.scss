@@ -35,7 +35,9 @@
   border-color: hsl(var(--border))
 }
 
-a.more{
+
+a.more,.a{
+  cursor: pointer;
  color: #4682e3;
   //text-decoration: underline;
   &:hover{
