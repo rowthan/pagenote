@@ -40,7 +40,6 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
       ])
 
       const backup: BackupData = {
-        backupId: `${Date.now()}`,
         backup_at: Date.now(),
         extension_version: whoAmI?.version,
         version: BackupVersion.version7,

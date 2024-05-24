@@ -403,6 +403,20 @@ export type BackupData = {
 
     // @deprecated
     did?: string;
+    // @deprecated
+    pages?: Partial<WebPage>[],
+    // @deprecated
+    lights?: Partial<Step>[],
+    // @deprecated
+    box?: Partial<Box>[],
+    // @deprecated
+    dataType?: BackupDataType[],
+    // @deprecated
+    snapshots?: Partial<SnapshotResource>[],
+    // @deprecated
+    notes?: Partial<Note>[]
+    // @deprecated
+    htmlList?: Partial<OfflineHTML>[]
 
     items: {
         db: string
