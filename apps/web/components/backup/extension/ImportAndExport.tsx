@@ -32,6 +32,7 @@ import {LightFormatFromWebPage} from "../../../utils/backup";
 import md5 from "md5";
 import TipInfo from "../../TipInfo";
 import TipInfoSvg from "../../../assets/svg/info.svg";
+import extApi from "@pagenote/shared/lib/pagenote-api";
 
 interface Props {
   children?: ReactNode
@@ -198,21 +199,21 @@ export default function ImportAndExport(props: Props) {
     <div className="">
       {children}
       <div>
-        <Dialog >
-          <DialogTrigger asChild>
-            <Button variant={'outline'} className={'w-full block'}>
-              备份并下载
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="">
-            <DialogHeader>
-              <DialogTitle>导出数据</DialogTitle>
-              <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换
-              </DialogDescription>
-            </DialogHeader>
-            <ExportFilter exportBy={exportBy}/>
-          </DialogContent>
-        </Dialog>
+        {/*<Dialog >*/}
+        {/*  <DialogTrigger asChild>*/}
+        {/*    <Button variant={'outline'} className={'w-full block'}>*/}
+        {/*      备份并下载*/}
+        {/*    </Button>*/}
+        {/*  </DialogTrigger>*/}
+        {/*  <DialogContent className="">*/}
+        {/*    <DialogHeader>*/}
+        {/*      <DialogTitle>导出数据</DialogTitle>*/}
+        {/*      <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换*/}
+        {/*      </DialogDescription>*/}
+        {/*    </DialogHeader>*/}
+        {/*    <ExportFilter exportBy={exportBy}/>*/}
+        {/*  </DialogContent>*/}
+        {/*</Dialog>*/}
 
         <div className={'mt-10 p-4 rounded border-2 border-dashed border-gray-300'}>
           <label
@@ -240,11 +241,7 @@ export default function ImportAndExport(props: Props) {
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        滞后的数据不会写入插件内。
-                        <br/>
-                        如果备份文件和当前插件内都存在同一条标记数据，则会保留最后修改的一条
-                      </p>
+
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

@@ -16,6 +16,23 @@ import CloudBackup from "../backup/CloudBackup";
 import useWhoAmi from "../../hooks/useWhoAmi";
 import DeviceInfo from "../account/DeviceInfo";
 import CheckVersion from "../check/CheckVersion";
+import {basePath} from "../../const/env";
+import {MdOutlineSettingsBackupRestore} from "react-icons/md";
+import classNames from "classnames";
+import {Switch} from "../../@/components/ui/switch";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "../../@/components/ui/dialog";
+import {Button} from "../../@/components/ui/button";
+import ExportFilter from "../backup/extension/ExportFilter";
+import CloudBackupList from "../backup/CloudBackupList";
+import CloudSupporters from "../backup/CloudSupporters";
+import CloudSync from "../backup/CloudSync";
 
 function SettingHome() {
     const [whoAmI] = useWhoAmi()
@@ -92,20 +109,47 @@ export default function Setting() {
                         path={'/data/backup'}
                         element={
                             <SettingDetail label={'本地备份'}>
-                                <div>
+                                <>
+                                    <div className={'bg-card rounded-lg p-2'}>
+                                        <MdOutlineSettingsBackupRestore
+                                            className={classNames('text-[40px] text-blue-400 m-auto', {
+                                            })}/>
+                                        <h2 className={'text-lg text-accent-foreground font-bold text-center'}>本地备份</h2>
+                                        <p className={'p-2  text-sm'}>
+                                            将本设备的数据导出为备份文件，用于恢复或导入其他设备。                                        </p>
+                                        {/*<hr className={'w-[90%] mx-auto my-2'}/>*/}
+                                        {/*<div className={'p-2 flex justify-between'}>*/}
+                                        {/*    <Dialog >*/}
+                                        {/*        <DialogTrigger asChild>*/}
+                                        {/*            <Button variant={'outline'} className={'w-full block'}>*/}
+                                        {/*                备份并下载*/}
+                                        {/*            </Button>*/}
+                                        {/*        </DialogTrigger>*/}
+                                        {/*        <DialogContent className="">*/}
+                                        {/*            <DialogHeader>*/}
+                                        {/*                <DialogTitle>导出数据</DialogTitle>*/}
+                                        {/*                <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换*/}
+                                        {/*                </DialogDescription>*/}
+                                        {/*            </DialogHeader>*/}
+                                        {/*            <ExportFilter exportBy={'extension'}/>*/}
+                                        {/*        </DialogContent>*/}
+                                        {/*    </Dialog>*/}
+                                        {/*</div>*/}
+                                    </div>
+                                    <ImportAndExport/>
                                     <p className={'py-2 text-sm text-muted-foreground'}>
-                                        将本设备的备份数据导出为文件，方便在其他设备导入。
+
                                         <CheckVersion requireVersion={'0.29.5'} fallback={<div></div>}>
                                             <span>
                                                 若需要自动备份，请前往
                                                 <a className={'more'}
-                                                   href="/ext/setting.html#/data/cloud-backup">云端备份</a>
+                                                   href={`${basePath}/ext/setting.html#/data/cloud-backup`}>云端备份</a>
                                             </span>
                                         </CheckVersion>
 
                                     </p>
-                                    <ImportAndExport/>
-                                </div>
+
+                                </>
                             </SettingDetail>
                         }
                     />
@@ -114,8 +158,23 @@ export default function Setting() {
                             <CloudBackup/>
                         </SettingDetail>
                     }/>
+                    <Route path="/data/cloud-sync" element={
+                        <SettingDetail label={'云同步'}>
+                            <CloudSync/>
+                        </SettingDetail>
+                    }/>
+                    <Route path="/data/cloud-supporters" element={
+                        <SettingDetail label={'云端存储服务商'}>
+                            <CloudSupporters/>
+                        </SettingDetail>
+                    }/>
+                    <Route path="/data/cloud-backup/history" element={
+                        <SettingDetail label={'备份历史'}>
+                            <CloudBackupList/>
+                        </SettingDetail>
+                    }/>
                     <Route path={'/data/image-cloud'} element={<ImageCloud/>}/>
-                    <Route path={'/data*'} element={<DataBackup/>}/>
+                    <Route path={'/data/*'} element={<DataBackup/>}/>
 
 
                     <Route path={'*'} element={<SettingHome/>}/>

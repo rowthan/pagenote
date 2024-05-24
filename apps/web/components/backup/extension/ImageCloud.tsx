@@ -2,20 +2,22 @@ import { type ReactNode, useState } from 'react'
 import SettingDetail from '../../setting/SettingDetail'
 import BasicSettingLine, {SettingSection} from '../../setting/BasicSettingLine'
 import TipInfo from '../../TipInfo'
-import useUserConfig from '../../../hooks/useUserConfig'
+import useSettingConfig from '../../../hooks/table/useSettingConfig'
 import { get } from 'lodash'
 import CloudStatus from './CloudStatus'
 import classNames from 'classnames'
 import useUserInfo from '../../../hooks/useUserInfo'
 import useOssKey from '../../../hooks/useOssKey'
 import { Switch } from "@/components/ui/switch"
+import useStat from "../../../hooks/useStat";
+import CloudStat from "../../stat/CloudStat";
 
 interface Props {
   children?: ReactNode
 }
 
 export default function ImageCloud(props: Props) {
-  const [cloudConfig, setCloudConfig] = useUserConfig('cloud')
+  const [cloudConfig, setCloudConfig] = useSettingConfig('cloud')
   const [oss, loading, connected] = useOssKey('private')
   const enabled = !!get(cloudConfig, 'enable')
   return (
@@ -83,21 +85,7 @@ export default function ImageCloud(props: Props) {
                   }
                   loading={loading}
                   right={
-                    <div>
-                      <a
-                        href={'https://pagenote.cn/pro-plan'}
-                        target={'_blank'}
-                        className={classNames(
-                          'btn btn-outline btn-xs text-sm btn-info font-normal',
-                          {
-                            'btn-success': connected,
-                            'btn-error': !connected,
-                          }
-                        )}
-                      >
-                        {connected ? '已连接' : 'VIP 可用'}
-                      </a>
-                    </div>
+                    <CloudStat types={['oss']} space={'private'} />
                   }
                 />
               </SettingSection>
