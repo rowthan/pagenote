@@ -84,7 +84,9 @@ export interface BaseMessageHeader {
 }
 
 type BaseMessageResponseHeader = {
-    [key: string]: string | number
+    cause: string // 解决失败原因的指向
+    'log-id': string // 请求的持续化跟踪ID
+    [key: string]: string
 }
 
 

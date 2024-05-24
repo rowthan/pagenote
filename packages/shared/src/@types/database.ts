@@ -29,7 +29,7 @@ export type FindResponse<T> = {
 }>
 
 export type Projection<Model> = {
-    [key in keyof Model]?: 1
+    [key in keyof Model]?: 1 | 0
 }
 
 export type Sort<Model> = {
