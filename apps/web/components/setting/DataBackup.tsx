@@ -15,27 +15,23 @@ export default function DataBackup() {
   const [oss, loading] = useStat('oss','private')
 
   return (
-      <>
-          <SettingDetail label={'数据存储'}>
-              <div className={' min-w-80'}>
-                  <ExtensionData />
-                  <SettingSection>
-                      <BasicSettingLine
-                          badge={<Status disabled={!enabled}>
-                              <img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>
-                          </Status>}
-                          label={<span>图片优化</span>}
-                          subLabel={<span>可减少本机图片空间占用</span>}
-                          right={
-                              <div className={'flex items-center'}>
-                                  {enabled ? (oss?.connected ? '已开启' : '未开启') : '禁用'}
-                              </div>
-                          }
-                          path={'/data/image-cloud'}
-                      />
-                  </SettingSection>
-              </div>
-          </SettingDetail>
-      </>
+      <div className={' min-w-80'}>
+          <ExtensionData/>
+          <SettingSection>
+              <BasicSettingLine
+                  badge={<Status disabled={!enabled}>
+                      <img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>
+                  </Status>}
+                  label={<span>图片优化</span>}
+                  subLabel={<span>可减少本机图片空间占用</span>}
+                  right={
+                      <div className={'flex items-center'}>
+                          {enabled ? (oss?.connected ? '已开启' : '未开启') : '禁用'}
+                      </div>
+                  }
+                  path={'/data/image-cloud'}
+              />
+          </SettingSection>
+      </div>
   )
 }

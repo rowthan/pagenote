@@ -91,11 +91,11 @@ export namespace lightpage {
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询网页携带的全量数据： 网页、标记、快照*/
-        getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
+        getLightPageDetail: IExtenstionMessageListener<{ key?: string, url?: string }, WebPage | null>,
 
 
         /**导入备份文件**/
-        importBackup: IExtenstionMessageListener<{backupData: BackupData } | {filePath: string}, {
+        importBackup: IExtenstionMessageListener<{backupData?: BackupData, filePath?: string }, {
             db: string
             table: string,
             keys: string[]
@@ -340,11 +340,11 @@ export namespace developer {
         /**代理执行浏览器插件方法*/
         chrome: IExtenstionMessageListener<{
             namespace: string,
-            // @deprecated 使用 method 代替
+            /**@deprecated 使用 method 代替*/
             type?: string,
             method: string,
             arguments: any[],
-            // @deprecated 使用 arguments 代替
+            /**@deprecated 使用 arguments 代替*/
             args?: any[]
         }, any>
 
@@ -379,7 +379,6 @@ export namespace user {
         name?: string,
         version?: string,
         mainVersion?: string,// 主要版本
-        latestVersion?: string //
         short_name?: string,
         browserType?: BrowserType,
         browserVersion?: string,
@@ -401,6 +400,7 @@ export namespace user {
 
     export interface User {
         profile?: {
+            pro?: number
             role: number,
             nickname?: string,
             emailMask?: string;
@@ -465,7 +465,7 @@ export namespace network {
             variables?: Record<string, any>
             [key: string]: any,
         },
-        method: 'GET' | 'POST' | string
+        method: "GET" | "POST" | "PUT" | "DELETE"
 
         credentials?: RequestCredentials
         cache?: RequestCache
@@ -488,6 +488,7 @@ export namespace network {
 
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        /**@deprecated 请使用 http*/
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
 
         // notion: IExtenstionMessageListener<{

@@ -30,76 +30,75 @@ export default function LightSetting() {
   const { keyupTimeout, showBarTimeout } = setting
 
   return (
-    <SettingDetail label={'画笔设置'}>
       <div className={'relative'}>
         <SettingSection>
           <BasicSettingLine
-            label={'标记快捷键灵敏度'}
-            right={
-              <Select
-                defaultValue={`${keyupTimeout}`}
-                value={`${keyupTimeout}`}
-                onValueChange={(newValue) => {
-                  updateSetting({ keyupTimeout: Number(newValue) })
-                }}
-              >
-                <SelectTrigger className={'w-auto border-none shadow-none'}>
-                  <SelectValue placeholder={'敏捷度调节'} />
-                </SelectTrigger>
-                <SelectContent position={'item-aligned'}>
-                  <SelectItem value={'0'}>灵敏，按下即触发</SelectItem>
-                  <SelectItem value="500">适中，长按0.5秒</SelectItem>
-                  <SelectItem value="2000">迟缓，长按2秒</SelectItem>
-                </SelectContent>
-              </Select>
-            }
+              label={'标记快捷键灵敏度'}
+              right={
+                <Select
+                    defaultValue={`${keyupTimeout}`}
+                    value={`${keyupTimeout}`}
+                    onValueChange={(newValue) => {
+                      updateSetting({keyupTimeout: Number(newValue)})
+                    }}
+                >
+                  <SelectTrigger className={'w-auto border-none shadow-none'}>
+                    <SelectValue placeholder={'敏捷度调节'}/>
+                  </SelectTrigger>
+                  <SelectContent position={'item-aligned'}>
+                    <SelectItem value={'0'}>灵敏，按下即触发</SelectItem>
+                    <SelectItem value="500">适中，长按0.5秒</SelectItem>
+                    <SelectItem value="2000">迟缓，长按2秒</SelectItem>
+                  </SelectContent>
+                </Select>
+              }
           ></BasicSettingLine>
           <BasicSettingLine
-            label={'画笔面板出现时机'}
-            right={
-              <Select
-                defaultValue={`${showBarTimeout}`}
-                value={`${showBarTimeout}`}
-                onValueChange={(newValue) => {
-                  updateSetting({ showBarTimeout: Number(newValue) })
-                }}
-              >
-                <SelectTrigger className={'w-auto border-none shadow-none'}>
-                  <SelectValue placeholder={'敏捷度调节'} />
-                </SelectTrigger>
-                <SelectContent position={'item-aligned'}>
-                  <SelectItem value={'0'}>立刻</SelectItem>
-                  <SelectItem value="1000">迟缓</SelectItem>
-                </SelectContent>
-              </Select>
-            }
+              label={'画笔面板出现时机'}
+              right={
+                <Select
+                    defaultValue={`${showBarTimeout}`}
+                    value={`${showBarTimeout}`}
+                    onValueChange={(newValue) => {
+                      updateSetting({showBarTimeout: Number(newValue)})
+                    }}
+                >
+                  <SelectTrigger className={'w-auto border-none shadow-none'}>
+                    <SelectValue placeholder={'敏捷度调节'}/>
+                  </SelectTrigger>
+                  <SelectContent position={'item-aligned'}>
+                    <SelectItem value={'0'}>立刻</SelectItem>
+                    <SelectItem value="1000">迟缓</SelectItem>
+                  </SelectContent>
+                </Select>
+              }
           ></BasicSettingLine>
 
           <BasicSettingLine
-            label={'禁用规则'}
-            className={'cursor-pointer'}
-            path={'/light/disable'}
-            subLabel={
-              <div>
-                {setting?.disableList?.length
-                  ? `${setting?.disableList?.length}条规则`
-                  : ''}
-              </div>
-            }
+              label={'禁用规则'}
+              className={'cursor-pointer'}
+              path={'/light/disable'}
+              subLabel={
+                <div>
+                  {setting?.disableList?.length
+                      ? `${setting?.disableList?.length}条规则`
+                      : ''}
+                </div>
+              }
           ></BasicSettingLine>
         </SettingSection>
 
         <div>
           <a
-            href={`${whoAmI?.origin}/pagenote.html#setting`}
-            target={'_blank'}
-            className={'mt-10 block '}
+              href={`${whoAmI?.origin}/pagenote.html#setting`}
+              target={'_blank'}
+              className={'mt-10 block '}
           >
             <SettingSection>
               <BasicSettingLine
-                label={'画笔设置'}
-                subLabel={'添加画笔、修改颜色'}
-                right={<OutLink className={'fill-current'} />}
+                  label={'画笔设置'}
+                  subLabel={'添加画笔、修改颜色'}
+                  right={<OutLink className={'fill-current'}/>}
               ></BasicSettingLine>
             </SettingSection>
           </a>
@@ -109,9 +108,9 @@ export default function LightSetting() {
           <AlertDialog>
             <AlertDialogTrigger>
               <Button
-                variant={'destructive'}
-                size={'sm'}
-                className={'absolute right-4'}
+                  variant={'destructive'}
+                  size={'sm'}
+                  className={'absolute right-4'}
               >
                 重置
               </Button>
@@ -126,9 +125,9 @@ export default function LightSetting() {
               <AlertDialogFooter>
                 <AlertDialogCancel>取消</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => {
-                    updateSetting(null)
-                  }}
+                    onClick={() => {
+                      updateSetting(null)
+                    }}
                 >
                   确认
                 </AlertDialogAction>
@@ -137,6 +136,5 @@ export default function LightSetting() {
           </AlertDialog>
         </div>
       </div>
-    </SettingDetail>
   )
 }

@@ -31,7 +31,7 @@ export default function UserCard(props: Props) {
   return (
       <div
           className={classNames(
-              ' rounded-lg p-2 px-5  min-w-80 w-full border text-card-foreground bg-[#63b3ed]',
+              ' rounded-lg p-2 px-5  min-w-60 w-full border text-card-foreground bg-[#63b3ed]',
               {
                 'cursor-pointer': !editable,
               }

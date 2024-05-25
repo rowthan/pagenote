@@ -38,7 +38,7 @@ export default function PermissionList(props: Props) {
 
     return (
         <div className="">
-            <div className="mx-auto max-w-lg space-y-6 py-10">
+            <div className="mx-auto space-y-6 py-10">
                 <SettingSection>
                     {
                         permissionList.map((item)=> {

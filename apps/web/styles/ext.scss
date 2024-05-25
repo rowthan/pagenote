@@ -2,10 +2,20 @@
 .popup {
   max-height: 100vh;
   min-height: 600px;
+  max-width: 1000px;
   margin: 0 auto;
   overflow: auto;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+// 平板尺寸以下
+@media screen and (max-width: 768px) {
+  .popup {
+    width: 100%;
+    min-height: 100vh;
+    max-height: 100vh;
   }
 }

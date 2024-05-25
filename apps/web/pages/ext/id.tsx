@@ -13,7 +13,7 @@ export default function Id() {
     return (
         <BasicLayout nav={false} footer={true} title={'PAGENOTE ID'} full={true}>
             <RedirectToExt>
-                <div className={'popup w-basic p-4 min-h-fill relative'}>
+                <div className={'popup p-4 min-h-fill relative'}>
                     {
                         mounted() &&
                         <Router>

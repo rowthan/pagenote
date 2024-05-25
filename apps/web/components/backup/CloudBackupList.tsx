@@ -74,8 +74,9 @@ export default function CloudBackupList(props: Props) {
     function doImportBackFile(url: string) {
         setImporting(true)
         extApi.lightpage.importBackup({
-            //@ts-ignore
             filePath: url,
+        },{
+            timeout: 20 * 1000
         }).then(function (res) {
             console.log('导入结果',res)
             toast({

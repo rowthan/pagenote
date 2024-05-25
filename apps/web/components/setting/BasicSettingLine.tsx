@@ -1,5 +1,5 @@
 import React, {ComponentProps, FC, PropsWithChildren, ReactElement, ReactNode, useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
 import SettingMoreSvg from '../../assets/svg/right-more.svg'
 import classNames from 'classnames'
 import Loading from '../loading/Loading'
@@ -75,6 +75,8 @@ export default function BasicSettingLine(props: {
   const [expand, setExpand] = useState(false)
   // todo 优化
   const navigate = useNavigate()
+  const match = useMatch(path|| '');
+  const active = match !== null;
 
   const Right = loading ? (
     <Loading />
@@ -97,6 +99,7 @@ export default function BasicSettingLine(props: {
     onClick && onClick()
   }
 
+  console.log(active,match)
   return (
       <div
           onClick={onClickRoot}
@@ -104,6 +107,7 @@ export default function BasicSettingLine(props: {
         'block px-4 py-3 min-h-12  bg-card border-b last:border-none border-base-200 hover:bg-accent last:rounded-b-lg first:rounded-t-lg overflow-hidden',
         {
           'cursor-pointer': !!path,
+          '!bg-accent': active
         },
         className
       )}
