@@ -1,6 +1,4 @@
-// 这里有问题，需要修复
 .popup {
-  max-height: 100vh;
   min-height: 600px;
   max-width: 1000px;
   margin: 0 auto;
@@ -15,7 +13,8 @@
 @media screen and (max-width: 768px) {
   .popup {
     width: 100%;
-    min-height: 100vh;
-    max-height: 100vh;
+    height: 100vh;
+    min-width: 480px;
+    min-height: 590px;
   }
 }
