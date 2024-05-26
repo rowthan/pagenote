@@ -4,6 +4,8 @@ import React from 'react'
 import BasicLayout from 'layouts/BasicLayout'
 import RedirectToExt from '../../components/RedirectToExt'
 import { useMountedState } from 'react-use'
+import ExtLayout from "../../layouts/ExtLayout";
+import Footer from "../../components/Footer";
 
 
 
@@ -13,7 +15,7 @@ export default function Setting() {
   return (
     <BasicLayout nav={false} footer={true} title={'设置· PAGENOTE 个性化'} full={true}>
       <RedirectToExt>
-        <div className={'popup p-4 min-h-fill relative'}>
+        <div className={'popup sm:p-4 p-1 min-h-fill relative'}>
           {mounted() && (
             <Router>
               <Routes>

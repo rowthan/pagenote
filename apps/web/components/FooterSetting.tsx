@@ -52,7 +52,7 @@ export function PopSetting() {
                     isSidePanel && <FaCheck/>
                 }
             </button>
-            <a href={`${basePath}/ext/setting.html`} className={'hover:bg-accent px-2 py-1'}>
+            <a href={`${basePath}/ext/setting.html`} target={'_blank'} className={'hover:bg-accent px-2 py-1'}>
                 更多设置
             </a>
         </div>
