@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "module": "./dist/obsidian.esm.js",
   "typings": "./dist/index.d.ts",
+  "private": true,
   "publishConfig": {
     "access": "public"
   },
