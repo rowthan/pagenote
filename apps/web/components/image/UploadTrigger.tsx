@@ -33,6 +33,7 @@ export default function UploadTrigger(props: {
     getPublicUploadClient().then(function ({ client, cloud_space }) {
       if (!cloud_space || !client) {
         toast('上传失败，请重试')
+        setUploading(false)
         return
       }
       canvas.current?.toBlob(
@@ -50,6 +51,7 @@ export default function UploadTrigger(props: {
               console.log(res.url, '上传结果')
               if (!res.url) {
                 toast('上传失败，请重试')
+                setUploading(false)
                 return
               }
               const url = res.url.replace(/^http:/, 'https:')

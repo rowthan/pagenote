@@ -22,14 +22,14 @@ type SessionSender = {
 
 export interface CommonBridgeOption extends CommunicationOption{
     storageChangeListener: (callback: (data: BaseMessageRequest)=>void)=>()=>void
-    sendRequest: (key: string, value: string)=>void
+    sendRequest: (key: string, value: string, originObject: any)=>void
     debug?: boolean
 }
 
 /**
  * 通过可共同使用的存储空间，来作为数据交换的介质
  * */
-export default class BridgeByStorage implements Communication<any>{
+export default class BridgeBy implements Communication<any>{
     clientId: string;
     listeners: Record<string, IBaseMessageListener<any, SessionSender, any>>;
     proxy: IBaseMessageProxy<any, SessionSender, any> = function () {
@@ -240,7 +240,8 @@ export default class BridgeByStorage implements Communication<any>{
             requestData.data = undefined; // 转移数据为 requestDataUri
             dataString = JSON.stringify(requestData)
         }
-        this.option.sendRequest(key,dataString)
+        this.option.sendRequest &&
+        this.option.sendRequest(key,dataString,requestData);
     }
 
     _debug(..._args:any){

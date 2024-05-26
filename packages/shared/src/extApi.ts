@@ -91,11 +91,11 @@ export namespace lightpage {
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询网页携带的全量数据： 网页、标记、快照*/
-        getLightPageDetail: IExtenstionMessageListener<{ key: string }, WebPage | null>,
+        getLightPageDetail: IExtenstionMessageListener<{ key?: string, url?: string }, WebPage | null>,
 
 
         /**导入备份文件**/
-        importBackup: IExtenstionMessageListener<{ backupData: BackupData }, {
+        importBackup: IExtenstionMessageListener<{backupData?: BackupData, filePath?: string }, {
             db: string
             table: string,
             keys: string[]
@@ -267,6 +267,18 @@ export namespace action {
     export type request = ComputeRequestToBackground<response>
 }
 
+export namespace actions{
+    export const id = 'actions'
+    export type response = {
+        runYaml: IExtenstionMessageListener<{ yaml: string } | {id: string}, { run_names: string[] }>
+        callAction: IExtenstionMessageListener<{
+            uses: string,
+            with: any
+        }, any>
+    }
+    export type request = ComputeRequestToBackground<response>
+}
+
 export namespace developer {
     import TabGroup = chrome.tabGroups.TabGroup;
     import Tab = chrome.tabs.Tab;
@@ -328,9 +340,16 @@ export namespace developer {
         /**代理执行浏览器插件方法*/
         chrome: IExtenstionMessageListener<{
             namespace: string,
-            type: string,
+            /**@deprecated 使用 method 代替*/
+            type?: string,
+            method: string,
+            arguments: any[],
+            /**@deprecated 使用 arguments 代替*/
             args?: any[]
         }, any>
+
+        store: IExtenstionMessageListener<{ key: string,value: string }, void>
+        watch: IExtenstionMessageListener<{ event: 'storage' | string, key: string }, {key: string, value: string}>
 
         /**打开标签页*/
         openTab: IExtenstionMessageListener<{ url: string, reUse: boolean, tab: { tabId?: string | number, windowId?: string | number, groupInfo?: Partial<TabGroup> } }, { tab: Tab }>
@@ -372,6 +391,7 @@ export namespace user {
         isCN?: boolean,
         isMac?: boolean,
         isFirefox?: boolean, // Firefox 浏览器判断，需要做兼容性处理
+        isEdge?: boolean
         isTest?: boolean,
         did?: string, // 客户端的标识 did 不可变更
         sec_did?: string
@@ -380,6 +400,7 @@ export namespace user {
 
     export interface User {
         profile?: {
+            pro?: number
             role: number,
             nickname?: string,
             emailMask?: string;
@@ -444,7 +465,7 @@ export namespace network {
             variables?: Record<string, any>
             [key: string]: any,
         },
-        method: 'GET' | 'POST' | string
+        method: "GET" | "POST" | "PUT" | "DELETE"
 
         credentials?: RequestCredentials
         cache?: RequestCache
@@ -467,23 +488,25 @@ export namespace network {
 
     export interface response {
         pagenote: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        /**@deprecated 请使用 http*/
         fetch: IExtenstionMessageListener<FetchRequest, FetchResponse>
 
-        notion: IExtenstionMessageListener<{
-            namespace: string,
-            method: string,
-            args: any[]
-        }, any>
+        // notion: IExtenstionMessageListener<{
+        //     namespace: string,
+        //     method: string,
+        //     args: any[]
+        // }, any>
 
-        uploadFile: IExtenstionMessageListener<{ content: string, contentType: ContentType }, string>
 
         /**请求第三方开放平台，与 fetch 相比，会增加鉴权，授权 token 信息至 请求 header 中*/
         openApi: IExtenstionMessageListener<FetchRequest, FetchResponse>
+        // todo 设置为 http actions
+        http: IExtenstionMessageListener<FetchRequest, FetchResponse>
 
-        state: IExtenstionMessageListener<void, {
-            online: boolean
-            google: boolean
-        }>
+        // state: IExtenstionMessageListener<void, {
+        //     online: boolean
+        //     google: boolean
+        // }>
 
         [key: string]: IExtenstionMessageListener<any, any>
     }
@@ -535,7 +558,7 @@ export type TableAPI<Schema extends TableSchemaBasicFields> = {
 
 
 type RequestParamsWithDBInfo<params> = {
-    db: string,
+    db?: string,
     table: string
     params: params
 }

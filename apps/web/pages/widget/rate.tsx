@@ -15,15 +15,18 @@ export default function Rate(props: Props) {
     function () {
       console.log(tab, whoAmI)
       if (whoAmI?.extensionStoreUrl) {
+        const args = [
+          tab?.id,
+          {
+            url: whoAmI.extensionStoreUrl,
+          },
+        ]
         extApi.developer.chrome({
           namespace: 'tabs',
           type: 'update',
-          args: [
-            tab?.id,
-            {
-              url: whoAmI.extensionStoreUrl,
-            },
-          ],
+          method: 'update',
+          args: args,
+          arguments: args,
         })
       }
     },

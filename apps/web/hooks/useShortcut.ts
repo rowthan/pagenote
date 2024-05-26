@@ -13,7 +13,9 @@ export default function useShortcut():[Command[]|undefined,Record<string, Comman
         return extApi.developer.chrome({
             namespace:"commands",
             type: 'getAll',
-            args:[]
+            method: 'getAll',
+            args:[],
+            arguments: [],
         }).then(function (res) {
             return res.data
         })

@@ -294,9 +294,9 @@ export default class ExtensionMessage implements Communication<any>{
     const request: BaseMessageRequest= {
       type: type,
       data: data,
-      //@ts-ignore
       header:{
         ...(header || {}),
+        timeout: header?.timeout || DEFAULT_TIMEOUT,
         targetClientId: header?.targetClientId || this.option.targetClientId || '',
         originClientId: header?.originClientId || this.clientId,
         senderClientId: this.clientId,
@@ -376,6 +376,7 @@ export default class ExtensionMessage implements Communication<any>{
     throw new Error(type+" not implemented.");
   }
 
+  /**@deprecated*/
   broadcast(type: string, data: any, header?: BaseMessageHeader){
     if(!this.option.isBackground){
       throw Error('only background can broadcast')
@@ -386,19 +387,8 @@ export default class ExtensionMessage implements Communication<any>{
       [type]: {
         data: data,
         header: header,
+        type: type,
       }
     });
-
-    // const requestMessage = this.requestMessage;
-    // // 对每一个标签页发送请求
-    // chrome.tabs.query({}, function (tabs) {
-    //   tabs.forEach(function (tab) {
-    //     return requestMessage(type, data, {
-    //       ...(header || {}),
-    //       targetTabId: tab.id,
-    //       targetClientId: null, // 无指定目标服务节点
-    //     })
-    //   })
-    // })
   }
 }

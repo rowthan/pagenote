@@ -1,4 +1,4 @@
-import BridgeByStorage, {CommonBridgeOption} from "./BridgeByStorage";
+import BridgeBy, {CommonBridgeOption} from "./BridgeBy";
 import type {BaseMessageRequest, CommunicationOption} from "../../base";
 import StorageChange = chrome.storage.StorageChange;
 
@@ -21,7 +21,7 @@ function triggerGlobalStorageEvent() {
  * storage 值变更事件，自身不会收到 storage 事件，只会对外发送 storage 事件
  * */
 export function getSessionStorageBridge(id:string,option: Partial<CommonBridgeOption> & {listenKey:string} ) {
-    return new BridgeByStorage(id, {
+    return new BridgeBy(id, {
         ...option,
         asServer: option.asServer || false,
         timeout: option.timeout || 4000,
@@ -55,6 +55,45 @@ export function getSessionStorageBridge(id:string,option: Partial<CommonBridgeOp
     });
 }
 
+/**
+ * Event 传播模式。用于具有同一个上下文的使用场景，类似 eventBus 。
+ * 特点，支持非序列化的数据传输，如 function 等。
+ * */
+export function getEventBridge(id: string,option: Partial<CommonBridgeOption>) {
+    const CUSTOM_EVENT_NAME = 'custom-session-storage';
+    return new BridgeBy(id, {
+        ...option,
+        asServer: option.asServer || false,
+        timeout: option.timeout || 4000,
+        sendRequest: function (key, _value,originObject) {
+            const event = new CustomEvent(CUSTOM_EVENT_NAME, {
+                detail: {
+                    key: key,
+                    data: originObject,
+                }
+            });
+            window.dispatchEvent(event);
+        },
+        storageChangeListener: function (callback: (data: BaseMessageRequest) => void) {
+            function changeListener(event:CustomEventInit) {
+                try {
+                    // 通道判断，过滤业务的读写storage事件
+                    if(event.detail && event.detail.key !== option.listenKey){
+                        return;
+                    }
+                    callback(event.detail.data);
+                } catch (e) {
+                    return;
+                }
+            }
+            window.addEventListener(CUSTOM_EVENT_NAME, changeListener)
+            return function () {
+                window.removeEventListener(CUSTOM_EVENT_NAME, changeListener)
+            }
+        }
+    })
+}
+
 
 /**
  * local bridge 跨页面的会话通信
@@ -63,7 +102,7 @@ export function getSessionStorageBridge(id:string,option: Partial<CommonBridgeOp
  * 案例：监测是否有相同页面被打开
  * */
 export function getLocalStorageBridge(id:string,option:BridgeOption) {
-    return new BridgeByStorage(id, {
+    return new BridgeBy(id, {
         ...option,
         sendRequest: function (key, value) {
             localStorage.setItem(key,value);
@@ -102,7 +141,7 @@ export function getLocalStorageBridge(id:string,option:BridgeOption) {
  * 通过 chrome.storage.local 通讯
  * */
 export function getStorageLocalBridge(id: string, option: BridgeOption) {
-    return new BridgeByStorage(id, {
+    return new BridgeBy(id, {
         ...option,
         sendRequest: function (key, value) {
             chrome.storage.local.set({
@@ -129,7 +168,7 @@ export function getStorageLocalBridge(id: string, option: BridgeOption) {
  * 跨域名的通信方式。
  * */
 export function getIframeBridge(id:string,option: BridgeOption) {
-    return new BridgeByStorage(id, {
+    return new BridgeBy(id, {
         ...option,
         sendRequest: function (key, value) {
             const data = JSON.parse(value);
@@ -151,5 +190,5 @@ export function getIframeBridge(id:string,option: BridgeOption) {
 
 
 export {
-    BridgeByStorage
+    BridgeBy
 };

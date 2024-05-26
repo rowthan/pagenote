@@ -17,17 +17,16 @@ module.exports = {
     //   },
     // },
     extend: {
-      width: {
-        basic: '480px',
-      },
-      height: {
-        basic: '550px',
-      },
-      minWidth: {
-        basic: '480px',
-      },
+      // width: {
+      //   basic: '480px',
+      // },
+      // height: {
+      //   basic: '550px',
+      // },
+      // minWidth: {
+      //   basic: '480px',
+      // },
       minHeight: {
-        basic: '600px',
         0: '0',
         '1/4': '25%',
         '1/2': '50%',

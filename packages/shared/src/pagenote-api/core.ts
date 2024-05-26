@@ -5,7 +5,7 @@ import {
     developer,
     lightpage,
     localdir, network,
-    setting, TableAPI, user, table
+    setting, TableAPI, user, table, actions
 } from "../extApi";
 import {BaseMessageHeader, RESPONSE_STATUS_CODE} from "@pagenote/bridge";
 
@@ -113,15 +113,15 @@ export const generateApi = function (wrapperFun: Wrapper) {
     }
 
     const networkMethod: ComputeRequestApiMapDefine<network.request> = {
-        state: true,
-        notion: true,
+        http: true,
         fetch: true,
         openApi: true,
         pagenote: true,
-        uploadFile: true
     }
 
     const developerMethod: ComputeRequestApiMapDefine<developer.request> = {
+        store: true,
+        watch: true,
         stat: true,
         chrome: true,
         downloadLog: true,
@@ -131,7 +131,7 @@ export const generateApi = function (wrapperFun: Wrapper) {
         requestBack: true,
         requestFront: true,
         requestPermission: true,
-        openTab: true,
+        openTab: true
     }
 
 
@@ -153,6 +153,11 @@ export const generateApi = function (wrapperFun: Wrapper) {
         get: true,
     }
 
+    const actionsMethods: ComputeRequestApiMapDefine<actions.request> = {
+        callAction: true,
+        runYaml: true
+    }
+
     return {
         lightpage: createApiForClient<lightpage.request>(lightpageMethod, lightpage.id, wrapperFun),
         // 待删除
@@ -166,5 +171,8 @@ export const generateApi = function (wrapperFun: Wrapper) {
 
         //通用数据库表操作 API
         table: createApiForClient<table.request>(commonTableMethods,table.id,wrapperFun),
+
+        actions: createApiForClient<actions.request>(actionsMethods,actions.id,wrapperFun)
+
     }
 };

@@ -70,7 +70,7 @@ export default function PlanCard(props: {
                     }`}
           onClick={() => {
             onClick(info)
-            fetchUserInfo(true)
+            fetchUserInfo(true,1000 *  60 * 5)
           }}
         >
           {disabled && (

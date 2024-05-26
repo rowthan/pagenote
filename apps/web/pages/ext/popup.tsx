@@ -32,7 +32,7 @@ export default function PopupPage() {
 
   return (
     <BasicLayout nav={false} footer={false} full={true}>
-      <div className={'popup w-basic rounded-lg transform translate-x-0'}>
+      <div className={'popup rounded-lg transform translate-x-0'}>
         {mounted() && (
           <Router>
             <div className="sticky top-0 bg-background z-10">

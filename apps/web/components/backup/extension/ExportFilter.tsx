@@ -40,7 +40,6 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
       ])
 
       const backup: BackupData = {
-        backupId: `${Date.now()}`,
         backup_at: Date.now(),
         extension_version: whoAmI?.version,
         version: BackupVersion.version7,
@@ -87,6 +86,14 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
         .chrome({
           namespace: 'downloads',
           type: 'download',
+          method: "download",
+          arguments: [
+            {
+              saveAs: true,
+              url: url,
+              filename: filename,
+            },
+          ],
           args: [
             {
               saveAs: true,
@@ -116,15 +123,7 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
         className={'btn btn-sm'}
         onClick={()=>{exportData('extension')}}
       >
-        导出为压缩包（推荐）
-      </Button>
-      <Button
-          disabled={downloading}
-          loading={downloading}
-          className={'btn btn-sm ml-2'}
-          onClick={()=>{exportData('web')}}
-      >
-        导出为当个文件
+        下载备份文件
       </Button>
     </div>
   )

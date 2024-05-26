@@ -45,6 +45,7 @@ export default function (): [BookInfo, () => void] {
             url: '/api/graph/book',
             method: 'GET',
             data: {
+              random: userinfo?.profile?.role,
               query: `query{books{startTime,endTime,duration,remark,giftDays}}`,
             },
           },

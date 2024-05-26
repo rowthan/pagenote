@@ -393,8 +393,6 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
-    // @deprecated
-    backupId?: string
     version?: BackupVersion,
     extension_version?: string,
     backup_at?: number,
@@ -403,7 +401,8 @@ export type BackupData = {
     // @deprecated
     remark?: string
 
-
+    // @deprecated
+    did?: string;
     // @deprecated
     pages?: Partial<WebPage>[],
     // @deprecated
@@ -418,10 +417,6 @@ export type BackupData = {
     notes?: Partial<Note>[]
     // @deprecated
     htmlList?: Partial<OfflineHTML>[]
-
-
-    // @deprecated
-    did?: string;
 
     items: {
         db: string

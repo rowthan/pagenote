@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "yarn run build",
     "build": "rm -rf lib && tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
     "publish-npm": "npm run build && npm publish --access public",
     "test": "echo \"skip mocha\"",
     "lint": "echo \"skip\""

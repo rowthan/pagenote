@@ -1,13 +1,9 @@
 import {type ReactNode, useEffect} from 'react';
-import {Alert, AlertDescription, AlertTitle} from "../../@/components/ui/alert";
-import {CheckIcon} from "@radix-ui/react-icons";
-import {Button} from "../../@/components/ui/button";
-import usePermissions from "../../hooks/usePermissions";
 import BasicSettingLine, {SettingSection} from "../setting/BasicSettingLine";
-import {CheckCircledIcon} from "@radix-ui/react-icons";
 import { HiCheckCircle } from "react-icons/hi";
-import { RiUserForbidFill } from "react-icons/ri";
 import { PiProhibitFill } from "react-icons/pi";
+import useWhoAmi from "hooks/useWhoAmi";
+import usePermissions from "hooks/usePermissions";
 
 interface Props {
     children?: ReactNode;
@@ -24,51 +20,55 @@ const permissionList = [
         name: '【可选】标签页分组管理',
         description: '可以对网页进行归组管理',
         permission: 'tabGroups',
-        namespace: 'permissions'
+        namespace: 'permissions',
+        supportPlatform: ['chrome','edge','offline']
     }
 ]
 
 export default function PermissionList(props: Props) {
     const {children} = props;
     const [permission,requestPermission] = usePermissions();
-
-    useEffect(() => {
-        const search = window.location.search;
-        console.log(search)
-    }, []);
-
-
+    const [whoAmI] = useWhoAmi()
     return (
         <div className="">
-            <div className="mx-auto max-w-lg space-y-6 py-10">
+            <div className="mx-auto space-y-6">
                 <SettingSection>
                     {
-                        permissionList.map((item)=>(
-                            <BasicSettingLine
-                                onClick={()=>{
-                                    console.log('request');
-                                    requestPermission({
-                                        [item.namespace]: [item.permission]
-                                    })
-                                }}
-                                key={item.name}
-                                subLabel={item.description}
-                                right={
-                                <div>
-                                    {
-                                        // @ts-ignore
-                                        permission[item.namespace]?.includes(item.permission) ?
-                                            <HiCheckCircle className={'text-green-500 text-xl'}/>
-                                            : <div>
-                                              <span className={'text-xs'}>缺少权限，点击申请</span>  <PiProhibitFill className={'inline-block text-red-500 text-xl'}/>
-                                            </div>
+                        permissionList.map((item)=> {
+                            const show = !item.supportPlatform || item.supportPlatform.includes(whoAmI?.extensionPlatform||"chrome");
+                            if(!show){
+                                return null;
+                            }
+                            //@ts-ignore
+                            const hasPerm = permission[item.namespace]?.includes(item.permission);
+                            return (
+                                <BasicSettingLine
+                                    onClick={()=>{
+                                        console.log('request');
+                                        if(hasPerm){
+                                            return
+                                        }
+                                        requestPermission({
+                                            [item.namespace]: [item.permission]
+                                        })
+                                    }}
+                                    key={item.name}
+                                    subLabel={item.description}
+                                    right={
+                                        <div>
+                                            {
+                                                hasPerm ?
+                                                    <HiCheckCircle className={'text-green-500 text-xl'}/>
+                                                    : <div>
+                                                        <span className={'text-xs'}>缺少权限，点击申请</span>  <PiProhibitFill className={'inline-block text-red-500 text-xl'}/>
+                                                    </div>
+                                            }
+                                        </div>
                                     }
-                                </div>
-                                }
-                                label={item.name}>
-
-                            </BasicSettingLine>
-                        ))
+                                    label={item.name}>
+                                </BasicSettingLine>
+                            )
+                        })
                     }
                 </SettingSection>
 

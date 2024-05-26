@@ -1,7 +1,5 @@
 import { type ReactNode } from 'react'
 import SettingDetail from '../SettingDetail'
-import useSettings from 'hooks/useSettings'
-import useSettingConfig from 'hooks/table/useSettingConfig'
 
 
 interface Props {
@@ -10,8 +8,7 @@ interface Props {
 
 export default function Shortcut(props: Props) {
   const { children } = props
-  const [config,update]= useSettingConfig('workflows_config');
-  const [workflows]= useSettingConfig('workflows');
+  // const [config,update]= useSettingConfig('workflows_config');
 
 
   return (

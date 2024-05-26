@@ -1,23 +1,55 @@
-import React, {ComponentProps, FC, PropsWithChildren, ReactElement, ReactNode, useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { ReactElement, ReactNode, useState} from 'react'
+import { useNavigate, useMatch } from 'react-router-dom'
 import SettingMoreSvg from '../../assets/svg/right-more.svg'
 import classNames from 'classnames'
 import Loading from '../loading/Loading'
 import {openUrlInGroup} from "../../utils/url";
+import { RiLoaderLine } from "react-icons/ri";
 
 export function SettingSection(props: {
   children: ReactNode
   className?: string
+  loading?: boolean
 }) {
   return (
     <div
-      className={classNames('border-card bg-card rounded-lg', props.className)}
+      className={classNames('relative border-card bg-card rounded-lg', props.className)}
     >
+      {
+          props.loading &&
+          <div className={'absolute w-full h-full flex items-center justify-center bg-gray-100 bg-opacity-10'}>
+            <RiLoaderLine className={'text-2xl animate-spin'}/>
+          </div>
+      }
       {props.children}
     </div>
   )
 }
+
+export function StatBadge(props: Props & {
+  type: 'success' | 'fail'
+}) {
+  return(
+      <div className={classNames(
+          'flex items-center gap-2 text-xs',
+          {
+            'text-blue-500': props.type === 'success',
+            'text-red-500': props.type === 'fail',
+          }
+      )}>
+        <div className={classNames(
+            'overflow-hidden rounded-full text-xs p-0.5 justify-center h-1 w-1',
+            {
+              'bg-blue-500': props.type === 'success',
+              'bg-red-500': props.type === 'fail',
+            }
+        )} />
+        {props.children}
+      </div>
+  )
+}
 export default function BasicSettingLine(props: {
+  badge?: ReactNode
   label: string | ReactElement
   subLabel?: string | ReactElement
   path?: string
@@ -28,6 +60,7 @@ export default function BasicSettingLine(props: {
   className?: string
 }) {
   const {
+    badge,
     className,
     label,
     path,
@@ -38,14 +71,19 @@ export default function BasicSettingLine(props: {
     loading,
     ...left
   } = props
-  const [expand, setExpand] = useState(false)
   // todo 优化
   const navigate = useNavigate()
+  const pathMatch = useMatch({
+      path: path|| '',
+      caseSensitive: false,
+      end: false,
+  });
+  const active = pathMatch && pathMatch?.pathname === path;
 
   const Right = loading ? (
     <Loading />
   ) : (
-      <div className={'flex items-center text-sm'}>
+      <div className={'flex items-center gap-2 text-sm text-muted-foreground'}>
         {right}
         {path && <SettingMoreButton />}
       </div>
@@ -70,19 +108,31 @@ export default function BasicSettingLine(props: {
         'block px-4 py-3 min-h-12  bg-card border-b last:border-none border-base-200 hover:bg-accent last:rounded-b-lg first:rounded-t-lg overflow-hidden',
         {
           'cursor-pointer': !!path,
+          '!bg-accent': active
         },
         className
       )}
       {...left}
     >
       <div className={'flex items-center justify-between'}>
-        <div className={'text-sm'}>
-          <div className={' leading-12 '}>{label}</div>
-          <div className={'text-xs text-muted-foreground'}>{subLabel}</div>
+        <div className={'flex items-center gap-2'}>
+          {
+              badge &&
+              <div className={'w-6 h-6'}>
+                {badge}
+              </div>
+          }
+          <div className={'text-sm'}>
+            <div className={' leading-12 '}>{label}</div>
+            {
+                subLabel &&
+                <div className={'text-xs text-muted-foreground'}>{subLabel}</div>
+            }
+          </div>
         </div>
         {Right}
       </div>
-      <div className={''}>{children}</div>
+        <div className={''}>{children}</div>
     </div>
   )
 }

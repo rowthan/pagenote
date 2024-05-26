@@ -13,10 +13,18 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true) {
     }
   }
   try {
-    const result =
-      getCacheContent(id) ||
-      await(await fetch(`${WEB_HOST}/api/doc?id=${id}`)).json() ||
-      getCacheContent(id, true)
+    let result =  getCacheContent(id);
+    if(!result){
+      try{
+        result = await(await fetch(`${WEB_HOST}/api/doc?id=${id}`)).json();
+      }catch (e) {
+        console.error('fetch doc detail error')
+      }
+    }
+    if(!result){
+      console.log('fallback get doc from local .cache')
+      result = getCacheContent(id, true);
+    }
 
     if (result?.recordMap) {
       return {

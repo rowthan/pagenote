@@ -1,12 +1,13 @@
 import extApi from "@pagenote/shared/lib/pagenote-api";
 import useSWR from "swr";
 import Tab = chrome.tabs.Tab;
+import {useEffect} from "react";
 
 type TabGroups = Tab[];
 type WindowMap = Map<number, TabGroups>
 let lastTab: undefined | Tab = undefined
 export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroups[] | undefined} {
-  const { data: tab } = useSWR<Tab | undefined>(
+  const { data: tab,mutate } = useSWR<Tab | undefined>(
     `/tab/currentTab/`,
     getTabInfo
   )
@@ -17,6 +18,14 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
       fallbackData: [],
     }
   )
+
+  useEffect(function () {
+      if(chrome && chrome.tabs){
+          chrome.tabs.onActivated.addListener(function () {
+              mutate();
+          })
+      }
+  },[])
 
   async function getTabInfo() {
     let currentTabId: number|undefined;
@@ -30,9 +39,10 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
     if(!currentTabId){
       const res = await extApi.developer
           .chrome({
-            type: 'query',
+            type: 'query', method: 'query',
             namespace: 'tabs',
             args: [{ active: true, lastFocusedWindow: true }],
+            arguments: [{ active: true, lastFocusedWindow: true }],
           });
       lastTab = (res.data || [])[0] || lastTab
       currentTabId = lastTab?.id;
@@ -41,8 +51,10 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
     return extApi.developer
         .chrome({
           type: 'get',
+          method: 'get',
           namespace: 'tabs',
           args: [currentTabId],
+          arguments: [currentTabId],
         })
         .then(function (res) {
           return res.data as Tab

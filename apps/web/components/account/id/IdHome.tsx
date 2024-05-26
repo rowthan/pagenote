@@ -38,26 +38,16 @@ export function IdRoutes(props:{rootPath: string}){
                         </div>
                     </AlertDescription>
                 </Alert>
-
             </SettingDetail>
-
         )
     }
 
     return(
         <Routes>
             <Route path="/" element={<IdIndex basePath={rootPath}/>}/>
-            {/*<Route path="/cloud-backup" element={*/}
-            {/*    <SettingDetail label={'云备份'}>*/}
-            {/*        <CloudBackup/>*/}
-            {/*    </SettingDetail>*/}
-            {/*}/>*/}
-
             <Route path="/third-part" element={
                 <SettingDetail label={'第三方授权'}>
-                    <div className={'px-2'}>
-                        <AuthList/>
-                    </div>
+                    <AuthList/>
                 </SettingDetail>
             }/>
             <Route path="/vip-record" element={
@@ -65,7 +55,6 @@ export function IdRoutes(props:{rootPath: string}){
                     <BookList/>
                 </SettingDetail>
             }/>
-
             <Route path="/*" element={<IdIndex basePath={rootPath}/>}/>
         </Routes>
     )
@@ -80,38 +69,36 @@ function IdIndex(props:{basePath: string}){
     const { basePath='' } = props;
 
     return(
-        <SettingDetail label={'PAGENOTE ID'}>
-            <>
-                <div className={'flex flex-col justify-center mb-10'}>
-                    <div className={'m-auto w-20 h-20'}>
-                        <Avatar/>
+        <>
+            <div className={'flex flex-col justify-center mb-10'}>
+                <div className={'m-auto w-20 h-20'}>
+                    <Avatar/>
+                </div>
+                <div className={'text-center'}>
+                    <div className={'text-accent-foreground'}>
+                        {userInfo?.profile.nickname}
                     </div>
-                    <div className={'text-center'}>
-                        <div className={'text-accent-foreground'}>
-                            {userInfo?.profile.nickname}
-                        </div>
-                        <div className={'text-muted-foreground text-xs'}>
-                            {whoAmI?.did}
-                        </div>
+                    <div className={'text-muted-foreground text-xs'}>
+                        {whoAmI?.did}
                     </div>
                 </div>
-                <SettingSection>
-                    <BasicSettingLine label={'关联账号'} path={basePath+'/third-part'}
-                                      right={authList?.length ? <span className={'text-xs text-muted-foreground'}>
+            </div>
+            <SettingSection>
+                <BasicSettingLine label={'关联账号'} path={basePath+'/third-part'}
+                                  right={authList?.length ? <span className={'text-xs text-muted-foreground'}>
                         已关联 {authList.length} 个账号
                         </span> : ''}/>
-                    {/*<BasicSettingLine label={'云备份'} path={basePath+'/cloud-backup'}/>*/}
+                {/*<BasicSettingLine label={'云备份'} path={basePath+'/cloud-backup'}/>*/}
 
-                </SettingSection>
+            </SettingSection>
 
-                <SettingSection className={'my-4'}>
-                    <BasicSettingLine
-                        label={'赞助记录'}
-                        right={bookInfo.expiredTip}
-                        path={(userInfo?.profile?.role || 0) > 2 ? basePath+'/vip-record': 'https://pagenote.cn/pro-plan'}/>
-                </SettingSection>
-            </>
-        </SettingDetail>
+            <SettingSection className={'my-4'}>
+                <BasicSettingLine
+                    label={'赞助记录'}
+                    right={bookInfo.expiredTip}
+                    path={(userInfo?.profile?.role || 0) > 2 ? basePath+'/vip-record': 'https://pagenote.cn/pro-plan'}/>
+            </SettingSection>
+        </>
     )
 }
 
