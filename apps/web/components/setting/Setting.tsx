@@ -1,53 +1,41 @@
 import UserCard from '../account/UserCard'
 import DataBackup from './DataBackup'
-import {Route, Routes, useNavigate, useNavigation, useRoutes} from 'react-router-dom'
-import React, {JSXElementConstructor, ReactElement, useEffect} from 'react'
-import LightSetting from './LightSetting'
-import ImageCloud from '../backup/extension/ImageCloud'
-import ImportAndExport from '../backup/extension/ImportAndExport'
+import {Route, Routes, useNavigate} from 'react-router-dom'
+import React, {JSXElementConstructor, ReactElement} from 'react'
 import SettingDetail from './SettingDetail'
 import extApi from '@pagenote/shared/lib/pagenote-api'
-import DisabledDetail from './DisabledDetail'
-import Safety from "./Safety";
-import PermissionList from "../permission/PermissionList";
 import BasicSettingLine, {SettingMoreButton, SettingSection} from "./BasicSettingLine";
-import CloudBackup from "../backup/CloudBackup";
 import useWhoAmi from "../../hooks/useWhoAmi";
 import DeviceInfo from "../account/DeviceInfo";
-import CheckVersion from "../check/CheckVersion";
-import {basePath} from "../../const/env";
+import {useWindowSize} from "react-use";
 import {MdOutlineSettingsBackupRestore} from "react-icons/md";
 import classNames from "classnames";
-import CloudBackupList from "../backup/CloudBackupList";
+import ImportAndExport from "../backup/extension/ImportAndExport";
+import CheckVersion from "../check/CheckVersion";
+import {basePath} from "../../const/env";
+import CloudBackup from "../backup/CloudBackup";
 import CloudSupporters from "../backup/CloudSupporters";
+import CloudBackupList from "../backup/CloudBackupList";
 import CloudSync from "../backup/CloudSync";
+import ImageCloud from "../backup/extension/ImageCloud";
+import LightSetting from "./LightSetting";
+import DisabledDetail from "./DisabledDetail";
 import ShortCutInfo from "../ShortCutInfo";
-import {useWindowSize} from "react-use";
+import Safety from "./Safety";
+import PermissionList from "../permission/PermissionList";
+import IdHome from "../account/id/IdHome";
 
-function SettingHomeRedirect() {
-    const navigate = useNavigate();
-    const {width} = useWindowSize(900, 600)
-
-    // useEffect(() => {
-    //     if(window.innerWidth > 600){
-    //         navigate('/data')
-    //     }else{
-    //         navigate('/home')
-    //     }
-    // }, []);
-
-    return (
-        width < 600 ?
-            <SettingHome/> :
-            <DataBackup/>
-
-    )
-}
-
-const routes: Record<string, { element: ReactElement<any, string | JSXElementConstructor<any>>, title: string }> = {
+export const routes: Record<string, {
+    element: ReactElement<any, string | JSXElementConstructor<any>>,
+    title: string
+}> = {
     '/': {
         element: <SettingHomeRedirect/>,
         title: ''
+    },
+    '/data': {
+        element: <DataBackup/>,
+        title: '数据存储'
     },
     '/data/*': {
         element: <DataBackup/>,
@@ -78,6 +66,10 @@ const routes: Record<string, { element: ReactElement<any, string | JSXElementCon
     "/data/cloud-backup": {
         element: <CloudBackup/>,
         title: '云备份'
+    },
+    '/data/cloud-supporters': {
+        element: <CloudSupporters/>,
+        title: '云盘服务商'
     },
     '/data/cloud-backup/history':
         {
@@ -125,10 +117,22 @@ const routes: Record<string, { element: ReactElement<any, string | JSXElementCon
         element: <PermissionList/>,
         title: '权限管理'
     },
+    '/id/*': {
+        element: <IdHome basePath={'/id'}/>,
+        title: ''
+    },
     '*': {
         element: <SettingHomeRedirect/>,
         title: ''
     }
+}
+function SettingHomeRedirect() {
+    const {width} = useWindowSize(900, 600)
+    return (
+        width < 600 ?
+            <SettingHome/> :
+            <DataBackup/>
+    )
 }
 
 function SettingHome() {
@@ -182,7 +186,7 @@ function SettingHome() {
 
 export default function Setting() {
     return (
-        <div className={'m-auto p-3 flex gap-12'}>
+        <div className={'m-auto p-3 flex gap-16'}>
             <div className={'lg:block hidden'}>
                 <SettingHome/>
             </div>

@@ -1,11 +1,10 @@
-import React, {ComponentProps, FC, PropsWithChildren, ReactElement, ReactNode, useState} from 'react'
+import React, { ReactElement, ReactNode, useState} from 'react'
 import { useNavigate, useMatch } from 'react-router-dom'
 import SettingMoreSvg from '../../assets/svg/right-more.svg'
 import classNames from 'classnames'
 import Loading from '../loading/Loading'
 import {openUrlInGroup} from "../../utils/url";
 import { RiLoaderLine } from "react-icons/ri";
-import { Badge } from "@/components/ui/badge"
 
 export function SettingSection(props: {
   children: ReactNode
@@ -72,11 +71,14 @@ export default function BasicSettingLine(props: {
     loading,
     ...left
   } = props
-  const [expand, setExpand] = useState(false)
   // todo 优化
   const navigate = useNavigate()
-  const match = useMatch(path|| '');
-  const active = match !== null;
+  const pathMatch = useMatch({
+      path: path|| '',
+      caseSensitive: false,
+      end: false,
+  });
+  const active = pathMatch && pathMatch?.pathname === path;
 
   const Right = loading ? (
     <Loading />
@@ -99,7 +101,6 @@ export default function BasicSettingLine(props: {
     onClick && onClick()
   }
 
-  console.log(active,match)
   return (
       <div
           onClick={onClickRoot}

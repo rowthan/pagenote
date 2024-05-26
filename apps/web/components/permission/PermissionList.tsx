@@ -29,16 +29,9 @@ export default function PermissionList(props: Props) {
     const {children} = props;
     const [permission,requestPermission] = usePermissions();
     const [whoAmI] = useWhoAmi()
-
-    useEffect(() => {
-        const search = window.location.search;
-        console.log(search)
-    }, []);
-
-
     return (
         <div className="">
-            <div className="mx-auto space-y-6 py-10">
+            <div className="mx-auto space-y-6">
                 <SettingSection>
                     {
                         permissionList.map((item)=> {

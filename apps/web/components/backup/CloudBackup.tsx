@@ -50,7 +50,7 @@ export default function CloudBackup(props: Props) {
                         'grayscale': !config?.switch
                     })} />
                     <h2 className={'text-lg text-accent-foreground font-bold text-center'}>备份</h2>
-                    <div className={'p-2  text-sm text-muted-foreground'}>
+                    <div className={'p-2 w-4/5 mx-auto text-center text-sm text-muted-foreground'}>
                         备份全量数据。当你重装插件、数据意外丢失数据、或重新在其他浏览器安装新的插件时，备份数据便于你快速地恢复数据。
                         {/*<div className={'p-2 text-center'}>*/}
                         {/*    <Dialog>*/}
