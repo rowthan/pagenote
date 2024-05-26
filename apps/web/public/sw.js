@@ -196,7 +196,7 @@ self.addEventListener('fetch', function (e) {
         return fetch(e.request)
       })
       .catch(function (err) {
-        console.error('sw fetch', err)
+        console.error(e.request.url,'sw fetch', err)
         return fetch(e.request)
       })
   )

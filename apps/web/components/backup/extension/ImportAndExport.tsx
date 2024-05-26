@@ -229,25 +229,9 @@ export default function ImportAndExport(props: Props) {
             <div className="flex flex-col items-center justify-center gap-2">
               <div className="text-sm text-center text-muted-foreground">
                 点击选择文件，或将文件拖入至此处
-                <br/>
-                支持一次导入多个文件
-                <br/>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className={'text-green-500'}>
-                        数据导入是安全的
-                        <TipInfoSvg className={'inline fill-current'} />
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
               <p>
-                支持 .pagenote、.bak、.json、.html、.jpeg、<b className={'text-green-500'}>.zip</b>
+                支持 .pagenote、.bak、.json、.html、.jpeg、.zip
               </p>
             </div>
             <input

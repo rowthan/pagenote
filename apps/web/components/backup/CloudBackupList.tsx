@@ -34,7 +34,7 @@ function getDateFromStr(input: string) {
     const matched = input.match(/202\d-\d\d-\d\d/g);
     if (matched) {
         if(today===matched[0]){
-            return '今日'
+            return matched[0]+'（今日）'
         }
         return matched[0]
     }

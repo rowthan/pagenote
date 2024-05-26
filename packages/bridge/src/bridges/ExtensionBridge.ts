@@ -294,9 +294,9 @@ export default class ExtensionMessage implements Communication<any>{
     const request: BaseMessageRequest= {
       type: type,
       data: data,
-      //@ts-ignore
       header:{
         ...(header || {}),
+        timeout: header?.timeout || DEFAULT_TIMEOUT,
         targetClientId: header?.targetClientId || this.option.targetClientId || '',
         originClientId: header?.originClientId || this.clientId,
         senderClientId: this.clientId,
@@ -376,6 +376,7 @@ export default class ExtensionMessage implements Communication<any>{
     throw new Error(type+" not implemented.");
   }
 
+  /**@deprecated*/
   broadcast(type: string, data: any, header?: BaseMessageHeader){
     if(!this.option.isBackground){
       throw Error('only background can broadcast')
@@ -386,6 +387,7 @@ export default class ExtensionMessage implements Communication<any>{
       [type]: {
         data: data,
         header: header,
+        type: type,
       }
     });
   }
