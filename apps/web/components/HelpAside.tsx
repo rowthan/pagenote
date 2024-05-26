@@ -4,6 +4,8 @@ import {basePath} from '../const/env'
 import {MdOutlineLiveHelp} from "react-icons/md";
 import {AiOutlineSetting} from "react-icons/ai";
 import {openUrlInGroup} from "../utils/url";
+import FooterSetting, {PopSetting} from "./FooterSetting";
+import {Popover, PopoverContent, PopoverTrigger} from "../@/components/ui/popover";
 
 interface Props {
     children?: ReactNode
@@ -17,7 +19,7 @@ export default function HelpAside(props: Props) {
     return (
         <div className="bg-accent">
             {children}
-            <aside className={'fixed right-4 bottom-6 pb-2'}>
+            <aside className={'fixed right-4 bottom-6 pb-2 sm:block hidden'}>
                 <div className={'flex flex-col gap-2 text-gray-500'}>
                     <a target={'_blank'}
                        onClick={() => {
@@ -27,16 +29,19 @@ export default function HelpAside(props: Props) {
                        aria-label={'help'}>
                         <MdOutlineLiveHelp className={'fill-current text-xl'}/>
                     </a>
-                    {
-                        showSetting &&
-                        <a
-                            className={'cursor-pointer hover:text-blue-500'}
-                            href={basePath + '/ext/setting.html'} target={'_blank'}>
+                    <Popover>
+                        <PopoverTrigger>
                             <AiOutlineSetting className={'fill-current text-xl'}/>
-                        </a>
-                    }
+                        </PopoverTrigger>
+                        <PopoverContent className={'text-sm p-0'}>
+                            <PopSetting/>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </aside>
+            <div className={'sm:hidden block'}>
+            <FooterSetting />
+            </div>
         </div>
     )
 }

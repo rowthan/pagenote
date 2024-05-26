@@ -38,11 +38,16 @@
 
 a.more,.a{
   cursor: pointer;
- color: #4682e3;
+  color: #4682e3;
   //text-decoration: underline;
   &:hover{
     text-decoration: underline;
   }
 }
 
+a{
+  &:hover{
+    text-decoration: underline;
+  }
+}
 
