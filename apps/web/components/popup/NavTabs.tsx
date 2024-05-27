@@ -118,15 +118,12 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
             </span>
           )}
         </div>
-          <a className={'link absolute right-14 top-2 text-lg '} onClick={()=>{
-              openUrlInGroup(`${whoAmi?.origin}/web/ext/setting.html#id`)
-          }}>
+          <a className={'link absolute right-14 top-2 text-lg '}
+             href={`${whoAmi?.origin}/web/ext/setting.html#id?reuse=1`} target={'_blank'}>
               <FaRegUserCircle  className={'fill-current'}/>
           </a>
         <a
-          onClick={()=>{
-              openUrlInGroup(`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay`)
-          }}
+          href={`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay?reuse=1`}
           target={'_blank'}
           data-tip={'前往管理页'}
           className={`link absolute right-5 top-1 tooltip tooltip-left flex`}
