@@ -119,11 +119,11 @@ export default function NavTabs(props: { keyword: string, onChangeKeyword: (keyw
           )}
         </div>
           <a className={'link absolute right-14 top-2 text-lg '}
-             href={`${whoAmi?.origin}/web/ext/setting.html#id?reuse=1`} target={'_blank'}>
+             href={`${whoAmi?.origin}/web/ext/setting.html?group=PAGENOTE&reuse=1#id`} target={'_blank'}>
               <FaRegUserCircle  className={'fill-current'}/>
           </a>
         <a
-          href={`${whoAmi?.origin}/pagenote.html#/notes/updateAtDay?reuse=1`}
+          href={`${whoAmi?.origin}/pagenote.html?group=PAGENOTE&reuse=1#/notes/updateAtDay`}
           target={'_blank'}
           data-tip={'前往管理页'}
           className={`link absolute right-5 top-1 tooltip tooltip-left flex`}

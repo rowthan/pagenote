@@ -27,7 +27,7 @@ export default function HelpAside(props: Props) {
                 <div className={'flex flex-col gap-2 text-gray-500'}>
                     <a target={'_blank'}
                        onClick={() => {
-                           openUrlInGroup(`https://pagenote.cn/question`)
+                           openUrlInGroup(`https://pagenote.cn/question?group=PAGENOTE&reuse=1`)
                        }}
                        className={'cursor-pointer hover:text-blue-500'}
                        aria-label={'help'}>
