@@ -2,6 +2,7 @@ import type {
   BaseMessageHeader,
   BaseMessageRequest,
   BaseMessageResponse,
+  BaseMessageSender,
   Communication,
   CommunicationOption,
   IBaseSendResponse,
@@ -15,6 +16,7 @@ import {
   STATUS,
 } from '../base'
 import {shouldResolveRequest, sumSizeMB} from "../utils";
+import MessageSender = chrome.runtime.MessageSender;
 
 type ExtensionOption = CommunicationOption & {
   isBackground: boolean
@@ -205,16 +207,18 @@ export default class ExtensionMessage implements Communication<any>{
       }
 
 
-      const { senderClientId,originClientId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
+      const { senderClientId,originClientId,targetTabId,isResponse, withCatch=false, timeout=DEFAULT_TIMEOUT } = header || {};
 
       // 1. 单线模式，只监听某个目标对象的请求。 非目标请求源，事件、代理均不响应
       if(that.option.targetClientId && senderClientId && senderClientId!==that.option.targetClientId){
         return false
       }
       // 封装 sender 信息，原生基础上加入 header 标识信息
-      const thisSender = {
+      const thisSender: BaseMessageSender = {
         ...sender,
         header:{
+          ...header,
+          targetTabId: targetTabId,
           originClientId : originClientId,
           senderClientId : senderClientId,
           senderURL: chrome.runtime.getURL('/'),

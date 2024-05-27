@@ -1,4 +1,3 @@
-import extApi from '@pagenote/shared/lib/pagenote-api'
 import useCurrentTab from 'hooks/useCurrentTab'
 import useTabPagenoteState from 'hooks/useTabPagenoteState'
 import { Bookmark } from 'components/popup/Bookmark'

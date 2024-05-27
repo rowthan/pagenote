@@ -102,7 +102,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.7",
     "@types/ali-oss": "^6.16.7",
-    "@types/chrome": "0.0.206",
+    "@types/chrome": "0.0.268",
     "@types/color": "^3.0.3",
     "@types/lodash": "^4.14.190",
     "@types/md5": "^2.3.2",

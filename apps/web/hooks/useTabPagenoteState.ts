@@ -38,7 +38,7 @@ export default function useTabPagenoteState(): [TabState | undefined, () => void
       if(!tab?.id){
         throw Error('tab id is undefined')
       }
-      return `/tab/state/${tab?.id}`
+      return `/tab/state/${tab?.id}${tab.url}${tab.title}`
     },
     function () {
       return fetchStatus(tab?.id)

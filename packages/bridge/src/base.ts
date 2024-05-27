@@ -104,7 +104,7 @@ type BaseMessageRequest = {
 /**
  * server
  * */
-type BaseMessageSender = {
+export type BaseMessageSender = {
     header: BaseMessageHeader,
 }
 

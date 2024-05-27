@@ -24,6 +24,7 @@ export function PopSetting() {
     const isSidePanel = config?.popMode === 'panel';
     const {pathname} = useRouter();
     const isSidePanelInPath = pathname.includes('sidepanel');
+    const {tab} = useCurrentTab();
 
     function updateMode(mode: 'popup'|'panel') {
         update({
@@ -34,6 +35,9 @@ export function PopSetting() {
             }
             if(mode==='panel' && !isSidePanelInPath){
                 window.close();
+                tab?.id && chrome && chrome.sidePanel && chrome.sidePanel.open({
+                    tabId: tab?.id
+                })
             }
         })
     }
