@@ -29,9 +29,9 @@ export default function Custom404(props: NotionDocProp) {
 
   useEffect(
     function () {
-      const redirectUrl = redirectMap[router.asPath]
+      const redirectUrl = redirectMap[window.location.pathname]
       if (redirectUrl) {
-        router.replace(redirectUrl)
+        router.replace(redirectUrl+window.location.search+window.location.hash)
       } else {
         if (router.asPath.indexOf('.html') > -1) {
           const path = router.asPath.replace('.html', '')
