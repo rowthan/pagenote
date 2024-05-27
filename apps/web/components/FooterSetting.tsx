@@ -1,5 +1,4 @@
-import {type ReactNode} from 'react';
-import {MdOutlineLiveHelp} from "react-icons/md";
+import React, {type ReactNode} from 'react';
 import {
     Popover,
     PopoverContent,
@@ -14,27 +13,50 @@ import ActionButton from "./button/ActionButton";
 import useTabPagenoteState from "../hooks/useTabPagenoteState";
 import useCurrentTab from "../hooks/useCurrentTab";
 import extApi from "@pagenote/shared/lib/pagenote-api";
+import useWhoAmi from "../hooks/useWhoAmi";
+import usePermissions from "../hooks/usePermissions";
+import { toast } from '@/components/ui/use-toast'
+import {ToastAction} from "../@/components/ui/toast";
 
 interface Props {
     children?: ReactNode;
 }
 
-export function PopSetting() {
+export function PopPanelSetting(props:{closedAfterChange: boolean}){
     const [config,update] = useSettingConfig<{popMode?:'panel'|'popup'}>('extension')
     const isSidePanel = config?.popMode === 'panel';
     const {pathname} = useRouter();
     const isSidePanelInPath = pathname.includes('sidepanel');
     const {tab} = useCurrentTab();
+    const [permission,requestPermission] = usePermissions();
+    const [whoAmI] = useWhoAmi();
 
-    function updateMode(mode: 'popup'|'panel') {
+    function updateMode(mode: 'popup' | 'panel') {
         update({
             popMode: mode,
         }).then(function () {
-            if(mode==='popup' && isSidePanelInPath){
-                window.close();
+            if (mode === 'popup' && isSidePanelInPath) {
+                if(props.closedAfterChange){
+                    window.close();
+                }
             }
-            if(mode==='panel' && !isSidePanelInPath){
-                window.close();
+            if (mode === 'panel' && !isSidePanelInPath) {
+                if(!permission?.permissions?.includes('sidePanel')){
+                    // 请求权限
+                    toast({
+                        variant: "destructive",
+                        title: "缺少必要的授权",
+                        description: "你需要授权后可启用侧边栏模式",
+                        action: <ToastAction altText="Try again" onClick={()=>{
+                            requestPermission({
+                                permissions: ['sidePanel']
+                            })
+                        }}>授权</ToastAction>,
+                    })
+                }
+                if(props.closedAfterChange){
+                    window.close();
+                }
                 tab?.id && chrome && chrome.sidePanel && chrome.sidePanel.open({
                     tabId: tab?.id
                 })
@@ -42,9 +64,13 @@ export function PopSetting() {
         })
     }
 
-    return (
-        <div className={'flex flex-col min-w-[120px]'}>
-            <button className={'flex justify-between hover:bg-accent px-2 py-1'}
+    if(whoAmI?.isFirefox){
+        return  null;
+    }
+
+    return(
+        <>
+            <button className={'flex w-full justify-between hover:bg-accent px-2 py-1'}
                     onClick={() => {
                         updateMode('popup')
                     }}
@@ -54,7 +80,7 @@ export function PopSetting() {
                     !isSidePanel && <FaCheck/>
                 }
             </button>
-            <button className={'flex justify-between hover:bg-accent px-2 py-1'}
+            <button className={'flex w-full justify-between hover:bg-accent px-2 py-1'}
                     onClick={() => {
                         updateMode('panel')
                     }}
@@ -64,6 +90,15 @@ export function PopSetting() {
                     isSidePanel && <FaCheck/>
                 }
             </button>
+        </>
+    )
+
+}
+
+export function PopSetting() {
+    return (
+        <div className={'flex flex-col min-w-[120px]'}>
+            <PopPanelSetting closedAfterChange={true} />
             <a href={`${basePath}/ext/setting.html`} target={'_blank'} className={'hover:bg-accent px-2 py-1'}>
                 更多设置
             </a>
@@ -74,7 +109,7 @@ export function PopSetting() {
 export default function FooterSetting(props: Props) {
     const [tabState, mutate, isLoading] = useTabPagenoteState()
     const { tab } = useCurrentTab()
-
+    const [whoAmI] = useWhoAmi()
     function enableCopy() {
         if (tabState?.enabledCopy) {
             return
@@ -103,12 +138,19 @@ export default function FooterSetting(props: Props) {
                 </ActionButton>
             </div>
             <div className={'text-sm text-muted-foreground'}>
-                <Popover>
-                    <PopoverTrigger>常用设置</PopoverTrigger>
-                    <PopoverContent className={'text-sm p-0'}>
-                        <PopSetting />
-                    </PopoverContent>
-                </Popover>
+                {
+                    whoAmI?.isFirefox ?
+                        <a href={`${basePath}/ext/setting.html`} target={'_blank'}
+                           className={'hover:bg-accent px-2 py-1'}>
+                            设置
+                        </a> :
+                        <Popover>
+                            <PopoverTrigger>常用设置</PopoverTrigger>
+                            <PopoverContent className={'text-sm p-0'}>
+                                <PopSetting/>
+                            </PopoverContent>
+                        </Popover>
+                }
             </div>
         </div>
     );

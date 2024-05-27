@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import { useEffect } from 'react'
 import useCurrentTab from "./useCurrentTab";
+import {checkInExtensionContext} from "../utils/chrome";
 
 function fetchStatus(tabId?: number) {
   console.log('fetch tab status',tabId)
@@ -46,7 +47,7 @@ export default function useTabPagenoteState(): [TabState | undefined, () => void
   )
 
   useEffect(() => {
-    if(chrome && chrome.tabs){
+    if(checkInExtensionContext()){
       chrome.tabs.onActivated.addListener(function () {
         mutate();
       })

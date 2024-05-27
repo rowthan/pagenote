@@ -2,7 +2,7 @@ import extApi from "@pagenote/shared/lib/pagenote-api";
 import useSWR from "swr";
 import Tab = chrome.tabs.Tab;
 import {useEffect} from "react";
-import {callChrome} from "../utils/chrome";
+import {callChrome, checkInExtensionContext} from "../utils/chrome";
 
 type TabGroups = Tab[];
 type WindowMap = Map<number, TabGroups>
@@ -21,7 +21,7 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
   )
 
   useEffect(function () {
-      if(chrome && chrome.tabs){
+      if(checkInExtensionContext() && chrome.tabs){
           chrome.tabs.onActivated.addListener(function () {
               mutate();
           })
@@ -64,21 +64,14 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
 
     const tabId = isNaN(Number(currentTabId)) ? currentTabId : Number(currentTabId)
 
-
-    if(chrome && chrome.tabs){
-        return chrome.tabs.get(tabId as number).then(function(res){
-            return res;
-        })
-    }else{
-        return callChrome<Tab>({
-                method: 'get',
-                namespace: 'tabs',
-                arguments: [tabId],
-            })
-            .then(function (res) {
-                return res
-            })
-    }
+      return callChrome<Tab>({
+          method: 'get',
+          namespace: 'tabs',
+          arguments: [tabId],
+      })
+          .then(function (res) {
+              return res
+          })
   }
 
   function getAllWindows() {

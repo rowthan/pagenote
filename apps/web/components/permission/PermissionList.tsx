@@ -4,6 +4,10 @@ import { HiCheckCircle } from "react-icons/hi";
 import { PiProhibitFill } from "react-icons/pi";
 import useWhoAmi from "hooks/useWhoAmi";
 import usePermissions from "hooks/usePermissions";
+import { TbLayoutSidebarRightCollapseFilled } from "react-icons/tb";
+import { FcTemplate } from "react-icons/fc";
+import { FcBookmark } from "react-icons/fc";
+import { FaInternetExplorer } from "react-icons/fa6";
 
 interface Props {
     children?: ReactNode;
@@ -11,18 +15,35 @@ interface Props {
 
 const permissionList = [
     {
-        name: '【必须】访问所有网站',
+        name: '访问所有网站[必须]',
         description: '在所有网页上运行工作的必要权限',
         namespace: 'origins',
         permission: '<all_urls>',
+        badge: <FaInternetExplorer fill={'#39b3df'} />
     },
     {
-        name: '【可选】标签页分组管理',
-        description: '可以对网页进行归组管理',
+        name: '标签页分组管理',
+        description: '自动将同类标签页归类至同组，批量管理',
         permission: 'tabGroups',
         namespace: 'permissions',
-        supportPlatform: ['chrome','edge','offline']
-    }
+        supportPlatform: ['chrome','edge','offline'],
+        badge: <FcTemplate />
+    },
+    {
+        name: '侧边栏模式',
+        description: '以侧边栏代替弹层',
+        namespace: 'permissions',
+        permission: 'sidePanel',
+        supportPlatform: ['chrome','edge','offline'],
+        badge: <TbLayoutSidebarRightCollapseFilled />
+    },
+    {
+        name: '书签管理',
+        description: '允许访问和修改浏览器书签',
+        namespace: 'permissions',
+        permission: 'bookmarks',
+        badge: <FcBookmark />
+    },
 ]
 
 export default function PermissionList(props: Props) {
@@ -43,8 +64,8 @@ export default function PermissionList(props: Props) {
                             const hasPerm = permission[item.namespace]?.includes(item.permission);
                             return (
                                 <BasicSettingLine
+                                    badge={item.badge}
                                     onClick={()=>{
-                                        console.log('request');
                                         if(hasPerm){
                                             return
                                         }

@@ -33,14 +33,17 @@ export default function HelpAside(props: Props) {
                        aria-label={'help'}>
                         <MdOutlineLiveHelp className={'fill-current text-xl'}/>
                     </a>
-                    <Popover>
-                        <PopoverTrigger>
-                            <AiOutlineSetting className={'fill-current text-xl'}/>
-                        </PopoverTrigger>
-                        <PopoverContent className={'text-sm p-0'}>
-                            <PopSetting/>
-                        </PopoverContent>
-                    </Popover>
+                    <a href="https://pagenote.cn/setting">
+                        <AiOutlineSetting className={'fill-current text-xl'}/>
+                    </a>
+                    {/*<Popover>*/}
+                    {/*    <PopoverTrigger>*/}
+                    {/*        <AiOutlineSetting className={'fill-current text-xl'}/>*/}
+                    {/*    </PopoverTrigger>*/}
+                    {/*    <PopoverContent className={'text-sm p-0'}>*/}
+                    {/*        <PopSetting/>*/}
+                    {/*    </PopoverContent>*/}
+                    {/*</Popover>*/}
                 </div>
             </aside>
             <div className={'sm:hidden block'}>
