@@ -11,7 +11,7 @@ type Props = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export default function ActionButton(props: Props) {
-    const {children, tip, active, keyboard = '', className, ...left} = props;
+    const {children, tip, active, keyboard = '', ...left} = props;
     return (
         <KeyboardTip command={keyboard} tip={tip}>
             <Button

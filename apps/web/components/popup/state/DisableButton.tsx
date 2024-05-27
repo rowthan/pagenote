@@ -47,6 +47,7 @@ export default function DisableButton() {
   const disabledList = setting.disableList || []
   const navigate = useNavigate()
 
+  console.log(tabState,'tabState')
   const url = tab?.url || ''
 
 

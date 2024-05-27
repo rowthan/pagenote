@@ -254,5 +254,3 @@ export default function PageMemo(props: Props) {
     </div>
   )
 }
-
-PageMemo.defaultProps = {}
