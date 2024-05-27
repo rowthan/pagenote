@@ -2,10 +2,8 @@ import React from 'react'
 import BiliSvg from 'assets/svg/bilibili.svg'
 import WechatSvg from 'assets/svg/wechat.svg'
 // import GithubSvg from 'assets/svg/github.svg'
-import EmailSvg from 'assets/svg/email.svg'
 import DeviceInfo from './account/DeviceInfo'
 import { RiVipFill } from "react-icons/ri";
-import Image from 'next/image'
 import Link from 'next/link'
 import {isExt} from "../const/env";
 
@@ -14,7 +12,7 @@ export default function Footer() {
   return (
     <>
       <footer
-          className="footer gap-y-1 px-4 py-4 border-t bg-accent text-base-content border-base-300 flex md:justify-center">
+          className="footer hidden sm:flex gap-y-1 px-4 py-4 border-t bg-accent text-base-content border-base-300  md:justify-center">
         <div className="items-center grid-flow-col">
           <Link href={homePath}>
             <h2>PAGENOTE</h2>

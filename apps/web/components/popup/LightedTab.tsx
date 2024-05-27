@@ -10,7 +10,7 @@ export default function LightedTab(props: { tab: Tab; isCurrent: boolean }) {
   const { tab, isCurrent } = props
   const { title, favIconUrl, url, id } = tab
   const [lights, setLights] = useState<Partial<Step>[]>([])
-  const [tabState, mutate, isLoading] = useTabPagenoteState(id)
+  const [tabState, mutate, isLoading] = useTabPagenoteState()
 
   useEffect(
     function () {

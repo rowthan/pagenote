@@ -9,12 +9,18 @@
   }
 }
 
-// 平板尺寸以下
+// 平板尺寸以下,弹层模式
 @media screen and (max-width: 768px) {
   .popup {
-    width: 100%;
     height: 100vh;
-    min-width: 480px;
+    width: 480px;
     min-height: 590px;
   }
+}
+
+
+.side-panel{
+  width: 100%;
+  min-width: unset !important;
+  max-width: unset !important;
 }

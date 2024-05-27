@@ -1,9 +1,9 @@
-import BasicLayout from 'layouts/BasicLayout'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import NavTabs from 'components/popup/NavTabs'
-import useWhoAmi from 'hooks/useWhoAmi'
 import { useMountedState } from 'react-use'
+import ExtLayout from "../../layouts/ExtLayout";
+import classNames from "classnames";
 
 const ClipboardList = lazy(() => import('components/manage/ClipboardList'))
 const Search = lazy(() => import('components/popup/Search'))
@@ -12,9 +12,8 @@ const CurrentTab = lazy(() => import('components/popup/state/EnableCheck'))
 
 const CACHE_SEARCH_KEY = 'popup_search'
 
-export default function PopupPage() {
+export default function PopupPage(props:{className: string}) {
   const [keyword, setKeyword] = useState<string>('')
-  const [whoAmi] = useWhoAmi()
   const mounted = useMountedState()
 
   useEffect(function () {
@@ -31,8 +30,8 @@ export default function PopupPage() {
   )
 
   return (
-    <BasicLayout nav={false} footer={false} full={true}>
-      <div className={'popup rounded-lg transform translate-x-0'}>
+    <ExtLayout>
+      <div className={classNames('popup rounded-lg transform translate-x-0',props.className)}>
         {mounted() && (
           <Router>
             <div className="sticky top-0 bg-background z-10">
@@ -89,6 +88,6 @@ export default function PopupPage() {
           </Router>
         )}
       </div>
-    </BasicLayout>
+    </ExtLayout>
   )
 }

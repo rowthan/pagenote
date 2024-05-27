@@ -186,7 +186,7 @@ function SettingHome() {
 
 export default function Setting() {
     return (
-        <div className={'m-auto p-3 flex gap-16'}>
+        <div className={'m-auto sm:p-1 p-3 flex gap-16'}>
             <div className={'lg:block hidden'}>
                 <SettingHome/>
             </div>
