@@ -1,11 +1,8 @@
 import React from 'react'
 import BasicSettingLine, {SettingSection} from './BasicSettingLine'
-import SettingDetail from './SettingDetail'
 import ExtensionData from '../backup/extension/ExtensionData'
 import { get } from 'lodash'
 import useSettingConfig from '../../hooks/table/useSettingConfig'
-import useOssKey from '../../hooks/useOssKey'
-import { Routes} from "react-router-dom";
 import Status from "../Status";
 import useStat from "../../hooks/useStat";
 
@@ -20,7 +17,7 @@ export default function DataBackup() {
           <SettingSection>
               <BasicSettingLine
                   badge={<Status disabled={!enabled}>
-                      <img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>
+                      <img src="https://pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>
                   </Status>}
                   label={<span>图片优化</span>}
                   subLabel={<span>可减少本机图片空间占用</span>}

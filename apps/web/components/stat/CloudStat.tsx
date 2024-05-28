@@ -1,4 +1,4 @@
-import React, {type ReactNode, useState} from 'react';
+import React, {type ReactNode} from 'react';
 import useStat from "../../hooks/useStat";
 import {StatBadge} from "../setting/BasicSettingLine";
 
@@ -24,7 +24,6 @@ export default function CloudStat(props: Props) {
         return stats[item]
     })
     const error = errorType ? stats[errorType] : null;
-    console.log(error,webdav)
 
     return (
         <>

@@ -2,7 +2,7 @@ import extApi from '@pagenote/shared/lib/pagenote-api'
 import useSWR from 'swr'
 
 
-const TEST_FILE_PATH = '.connect.txt'
+const TEST_FILE_PATH = '/.temp/.connect.txt'
 
 type Stat = {
     connected: boolean,
@@ -24,7 +24,7 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
                             type: space || 'data',
                             method: 'put',
                             filePath: TEST_FILE_PATH,
-                            file: 'oss test',
+                            file: 'test success oss',
                         }
                     },
                 },{
@@ -49,7 +49,7 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
                             method: 'put',
                             filePath: TEST_FILE_PATH,
                             details: false,
-                            file: 'webdav test'
+                            file: 'webdav test success at '+new Date().toISOString()
                         }
                     },
                 },{
@@ -57,13 +57,11 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
                         maxAgeMillisecond: 2000
                     }
                 }).then(function (res) {
-                    const response = {
+                    return {
                         connected: Boolean(res?.data?.filePath),
                         error: res?.error || '',
                         actionUrl: String(res?.header?.cause || ''),
                     }
-                    console.log(res,'webdav stat',response)
-                    return response
                 })
             default:
                 return {

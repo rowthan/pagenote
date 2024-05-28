@@ -5,7 +5,6 @@ import useCurrentTab from "./useCurrentTab";
 import {checkInExtensionContext} from "../utils/chrome";
 
 function fetchStatus(tabId?: number) {
-  console.log('fetch tab status',tabId)
   if(!tabId){
     return Promise.reject('tab id is undefined')
   }
