@@ -34,7 +34,7 @@ export function IdRoutes(props:{rootPath: string}){
                         当前处于脱机模式，无法启用部分功能。
                         但这并不影响你使用 PAGENOTE 基础标记功能。
                         <div className={'flex justify-center mt-4'}>
-                            <Button variant={'link'} onClick={()=>{openUrlInGroup('https://pagenote.cn/signin')}}>登录后查看</Button>
+                            <a className={'a'} href={'https://pagenote.cn/signin?group=PAGENOTE&reuse=1'}>登录后查看</a>
                         </div>
                     </AlertDescription>
                 </Alert>

@@ -71,7 +71,7 @@ export default function CloudSupporters(props: Props) {
                    <BasicSettingLine
                        badge={<Status disabled={!webdavSwitch}><img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/webdav.jpeg" alt=""/></Status>}
                        label={'WebDav'}
-                       subLabel={webdavSwitch?"数据保存至你自己的服务器。":"即将开放"}
+                       subLabel={webdavSwitch?"数据保存至你自己的服务器。更安全":""}
                        right={
                            <>
                                {

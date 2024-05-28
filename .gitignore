@@ -78,3 +78,4 @@ docs
 **/node_modules.nosync/*
 .temp
 .parcel-cache
+.local

@@ -23,6 +23,10 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import useWhoAmi from "../../hooks/useWhoAmi";
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {PopPanelSetting} from "../FooterSetting";
+
 
 export default function LightSetting() {
   const { data: setting, update: updateSetting } = useSettings()
@@ -86,6 +90,20 @@ export default function LightSetting() {
                 </div>
               }
           ></BasicSettingLine>
+
+            {
+                !whoAmI?.isFirefox &&
+                <BasicSettingLine
+                    label={'面板模式'}
+                    className={'cursor-pointer'}
+                    subLabel={'辅助面板展示形式'}
+                    right={
+                        <div className={'flex-col gap-1 min-w-32'}>
+                            <PopPanelSetting closedAfterChange={false} />
+                        </div>
+                    }
+                />
+            }
         </SettingSection>
 
         <div>

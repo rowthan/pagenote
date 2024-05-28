@@ -57,7 +57,7 @@ export default function ShortCutInfo() {
       </SettingSection>
 
       <BasicSettingTitle className={'mt-10'}>
-          <a className={'link'} onClick={()=>{openUrlInGroup(`${whoAmI?.origin}/pagenote.html#setting`)}}>插件快捷键</a>
+          <a className={'link'} href={`${whoAmI?.origin}/pagenote.html?group=PAGENOTE&reuse=1#setting`}>插件快捷键</a>
       </BasicSettingTitle>
     </>
   )

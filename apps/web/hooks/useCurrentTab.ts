@@ -2,6 +2,7 @@ import extApi from "@pagenote/shared/lib/pagenote-api";
 import useSWR from "swr";
 import Tab = chrome.tabs.Tab;
 import {useEffect} from "react";
+import {callChrome, checkInExtensionContext} from "../utils/chrome";
 
 type TabGroups = Tab[];
 type WindowMap = Map<number, TabGroups>
@@ -20,45 +21,57 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
   )
 
   useEffect(function () {
-      if(chrome && chrome.tabs){
+      if(checkInExtensionContext() && chrome.tabs){
           chrome.tabs.onActivated.addListener(function () {
+              mutate();
+          })
+
+          chrome.webNavigation && chrome.webNavigation.onCommitted.addListener(function () {
               mutate();
           })
       }
   },[])
 
   async function getTabInfo() {
-    let currentTabId: number|undefined;
+    let currentTabId: number| string | undefined;
+
+
+    /**基于URL指定tabid，适用于 popup/sidepanel 无上下文的场景*/
     if(!currentTabId){
-      const result = await extApi.user.getWhoAmI();
-      // @ts-ignore;
-      const tab = result.data?.sender?.tab as Tab;
-      currentTabId = tab?.id;
+        const search = new URLSearchParams(window.location.search);
+        currentTabId = search.get('tabId')?.toString()
     }
 
+      /**基于 API 响应 tabid,不适用于 popup/sidepanel 无上下文的场景*/
+      if(!currentTabId){
+          const result = await extApi.user.getWhoAmI();
+          // @ts-ignore;
+          const tab = result.data?.sender?.tab as Tab;
+          currentTabId = tab?.id;
+      }
+
+    /**兜底方案，通过查询当前窗口*/
     if(!currentTabId){
       const res = await extApi.developer
           .chrome({
-            type: 'query', method: 'query',
+            method: 'query',
             namespace: 'tabs',
-            args: [{ active: true, lastFocusedWindow: true }],
             arguments: [{ active: true, lastFocusedWindow: true }],
           });
       lastTab = (res.data || [])[0] || lastTab
       currentTabId = lastTab?.id;
     }
 
-    return extApi.developer
-        .chrome({
-          type: 'get',
+    const tabId = isNaN(Number(currentTabId)) ? currentTabId : Number(currentTabId)
+
+      return callChrome<Tab>({
           method: 'get',
           namespace: 'tabs',
-          args: [currentTabId],
-          arguments: [currentTabId],
-        })
-        .then(function (res) {
-          return res.data as Tab
-        })
+          arguments: [tabId],
+      })
+          .then(function (res) {
+              return res
+          })
   }
 
   function getAllWindows() {
