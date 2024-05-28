@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/actions",
-  "version": "0.1.4-next.2",
+  "version": "0.1.4",
   "license": "MIT",
   "source": "./src/index.ts",
   "main": "./dist/index.js",

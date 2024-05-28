@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.18-next.0...@pagenote/bridge@1.1.1) (2024-05-28)
+
+
+### Features
+
+* **shared:** upgrade api ([b5ab96e](https://github.com/rowthan/pagenote/commit/b5ab96e9d23f2469370e1daf7710ae64e1c4dfee))
+
+
+
+
+
 ## [1.0.18-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.0.17...@pagenote/bridge@1.0.18-next.0) (2024-04-05)
 
 **Note:** Version bump only for package @pagenote/bridge
