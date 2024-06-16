@@ -1,6 +1,6 @@
 import extApi from '@pagenote/shared/lib/pagenote-api'
-import useSWR from 'swr'
-
+import useSWR, {KeyedMutator} from 'swr'
+import useSettingConfig from "./table/useSettingConfig";
 
 const TEST_FILE_PATH = '/.temp/.connect.txt'
 
@@ -9,13 +9,19 @@ type Stat = {
     error: string,
     actionUrl?: string
 }
-export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): [Stat | undefined,boolean] {
-    const { data, isLoading, mutate } = useSWR<Stat>('/stat/'+type, fetchInfo)
 
-    async function fetchInfo() {
+function useStat(type:'webdav'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void}
+function useStat(type:'oss',space: "private"|'data'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void}
+function useStat(type: 'oss'|'webdav',space?: "private"|'data'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void} {
+    const { data, isLoading, mutate } = useSWR<Stat>(function () {
+        return '/stat/'+type
+    }, ()=>fetchInfo())
+
+
+    async function fetchInfo(cacheKey: number = 10000) {
         switch (type) {
             case "oss":
-                return  extApi.developer.requestBack({
+                return extApi.developer.requestBack({
                     namespace: "actions",
                     type: "callAction",
                     params: {
@@ -24,15 +30,14 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
                             type: space || 'data',
                             method: 'put',
                             filePath: TEST_FILE_PATH,
-                            file: 'test success oss',
+                            file: 'test success oss at '+new Date().toISOString(),
                         }
                     },
                 },{
                     cacheControl: {
-                        maxAgeMillisecond: 2000
+                        maxAgeMillisecond: cacheKey
                     }
                 }).then(function (res) {
-                    console.log('oss',res)
                     return {
                         connected: Boolean(res?.data?.filePath),
                         error: res?.error || '',
@@ -54,7 +59,7 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
                     },
                 },{
                     cacheControl: {
-                        maxAgeMillisecond: 2000
+                        maxAgeMillisecond: cacheKey
                     }
                 }).then(function (res) {
                     return {
@@ -66,12 +71,20 @@ export default function useStat(type: 'oss'|'webdav',space?: "private"|'data'): 
             default:
                 return {
                     connected: false,
-                    error: 'not support',
-                    actionUrl: '',
+                    error: '未知云存储类型',
+                    actionUrl: 'https://pagenote.cn/help',
                 }
         }
-
     }
 
-    return [data,isLoading]
+    return {
+        data,
+        mutate,
+        refresh: ()=>{
+            fetchInfo(-1).then(function (res) {
+                mutate(res)
+            })
+        }
+    }
 }
+export default useStat

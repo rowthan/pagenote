@@ -1,42 +1,42 @@
 import React, {type ReactNode} from 'react';
 import useStat from "../../hooks/useStat";
 import {StatBadge} from "../setting/BasicSettingLine";
+import useSettingConfig from "../../hooks/table/useSettingConfig";
+import classNames from "classnames";
 
 interface Props {
     children?: ReactNode;
-    types: ('oss'|'webdav')[]
+    type: 'oss'|'webdav'
     space?: "private"|'data'
 }
 
 export default function CloudStat(props: Props) {
-    const {children,types = ['oss','webdav']} = props;
-    const [oss] = useStat('oss',props.space)
-    const [webdav] = useStat('webdav')
-    const stats = {
-        oss,
-        webdav
-    }
-
-    const connected = types.some(function(type){
-       return Boolean(stats[type]?.connected)
-    })
-    const errorType = types.find(function(item){
-        return stats[item]
-    })
-    const error = errorType ? stats[errorType] : null;
+    const {children,type} = props;
+    //@ts-ignore
+    const {data} = useStat(type,props.space)
+    const status = data?.connected ? 'success' : 'fail';
+    const label = data?.connected ? type + ' connected' : data?.error;
+    const actionUrl = data?.actionUrl;
 
     return (
         <>
-            {
-                connected ? <StatBadge type={'success'} className={'text-blue-500'}>
-                        成功连接
-                    </StatBadge>:
-                    <StatBadge type={'fail'}>
-                        {error?.actionUrl ? <a className={'a !text-red-500'} href={error.actionUrl} target={'_blank'}>{error.error}</a>:error?.error}
-                    </StatBadge>
-
-            }
+            <StatBadge key={type} type={status} className={classNames({
+                'text-blue-500': status === 'success',
+                'text-red-500': status !== 'success',
+            })}>
+                {actionUrl ? <a className={'a !text-red-500'} href={actionUrl} target={'_blank'}>{label}</a> :label}
+            </StatBadge>
         </>
     );
 }
 
+
+export function CloudConnectedCheck() {
+    const {data:oss} = useStat('oss','data')
+    const {data:webdav} = useStat('webdav');
+
+    const connected = oss?.connected || webdav?.connected;
+    return <StatBadge type={connected ? 'success' : 'fail'}>
+        {connected ? '' : 'not connected'}
+    </StatBadge>
+}

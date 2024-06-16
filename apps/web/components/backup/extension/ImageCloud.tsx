@@ -4,12 +4,7 @@ import BasicSettingLine, {SettingSection} from '../../setting/BasicSettingLine'
 import TipInfo from '../../TipInfo'
 import useSettingConfig from '../../../hooks/table/useSettingConfig'
 import { get } from 'lodash'
-import CloudStatus from './CloudStatus'
-import classNames from 'classnames'
-import useUserInfo from '../../../hooks/useUserInfo'
 import useOssKey from '../../../hooks/useOssKey'
-import { Switch } from "@/components/ui/switch"
-import useStat from "../../../hooks/useStat";
 import CloudStat from "../../stat/CloudStat";
 
 interface Props {
@@ -78,7 +73,7 @@ export default function ImageCloud(props: Props) {
                               }
                               loading={loading}
                               right={
-                                  <CloudStat types={['oss']} space={'private'}/>
+                                  <CloudStat type={'oss'} space={'private'}/>
                               }
                           />
                       </SettingSection>

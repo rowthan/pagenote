@@ -24,8 +24,6 @@ import {
     AlertDialogTitle
 } from "../../@/components/ui/alert-dialog";
 import {basePath} from "../../const/env";
-import CloudBackupList from "./CloudBackupList";
-import Link from "next/link";
 import {NavLink} from "react-router-dom";
 import CloudStat from "../stat/CloudStat";
 
@@ -37,10 +35,9 @@ export default function CloudBackup(props: Props) {
     const {children} = props;
     const [config,update] = useSettingConfig<{
         switch: boolean,
-        pagenote: boolean
-    }>('_cloud');
+    }>('_backup');
     const [showImport,setShowImport] = useState(false)
-    const [showSupporters,setShowSupporters] = useState(false)
+    // const [showSupporters,setShowSupporters] = useState(false)
 
     return (
         <div className="flex flex-col gap-6">
@@ -51,7 +48,7 @@ export default function CloudBackup(props: Props) {
                     })} />
                     <h2 className={'text-lg text-accent-foreground font-bold text-center'}>备份</h2>
                     <div className={'p-2 w-4/5 mx-auto text-center text-sm text-muted-foreground'}>
-                        备份全量数据。当你重装插件、数据意外丢失数据、或重新在其他浏览器安装新的插件时，备份数据便于你快速地恢复数据。
+                        创建全量数据快照。当你重装插件、数据意外丢失数据、或重新在其他浏览器安装新的插件时，备份数据便于你快速地恢复数据。
                         {/*<div className={'p-2 text-center'}>*/}
                         {/*    <Dialog>*/}
                         {/*        <DialogTrigger asChild>*/}
@@ -102,21 +99,22 @@ export default function CloudBackup(props: Props) {
                 <BasicSettingLine label={'云备份此设备'}
                                   subLabel={config?.switch ? <span>
                                       将在系统闲置时备份今日数据至
-                                       <NavLink className={'a'} to={'/data/cloud-supporters'}>云端</NavLink>
+                                       <NavLink className={'a'} to={'/cloud/supporters'}>云端</NavLink>
                                   </span>:''}
                                   right={
                                       <>
                                           {
-                                              config?.switch && <CloudStat types={['oss','webdav']}/>
+                                              config?.switch && <div>
+                                                  <CloudStat type={'oss'}/> <CloudStat type={'webdav'}/>
+                                              </div>
                                           }
                                           <Switch checked={config?.switch} onCheckedChange={(checked)=>{
                                               update({
                                                   switch: checked,
-                                                  pagenote: checked,
                                               })
-                                              if(checked){
-                                                  setShowSupporters(true)
-                                              }
+                                            //   if(checked){
+                                            //       setShowSupporters(true)
+                                            //   }
                                           }} />
                                       </>
                 }>
@@ -124,32 +122,32 @@ export default function CloudBackup(props: Props) {
                 </BasicSettingLine>
                 {
                     config?.switch &&
-                    <BasicSettingLine label={'云备份历史'} path={'/data/cloud-backup/history'} />
+                    <BasicSettingLine label={'云备份历史'} path={'/cloud/backup/history'} />
                 }
             </div>
 
-            <div>
-                <div>
-                    <Dialog>
-                        <DialogTrigger className={'block w-full'}>
-                            <BasicSettingLine className={'w-full text-blue-400'} label={'立即备份'}></BasicSettingLine>
-                        </DialogTrigger>
-                        <DialogContent className="">
-                            <DialogHeader>
-                                <DialogTitle>备份文件</DialogTitle>
-                                <DialogDescription>
-                                    选择备份到本地或云端
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ExportFilter exportBy={'extension'}/>
-                        </DialogContent>
-                    </Dialog>
-                </div>
-                <BasicSettingDescription>
-                    <a className={'more'}
-                       href={`${basePath}/ext/setting.html#/data/backup`}>导入备份</a>可用于数据还原、交换。备份文件未经过加密处理，请妥善保管文件。
-                </BasicSettingDescription>
-            </div>
+            {/*<div>*/}
+            {/*    <div>*/}
+            {/*        <Dialog>*/}
+            {/*            <DialogTrigger className={'block w-full'}>*/}
+            {/*                <BasicSettingLine className={'w-full text-blue-400'} label={'立即备份'}></BasicSettingLine>*/}
+            {/*            </DialogTrigger>*/}
+            {/*            <DialogContent className="">*/}
+            {/*                <DialogHeader>*/}
+            {/*                    <DialogTitle>备份文件</DialogTitle>*/}
+            {/*                    <DialogDescription>*/}
+            {/*                        选择备份到本地或云端*/}
+            {/*                    </DialogDescription>*/}
+            {/*                </DialogHeader>*/}
+            {/*                <ExportFilter exportBy={'extension'}/>*/}
+            {/*            </DialogContent>*/}
+            {/*        </Dialog>*/}
+            {/*    </div>*/}
+            {/*    <BasicSettingDescription>*/}
+            {/*        <a className={'more'}*/}
+            {/*           href={`${basePath}/ext/setting.html#/data/backup`}>导入备份</a>可用于数据还原、交换。备份文件未经过加密处理，请妥善保管文件。*/}
+            {/*    </BasicSettingDescription>*/}
+            {/*</div>*/}
 
             {/*<div>*/}
             {/*    <Dialog>*/}
@@ -171,7 +169,7 @@ export default function CloudBackup(props: Props) {
             {/*       href={`${basePath}/ext/setting.html#/data/backup`}>导入备份</a>*/}
             {/*</div>*/}
 
-            <Dialog open={showSupporters} onOpenChange={setShowSupporters}>
+            {/* <Dialog open={showSupporters} onOpenChange={setShowSupporters}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>选择将数据存储至何处?</DialogTitle>
@@ -180,7 +178,7 @@ export default function CloudBackup(props: Props) {
                         </DialogDescription>
                     </DialogHeader>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             {/*{*/}
             {/*    config?.switch &&*/}

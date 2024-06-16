@@ -9,8 +9,9 @@ import ConfigItem = config.ConfigValue
 import { get } from 'lodash'
 
 export default function useSettingConfig<T extends ConfigItem>(
-  rootKey: string = 'global'
-): [T | null, (input: any) => Promise<void>] {
+  rootKey: string = 'global',
+  table: 'config'|'secret' = 'config',
+): [T | null, (input: Partial<T>) => Promise<void>] {
   const { data = null, mutate } = useSWR<T | null>(
     '/user-config/' + rootKey,
     fetchUserConfig,
@@ -23,7 +24,7 @@ export default function useSettingConfig<T extends ConfigItem>(
     return extApi.table
       .query({
         db: 'setting',
-        table: 'config',
+        table: table,
         params: {
           query: {
             rootKey: rootKey,
@@ -43,7 +44,7 @@ export default function useSettingConfig<T extends ConfigItem>(
       })
   }
 
-  function update(input: T) {
+  function update(input: Partial<T>) {
     const data = {
       [rootKey]: input,
     }
@@ -56,7 +57,7 @@ export default function useSettingConfig<T extends ConfigItem>(
     return extApi.table
       .put({
         db: 'setting',
-        table: 'config',
+        table: table,
         params: objectArray,
       })
       .then(function (res) {

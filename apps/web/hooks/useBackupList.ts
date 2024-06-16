@@ -60,5 +60,7 @@ export default function useBackupList(type: 'oss'|'webdav'): [FileItem[],boolean
 
     }
 
-    return [data,isLoading]
+    return [data.filter(function(item){
+        return item.filename.includes('.zip')
+    }),isLoading]
 }

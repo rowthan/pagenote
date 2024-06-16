@@ -21,7 +21,7 @@ import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogDescription, DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -199,22 +199,6 @@ export default function ImportAndExport(props: Props) {
     <div className="">
       {children}
       <div>
-        {/*<Dialog >*/}
-        {/*  <DialogTrigger asChild>*/}
-        {/*    <Button variant={'outline'} className={'w-full block'}>*/}
-        {/*      备份并下载*/}
-        {/*    </Button>*/}
-        {/*  </DialogTrigger>*/}
-        {/*  <DialogContent className="">*/}
-        {/*    <DialogHeader>*/}
-        {/*      <DialogTitle>导出数据</DialogTitle>*/}
-        {/*      <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换*/}
-        {/*      </DialogDescription>*/}
-        {/*    </DialogHeader>*/}
-        {/*    <ExportFilter exportBy={exportBy}/>*/}
-        {/*  </DialogContent>*/}
-        {/*</Dialog>*/}
-
         <div className={'mt-10 p-4 rounded border-2 border-dashed border-gray-300'}>
           <label
               htmlFor={'backup-input'}
@@ -247,27 +231,48 @@ export default function ImportAndExport(props: Props) {
           </label>
         </div>
       </div>
-      {showConfirmModal && backupData && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <button
-              className={'absolute right-4'}
-              onClick={() => {
-                setShowConfirmModal(false)
-              }}
-            >
-              <CloseSvg />
-            </button>
-            <ImportFilter
-              backupData={backupData}
-              onSuccess={() => {
-                setShowConfirmModal(false);
-                setBackupData(null)
-              }}
-            />
-          </div>
-        </div>
-      )}
+
+      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+
+        <DialogContent className="max-h-full overflow-auto">
+          <DialogTitle>
+            请确认你的备份文件
+          </DialogTitle>
+          <DialogDescription>
+            如果插件已有你导入的数据，将自动合并采用更新版本的数据。
+          </DialogDescription>
+          {
+            backupData && <ImportFilter
+                  backupData={backupData}
+                  onSuccess={() => {
+                    setShowConfirmModal(false);
+                    setBackupData(null)
+                  }}
+              />
+          }
+        </DialogContent>
+      </Dialog>
+      {/*{showConfirmModal && backupData && (*/}
+      {/*  <div className="modal modal-open">*/}
+      {/*    <div className="modal-box">*/}
+      {/*      <button*/}
+      {/*        className={'absolute right-4'}*/}
+      {/*        onClick={() => {*/}
+      {/*          setShowConfirmModal(false)*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <CloseSvg />*/}
+      {/*      </button>*/}
+      {/*      <ImportFilter*/}
+      {/*        backupData={backupData}*/}
+      {/*        onSuccess={() => {*/}
+      {/*          setShowConfirmModal(false);*/}
+      {/*          setBackupData(null)*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </div>
   )
 }

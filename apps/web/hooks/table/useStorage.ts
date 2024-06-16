@@ -11,6 +11,8 @@ export default function useStorage(
     useSWR<TableStat>('/storage/info/' + collection, fetchData, {
       fallback: {
         usage: 0,
+        quota: 0,
+        size: 0,
       },
     })
 

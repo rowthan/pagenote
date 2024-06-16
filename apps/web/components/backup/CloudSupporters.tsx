@@ -2,7 +2,6 @@ import React, {type ReactNode, useState} from 'react';
 import BasicSettingLine, {BasicSettingDescription, BasicSettingTitle} from "../setting/BasicSettingLine";
 import {Switch} from "@/components/ui/switch";
 import useSettingConfig from "hooks/table/useSettingConfig";
-import {Button} from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,28 +13,27 @@ import {
 import WebdavForm from "../form/WebdavForm";
 import Status from "../Status";
 import CheckVersion from "../check/CheckVersion";
-import useUserInfo from "../../hooks/useUserInfo";
 import CloudStat from "../stat/CloudStat";
+import useStat from "../../hooks/useStat";
 
 interface Props {
     children?: ReactNode;
 }
 
-
 export default function CloudSupporters(props: Props) {
-    const {children} = props;
     const [showForm,setShowForm] = useState(false)
-    const [cloudBackupConfig, updateCloudUpdate] = useSettingConfig<{
-        pagenote: boolean
+    const [ossConfig, updateOssConfig] = useSettingConfig<{
         switch: boolean
-    }>('_cloud');
-    const [webdavConfig, update] = useSettingConfig<{ host: string, username: string,password?: string }>('_webdav')
-    const [userInfo] = useUserInfo()
+    }>('_oss');
+    const {data: webdav,mutate:refreshWebdav} = useStat('webdav',);
+    const {data: oss,refresh} = useStat('oss','data');
+
+    const [webdavConfig, update] = useSettingConfig<{ host: string, username: string,password?: string }>('_webdav','secret')
     const webdavSwitch = !!webdavConfig?.host && !!webdavConfig?.username && !!webdavConfig?.password
-    const pagenoteSwitch = !!cloudBackupConfig?.pagenote;
+    const pagenoteSwitch = Boolean(ossConfig?.switch);
     return (
         <div>
-            <BasicSettingTitle>
+            {/* <BasicSettingTitle>
                 <span>
                     {
                        ( !webdavSwitch && !pagenoteSwitch) ?
@@ -47,45 +45,44 @@ export default function CloudSupporters(props: Props) {
                            </span>
                     }
                 </span>
-            </BasicSettingTitle>
+            </BasicSettingTitle> */}
             <div className="">
-                <BasicSettingLine badge={<Status disabled={!pagenoteSwitch}><img src="/images/light-48.png" alt=""/></Status>}
+                <CheckVersion requireVersion={'0.29.5'} fallback={<></>}>
+                    <BasicSettingLine
+                        badge={<Status disabled={!webdav?.connected}><img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/webdav.jpeg" alt=""/></Status>}
+                        label={'WebDav'}
+                        subLabel={webdavSwitch?"数据保存至你自己的服务器。更安全":""}
+                        path={'/cloud/supporters/webdav'}
+                        right={
+                            <>
+                                {
+                                    webdavSwitch ? <CloudStat type='webdav'/> :
+                                        <span className={'text-xs'}>未配置</span>
+                                }
+                            </>
+                        }/>
+                </CheckVersion>
+                <BasicSettingLine badge={<Status disabled={!oss?.connected}><img src="/images/light-48.png" alt=""/></Status>}
                                   label={'PAGENOTE Cloud'}
                                   subLabel={pagenoteSwitch ? '由 PAGENOTE 提供服务。' : '未开启'}
                                   right={
                                       <>
                                           {
-                                              pagenoteSwitch && <CloudStat types={['oss']}/>
+                                              pagenoteSwitch && <CloudStat type='oss'/>
                                           }
                                           <Switch checked={pagenoteSwitch} onCheckedChange={
                                               () => {
-                                                  updateCloudUpdate({
-                                                      pagenote: !pagenoteSwitch,
+                                                  updateOssConfig({
+                                                      switch: !pagenoteSwitch,
+                                                  }).then(function () {
+                                                      refresh()
                                                   })
                                               }
                                           } id="pagenote-cloud-switch"/>
                                       </>
                                   }>
                 </BasicSettingLine>
-               <CheckVersion requireVersion={'0.29.5'} fallback={<></>}>
-                   <BasicSettingLine
-                       badge={<Status disabled={!webdavSwitch}><img src="//pagenote-public.oss-cn-beijing.aliyuncs.com/0000/webdav.jpeg" alt=""/></Status>}
-                       label={'WebDav'}
-                       subLabel={webdavSwitch?"数据保存至你自己的服务器。更安全":""}
-                       right={
-                           <>
-                               {
-                                   webdavSwitch && <CloudStat types={['webdav']}/>
-                               }
-                               <Switch className={'bg-input'} checked={webdavSwitch} onClick={
-                                   () => {
-                                       setShowForm(true)
-                                   }
-                               }/>
-                           </>
-                       }>
-                   </BasicSettingLine>
-               </CheckVersion>
+
                 <Dialog open={showForm} onOpenChange={setShowForm}>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
@@ -100,14 +97,14 @@ export default function CloudSupporters(props: Props) {
                     </DialogContent>
                 </Dialog>
             </div>
-            <BasicSettingDescription>
-                <span>
-                    数据存储服务商可以查看、编辑、删除你的数据。
-                    <br/>
-                    当启用多个云端存储服务时，将同时工作，且优先使用由个人提供的存储服务（WebDav &gt; PAGENOTE）。
-                    <a href="https://pagenote.cn/docs/cloud" className={'more'}>了解更多</a>
-                </span>
-            </BasicSettingDescription>
+            {/*<BasicSettingDescription>*/}
+            {/*    <span>*/}
+            {/*        数据存储服务商可以查看、编辑、删除你的数据。*/}
+            {/*        <br/>*/}
+            {/*        当启用多个云端存储服务时，将同时工作，且优先使用由个人提供的存储服务（WebDav &gt; PAGENOTE）。*/}
+            {/*        <a href="https://pagenote.cn/docs/cloud" className={'more'}>了解更多</a>*/}
+            {/*    </span>*/}
+            {/*</BasicSettingDescription>*/}
         </div>
     );
 }

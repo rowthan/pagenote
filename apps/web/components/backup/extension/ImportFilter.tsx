@@ -86,10 +86,10 @@ export default function ImportFilter(props: {
 
   return (
     <div>
-      <h3 className="font-bold text-lg">请确认你的备份文件</h3>
+      {/*<h3 className="font-bold text-lg">请确认你的备份文件</h3>*/}
       <div className="py-4">
-        <p>如果插件已有你导入的数据，将自动合并采用更新版本的数据。</p>
-        <div className="modal-action flex justify-center mb-4">
+        {/*<p>如果插件已有你导入的数据，将自动合并采用更新版本的数据。</p>*/}
+        <div className=" flex justify-center mb-4">
           <Button
               disabled={importIng}
               className={`btn btn-primary ${importIng ? 'loading' : ''}`}
@@ -98,26 +98,26 @@ export default function ImportFilter(props: {
             确定导入
           </Button>
         </div>
-        <table className="table table-compact w-full">
-          <thead>
-          <tr>
-            <th>数据类型</th>
-            <th>数量</th>
-          </tr>
-          </thead>
-          <tbody>
-          {
-            backupData.items.map((item, index) => (
-                <tr key={index} className={classNames({
-                  "hide": item.list.length === 0
-                })}>
-                  <td>{TableMap[item.table]}</td>
-                  <td>{item.list.length}个</td>
-                </tr>
-            ))
-          }
-          </tbody>
-        </table>
+        {/*<table className="table table-compact w-full">*/}
+        {/*  <thead>*/}
+        {/*  <tr>*/}
+        {/*    <th>数据类型</th>*/}
+        {/*    <th>数量</th>*/}
+        {/*  </tr>*/}
+        {/*  </thead>*/}
+        {/*  <tbody>*/}
+        {/*  {*/}
+        {/*    backupData.items.map((item, index) => (*/}
+        {/*        <tr key={index} className={classNames({*/}
+        {/*          "hide": item.list.length === 0*/}
+        {/*        })}>*/}
+        {/*          <td>{TableMap[item.table]}</td>*/}
+        {/*          <td>{item.list.length}个</td>*/}
+        {/*        </tr>*/}
+        {/*    ))*/}
+        {/*  }*/}
+        {/*  </tbody>*/}
+        {/*</table>*/}
       </div>
 
     </div>

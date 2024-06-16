@@ -1,4 +1,4 @@
-import {type ReactNode, useEffect, useState} from 'react';
+import React, {type ReactNode, useEffect, useState} from 'react';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "../../@/components/ui/form";
 import {Input} from "../../@/components/ui/input";
 import {DialogFooter} from "../../@/components/ui/dialog";
@@ -7,10 +7,12 @@ import {useForm} from "react-hook-form";
 import * as z from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useSettingConfig from "../../hooks/table/useSettingConfig";
+import CloudStat from "../stat/CloudStat";
+import useStat from "../../hooks/useStat";
 
 interface Props {
     children?: ReactNode;
-    afterSubmit: () => void
+    afterSubmit?: () => void
 }
 const FormSchema = z.object({
     password: z.string(),
@@ -25,8 +27,9 @@ const FormSchema = z.object({
 
 export default function WebdavForm(props: Props) {
     const {afterSubmit} = props;
+    const {mutate} = useStat('webdav')
     const [loading,setLoading] = useState(false)
-    const [config,update] = useSettingConfig<z.infer<typeof FormSchema>>('_webdav')
+    const [config,update] = useSettingConfig<z.infer<typeof FormSchema>>('_webdav','secret')
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -45,67 +48,74 @@ export default function WebdavForm(props: Props) {
         setLoading(true)
         update(data).then(function () {
             setLoading(false)
-            afterSubmit();
+            mutate();
+            afterSubmit && afterSubmit();
         })
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
-                <FormField
-                    control={form.control}
-                    name="host"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>
-                                服务器地址
-                            </FormLabel>
-                            <FormControl>
-                                <Input className={''} placeholder="服务器地址" {...field} />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({field}) => (
-                        <>
+        <div>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
+                    <FormField
+                        control={form.control}
+                        name="host"
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>
-                                    用户名
+                                    服务器地址
                                 </FormLabel>
                                 <FormControl>
-                                    <Input className={''} placeholder="用户名" {...field} />
+                                    <Input className={''} placeholder="服务器地址" {...field} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
-                        </>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>
-                                密码
-                            </FormLabel>
-                            <FormControl>
-                                <div className={'flex justify-between'}>
-                                    <Input className={''} placeholder="密码" {...field} />
-                                </div>
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <DialogFooter>
-                    <Button loading={loading} type="submit">保存</Button>
-                </DialogFooter>
-            </form>
-        </Form>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="username"
+                        render={({field}) => (
+                            <>
+                                <FormItem>
+                                    <FormLabel>
+                                        用户名
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input className={''} placeholder="用户名" {...field} />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            </>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>
+                                    密码
+                                </FormLabel>
+                                <FormControl>
+                                    <div className={'flex justify-between'}>
+                                        <Input type={'password'} className={''} placeholder="密码" {...field} />
+                                    </div>
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <div className={'text-sm text-muted-foreground'}>
+                        此账户、密码信息仅保存在本浏览器，不会上传服务器。其他浏览器需要重新配置。
+                    </div>
+                    <DialogFooter>
+                        <CloudStat type={'webdav'}/>
+                        <Button loading={loading} type="submit">保存</Button>
+                    </DialogFooter>
+                </form>
+            </Form>
+        </div>
     );
 }
 
