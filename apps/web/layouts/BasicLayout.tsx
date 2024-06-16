@@ -1,11 +1,9 @@
 import { PropsWithChildren } from 'react'
 import Head from 'next/head'
-// import {useTheme} from "next-themes";
 import Breadcrumbs from '../components/Breadcrumbs'
-import Footer from '../components/Footer'
 import ErrorBoundary from '../components/debug/ErrorBound'
 import Error from 'components/debug/ErrorTip'
-import HelpAside from '../components/HelpAside'
+import {Asides} from '../components/HelpAside'
 
 // 给普通用户访问的页面，基础layout
 export default function BasicLayout(
@@ -56,8 +54,7 @@ export default function BasicLayout(
             </nav>
           )}
           <main className="mx-auto relative min-h-fill">{children}</main>
-          <HelpAside />
-          {footer && <Footer />}
+          <Asides/>
         </>
       </ErrorBoundary>
     )

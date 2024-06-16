@@ -4,6 +4,7 @@ import ErrorBoundary from '../components/debug/ErrorBound'
 import Error from 'components/debug/ErrorTip'
 import HelpAside from '../components/HelpAside'
 import {basePath} from "../const/env";
+import Footer from "../components/Footer";
 
 export default function ExtLayout(
   props: PropsWithChildren<{
@@ -37,8 +38,11 @@ export default function ExtLayout(
                         type="image/x-icon"
                     />
                 </Head>
-                {children}
+                <main className={'min-h-fill'}>
+                    {children}
+                </main>
                 <HelpAside/>
+                <Footer />
             </>
         </ErrorBoundary>
     )
