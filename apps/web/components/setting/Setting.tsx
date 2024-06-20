@@ -188,7 +188,7 @@ function SettingHome() {
 
             <SettingSection className={'mt-6'}>
                 <BasicSettingLine
-                    label={'版本'}
+                    label={'关于'}
                     subLabel={<a className={'hover:underline'} href={whoAmI?.extensionStoreUrl}
                                  target={'_blank'}>{whoAmI?.extensionPlatform}</a>}
                     right={

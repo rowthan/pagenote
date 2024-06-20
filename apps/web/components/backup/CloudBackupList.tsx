@@ -59,17 +59,19 @@ export default function CloudBackupList(props: Props) {
 
     const [backLink,setBackLink] = useState('');
     const [importing,setImporting] = useState(false);
-    const {data,mutate : refreshList} = useTableQuery<{key: string,filePath: string,protocol: string}>(Collection.file, {
+    const {data,mutate : refreshList} = useTableQuery<{key: string,filePath: string,protocol: string,suffix?: string}>(Collection.file, {
         query: {
-            protocol: 'oss:',
+            // protocol: 'oss:',
+            suffix: 'zip',
         },
+        limit: 99,
         projection:{
             key: 1,
             filePath: 1
         }
     })
 
-    console.log(data,'temps')
+    console.log(data,'temps files')
 
     function doImportBackFile(url: string) {
         setImporting(true)
