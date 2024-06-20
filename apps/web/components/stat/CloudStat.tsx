@@ -1,13 +1,13 @@
 import React, {type ReactNode} from 'react';
 import useStat from "../../hooks/useStat";
 import {StatBadge} from "../setting/BasicSettingLine";
-import useSettingConfig from "../../hooks/table/useSettingConfig";
 import classNames from "classnames";
 
 interface Props {
     children?: ReactNode;
     type: 'oss'|'webdav'
     space?: "private"|'data'
+    connectedLable?: string
 }
 
 export default function CloudStat(props: Props) {
@@ -15,7 +15,7 @@ export default function CloudStat(props: Props) {
     //@ts-ignore
     const {data} = useStat(type,props.space)
     const status = data?.connected ? 'success' : 'fail';
-    const label = data?.connected ? type + ' connected' : data?.error;
+    const label = data?.connected ? (props.connectedLable || 'connected') : data?.error;
     const actionUrl = data?.actionUrl;
 
     return (

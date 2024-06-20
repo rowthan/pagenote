@@ -99,7 +99,7 @@ export default function CloudBackupList(props: Props) {
 
     return (
         <div className="">
-            <ImportAndExport />
+            {/*<ImportAndExport />*/}
             <BasicSettingTitle>
                 备份列表
             </BasicSettingTitle>

@@ -10,10 +10,10 @@ import { get } from 'lodash'
 
 export default function useSettingConfig<T extends ConfigItem>(
   rootKey: string = 'global',
-  table: 'config'|'secret' = 'config',
+  table: 'config'|'secret',
 ): [T | null, (input: Partial<T>) => Promise<void>] {
   const { data = null, mutate } = useSWR<T | null>(
-    '/user-config/' + rootKey,
+    '/user-config/' + rootKey + table,
     fetchUserConfig,
     {
       fallback: {},
@@ -61,7 +61,9 @@ export default function useSettingConfig<T extends ConfigItem>(
         params: objectArray,
       })
       .then(function (res) {
-        mutate()
+        fetchUserConfig().then(function (data) {
+          mutate(data)
+        })
       })
   }
 

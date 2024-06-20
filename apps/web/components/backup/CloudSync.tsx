@@ -14,6 +14,7 @@ import { IoSyncCircleSharp } from "react-icons/io5";
 
 import {NavLink} from "react-router-dom";
 import Status from "../Status";
+import ConfigSwitch from "./ConfigSwitch";
 
 interface Props {
     children?: ReactNode;
@@ -22,9 +23,7 @@ interface Props {
 export default function CloudSync(props: Props) {
     const [syncInfo,update] = useSettingConfig<{
         switch: boolean,
-    }>('_sync');
-    const [showImport,setShowImport] = useState(false)
-    const [showSupporters,setShowSupporters] = useState(false)
+    }>('_sync','config');
 
     return (
         <div className="flex flex-col gap-6">
@@ -40,13 +39,7 @@ export default function CloudSync(props: Props) {
                 </div>
                 <hr className={'w-[90%] mx-auto'}/>
                 <BasicSettingLine label={'云同步此设备'}
-                                  right={
-                                      <Switch checked={syncInfo?.switch} onCheckedChange={(checked)=>{
-                                          update({
-                                              switch: checked,
-                                          })
-                                      }} />
-                } />
+                                  right={ <ConfigSwitch rootKey={'_sync'}/>} />
             </div>
 
             {

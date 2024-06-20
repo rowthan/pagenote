@@ -14,6 +14,7 @@ import {Switch} from "@/components/ui/switch";
 import useSettingConfig from "hooks/table/useSettingConfig";
 import SettingDetail from "../setting/SettingDetail";
 import { Button } from '@/components/ui/button';
+import ConfigSwitch from "../backup/ConfigSwitch";
 
 interface Props {
     children?: ReactNode;
@@ -21,13 +22,23 @@ interface Props {
 
 export default function CloudFunctions(props: Props) {
     const {children} = props;
-  const [backup] = useSettingConfig<{ switch?: boolean }>('_backup')
-  const [sync,update] = useSettingConfig<{
-    switch: boolean,
-  }>('_sync');
+  const [backup,updateBackup] = useSettingConfig<{ cloudSource?: 'webdav' | 'oss',switch?:boolean }>('_backup','config')
+  const [sync,updateConfig] = useSettingConfig<{
+    switch?: boolean,
+  }>('_sync','config');
+  const cloudBackupEnabled = Boolean(backup?.switch);
+  const syncEnabled = Boolean(sync?.switch);
 
-  const [cloudConfig, setCloudConfig] = useSettingConfig<{enable?:boolean}>('cloud')
-  const enabled = cloudConfig?.enable ?? false;
+  const enabledAll = cloudBackupEnabled && syncEnabled;
+
+  function toggleAll() {
+        updateBackup({
+            switch: !enabledAll
+        })
+        updateConfig({
+            switch: !enabledAll
+        })
+  }
 
   return (
         <>
@@ -38,54 +49,55 @@ export default function CloudFunctions(props: Props) {
                 <BasicSettingLine
                     badge={
                         <MdOutlineSettingsBackupRestore className={classNames('w-full h-full text-blue-400', {
-                            'grayscale': !backup?.switch
+                            'grayscale': !cloudBackupEnabled
                         })}/>
                     }
                     label={'备份'}
                     right={
                         <div className={'text-muted-foreground'}>
-                            {backup?.switch ?
-                                <CloudConnectedCheck/>
-                                : '未开启'}
+                            {cloudBackupEnabled ?
+                                '已开启':
+                                <ConfigSwitch rootKey={'_backup'} />
+                                }
                         </div>
-                    } path={'/cloud/backup'}/>
-                <CheckVersion requireVersion={'0.29.13'} fallback={<></>}>
+                    } path={cloudBackupEnabled ? '/cloud/backup' :''}/>
+                <CheckVersion requireVersion={'0.29.11'} fallback={<></>}>
                     <BasicSettingLine badge={
                         <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {
-                            'grayscale': !sync?.switch
+                            'grayscale': !syncEnabled
                         })}/>
                     } label={'同步'}
-                                      right={sync?.switch ? <CloudConnectedCheck/> : '未开启'}
-                                      path={'/cloud/sync'}/>
+                                      right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}
+                                      path={syncEnabled ? '/cloud/sync':''}/>
                 </CheckVersion>
 
-                <SettingSection>
-                    <BasicSettingLine
-                        badge={<Status disabled={!enabled}>
-                            <img src="https://pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>
-                        </Status>}
-                        label={<span>图床</span>}
-                        subLabel={<span>
-                            将快照图片上传至云端，生成图片链接。可以在互联网公开访问该资源。
-                        </span>}
-                        right={
-                            <>
-                                <CloudStat type={'oss'} space={'private'}/>
-                                <Switch checked={enabled} onCheckedChange={
-                                    () => {
-                                        setCloudConfig({
-                                            enable: !enabled,
-                                        })
-                                    }
-                                } id="pagenote-cloud-switch"/>
-                            </>
-                        }
-                    />
-                </SettingSection>
+                {/*<SettingSection>*/}
+                {/*    <BasicSettingLine*/}
+                {/*        badge={<Status disabled={!enabled}>*/}
+                {/*            <img src="https://pagenote-public.oss-cn-beijing.aliyuncs.com/0000/img.jpg" alt=""/>*/}
+                {/*        </Status>}*/}
+                {/*        label={<span>图床</span>}*/}
+                {/*        subLabel={<span>*/}
+                {/*            将快照图片上传至 PAGENOTE 云端，生成图片链接。请不要分享图片链接，链接可在互联网公开环境下访问。*/}
+                {/*        </span>}*/}
+                {/*        right={*/}
+                {/*            <>*/}
+                {/*                <CloudStat connectedLable='✅' type={'oss'} space={'private'}/>*/}
+                {/*                <Switch checked={enabled} onCheckedChange={*/}
+                {/*                    () => {*/}
+                {/*                        setCloudConfig({*/}
+                {/*                            enable: !enabled,*/}
+                {/*                        })*/}
+                {/*                    }*/}
+                {/*                } id="pagenote-cloud-switch"/>*/}
+                {/*            </>*/}
+                {/*        }*/}
+                {/*    />*/}
+                {/*</SettingSection>*/}
             </SettingSection>
-            {/*<BasicSettingDescription>*/}
-            {/*    <a>一键开启</a>*/}
-            {/*</BasicSettingDescription>*/}
+            <BasicSettingDescription className={'flex justify-end'}>
+                <Button variant={'ghost'} size={'sm'} onClick={()=>{toggleAll()}}>一键{enabledAll ? '关闭' : '开启'}</Button>
+            </BasicSettingDescription>
         </>
     );
 }

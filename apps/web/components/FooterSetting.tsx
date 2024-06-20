@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function PopPanelSetting(props:{closedAfterChange: boolean}){
-    const [config,update] = useSettingConfig<{popMode?:'panel'|'popup'}>('extension')
+    const [config,update] = useSettingConfig<{popMode?:'panel'|'popup'}>('extension','config')
     const isSidePanel = config?.popMode === 'panel';
     const {pathname} = useRouter();
     const isSidePanelInPath = pathname.includes('sidepanel');

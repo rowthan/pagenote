@@ -1,19 +1,18 @@
 import extApi from '@pagenote/shared/lib/pagenote-api'
 import useSWR, {KeyedMutator} from 'swr'
-import useSettingConfig from "./table/useSettingConfig";
 
 const TEST_FILE_PATH = '/.temp/.connect.txt'
 
-type Stat = {
+export type CloudStat = {
     connected: boolean,
     error: string,
     actionUrl?: string
 }
 
-function useStat(type:'webdav'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void}
-function useStat(type:'oss',space: "private"|'data'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void}
-function useStat(type: 'oss'|'webdav',space?: "private"|'data'): {data:Stat | undefined, mutate:KeyedMutator<Stat>,refresh:()=>void} {
-    const { data, isLoading, mutate } = useSWR<Stat>(function () {
+function useStat(type:'webdav'): {data:CloudStat | undefined, mutate:KeyedMutator<CloudStat>,refresh:()=>void}
+function useStat(type:'oss',space: "private"|'data'): {data:CloudStat | undefined, mutate:KeyedMutator<CloudStat>,refresh:()=>void}
+function useStat(type: 'oss'|'webdav',space?: "private"|'data'): {data:CloudStat | undefined, mutate:KeyedMutator<CloudStat>,refresh:()=>void} {
+    const { data, isLoading, mutate } = useSWR<CloudStat>(function () {
         return '/stat/'+type
     }, ()=>fetchInfo())
 
