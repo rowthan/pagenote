@@ -1,6 +1,16 @@
 
 
-export const supporters = [
+export type SupporterType = 'webdav '| 'oss' |string;
+
+type Supporter = {
+    type: SupporterType
+    name: string
+    path: string
+    icon: string
+    description: string
+}
+
+export const supporters:Supporter[] = [
     {
         type: 'webdav',
         name: 'WebDav',
@@ -12,6 +22,15 @@ export const supporters = [
         type: 'oss',
         name: "PAGENOTE 云",
         description: '由 PAGENOTE 提供服务。',
-        icon: "https://pagenote.cn/images/light-48.png"
+        icon: "https://pagenote.cn/images/light-48.png",
+        path: 'https://pagenote.cn/docs/cloud'
     }
 ]
+
+const map: Record<string, Supporter> = {};
+
+supporters.forEach(function(item){
+    map[item.type] = item;
+})
+
+export const supporterMap = map;

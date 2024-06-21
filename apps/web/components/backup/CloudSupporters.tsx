@@ -17,7 +17,7 @@ import {
 import WebdavForm from "../form/WebdavForm";
 import Status from "../Status";
 import CheckVersion from "../check/CheckVersion";
-import CloudStat from "../stat/CloudStat";
+import CloudStat from "../cloud/CloudStat";
 import useStat from "../../hooks/useStat";
 import {supporters} from "../../const/supporters";
 

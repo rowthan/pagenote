@@ -15,7 +15,7 @@ import {basePath} from "../../const/env";
 import CloudBackup from "../backup/CloudBackup";
 import CloudSupporters from "../backup/CloudSupporters";
 import CloudBackupList from "../backup/CloudBackupList";
-import CloudSync from "../backup/CloudSync";
+import CloudSync from "../cloud/CloudSync";
 import ImageCloud from "../backup/extension/ImageCloud";
 import LightSetting from "./LightSetting";
 import DisabledDetail from "./DisabledDetail";

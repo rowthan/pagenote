@@ -1,39 +1,26 @@
 import React, {type ReactNode} from 'react';
 import BasicSettingLine, {
     BasicSettingDescription,
-    BasicSettingTitle,
-    SettingSection
 } from "../setting/BasicSettingLine";
-import {MdOutlineSettingsBackupRestore} from "react-icons/md";
 import classNames from "classnames";
-import CloudStat, {CloudConnectedCheck} from "../stat/CloudStat";
-import CheckVersion from "../check/CheckVersion";
-import {IoSyncCircleSharp} from "react-icons/io5";
+import CloudStat from "./CloudStat";
 import useSettingConfig from "../../hooks/table/useSettingConfig";
-import Status from "../Status";
-import {get} from "lodash";
-import CloudSupporters from '../backup/CloudSupporters';
 import { MdOutlineCloudUpload } from "react-icons/md";
-import {Switch} from "../../@/components/ui/switch";
 import useStat from "../../hooks/useStat";
 import CloudFunctions from "./CloudFunctions";
-import { Span } from 'next/dist/trace';
 import {CloudSelect} from "./CloudSelector";
-
+import CloudSupportLink from "./CloudSupportLink";
 
 interface Props {
     children?: ReactNode;
 }
 
 export default function CloudIndex(props: Props) {
-    const [cloud, update] = useSettingConfig<{ cloudSource: string }>('_cloud','config');
+    const [cloud] = useSettingConfig<{ cloudSource: string }>('_cloud','config');
     const cloudSource = cloud?.cloudSource as 'oss' | 'webdav'
     //@ts-ignore
     const {data:cloudStat} = useStat(cloudSource,'data')
-
-
-
-    const enabled =   cloudStat?.connected  //Boolean(cloud?.cloudSource) && count > 0;
+    const enabled =   cloudStat?.connected;
 
     return (
         <div className="">
@@ -66,11 +53,10 @@ export default function CloudIndex(props: Props) {
                         label={
                         <div className={'flex gap-2'}>
                             <span>云存储服务商</span>
-                            {/*@ts-ignore*/}
                             {cloud?.cloudSource && <CloudStat type={cloud?.cloudSource||''} space={'data'} />}
                         </div>
                         }
-                        subLabel={'选择你信任的云端作为数据存储服务商'}
+                        subLabel={cloud?.cloudSource?<span>已选择 <CloudSupportLink /> 作为云存储服务商</span>:'未启用云'}
                         right={ <CloudSelect />}
                     />
                 </div>

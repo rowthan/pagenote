@@ -4,7 +4,7 @@ import useSettingConfig from "hooks/table/useSettingConfig";
 import BasicSettingLine, {BasicSettingDescription, SettingSection} from "../setting/BasicSettingLine";
 import StorageInfo from "../backup/extension/StorageInfo";
 import Status from "../Status";
-import CloudStat from "../stat/CloudStat";
+import CloudStat from "../cloud/CloudStat";
 import {Switch} from "../../@/components/ui/switch";
 import ConfigSwitch from "../backup/ConfigSwitch";
 

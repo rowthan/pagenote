@@ -3,22 +3,17 @@ import BasicSettingLine from "../setting/BasicSettingLine";
 import { MdOutlineSettingsBackupRestore } from "react-icons/md";
 import useSettingConfig from "../../hooks/table/useSettingConfig";
 import classNames from "classnames";
-import {NavLink} from "react-router-dom";
-import { CloudSelect } from 'components/cloud/CloudSelector';
-import CloudStat from "../stat/CloudStat";
-import {Switch} from "../../@/components/ui/switch";
 import ConfigSwitch from "./ConfigSwitch";
+import CloudSupportLink from "../cloud/CloudSupportLink";
 
 interface Props {
     children?: ReactNode;
 }
 
 export default function CloudBackup(props: Props) {
-    const [config,update] = useSettingConfig<{
-        cloudSource: 'oss' | 'webdav',
+    const [config] = useSettingConfig<{
         switch?: boolean
     }>('_backup','config');
-
     const enabled = config?.switch;
 
     return (
@@ -37,14 +32,10 @@ export default function CloudBackup(props: Props) {
                 <BasicSettingLine
                   label={'云备份此设备'}
                   subLabel={enabled ? <span>
-                      将在系统闲置时备份今日数据至云
+                      将在系统闲置时备份今日数据至 <CloudSupportLink />
                   </span>:'未启用云备份功能'}
                   right={
-                    <div className={'flex gap-2'}>
-                        {/*<CloudStat type={config?.cloudSource || 'oss'} space={'data'} />*/}
-                        {/*<CloudSelect />*/}
-                        <ConfigSwitch rootKey={'_backup'} />
-                    </div>
+                      <ConfigSwitch rootKey={'_backup'} />
                   } />
                 {
                     enabled &&

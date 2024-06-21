@@ -2,10 +2,11 @@ import React, {type ReactNode} from 'react';
 import useStat from "../../hooks/useStat";
 import {StatBadge} from "../setting/BasicSettingLine";
 import classNames from "classnames";
+import {SupporterType} from "../../const/supporters";
 
 interface Props {
     children?: ReactNode;
-    type: 'oss'|'webdav'
+    type:SupporterType
     space?: "private"|'data'
     connectedLable?: string
 }

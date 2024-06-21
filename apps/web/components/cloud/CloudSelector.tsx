@@ -54,7 +54,6 @@ export function CloudSelect() {
                                 <SelectItem
                                     key={item.type}
                                     value={item.type}
-                                    disabled={disabled}
                                 >
                                     <div className={'flex gap-2 items-center'}>
                                         <img src={item.icon} alt={item.name} className={'w-4 h-4'}/>

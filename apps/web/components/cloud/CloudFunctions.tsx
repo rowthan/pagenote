@@ -6,13 +6,8 @@ import BasicSettingLine, {
 } from "../setting/BasicSettingLine";
 import {MdOutlineSettingsBackupRestore} from "react-icons/md";
 import classNames from "classnames";
-import CloudStat, {CloudConnectedCheck} from "../stat/CloudStat";
-import CheckVersion from "../check/CheckVersion";
 import {IoSyncCircleSharp} from "react-icons/io5";
-import Status from "../Status";
-import {Switch} from "@/components/ui/switch";
 import useSettingConfig from "hooks/table/useSettingConfig";
-import SettingDetail from "../setting/SettingDetail";
 import { Button } from '@/components/ui/button';
 import ConfigSwitch from "../backup/ConfigSwitch";
 
@@ -61,15 +56,15 @@ export default function CloudFunctions(props: Props) {
                                 }
                         </div>
                     } path={cloudBackupEnabled ? '/cloud/backup' :''}/>
-                {/*<CheckVersion requireVersion={'0.29.11'} fallback={<></>}>*/}
-                {/*    <BasicSettingLine badge={*/}
-                {/*        <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {*/}
-                {/*            'grayscale': !syncEnabled*/}
-                {/*        })}/>*/}
-                {/*    } label={'同步'}*/}
-                {/*                      right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}*/}
-                {/*                      path={syncEnabled ? '/cloud/sync':''}/>*/}
-                {/*</CheckVersion>*/}
+                <BasicSettingLine
+                    badge={
+                        <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {
+                            'grayscale': !syncEnabled
+                        })}/>
+                    }
+                    label={'同步'}
+                    right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}
+                    path={syncEnabled ? '/cloud/sync':''}/>
 
                 {/*<SettingSection>*/}
                 {/*    <BasicSettingLine*/}

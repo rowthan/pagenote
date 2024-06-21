@@ -7,7 +7,7 @@ import {useForm} from "react-hook-form";
 import * as z from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useSettingConfig from "../../hooks/table/useSettingConfig";
-import CloudStat from "../stat/CloudStat";
+import CloudStat from "../cloud/CloudStat";
 import useStat from "../../hooks/useStat";
 
 interface Props {

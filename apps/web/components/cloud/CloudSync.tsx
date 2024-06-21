@@ -7,14 +7,13 @@ import BasicSettingLine, {
 } from "../setting/BasicSettingLine";
 import useSettingConfig from "../../hooks/table/useSettingConfig";
 import classNames from "classnames";
-import { LuFolderSync } from "react-icons/lu";
 import { FcOpenedFolder } from "react-icons/fc";
 import { FcSettings } from "react-icons/fc";
 import { IoSyncCircleSharp } from "react-icons/io5";
-
-import {NavLink} from "react-router-dom";
 import Status from "../Status";
-import ConfigSwitch from "./ConfigSwitch";
+import ConfigSwitch from "../backup/ConfigSwitch";
+import CloudSupportLink from './CloudSupportLink';
+import {NavLink} from "react-router-dom";
 
 interface Props {
     children?: ReactNode;
@@ -24,6 +23,7 @@ export default function CloudSync(props: Props) {
     const [syncInfo,update] = useSettingConfig<{
         switch: boolean,
     }>('_sync','config');
+    const [cloudConfig] = useSettingConfig<{cloudSource?: string}>('_cloud','config')
 
     return (
         <div className="flex flex-col gap-6">
@@ -39,6 +39,7 @@ export default function CloudSync(props: Props) {
                 </div>
                 <hr className={'w-[90%] mx-auto'}/>
                 <BasicSettingLine label={'云同步此设备'}
+                                  subLabel={syncInfo?.switch && cloudConfig?.cloudSource? <span>数据将同步至 <CloudSupportLink/></span> : '未开启'}
                                   right={ <ConfigSwitch rootKey={'_sync'}/>} />
             </div>
 
@@ -54,6 +55,10 @@ export default function CloudSync(props: Props) {
                                           badge={<Status>
                                               <FcSettings className={'w-full h-full'}/>
                                           </Status>}
+                                          right={
+                                              <Switch checked={true} disabled={true}>
+                                              </Switch>
+                                          }
                         />
                         <BasicSettingLine label={'笔记'}
                                           badge={<Status disabled={true}>
@@ -68,7 +73,7 @@ export default function CloudSync(props: Props) {
                     </SettingSection>
                     <BasicSettingDescription>
                         <span>
-                           数据将上传至<NavLink className={'a'} to={'/cloud/supporters'}>云端</NavLink>。服务商可以查看、编辑、删除你的数据，请选择你授信的存储服务商。
+                           服务商可以查看、编辑、删除你的数据，<NavLink to="/cloud">请选择你信任的存储服务商</NavLink>。
                       </span>
                     </BasicSettingDescription>
                 </div>

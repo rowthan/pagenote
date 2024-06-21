@@ -5,7 +5,7 @@ import TipInfo from '../../TipInfo'
 import useSettingConfig from '../../../hooks/table/useSettingConfig'
 import { get } from 'lodash'
 import useOssKey from '../../../hooks/useOssKey'
-import CloudStat from "../../stat/CloudStat";
+import CloudStat from "../../cloud/CloudStat";
 
 interface Props {
   children?: ReactNode

@@ -92,7 +92,7 @@ export default function BasicSettingLine(props: {
   function onClickRoot() {
     if (path) {
       if(path.startsWith('http')){
-        openUrlInGroup('https://pagenote.cn/pro-plan')
+        openUrlInGroup(path)
       }else{
         navigate(path)
       }
