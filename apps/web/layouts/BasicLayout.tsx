@@ -48,11 +48,11 @@ export default function BasicLayout(
               type="image/x-icon"
             />
           </Head>
-          {nav && (
-            <nav>
-              <Breadcrumbs />
-            </nav>
-          )}
+          {/*{nav && (*/}
+          {/*  <nav>*/}
+          {/*    <Breadcrumbs />*/}
+          {/*  </nav>*/}
+          {/*)}*/}
           <main className="mx-auto relative min-h-fill">{children}</main>
           <Asides/>
         </>
