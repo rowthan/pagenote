@@ -5,6 +5,7 @@ import useSettingConfig from "../../hooks/table/useSettingConfig";
 import classNames from "classnames";
 import ConfigSwitch from "./ConfigSwitch";
 import CloudSupportLink from "../cloud/CloudSupportLink";
+import BackupStat from "./BackupStat";
 
 interface Props {
     children?: ReactNode;
@@ -39,7 +40,9 @@ export default function CloudBackup(props: Props) {
                   } />
                 {
                     enabled &&
-                    <BasicSettingLine label={'云备份历史'} path={'/cloud/backup/history'} />
+                    <BasicSettingLine label={'云备份历史'}
+                                      subLabel={<BackupStat />}
+                                      path={'/cloud/backup/history'} />
                 }
             </div>
         </div>

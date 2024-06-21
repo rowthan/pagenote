@@ -10,6 +10,8 @@ import {IoSyncCircleSharp} from "react-icons/io5";
 import useSettingConfig from "hooks/table/useSettingConfig";
 import { Button } from '@/components/ui/button';
 import ConfigSwitch from "../backup/ConfigSwitch";
+import BackupStat from "../backup/BackupStat";
+import CheckVersion from "../check/CheckVersion";
 
 interface Props {
     children?: ReactNode;
@@ -47,7 +49,8 @@ export default function CloudFunctions(props: Props) {
                             'grayscale': !cloudBackupEnabled
                         })}/>
                     }
-                    label={'备份'}
+                    label={'云备份'}
+                    subLabel={<BackupStat />}
                     right={
                         <div className={'text-muted-foreground'}>
                             {cloudBackupEnabled ?
@@ -56,15 +59,17 @@ export default function CloudFunctions(props: Props) {
                                 }
                         </div>
                     } path={cloudBackupEnabled ? '/cloud/backup' :''}/>
-                <BasicSettingLine
-                    badge={
-                        <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {
-                            'grayscale': !syncEnabled
-                        })}/>
-                    }
-                    label={'同步'}
-                    right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}
-                    path={syncEnabled ? '/cloud/sync':''}/>
+                <CheckVersion requireVersion={'0.29.14'} fallback={<></>}>
+                    <BasicSettingLine
+                        badge={
+                            <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {
+                                'grayscale': !syncEnabled
+                            })}/>
+                        }
+                        label={'同步'}
+                        right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}
+                        path={syncEnabled ? '/cloud/sync':''}/>
+                </CheckVersion>
 
                 {/*<SettingSection>*/}
                 {/*    <BasicSettingLine*/}

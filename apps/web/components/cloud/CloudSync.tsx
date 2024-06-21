@@ -47,7 +47,7 @@ export default function CloudSync(props: Props) {
                 syncInfo?.switch &&
                 <div>
                     <BasicSettingTitle>
-                        使用 CLOUD 同步的数据类型
+                        云同步的数据类型
                     </BasicSettingTitle>
                     <SettingSection>
                         <BasicSettingLine label={'配置'}
