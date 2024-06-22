@@ -40,7 +40,7 @@ export function PopPanelSetting(props:{closedAfterChange: boolean}){
                     window.close();
                 }
             }
-            if (mode === 'panel' && !isSidePanelInPath) {
+            if (mode === 'panel') {
                 if(!permission?.permissions?.includes('sidePanel')){
                     // 请求权限
                     toast({

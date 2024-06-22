@@ -20,7 +20,7 @@ export default function DeviceInfo() {
   const newVersion = compare(version,whoAmI.version,'>')
 
   return (
-      <a href={'https://pagenote.cn/release/?reuse=1&group=PAGENOTE'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
+      <a href={whoAmI.extensionStoreUrl||'https://pagenote.cn'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
         {whoAmI.version}
         {newVersion ? <PiArrowFatLinesUpFill className={'animation animate-bounce'} fill={'red'} /> : ''}
       </a>
