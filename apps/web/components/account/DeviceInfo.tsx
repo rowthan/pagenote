@@ -3,6 +3,7 @@ import useTableQuery from "../../hooks/table/useTableQuery";
 import {Collection} from "../../const/collection";
 import {compare} from "compare-versions";
 import { PiArrowFatLinesUpFill } from "react-icons/pi";
+import extApi from "@pagenote/shared/lib/pagenote-api";
 
 export default function DeviceInfo() {
   const [whoAmI] = useWhoAmi('')
@@ -19,8 +20,21 @@ export default function DeviceInfo() {
 
   const newVersion = compare(version,whoAmI.version,'>')
 
+  function onClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    extApi.commonAction.openTab({
+      reUse: true,
+      tab: {
+        groupInfo:{
+          title: 'PAGENOTE',
+        }
+      },
+      url: e.currentTarget.href,
+    })
+  }
+
   return (
-      <a href={whoAmI.extensionStoreUrl||'https://pagenote.cn'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
+      <a onClick={onClick} href={'chrome://extensions/' || whoAmI.extensionStoreUrl||'https://pagenote.cn'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
         {whoAmI.version}
         {newVersion ? <PiArrowFatLinesUpFill className={'animation animate-bounce'} fill={'red'} /> : ''}
       </a>
