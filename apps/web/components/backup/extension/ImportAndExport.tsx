@@ -276,5 +276,3 @@ export default function ImportAndExport(props: Props) {
     </div>
   )
 }
-
-ImportAndExport.defaultProps = {}
