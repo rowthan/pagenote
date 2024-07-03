@@ -105,6 +105,7 @@ export default function CloudBackupList(props: Props) {
             <BasicSettingTitle>
                 备份列表
             </BasicSettingTitle>
+
             <SettingSection loading={(ossList.length+webdavList.length===0) && (loadingOss || loadingWebdav)}>
                 {
                     [...ossList,...webdavList].map((item, index) => {
@@ -125,9 +126,12 @@ export default function CloudBackupList(props: Props) {
                         return (
                             <BasicSettingLine key={index}
                                               badge={
-                                                  <Status>
-                                                      <img src={icon} alt=""/>
-                                                  </Status>
+                                                  <div className={'flex items-center gap-2'}>
+                                                      <span className={'text-sm text-muted-foreground'}>{index+1}</span>
+                                                      <Status>
+                                                          <img src={icon} alt=""/>
+                                                      </Status>
+                                                  </div>
                                               }
                                               label={
                                                     <span>
