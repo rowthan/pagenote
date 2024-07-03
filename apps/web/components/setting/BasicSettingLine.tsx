@@ -118,7 +118,7 @@ export default function BasicSettingLine(props: {
         <div className={'flex items-center gap-2'}>
           {
               badge &&
-              <div className={'w-6 h-6'}>
+              <div className={''}>
                 {badge}
               </div>
           }

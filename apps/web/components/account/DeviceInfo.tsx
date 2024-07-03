@@ -34,7 +34,7 @@ export default function DeviceInfo() {
   }
 
   return (
-      <a onClick={onClick} href={'chrome://extensions/' || whoAmI.extensionStoreUrl||'https://pagenote.cn'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
+      <a onClick={onClick} href={ whoAmI.extensionStoreUrl||'https://pagenote.cn'} target={'_blank'} className={'hover:underline flex items-center gap-1 text-xs cursor-pointer'}>
         {whoAmI.version}
         {newVersion ? <PiArrowFatLinesUpFill className={'animation animate-bounce'} fill={'red'} /> : ''}
       </a>
