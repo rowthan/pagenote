@@ -39,7 +39,7 @@ export default function CloudSync(props: Props) {
                 </div>
                 <hr className={'w-[90%] mx-auto'}/>
                 <BasicSettingLine label={'云同步此设备'}
-                                  subLabel={syncInfo?.switch && cloudConfig?.cloudSource? <span>数据将同步至 <CloudSupportLink/></span> : '未开启'}
+                                  subLabel={syncInfo?.switch && cloudConfig?.cloudSource? <span>数据将同步至云端</span> : '未开启'}
                                   right={ <ConfigSwitch rootKey={'_sync'}/>} />
             </div>
 

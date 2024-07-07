@@ -59,7 +59,7 @@ export default function CloudFunctions(props: Props) {
                                 }
                         </div>
                     } path={cloudBackupEnabled ? '/cloud/backup' :''}/>
-                <CheckVersion requireVersion={'0.29.14'} fallback={<></>}>
+                <CheckVersion requireVersion={'0.29.13'} fallback={<></>}>
                     <BasicSettingLine
                         badge={
                             <IoSyncCircleSharp className={classNames('w-full h-full text-blue-400', {

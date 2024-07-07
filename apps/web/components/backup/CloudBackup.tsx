@@ -33,7 +33,7 @@ export default function CloudBackup(props: Props) {
                 <BasicSettingLine
                   label={'云备份此设备'}
                   subLabel={enabled ? <span>
-                      将在系统闲置时备份今日数据至 <CloudSupportLink />
+                      将在系统闲置时备份今日数据至云
                   </span>:'未启用云备份功能'}
                   right={
                       <ConfigSwitch rootKey={'_backup'} />
