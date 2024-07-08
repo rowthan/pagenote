@@ -27,6 +27,9 @@ import WebdavForm from "../form/WebdavForm";
 import CloudIndex from 'components/cloud/CloudIndex'
 import ExtensionData from 'components/data/ExtensionData'
 import ExportFilter from "../backup/extension/ExportFilter";
+import About from "./About";
+import Advance from "./Advance";
+import CustomStyle from "./CustomStyle";
 
 export const routes: Record<string, {
     element: ReactElement<any, string | JSXElementConstructor<any>>,
@@ -36,6 +39,11 @@ export const routes: Record<string, {
         element: <SettingHomeRedirect/>,
         title: ''
     },
+    '/about':
+        {
+            element: <About/>,
+            title: '关于'
+        },
     '/data': {
         element: <ExtensionData/>,
         title: '本机存储'
@@ -120,11 +128,25 @@ export const routes: Record<string, {
             element: <CloudSupporters/>,
             title: '云端存储服务商'
         },
+    '/advance':
+        {
+            element: <Advance/>,
+            title: '高级设置'
+        },
+    '/advance/style':
+        {
+            element: <CustomStyle/>,
+            title: '自定义样式'
+        },
     '/safety':
         {
             element: <Safety/>,
             title: '隐私与安全'
         },
+    '/advance/permission': {
+        element: <PermissionList/>,
+        title: '权限管理'
+    },
     '/safety/permission': {
         element: <PermissionList/>,
         title: '权限管理'
@@ -148,7 +170,6 @@ function SettingHomeRedirect() {
 }
 
 function SettingHome() {
-    const [whoAmI] = useWhoAmi()
     const navigate = useNavigate();
 
     function onClickUser() {
@@ -182,15 +203,15 @@ function SettingHome() {
             </SettingSection>
 
             <SettingSection className={'my-4'}>
-                <BasicSettingLine label={'隐私与安全'} path={'/safety'}/>
+                <BasicSettingLine label={routes['/advance'].title} path={'/advance'}/>
             </SettingSection>
 
 
             <SettingSection className={'mt-6'}>
                 <BasicSettingLine
                     label={'关于'}
-                    subLabel={<a className={'hover:underline'} href={whoAmI?.extensionStoreUrl}
-                                 target={'_blank'}>{whoAmI?.extensionPlatform}</a>}
+                    path={'/about'}
+
                     right={
                         <DeviceInfo/>
                     }

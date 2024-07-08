@@ -526,6 +526,7 @@ export interface TableStat {
     usage: number // 占用空间
     size: number // 数据条数
     quota: number // 总空间
+    totalUsage: number // 总使用空间
 }
 
 // @deprecated 废弃

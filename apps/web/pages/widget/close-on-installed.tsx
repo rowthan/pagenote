@@ -22,7 +22,7 @@ export default function CloseOnInstalled(props: Props) {
 
   useEffect(function(){
     // 360 平台插件过期，公告提示
-    if(whoAmI && whoAmI.extensionPlatform === "360" && !valid && !exceeded){
+    if(whoAmI && whoAmI.extensionPlatform === "360" && !valid){
       extApi.developer.chrome({
         "namespace":"tabs",
         type: "create",
