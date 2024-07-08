@@ -25,7 +25,7 @@ export default function About() {
                   label={'PAGENOTE 版本'}
                   path={''}
                   right={<>
-                      <DeviceInfo/>/<a href={whoAmI?.extensionStoreUrl}>{whoAmI?.extensionPlatform}</a>
+                      <DeviceInfo/>/<a target={'_blank'} href={whoAmI?.extensionStoreUrl+'?group=PAGENOTE&reuse=1'}>{whoAmI?.extensionPlatform}</a>
                   </>}
               />
               <BasicSettingLine
