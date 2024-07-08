@@ -5,6 +5,10 @@ import classNames from 'classnames'
 import Loading from '../loading/Loading'
 import {openUrlInGroup} from "../../utils/url";
 import { RiLoaderLine } from "react-icons/ri";
+import {MdOutlineCloudUpload} from "react-icons/md";
+import CloudStat from "../cloud/CloudStat";
+import CloudSupportLink from "../cloud/CloudSupportLink";
+import {CloudSelect} from "../cloud/CloudSelector";
 
 export function SettingSection(props: {
   children: ReactNode
@@ -172,4 +176,23 @@ export function BasicSettingDescription(props: Props) {
         {props.children}
       </div>
   )
+}
+
+export function SettingArea(props: Props & {title: string, description: ReactElement, icon: ReactElement}) {
+    return (
+        <div className={classNames('bg-card rounded-lg',{
+            'pb-3': !props.children
+        })}>
+            <div className={'p-3'}>
+                {React.cloneElement(props.icon,{
+                    className:classNames(props.icon.props.className,'text-[40px] text-blue-400 m-auto')
+                })}
+                <h2 className={'text-lg text-accent-foreground font-bold text-center'}>{props.title}</h2>
+            </div>
+            <BasicSettingDescription className={'text-center'}>
+                {props.description}
+            </BasicSettingDescription>
+            {props.children}
+        </div>
+    )
 }

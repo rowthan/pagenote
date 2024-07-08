@@ -50,7 +50,7 @@ export default function CloudFunctions(props: Props) {
                         })}/>
                     }
                     label={'云备份'}
-                    subLabel={<BackupStat />}
+                    subLabel={<BackupStat statKey={'backup.at'} title={'上次备份于'} />}
                     right={
                         <div className={'text-muted-foreground'}>
                             {cloudBackupEnabled ?
@@ -66,7 +66,11 @@ export default function CloudFunctions(props: Props) {
                                 'grayscale': !syncEnabled
                             })}/>
                         }
-                        label={'同步'}
+                        label={'同步(beta)'}
+                        subLabel={<div>
+                            仅支持配置同步。
+                            <BackupStat statKey={'sync.at'} title={'上次同步于'} />
+                        </div>}
                         right={syncEnabled ? '已开启' : <ConfigSwitch rootKey={'_sync'} />}
                         path={syncEnabled ? '/cloud/sync':''}/>
                 </CheckVersion>

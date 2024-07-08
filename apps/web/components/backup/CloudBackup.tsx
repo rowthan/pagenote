@@ -41,7 +41,7 @@ export default function CloudBackup(props: Props) {
                 {
                     enabled &&
                     <BasicSettingLine label={'云备份历史'}
-                                      subLabel={<BackupStat />}
+                                      subLabel={<BackupStat statKey={'backup.at'} title={'上次备份于'} />}
                                       path={'/cloud/backup/history'} />
                 }
             </div>

@@ -5,13 +5,15 @@ import {computeTimeDiff} from "../../utils/time";
 
 interface Props {
     children?: ReactNode;
+    title: string
+    statKey: 'backup.at'| 'sync.at' |string
 }
 
 export default function BackupStat(props: Props) {
-    const {children} = props;
+    const {children,title='',statKey='backup.at'} = props;
     const {data} = useTableQuery<{key: string,value?: number}>(Collection.memory, {
         query: {
-            key: 'backup.at',
+            key: statKey,
         },
         limit: 1,
     })
@@ -25,9 +27,9 @@ export default function BackupStat(props: Props) {
     }
 
     return (
-        <div className="">
-            上次备份于：{computeTimeDiff(time)}
-        </div>
+        <span className="">
+           {title || statKey} {computeTimeDiff(time)}
+        </span>
     );
 }
 
