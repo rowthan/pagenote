@@ -1,11 +1,14 @@
-import { isDev } from '../../const/env'
-import { DEFAULT_BASE_DOC_PATH } from '../../const/notion'
-import { getCacheContent } from './cache'
-
-// 制定获取 notion 数据源的接口；默认请求自身服务。
-const WEB_HOST = process.env.WEB_HOST
-
-export async function getNotionDocDetail(id: string, notFound: boolean = true) {
+import {isDev} from '../../const/env'
+import {DEFAULT_BASE_DOC_PATH} from '../../const/notion'
+import {getCacheContent} from './cache'
+import { getNotionDetailFromServer, WEB_HOST} from "./api";
+import {NotionDocProp} from "../../components/notion/NotionDoc";
+export interface DocNotion {
+  notFound?: boolean,
+  props?: NotionDocProp,
+  revalidate?: number
+}
+export async function getNotionDocDetail(id: string, notFound: boolean = true):Promise<DocNotion> {
   // 静态资源 .xxx 不执行查询
   if (/\.js|css|html|php|png|jpg|jsp|txt/.test(id)) {
     return {
@@ -13,14 +16,7 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true) {
     }
   }
   try {
-    let result =  getCacheContent(id);
-    if(!result){
-      try{
-        result = await(await fetch(`${WEB_HOST}/api/doc?id=${id}`)).json();
-      }catch (e) {
-        console.error('fetch doc detail error')
-      }
-    }
+    let result =  getCacheContent(id) || await getNotionDetailFromServer(id);
     if(!result){
       console.log('fallback get doc from local .cache')
       result = getCacheContent(id, true);
