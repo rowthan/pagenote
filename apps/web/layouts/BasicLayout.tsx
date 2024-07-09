@@ -4,6 +4,7 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import ErrorBoundary from '../components/debug/ErrorBound'
 import Error from 'components/debug/ErrorTip'
 import {Asides} from '../components/HelpAside'
+import Footer from "../components/Footer";
 
 // 给普通用户访问的页面，基础layout
 export default function BasicLayout(
@@ -53,7 +54,10 @@ export default function BasicLayout(
           {/*    <Breadcrumbs />*/}
           {/*  </nav>*/}
           {/*)}*/}
-          <main className="mx-auto relative min-h-fill">{children}</main>
+          <main className="mx-auto relative min-h-fill">
+              {children}
+          </main>
+          {footer && <Footer />}
           <Asides/>
         </>
       </ErrorBoundary>

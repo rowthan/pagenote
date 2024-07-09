@@ -1,7 +1,6 @@
 import SettingIndex from 'components/setting/Setting'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import React from 'react'
-import BasicLayout from 'layouts/BasicLayout'
 import RedirectToExt from '../../components/RedirectToExt'
 import { useMountedState } from 'react-use'
 import ExtLayout from "../../layouts/ExtLayout";
