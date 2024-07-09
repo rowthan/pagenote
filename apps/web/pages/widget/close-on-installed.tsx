@@ -43,7 +43,6 @@ export default function CloseOnInstalled(props: Props) {
     const closeMe = valid && tab?.id
     /**频控周期内，自动关闭*/
     if ((closeMe || exceeded)) {
-      console.log('关闭窗口')
       extApi.developer.chrome({
         namespace: 'tabs',
         type: 'remove',

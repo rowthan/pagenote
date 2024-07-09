@@ -43,7 +43,7 @@ export type NotionDocProp = {
 } & Partial<Parameters<typeof NotionRenderer>[0]>
 
 export default function NotionDoc(props: NotionDocProp) {
-  const { recordMap, pageTitle, title, description, keywords } = props || {}
+  const { recordMap,header,pageHeader,fullPage=true, pageTitle, title, description, keywords } = props || {}
   const [darkMode, setDark] = useState<boolean>(false)
   const router = useRouter()
 
@@ -95,8 +95,10 @@ export default function NotionDoc(props: NotionDocProp) {
             Modal,
             Pdf,
           }}
+          header={header}
+          pageHeader={pageHeader}
           pageTitle={pageTitle}
-          fullPage={true}
+          fullPage={fullPage}
           darkMode={darkMode}
           footer={<Footer />}
           searchNotion={searchInNotion}
