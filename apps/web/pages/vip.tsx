@@ -2,12 +2,10 @@ import React, {type ReactNode} from 'react';
 import NotionContent from "../components/notion/NotionContent";
 import { getNotionDocDetail } from 'service/server/doc';
 import { NotionDocProp } from 'components/notion/NotionDoc';
-import ProPlan from "./widget/pro-plan";
 import Plans from "../components/pro/Plans";
 import {PlanInfo} from "../typing";
 import {getPlansFromServer} from "../service/server/api";
 import BasicLayout from "../layouts/BasicLayout";
-import ExtLayout from "../layouts/ExtLayout";
 
 interface Props {
     children?: ReactNode;
@@ -33,14 +31,13 @@ export default function expired1(props: {doc: NotionDocProp,plans: PlanInfo[]}) 
 
     return (
         <BasicLayout>
-            <div className={'m-auto px-6 max-w-7xl py-16'}>
+            <div className={'m-auto px-6 max-w-5xl py-14'}>
                 <Plans plans={plans || []} />
             </div>
             {/*https://page-note.notion.site/da8bdda50ec344f488d7c84ba52faea5?pvs=4*/}
             <NotionContent
                 docId={NOTION_DOC_ID}
                 notionDoc={props.doc}
-                // docId={'97d2bd1d27284a9da670fdfb9b25d0fe'}
             />
         </BasicLayout>
     );

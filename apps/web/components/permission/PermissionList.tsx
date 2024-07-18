@@ -26,7 +26,7 @@ const permissionList = [
         description: '自动将同类标签页归类至同组，批量管理',
         permission: 'tabGroups',
         namespace: 'permissions',
-        supportPlatform: ['chrome','edge','offline'],
+        supportPlatform: ['offline'],
         badge: <FcTemplate />
     },
     {
@@ -34,7 +34,7 @@ const permissionList = [
         description: '以侧边栏代替弹层',
         namespace: 'permissions',
         permission: 'sidePanel',
-        supportPlatform: ['chrome','edge','offline'],
+        supportPlatform: ['offline'],
         badge: <TbLayoutSidebarRightCollapseFilled />
     },
     {

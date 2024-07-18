@@ -1,7 +1,7 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "12"
+var version = "0.29.16"
 
 var cacheRules = {
   whiteList: [],
