@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import CloseSvg from '../../assets/svg/close.svg'
 import { bindTransition } from '../../service'
 import { toast } from 'utils/toast'
-import CommonForm from '../CommonForm'
 import CheckUser from 'components/check/CheckUser'
 import { PlanInfo } from '../../typing'
 
@@ -16,7 +15,6 @@ export default function Tip(props: {
   const [paid, setPaid] = useState(false)
   const [userInfo] = useUserInfo()
   const [showButton, setShowButton] = useState(false)
-  const [loading, setLoading] = useState(false)
 
   function confirmPaid() {
     if (userInfo) {
@@ -28,21 +26,6 @@ export default function Tip(props: {
     }
   }
 
-  function bindTransitionByUser(value: { recordId: string }) {
-    if (!userInfo) {
-      toast('请先登录后，返回此页面')
-      window.open('https://pagenote.cn/signin.html')
-      return
-    }
-    setLoading(true)
-    bindTransition(value.recordId, plan.price).then(function (res) {
-      setLoading(false)
-      toast(res.data?.json?.success ? '提交成功' : '提交失败')
-      if (res?.data?.json?.success) {
-        onClose()
-      }
-    })
-  }
 
   useEffect(function () {
     setTimeout(function () {
@@ -70,27 +53,8 @@ export default function Tip(props: {
           {paid ? (
             <div>
               若你已留言邮箱，无需其他操作，请稍后，我将尽快确认赞助信息，这可能需要几分钟。
-              <div className={'divider'}></div>
-              <div className={'text-sm mb-2'}>
-                {' '}
-                或手动提交支付凭证(为保障你的体验，提交后将立即启用一日VIP，作者将在12小时内核准订单)
-                <CommonForm
-                  loading={loading}
-                  onSubmit={bindTransitionByUser}
-                  fields={[
-                    {
-                      label: '支付订单号',
-                      name: 'recordId',
-                      placeholder: '支付订单号或转账单号',
-                    },
-                  ]}
-                  value={{ recordId: '' }}
-                />
-              </div>
-              <div className={'text-xs'}>
-                超过12小时未收到邮件通知，请在 <key-word>微信公众号</key-word>{' '}
-                留言联系我。
-              </div>
+              <br/>或者你可以
+              <a href="/vip-bind" className={'a'}>手动提交支付凭证</a>
             </div>
           ) : (
             <div>
