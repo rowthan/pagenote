@@ -25,23 +25,26 @@ enum ReceiveStatus {
 type UserForm = { uid?: number; email?: string }
 
 export async function getStaticProps() {
-  const keys = Object.keys(demoGiftDetail).join(',')
-  const data = await fetch(
-    `${process.env.API_HOST}/api/graph/book?query=query{gifts{${keys}}}`,
-    {
-      headers: {
-        token: 'system_20231212',
-      },
-    }
-  ).then(function (res) {
-    return res.json()
-  })
-
-  console.log(data, 'static props')
-
+  const keys = Object.keys(demoGiftDetail).join(',');
+  const gifts = [];
+  try{
+    const data = await fetch(
+        `${process.env.API_HOST}/api/graph/book?query=query{gifts{${keys}}}`,
+        {
+          headers: {
+            token: 'system_20231212',
+          },
+        }
+    ).then(function (res) {
+      return res.json()
+    })
+    gifts.push(...data?.data?.gifts || [])
+  }catch (e) {
+    console.warn('init gifts error')
+  }
   return {
     props: {
-      gifts: data?.data?.gifts || [],
+      gifts: gifts || [],
     },
   }
 }

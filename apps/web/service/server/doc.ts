@@ -16,12 +16,20 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     }
   }
   try {
-    let result =  getCacheContent(id) || await getNotionDetailFromServer(id);
+    let result =  getCacheContent(id);
     if(!result){
-      console.log('fallback get doc from local .cache')
-      result = getCacheContent(id, true);
+      try{
+        result = await getNotionDetailFromServer(id);
+        console.log(id,'get from server ',WEB_HOST, result)
+      }catch (e) {
+        console.error(id,'fetch doc detail error')
+      }
     }
-
+    const forceEnableCache = !isDev && (!result || !result.recordMap);
+    if(forceEnableCache){
+      result = getCacheContent(id, true);
+      console.log(id,'fallback get doc from local .cache')
+    }
     if (result?.recordMap) {
       return {
         props: result,
