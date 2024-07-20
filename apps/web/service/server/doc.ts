@@ -17,15 +17,16 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true) {
     if(!result){
       try{
         result = await(await fetch(`${WEB_HOST}/api/doc?id=${id}`)).json();
+        console.log(id,'get from server ',WEB_HOST, result)
       }catch (e) {
-        console.error('fetch doc detail error')
+        console.error(id,'fetch doc detail error')
       }
     }
-    if(!result){
-      console.log('fallback get doc from local .cache')
+    const forceEnableCache = !isDev && (!result || !result.recordMap);
+    if(forceEnableCache){
       result = getCacheContent(id, true);
+      console.log(id,'fallback get doc from local .cache')
     }
-
     if (result?.recordMap) {
       return {
         props: result,
