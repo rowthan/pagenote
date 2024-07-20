@@ -129,10 +129,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
-    if(!recordMap.notion_user[WRITER_ID]){
-      console.log(recordMap.notion_user)
-      recordMap = null;
-    }
+    console.log(recordMap,'public get notion page',recordMap)
+    // 这里会隐藏作者信息，无法验证
+    // if(!recordMap.notion_user[WRITER_ID]){
+    //   console.log(recordMap.notion_user)
+    //   recordMap = null;
+    // }
   } catch (e) {
     console.error(e,'fetch recordMap error')
     return res.status(200).json(null)
