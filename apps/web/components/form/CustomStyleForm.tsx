@@ -24,10 +24,17 @@ pagenote-action>pagenote-block{
     transform: translate(1px, 2px); /**作用：向右偏移1像素，向下偏移2像素。*/ 
 }
 
+/**操作按钮设置，如防止遮挡文字*/
+pagenote-annotation{
+
+}
+
 /**侧边栏样式*/
 pagenote-bar{
   display:block; /**block,显示；none,隐藏。*/
 }
+
+
 `
 
 export default function CustomStyleForm(props: Props) {
