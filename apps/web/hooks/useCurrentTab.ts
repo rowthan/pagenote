@@ -21,7 +21,7 @@ export default function useCurrentTab():{tab: Tab | undefined, windows: TabGroup
   )
 
   useEffect(function () {
-      if(checkInExtensionContext() && chrome.tabs){
+      if(checkInExtensionContext()){
           chrome.tabs.onActivated.addListener(function () {
               mutate();
           })

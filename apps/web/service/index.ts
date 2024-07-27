@@ -19,7 +19,7 @@ export function bindTransition(record: string, amount: number) {
   return extApi.network.pagenote({
     url: '/api/graph/book',
     data: {
-      mutation: `mutation params($transition:Transition!){bindTransition(transition:$transition){status}}`,
+      mutation: `mutation params($transition:TransitionRecord!){bindTransition(transition:$transition){status}}`,
       variables:{
           transition:{
               recordId:recordId,

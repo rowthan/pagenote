@@ -26,7 +26,7 @@ const labelMap: Record<ConnectState, string> = {
 export default function CloudStatus(props: Props) {
   const { cloudServer } = props
   const [open, setOpen] = useState(false)
-  const [config, update] = useSettingConfig<OssCloudConfig>(cloudServer)
+  const [config, update] = useSettingConfig<OssCloudConfig>(cloudServer,'config')
   const [state, setState] = useState<ConnectState>(ConnectState.un_check)
 
   const { setValue, register, handleSubmit } = useForm({

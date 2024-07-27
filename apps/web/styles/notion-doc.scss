@@ -53,6 +53,12 @@ blockquote.notion-quote{
   font-size: 0.9em;
 }
 
+/**notion 作为组件展示，隐藏properties*/
+.notion-component .notion-collection-page-properties{
+  display: none;
+}
+
+
  //动画
 .notion-page-link {
   .notion-page-title-text{

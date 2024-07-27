@@ -4,7 +4,12 @@ import { PlanInfo } from '../../typing'
 
 export const getStaticProps = async function () {
   const data = await fetch(
-    `${process.env.API_HOST}/api/graph/book?query=query{plans{dataJson}}`
+    `${process.env.API_HOST}/api/graph/book?query=query{plans{dataJson}}`,
+      {
+        headers: {
+          'x-pagenote-priority': '1.1'
+        }
+      }
   ).then(async function (response) {
     const res = await response.json()
     const dataJson = res.data?.plans?.dataJson
@@ -12,6 +17,30 @@ export const getStaticProps = async function () {
       const plans: PlanInfo[] = JSON.parse(dataJson)
       return plans
     }
+  }).catch(function () {
+    return [{
+      title: '终身VIP',
+      description: '没有时限的VIP用户。',
+      price: 125,
+      duration: '终身',
+      unit: '元(累计)',
+      bg: 'indigo',
+      role: 2,
+      deduct: true,
+      final: true,
+      rights: [{
+        label: '解锁所有功能',
+      }],
+      payments: [{
+        id: 'alipay',
+        label: '支付宝',
+        url: "https://pagenote-public.oss-cn-beijing.aliyuncs.com/_static/alipay.png",
+      },{
+        id:'wechat',
+        label: '微信',
+        url: "https://pagenote-public.oss-cn-beijing.aliyuncs.com/0000/wechat_pay.jpg?x-oss-process=style/q75",
+      }]
+    },]
   })
 
   console.log('fetch prices in static props')

@@ -6,11 +6,14 @@ import { TableStat } from '@pagenote/shared/lib/extApi'
 export default function useStorage(
   collection: Collection
 ): [TableStat, boolean] {
-  const { data = { usage: 0, quota: 0, size: 0 }, isLoading } =
+  const { data = { usage: 0, quota: 0, size: 0, totalUsage:  0 }, isLoading } =
     //   @ts-ignore
     useSWR<TableStat>('/storage/info/' + collection, fetchData, {
       fallback: {
         usage: 0,
+        quota: 0,
+        size: 0,
+        totalUsage: 0
       },
     })
 
@@ -21,7 +24,7 @@ export default function useStorage(
         params: undefined,
       })
       .then(function (res) {
-        return res.data || { usage: 0 }
+        return res.data || { usage: 0, totalUsage: 0 }
       })
   }
 

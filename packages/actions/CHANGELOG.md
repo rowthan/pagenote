@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.2...@pagenote/actions@0.1.4) (2024-05-28)
+
+
+### Features
+
+* call action ([fb1b755](https://github.com/rowthan/pagenote/commit/fb1b7552476e5b0681023bcefc9c49499536c063))
+* 优化fetch请求 参数兼容性 ([a200467](https://github.com/rowthan/pagenote/commit/a200467cba16e5588ad59a8ab113e3004ca0b9c1))
+* 支持 jpeg 图片的导出导入 ([f95c152](https://github.com/rowthan/pagenote/commit/f95c152936e79e660549da4087d05fd055ede904))
+* 运算符扩展支持 contains/startWith ([a26200a](https://github.com/rowthan/pagenote/commit/a26200ab09fdb1661fffcc77fd96f28a72307acc))
+
+
+
+
+
 ## [0.1.4-next.2](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.1...@pagenote/actions@0.1.4-next.2) (2024-04-08)
 
 **Note:** Version bump only for package @pagenote/actions

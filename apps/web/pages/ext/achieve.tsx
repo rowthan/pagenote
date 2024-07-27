@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import {Button} from "../../@/components/ui/button";
 import {openHtml} from "../../service/offline";
 import Empty from "../../components/Empty";
+import ExtLayout from "../../layouts/ExtLayout";
 
 interface Props {
     css?: string
@@ -78,7 +79,7 @@ const Achieve: FC<PropsWithChildren<Props>> = (props) => {
     }, [])
 
     return (
-        <BasicLayout nav={false}>
+        <ExtLayout>
             <div className={'m-2'}>
                 {
                     data.map((url)=>(
@@ -98,7 +99,7 @@ const Achieve: FC<PropsWithChildren<Props>> = (props) => {
                 }
 
             </div>
-        </BasicLayout>
+        </ExtLayout>
     );
 }
 export default Achieve

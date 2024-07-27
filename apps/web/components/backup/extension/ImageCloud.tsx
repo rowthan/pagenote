@@ -4,20 +4,15 @@ import BasicSettingLine, {SettingSection} from '../../setting/BasicSettingLine'
 import TipInfo from '../../TipInfo'
 import useSettingConfig from '../../../hooks/table/useSettingConfig'
 import { get } from 'lodash'
-import CloudStatus from './CloudStatus'
-import classNames from 'classnames'
-import useUserInfo from '../../../hooks/useUserInfo'
 import useOssKey from '../../../hooks/useOssKey'
-import { Switch } from "@/components/ui/switch"
-import useStat from "../../../hooks/useStat";
-import CloudStat from "../../stat/CloudStat";
+import CloudStat from "../../cloud/CloudStat";
 
 interface Props {
   children?: ReactNode
 }
 
 export default function ImageCloud(props: Props) {
-  const [cloudConfig, setCloudConfig] = useSettingConfig('cloud')
+  const [cloudConfig, setCloudConfig] = useSettingConfig('cloud','config')
   const [oss, loading, connected] = useOssKey('private')
   const enabled = !!get(cloudConfig, 'enable')
   return (
@@ -78,7 +73,7 @@ export default function ImageCloud(props: Props) {
                               }
                               loading={loading}
                               right={
-                                  <CloudStat types={['oss']} space={'private'}/>
+                                  <CloudStat type={'oss'} space={'private'}/>
                               }
                           />
                       </SettingSection>

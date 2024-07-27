@@ -1,14 +1,12 @@
-import React from 'react'
-import ImportAndExport from "components/backup/extension/ImportAndExport";
+import React, {useEffect} from 'react'
+import {basePath} from "../../const/env";
 
 export default function Data() {
+    useEffect(() => {
+        window.location.href = window.location.origin + basePath +"/ext/setting.html#/data"
+    }, []);
+
   return (
-      <div>
-        <div className={'max-w-md m-auto mt-20'}>
-          <div>
-            <ImportAndExport exportBy={'extension'} />
-          </div>
-        </div>
-      </div>
+      <></>
   )
 }

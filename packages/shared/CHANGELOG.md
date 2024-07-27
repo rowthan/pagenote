@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.40](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.40-next.0...@pagenote/shared@1.14.40) (2024-05-28)
+
+
+### Bug Fixes
+
+* core api ([9ebc718](https://github.com/rowthan/pagenote/commit/9ebc718c20539e893b6f381ca93895705c80b8e7))
+* tips ([e92a377](https://github.com/rowthan/pagenote/commit/e92a377b7bae4fc81ea4e93690819a941453d2a5))
+
+
+### Features
+
+* resolve  html  file ([fc8a0eb](https://github.com/rowthan/pagenote/commit/fc8a0eb444b07ae152e3d670eb5d563adfeb8bdd))
+* responsive design ([84ad57c](https://github.com/rowthan/pagenote/commit/84ad57c31c6c2895f8491f91d0f087f4b7c555a7))
+* **shared:** new openTab api ([3f87303](https://github.com/rowthan/pagenote/commit/3f87303c171d53bf37eec0d2322377cc68038230))
+* **shared:** upgrade api ([b5ab96e](https://github.com/rowthan/pagenote/commit/b5ab96e9d23f2469370e1daf7710ae64e1c4dfee))
+* 支持压缩包的导入导出 ([674db6c](https://github.com/rowthan/pagenote/commit/674db6cf1aca7dcf687f131018bcd3b8775a7050))
+
+
+
+
+
 ## [1.14.40-next.0](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.39...@pagenote/shared@1.14.40-next.0) (2024-04-05)
 
 **Note:** Version bump only for package @pagenote/shared

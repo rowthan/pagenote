@@ -1,7 +1,7 @@
 import extApi from "@pagenote/shared/lib/pagenote-api";
 
 export function checkInExtensionContext(){
-    return typeof chrome !== 'undefined' && chrome && chrome.runtime
+    return typeof chrome !== 'undefined' && chrome && chrome.runtime && chrome.tabs
 }
 
 export function callChrome<T>(arg:{namespace: string, method: string, arguments: any[]}):Promise<T> {

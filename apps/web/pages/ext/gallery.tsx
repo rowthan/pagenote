@@ -12,9 +12,7 @@ import Slideshow from 'yet-another-react-lightbox/plugins/slideshow'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
-import { basePath } from '../../const/env'
 import { useRouter } from 'next/router'
-import RedirectToExt from 'components/RedirectToExt'
 import { Collection } from '../../const/collection'
 import {Button} from "../../@/components/ui/button";
 import {downloadBase64Images} from "../../utils/image";
@@ -67,7 +65,8 @@ export default function Gallery() {
   })
 
   function onClickAlbum(index: number) {
-    window.open(process.env.WEB_HOST+`/file/${imageList[index].key}.jpeg`)
+    const host = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://pagenote.cn'
+    window.open(`${host}/file/${imageList[index].key}.jpeg`)
 
     // window.open(`${basePath}/ext/img.html?id=${imageList[index].key}`)
   }

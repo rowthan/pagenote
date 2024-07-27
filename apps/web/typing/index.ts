@@ -16,8 +16,8 @@ export interface PlanInfo {
 
   rights: {
     label: string
-    allowed: boolean
-    disAllowLabel: string
+    allowed?: boolean
+    disAllowLabel?: string
   }[]
 
   payments:{

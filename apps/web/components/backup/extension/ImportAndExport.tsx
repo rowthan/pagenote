@@ -1,13 +1,5 @@
 import React, {type ReactNode, useState} from 'react'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import CloseSvg from 'assets/svg/close.svg'
 import ImportFilter from './ImportFilter'
-import ExportFilter from './ExportFilter'
 import {
   BackupData,
   BackupVersion,
@@ -17,11 +9,10 @@ import {
   Step
 } from '@pagenote/shared/lib/@types/data'
 import {toast} from 'utils/toast'
-import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogDescription, DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -30,9 +21,7 @@ import {UploadIcon} from '@radix-ui/react-icons'
 import {readFiles, resolveImportString} from "../../../utils/file";
 import {LightFormatFromWebPage} from "../../../utils/backup";
 import md5 from "md5";
-import TipInfo from "../../TipInfo";
-import TipInfoSvg from "../../../assets/svg/info.svg";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import useWhoAmi from "../../../hooks/useWhoAmi";
 
 interface Props {
   children?: ReactNode
@@ -42,7 +31,8 @@ interface Props {
 export default function ImportAndExport(props: Props) {
   const { children,exportBy = 'web' } = props
   const [backupData, setBackupData] = useState<BackupData | null>(null)
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   function onImportBackup(files: FileList) {
     const selectedFile = files || []
@@ -56,7 +46,7 @@ export default function ImportAndExport(props: Props) {
       }
       for(let i = 0; i < list.length; i++){
         try{
-          const backupData = resolveImportString(list[i].text, list[i].type)
+          const backupData = resolveImportString(list[i].text, list[i].type);
           if (backupData) {
             // 格式初始化
             mergeBackupData.items = mergeBackupData.items || []
@@ -65,8 +55,9 @@ export default function ImportAndExport(props: Props) {
               mergeBackupData.items.push(...backupData.items)
             }
 
-            // 低版本数据处理
+            // 低版本数据处理 不再维护
             if((backupData.version || 0) < BackupVersion.version7){
+              console.warn('正在使用低版本数据，',backupData)
               if(backupData.pages && backupData.pages.length > 0){
                 mergeBackupData.items.push({
                   db: "lightpage",
@@ -170,8 +161,9 @@ export default function ImportAndExport(props: Props) {
           } else {
             toast('解析备份文件失败', 'error')
           }
-        }catch (e) {
-          toast('部分文件解析失败', 'error')
+        }catch (e:any) {
+          console.error(e,'解析文件失败')
+          toast('部分文件解析失败'+e.message, 'error')
         }
       }
 
@@ -199,22 +191,6 @@ export default function ImportAndExport(props: Props) {
     <div className="">
       {children}
       <div>
-        {/*<Dialog >*/}
-        {/*  <DialogTrigger asChild>*/}
-        {/*    <Button variant={'outline'} className={'w-full block'}>*/}
-        {/*      备份并下载*/}
-        {/*    </Button>*/}
-        {/*  </DialogTrigger>*/}
-        {/*  <DialogContent className="">*/}
-        {/*    <DialogHeader>*/}
-        {/*      <DialogTitle>导出数据</DialogTitle>*/}
-        {/*      <DialogDescription>保存为单个备份文件或压缩包，你可以将该文件导入到其他设备中以实现数据交换*/}
-        {/*      </DialogDescription>*/}
-        {/*    </DialogHeader>*/}
-        {/*    <ExportFilter exportBy={exportBy}/>*/}
-        {/*  </DialogContent>*/}
-        {/*</Dialog>*/}
-
         <div className={'mt-10 p-4 rounded border-2 border-dashed border-gray-300'}>
           <label
               htmlFor={'backup-input'}
@@ -247,29 +223,48 @@ export default function ImportAndExport(props: Props) {
           </label>
         </div>
       </div>
-      {showConfirmModal && backupData && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <button
-              className={'absolute right-4'}
-              onClick={() => {
-                setShowConfirmModal(false)
-              }}
-            >
-              <CloseSvg />
-            </button>
-            <ImportFilter
-              backupData={backupData}
-              onSuccess={() => {
-                setShowConfirmModal(false);
-                setBackupData(null)
-              }}
-            />
-          </div>
-        </div>
-      )}
+
+      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+
+        <DialogContent className="max-h-full overflow-auto">
+          <DialogTitle>
+            请确认你的备份文件
+          </DialogTitle>
+          <DialogDescription>
+            如果插件已有你导入的数据，将自动合并采用更新版本的数据。
+          </DialogDescription>
+          {
+            backupData && <ImportFilter
+                  backupData={backupData}
+                  onSuccess={() => {
+                    setShowConfirmModal(false);
+                    setBackupData(null)
+                  }}
+              />
+          }
+        </DialogContent>
+      </Dialog>
+      {/*{showConfirmModal && backupData && (*/}
+      {/*  <div className="modal modal-open">*/}
+      {/*    <div className="modal-box">*/}
+      {/*      <button*/}
+      {/*        className={'absolute right-4'}*/}
+      {/*        onClick={() => {*/}
+      {/*          setShowConfirmModal(false)*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <CloseSvg />*/}
+      {/*      </button>*/}
+      {/*      <ImportFilter*/}
+      {/*        backupData={backupData}*/}
+      {/*        onSuccess={() => {*/}
+      {/*          setShowConfirmModal(false);*/}
+      {/*          setBackupData(null)*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </div>
   )
 }
-
-ImportAndExport.defaultProps = {}

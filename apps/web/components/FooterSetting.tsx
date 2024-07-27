@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function PopPanelSetting(props:{closedAfterChange: boolean}){
-    const [config,update] = useSettingConfig<{popMode?:'panel'|'popup'}>('extension')
+    const [config,update] = useSettingConfig<{popMode?:'panel'|'popup'}>('extension','config')
     const isSidePanel = config?.popMode === 'panel';
     const {pathname} = useRouter();
     const isSidePanelInPath = pathname.includes('sidepanel');
@@ -40,7 +40,7 @@ export function PopPanelSetting(props:{closedAfterChange: boolean}){
                     window.close();
                 }
             }
-            if (mode === 'panel' && !isSidePanelInPath) {
+            if (mode === 'panel') {
                 if(!permission?.permissions?.includes('sidePanel')){
                     // 请求权限
                     toast({

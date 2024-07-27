@@ -1,5 +1,4 @@
 import UserCard from '../account/UserCard'
-import DataBackup from './DataBackup'
 import {Route, Routes, useNavigate} from 'react-router-dom'
 import React, {JSXElementConstructor, ReactElement} from 'react'
 import SettingDetail from './SettingDetail'
@@ -16,7 +15,7 @@ import {basePath} from "../../const/env";
 import CloudBackup from "../backup/CloudBackup";
 import CloudSupporters from "../backup/CloudSupporters";
 import CloudBackupList from "../backup/CloudBackupList";
-import CloudSync from "../backup/CloudSync";
+import CloudSync from "../cloud/CloudSync";
 import ImageCloud from "../backup/extension/ImageCloud";
 import LightSetting from "./LightSetting";
 import DisabledDetail from "./DisabledDetail";
@@ -24,6 +23,13 @@ import ShortCutInfo from "../ShortCutInfo";
 import Safety from "./Safety";
 import PermissionList from "../permission/PermissionList";
 import IdHome from "../account/id/IdHome";
+import WebdavForm from "../form/WebdavForm";
+import CloudIndex from 'components/cloud/CloudIndex'
+import ExtensionData from 'components/data/ExtensionData'
+import ExportFilter from "../backup/extension/ExportFilter";
+import About from "./About";
+import Advance from "./Advance";
+import CustomStyle from "./CustomStyle";
 
 export const routes: Record<string, {
     element: ReactElement<any, string | JSXElementConstructor<any>>,
@@ -33,54 +39,68 @@ export const routes: Record<string, {
         element: <SettingHomeRedirect/>,
         title: ''
     },
+    '/about':
+        {
+            element: <About/>,
+            title: '关于'
+        },
     '/data': {
-        element: <DataBackup/>,
-        title: '数据存储'
+        element: <ExtensionData/>,
+        title: '本机存储'
     },
     '/data/*': {
-        element: <DataBackup/>,
-        title: '数据存储'
+        element: <ExtensionData/>,
+        title: '本机存储'
     },
     '/data/backup': {
         element: <>
-            <div className={'bg-card rounded-lg p-2'}>
+            <div className={'bg-card rounded-lg p-2 mb-4'}>
                 <MdOutlineSettingsBackupRestore
                     className={classNames('text-[40px] text-blue-400 m-auto', {})}/>
                 <h2 className={'text-lg text-accent-foreground font-bold text-center'}>本地备份</h2>
-                <p className={'p-2  text-sm'}>
-                    将本设备的数据导出为备份文件，用于恢复或导入其他设备。 </p>
-            </div>
-            <ImportAndExport/>
-            <p className={'py-2 text-sm text-muted-foreground'}>
-                <CheckVersion requireVersion={'0.29.5'} fallback={<div></div>}>
+                <div className={'p-2  text-sm'}>
+                    将本设备的数据下载为备份文件，用于恢复或导入其他设备。
+                    <CheckVersion requireVersion={'0.29.5'} fallback={<div></div>}>
                     <span>
-                        若需要自动备份，请前往
+                        自动备份，请前往
                         <a className={'more'}
-                           href={`${basePath}/ext/setting.html#/data/cloud-backup`}>云端备份</a>
+                           href={`${basePath}/ext/setting.html#/cloud/backup`}>云端备份</a>
                     </span>
-                </CheckVersion>
-            </p>
+                    </CheckVersion>
+                </div>
+            </div>
+            <ExportFilter exportBy={'extension'}/>
+            <ImportAndExport/>
+
         </>,
         title: '本地备份'
     },
-    "/data/cloud-backup": {
+    '/cloud': {
+        element: <CloudIndex/>,
+        title: '云空间(Beta)'
+    },
+    "/cloud/backup": {
         element: <CloudBackup/>,
         title: '云备份'
     },
-    '/data/cloud-supporters': {
+    '/cloud/supporters': {
         element: <CloudSupporters/>,
         title: '云盘服务商'
     },
-    '/data/cloud-backup/history':
+    '/cloud/supporters/webdav': {
+        element: <WebdavForm/>,
+        title: 'WebDav 配置'
+    },
+    '/cloud/backup/history':
         {
             element: <CloudBackupList/>,
             title: '备份历史'
         },
-    '/data/cloud-sync': {
+    '/cloud/sync': {
         element: <CloudSync/>,
         title: '云同步'
     },
-    '/data/image-cloud': {
+    '/cloud/image': {
         element: <ImageCloud/>,
         title: '图床'
     },
@@ -108,11 +128,25 @@ export const routes: Record<string, {
             element: <CloudSupporters/>,
             title: '云端存储服务商'
         },
+    '/advance':
+        {
+            element: <Advance/>,
+            title: '高级设置'
+        },
+    '/advance/style':
+        {
+            element: <CustomStyle/>,
+            title: '自定义样式'
+        },
     '/safety':
         {
             element: <Safety/>,
             title: '隐私与安全'
         },
+    '/advance/permission': {
+        element: <PermissionList/>,
+        title: '权限管理'
+    },
     '/safety/permission': {
         element: <PermissionList/>,
         title: '权限管理'
@@ -131,12 +165,11 @@ function SettingHomeRedirect() {
     return (
         width < 600 ?
             <SettingHome/> :
-            <DataBackup/>
+            <ExtensionData/>
     )
 }
 
 function SettingHome() {
-    const [whoAmI] = useWhoAmi()
     const navigate = useNavigate();
 
     function onClickUser() {
@@ -157,24 +190,28 @@ function SettingHome() {
                 </UserCard>
             </div>
             <SettingSection>
-                <BasicSettingLine label={'数据存储'} path={'/data'}/>
+                <BasicSettingLine label={routes['/data'].title} path={'/data'}/>
+                <BasicSettingLine label={routes['/cloud'].title} path={'/cloud'}/>
+            </SettingSection>
+
+            <SettingSection className={'mt-6'}>
                 <BasicSettingLine
-                    label={'画笔设置'}
+                    label={routes['/light'].title}
                     path={'/light'}
                 />
                 <BasicSettingLine label={'快捷键'} path={'/shortcut'}/>
             </SettingSection>
 
             <SettingSection className={'my-4'}>
-                <BasicSettingLine label={'隐私与安全'} path={'/safety'}/>
+                <BasicSettingLine label={routes['/advance'].title} path={'/advance'}/>
             </SettingSection>
 
 
             <SettingSection className={'mt-6'}>
                 <BasicSettingLine
-                    label={'版本'}
-                    subLabel={<a className={'hover:underline'} href={whoAmI?.extensionStoreUrl}
-                                 target={'_blank'}>{whoAmI?.extensionPlatform}</a>}
+                    label={'关于'}
+                    path={'/about'}
+
                     right={
                         <DeviceInfo/>
                     }

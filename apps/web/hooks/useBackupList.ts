@@ -8,6 +8,7 @@ interface FileItem {
     url?: string,
 }
 
+const CACHE_DURATION = 10 * 1000
 
 export default function useBackupList(type: 'oss'|'webdav'): [FileItem[],boolean] {
     const { data = [], isLoading, mutate } = useSWR<FileItem[]>('/cloud/backup/list/'+type, fetchInfo)
@@ -26,6 +27,10 @@ export default function useBackupList(type: 'oss'|'webdav'): [FileItem[],boolean
                             filePath: '/backup',
                         }
                     },
+                },{
+                    cacheControl:{
+                        maxAgeMillisecond: CACHE_DURATION
+                    }
                 }).then(function (res) {
                     return (res?.data || []).map(function (res: { filename: string }) {
                         return {
@@ -46,6 +51,10 @@ export default function useBackupList(type: 'oss'|'webdav'): [FileItem[],boolean
                             details: false,
                         }
                     },
+                },{
+                    cacheControl:{
+                        maxAgeMillisecond: CACHE_DURATION
+                    }
                 }).then(function (res) {
                     return (res?.data || []).map(function (res: { filename: string }) {
                         console.log(res)
@@ -60,5 +69,7 @@ export default function useBackupList(type: 'oss'|'webdav'): [FileItem[],boolean
 
     }
 
-    return [data,isLoading]
+    return [data.filter(function(item){
+        return item.filename.includes('.zip')
+    }),isLoading]
 }

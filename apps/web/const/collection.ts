@@ -7,6 +7,7 @@ export enum Collection {
   html = 'html',
   note = 'note',
   file = 'file',
+  memory = 'memory'
 }
 
 export const dbTableMap: Record<
@@ -36,5 +37,9 @@ export const dbTableMap: Record<
   [Collection.note]: {
     db: 'lightpage',
     table: 'note',
+  },
+  [Collection.memory]: {
+    db: 'temp',
+    table: 'memory',
   }
 }
