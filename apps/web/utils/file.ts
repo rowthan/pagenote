@@ -55,7 +55,8 @@ export function readFiles(files: FileList):Promise<FileParse[]> {
                     text: base64Image,
                     type: fileType,
                 })
-            }else if(fileType === 'application/zip'){
+            }else if(fileType.includes('zip')){
+                console.log('解压文件 开始')
                 const zipFileList = await unzipFile(file);
                 result.push(...zipFileList);
             } else{
@@ -134,7 +135,7 @@ export const resolveImportString = function (inputStr: string, type: string):Bac
         data = JSON.parse(inputStr);
         return data
     }catch (e) {
-        console.warn('低版本数据，二次解码处理中。不推荐使用，请使用最新版本导出数据')
+        console.warn('初次尝试解析文件异常',inputStr)
     }
 
     /**
