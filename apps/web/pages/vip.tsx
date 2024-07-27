@@ -22,7 +22,8 @@ export async function getStaticProps() {
         props: {
             doc: res.props,
             plans: plans
-        }
+        },
+        revalidate: 60 * 60 * 4, // 单位 秒
     };
 }
 
