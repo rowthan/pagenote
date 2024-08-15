@@ -1,6 +1,6 @@
 import {type ReactNode} from 'react';
-import useSettingConfig from "../../hooks/table/useSettingConfig";
-import {Button} from "../../@/components/ui/button";
+import useSettingConfig from "hooks/table/useSettingConfig";
+import {Button} from "@/components/ui/button";
 import BasicSettingLine from "./BasicSettingLine";
 import {
     Dialog,
@@ -11,7 +11,6 @@ import {
     DialogTitle,
     DialogTrigger
 } from '@/components/ui/dialog';
-import {Label} from "../../@/components/ui/label";
 import UrlRuleForm from "../form/UrlRuleForm";
 
 interface Props {
