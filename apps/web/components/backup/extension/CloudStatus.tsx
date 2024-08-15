@@ -133,4 +133,3 @@ export default function CloudStatus(props: Props) {
   )
 }
 
-CloudStatus.defaultProps = {}

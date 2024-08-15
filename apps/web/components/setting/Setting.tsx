@@ -30,6 +30,7 @@ import ExportFilter from "../backup/extension/ExportFilter";
 import About from "./About";
 import Advance from "./Advance";
 import CustomStyle from "./CustomStyle";
+import LinkedRule from "./LinkedRule";
 
 export const routes: Record<string, {
     element: ReactElement<any, string | JSXElementConstructor<any>>,
@@ -137,6 +138,11 @@ export const routes: Record<string, {
         {
             element: <CustomStyle/>,
             title: '自定义样式'
+        },
+    '/advance/link':
+        {
+            element: <LinkedRule/>,
+            title: 'URL关联规则'
         },
     '/safety':
         {
