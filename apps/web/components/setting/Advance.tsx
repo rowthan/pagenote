@@ -23,7 +23,15 @@ export default function Advance() {
               />
               <BasicSettingLine
                   label={'网页指纹（Beta）'}
-                  subLabel={'对网页生成指纹，不同URL指向同一网页的依据'}
+                  subLabel={
+                      <span>
+                          对网页生成指纹，不同URL
+                            <a href={'https://pagenote.cn/docs/web-signature'}
+                               className={'a'}
+                               target={'_blank'}>
+                              指向同一网页的依据</a>
+                      </span>
+                    }
                   right={
                       <Switch checked={enabled} onCheckedChange={(checked)=>{
                           update({
