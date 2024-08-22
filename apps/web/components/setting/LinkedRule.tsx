@@ -75,7 +75,9 @@ export default function LinkedRule(props: Props) {
                     return (
                         <BasicSettingLine
                             key={index}
-                            subLabel={`${config.template||''}`}
+                            subLabel={
+                                <div className={'whitespace-pre-wrap max-w-[80%] break-all'}>{config.template}</div>
+                            }
                             label={config.matchUrl}
                             right={
                                 <div className={'flex gap-2'}>
