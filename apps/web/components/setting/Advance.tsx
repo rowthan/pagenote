@@ -1,6 +1,7 @@
 import React from 'react'
 import BasicSettingLine, { SettingSection } from './BasicSettingLine'
 import useSettingConfig from "../../hooks/table/useSettingConfig";
+import CheckVersion from "../check/CheckVersion";
 
 export default function Advance() {
     const [config,update] = useSettingConfig<{
@@ -12,10 +13,13 @@ export default function Advance() {
     return (
       <div className={'relative'}>
           <SettingSection>
-              <BasicSettingLine
+              <CheckVersion requireVersion={'0.29.17'} fallback={<BasicSettingLine
                   label={'权限管理'}
                   path={'/advance/permission'}
-              />
+              />}>
+                  <></>
+              </CheckVersion>
+
               <BasicSettingLine
                   label={'自定义样式'}
                   path={'/advance/style'}
