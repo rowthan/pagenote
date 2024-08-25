@@ -14,7 +14,7 @@ export default function Achieve() {
         <div className={'flex gap-4 items-center'}>
           <CaptureButton pageUrl={content?.pageUrl || tab?.url || ''} pageKey={content?.pageKey || content?.pageUrl || tab?.url || ''} />
           <PageInfo pageUrl={content?.pageUrl || tab?.url || ''} />
-          <LightInfo pageUrl={content?.pageUrl || tab?.url || ''} />
+          <LightInfo pageKey={content?.pageKey || tab?.url || ''} />
         </div>
         <DisableButton />
       </div>

@@ -86,36 +86,46 @@ export default function UrlRuleForm(props: Props) {
                                 </FormLabel>
                                 <FormDescription>
                                     将不同网址认定为同一个网址的规则。如
-                                    https://pagenote.cn/author#line1?from=a
-                                    https://pagenote.cn/author#line2?from=b
+                                    https://pagenote.cn/author#line1?from=web
+                                    https://pagenote.cn/author#line2?from=app
                                     经过格式化、忽略无关的URL参数后，处理为 https://pagenote.cn/author
                                 </FormDescription>
                                 <FormControl>
                                     <Textarea className={''} placeholder={`如：${demoTemplate}`} {...field} />
                                 </FormControl>
                                 <div>
+                                    <FormDescription>
+                                       <b className={'text-red-500'}>[]</b> 为变量占位符，支持以下几种类型：
+                                    </FormDescription>
                                     <ul>
                                         <li>
                                             <FormDescription>
-                                                1. [origin] 表示服务器主机地址，对应如 https://pagenote.cn
+                                                1. [origin] 表示服务器主机地址，替换后如 <b>https://pagenote.cn</b>
                                             </FormDescription>
                                         </li>
                                         <li>
                                             <FormDescription>
-                                                2. [pathname] 表示网址路径地址，对应 /author
+                                                2. [pathname] 表示网址路径地址，替换后如 <b>/author</b>
                                             </FormDescription>
                                         </li>
                                         <li>
                                             <FormDescription>
-                                                2. [hash] 表示网址路径hash地址，对应如 #line1
+                                                2. [hash] 表示网址路径hash地址，替换后如 <b>#line1</b>
                                             </FormDescription>
                                         </li>
                                         <li>
                                             <FormDescription>
-                                                3. [search] 表示网址中的所有参数
+                                                3. [search] 表示网址中的所有参数，替换后如 <b>?a=1&b=2</b>
                                             </FormDescription>
+                                        </li>
+                                        <li>
                                             <FormDescription>
-                                                4. [searchParams.a] 表示单独获取参数名为 a 的变量
+                                                4. [searchParams.from] 表示单独获取参数名为 from 的变量值，替换后如   <b>web/app</b>
+                                            </FormDescription>
+                                        </li>
+                                        <li>
+                                            <FormDescription>
+                                                5. [?:from,b,c] 表示保留URL中的参数白名单列表： from,b,c。替换结果如 <b>from=web&b=2&c=3</b>
                                             </FormDescription>
                                         </li>
                                     </ul>

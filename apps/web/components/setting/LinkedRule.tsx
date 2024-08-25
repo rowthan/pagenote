@@ -19,16 +19,26 @@ interface Props {
     children?: ReactNode;
 }
 
+
+const KEYS = ["DBCODE","dbcode","dbname","FileName","filename","TABLEName"]
 const PRESET_RULES: Record<string, Config[]> = {
-    zhiwang: [{
-        key: 'ZHIWANG_PRESET_XML_READ_XML',
-        matchUrl: 'https://kns.cnki.net/nzkhtml/xmlRead/xml.html*',
-        template: '[origin][pathname]?fileName=[searchParams.fileName]&tableName=[searchParams.tableName]&dbCode=[searchParams.dbCode]&fileSourceType=[searchParams.fileSourceType]'
-    },{
-        key: 'ZHIWANG_PRESET_XML_TRIAL_READ_XML',
-        matchUrl: 'https://x.cnki.net/web/trilalread/article/trialXmlRead.html*',
-        template: '[origin][pathname]?fileName=[searchParams.fileName]&tableName=[searchParams.tableName]&dbCode=[searchParams.dbCode]&fileSourceType=[searchParams.fileSourceType]'
-    }]
+    zhiwang: [
+        {
+            key: "CNKI_NET",
+            matchUrl: 'https://www.cnki.net/*',
+            template: `[origin][pathname]?[?:${KEYS.toString()}]&title=[title]`
+        },
+        {
+            key: "KNS_CNKI_NET",
+            matchUrl: 'https://kns.cnki.net/*',
+            template: `[origin][pathname]?[?:${KEYS.toString()}]&title=[title]`
+        },
+        {
+            key: "KNS_ALL_CNKI_NET",
+            matchUrl: 'https://*.cnki.net/*',
+            template: `[origin][pathname]?[?:${KEYS.toString()}]&title=[title]`
+        },
+    ]
 }
 
 const KEY_PREFIX = 'extension.linkRule.'
