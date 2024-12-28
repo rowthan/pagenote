@@ -94,11 +94,11 @@ export function PageInfo(props:{pageUrl: string}) {
   )
 }
 
-export function LightInfo(props:{pageUrl: string}) {
+export function LightInfo(props:{pageKey: string}) {
   const { data: lights } = useTableQuery<Step>(Collection.light, {
     limit: 999,
     query: {
-      pageKey: props.pageUrl,
+      pageKey: props.pageKey,
     },
     projection: {
       lightId: 1,

@@ -7,7 +7,8 @@ export enum Collection {
   html = 'html',
   note = 'note',
   file = 'file',
-  memory = 'memory'
+  memory = 'memory',
+  config = 'config',
 }
 
 export const dbTableMap: Record<
@@ -41,5 +42,9 @@ export const dbTableMap: Record<
   [Collection.memory]: {
     db: 'temp',
     table: 'memory',
+  },
+  [Collection.config]: {
+    db: 'setting',
+    table: 'config'
   }
 }

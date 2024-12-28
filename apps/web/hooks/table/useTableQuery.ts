@@ -26,9 +26,35 @@ export default function useTableQuery<T>(
       })
   }
 
+  function put(item: T){
+    if(!item){
+     return Promise.resolve();
+    }
+    return extApi.table.put({
+      params: [item],
+      table: collection,
+    }).then(function(){
+      mutate();
+    })
+  }
+
+  function remove(key?: string) {
+    if(!key){
+      return;
+    }
+    return extApi.table.remove({
+      params: [key],
+      table: collection
+    }).then(function () {
+      mutate()
+    })
+  }
+
   return {
     data,
     isLoading,
     mutate,
+    put,
+    remove,
   }
 }

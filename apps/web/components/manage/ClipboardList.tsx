@@ -104,26 +104,26 @@ export default function ClipboardList() {
   return (
     <div>
       <div className="mx-auto p-3">
-        <SettingSection>
-          <BasicSettingLine
-            label={'自动 Control C / 临时剪切板'}
-            subLabel={
-              <div>
-                临时剪切板历史内容将出现在下方。最多保留30天内、100条数据
-              </div>
-            }
-            right={
-              <input
-                type="checkbox"
-                className="toggle toggle-info"
-                checked={setting.controlC}
-                onChange={(e) => {
-                  updateSetting({ controlC: e.target.checked })
-                }}
-              />
-            }
-          />
-        </SettingSection>
+        {/*<SettingSection>*/}
+        {/*  <BasicSettingLine*/}
+        {/*    label={'自动 Control C / 临时剪切板'}*/}
+        {/*    subLabel={*/}
+        {/*      <div>*/}
+        {/*        临时剪切板历史内容将出现在下方。最多保留30天内、100条数据*/}
+        {/*      </div>*/}
+        {/*    }*/}
+        {/*    right={*/}
+        {/*      <input*/}
+        {/*        type="checkbox"*/}
+        {/*        className="toggle toggle-info"*/}
+        {/*        checked={setting.controlC}*/}
+        {/*        onChange={(e) => {*/}
+        {/*          updateSetting({ controlC: e.target.checked })*/}
+        {/*        }}*/}
+        {/*      />*/}
+        {/*    }*/}
+        {/*  />*/}
+        {/*</SettingSection>*/}
         <div className="my-4 flex items-center">
           <input
             type="checkbox"

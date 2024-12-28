@@ -11,6 +11,7 @@ import { get } from 'lodash'
 export default function useSettingConfig<T extends ConfigItem>(
   rootKey: string = 'global',
   table: 'config'|'secret',
+  deep: number = Infinity
 ): [T | null, (input: Partial<T>) => Promise<void>] {
   const { data = null, mutate } = useSWR<T | null>(
     '/user-config/' + rootKey + table,
@@ -49,7 +50,7 @@ export default function useSettingConfig<T extends ConfigItem>(
       [rootKey]: input,
     }
     // @ts-ignore
-    const objectArray = objectToConfigArray(data)
+    const objectArray = objectToConfigArray(data, deep)
     // mutate({
     //   ...(data || {}),
     //   ...input,

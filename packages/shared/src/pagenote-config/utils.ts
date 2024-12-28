@@ -4,13 +4,14 @@ import ConfigItem = config.ConfigObject;
 const get = require('lodash/get')
 const set = require('lodash/set')
 
-function getDeepKeys(obj: Record<string, any>) {
+function getDeepKeys(obj: Record<string, any>, deep: number) {
     let keys: string[] = [];
     for(const key in obj) {
-        if(typeof obj[key] === "object") {
-            const subkeys = getDeepKeys(obj[key]);
-            keys = keys.concat(subkeys.map(function(subkey) {
-                return key + "." + subkey;
+        // 限定取值的深度
+        if(typeof obj[key] === "object" && deep > 0) {
+            const subKeys = getDeepKeys(obj[key],deep - 1);
+            keys = keys.concat(subKeys.map(function(subKey) {
+                return key + "." + subKey;
             }));
         }else{
             keys.push(key);
@@ -19,8 +20,8 @@ function getDeepKeys(obj: Record<string, any>) {
     return keys;
 }
 
-export function objectToConfigArray(config: ConfigItem): Pick<ConfigObject, "key"|"value"|"rootKey">[] {
-    const keys = getDeepKeys(config);
+export function objectToConfigArray(config: ConfigItem,deep: number): Pick<ConfigObject, "key"|"value"|"rootKey">[] {
+    const keys = getDeepKeys(config, deep);
     return keys.map(function (key) {
         return {
             key: key,
