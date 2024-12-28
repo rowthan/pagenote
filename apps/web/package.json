@@ -75,7 +75,7 @@
     "lodash": "^4.17.21",
     "marked": "^11.2.0",
     "md5": "^2.3.0",
-    "next": "^13.5.3",
+    "next": "^14.2.10",
     "next-mdx-remote": "^4.1.0",
     "next-themes": "^0.2.1",
     "notion-client": "^6.16.0",
