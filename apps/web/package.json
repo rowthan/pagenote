@@ -122,7 +122,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "react-router-dom": "^6.6.1",
-    "sass": "^1.62.0",
+    "sass": "^1.83.1",
     "tailwindcss": "^3.2.4",
     "typescript": "^5.3.3"
   }
