@@ -107,7 +107,7 @@
     "@types/color": "^3.0.3",
     "@types/lodash": "^4.14.190",
     "@types/md5": "^2.3.2",
-    "@types/node": "18.11.3",
+    "@types/node": "22.10.5",
     "@types/react": "^18.2.24",
     "@types/react-dom": "^18.2.8",
     "@types/wicg-file-system-access": "^2020.9.4",
