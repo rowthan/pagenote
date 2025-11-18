@@ -63,7 +63,6 @@
     "father": "^4.3.8",
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
-    "node-sass": "^9.0.0",
     "postcss": "^8.4.32",
     "postcss-loader": "^7.3.3",
     "postcss-nesting": "^12.0.2",

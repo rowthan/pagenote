@@ -67,7 +67,7 @@ export default function Footer() {
             {/*  <EmailSvg width={24} height={24}/>*/}
             {/*</a>*/}
             <a
-                href="https://pagenote.cn/pro-plan"
+                href="https://pagenote.cn/vip"
                 aria-label={'vip'}
                 className={'text-[24px] hover:text-blue-800'}
             >

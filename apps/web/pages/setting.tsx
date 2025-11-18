@@ -11,7 +11,7 @@ export default function Redirect(props: Props) {
 
   useEffect(
     function () {
-        window.location.href = '/ext/setting'
+        window.location.href = '/ext/setting'+window.location.hash
     },
     [whoAmI]
   )
