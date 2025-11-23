@@ -1,12 +1,14 @@
 var preCacheName = 'pre_cache'
 var commonCacheName = 'common_cache'
 var preCacheFiles = []
-var version = "0.29.22"
+var version = "0.29.22.0"
 
 var cacheRules = {
   whiteList: [],
-  blockList: ['worker-register.js'],
+  blockList: [],
 }
+
+/**基础工具*/
 var util = {
   checkIsDocument: function (request) {
     return request.destination === 'document'
@@ -67,7 +69,7 @@ var util = {
         }
       }
 
-      /**静态资源，可安全使用缓存*/
+      /**静态资源,非API请求，可安全使用缓存*/
       var isStatic = /\.(js|css|png|jpg|svg|woff|jpeg)/.test(request.url)
       var isDoucment = util.checkIsDocument(request)
       if (isStatic || isDoucment) {

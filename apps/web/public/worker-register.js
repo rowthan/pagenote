@@ -1,7 +1,4 @@
 function registerMain() {
-    if(window.location.hostname==='localhost'){
-        return
-    }
     navigator.serviceWorker
         .register('/sw.js')
         .then(function (registration) {
