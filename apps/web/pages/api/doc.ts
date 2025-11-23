@@ -7,7 +7,7 @@ import {
   getUnOfficialNotion,
 } from '../../service/server/notion'
 import { writeCacheFile } from '../../service/server/cache'
-import {databaseList, SEO_REVERT_MAP, WRITER_ID} from '../../const/notion'
+import {databaseList, SEO_REVERT_MAP} from '../../const/notion'
 
 /**
  * SEO 优化处理：
@@ -21,15 +21,18 @@ async function fetchDocByPath(path: string): Promise<string | null> {
   }
   for(let i=0; i<databaseList.length; i++){
     const id = await queryIdByPathInDatabase(databaseList[i],path);
+    console.log(`从数据库【${databaseList[i]}】中查询:`,path,'结果：',id)
     if(id){
+      console.log('从预设数据库中查询得到ID')
       return id;
     }
   }
 
+  // 查询所有数据源，遍历数据源
   const { results } = await officialNotion.search({
     filter: {
       property: 'object',
-      value: 'database',
+      value: 'data_source',
     },
     sort:{
       timestamp: "last_edited_time",
@@ -37,10 +40,9 @@ async function fetchDocByPath(path: string): Promise<string | null> {
     },
     page_size: 20,
   })
-  console.log(results.length,'database')
   results.forEach(function (item) {
     // @ts-ignore
-    console.log('database::',item.url)
+    console.log('dataSource::',item.url)
   })
 
   for (let i = 0; i < results.length; i++) {
@@ -50,6 +52,9 @@ async function fetchDocByPath(path: string): Promise<string | null> {
       continue
     }
     const queryResult = await queryIdByPathInDatabase(id,path);
+    if(queryResult){
+      console.log('从遍历数据源中获取ID',path,id)
+    }
     return queryResult;
   }
 
@@ -62,10 +67,10 @@ async function queryIdByPathInDatabase(databaseId: string, path: string) {
     return null;
   }
   try{
-    const queryResult = await officialNotion.databases.query({
-      database_id: databaseId,
+    const queryResultFromDataSource = await officialNotion.dataSources.query({
+      data_source_id: databaseId,
       filter: {
-        or: [
+        or:  [
           {
             property: 'path',
             type: 'url',
@@ -87,20 +92,16 @@ async function queryIdByPathInDatabase(databaseId: string, path: string) {
               equals: path.replace(/^\//, ''),
             },
           },
-        ],
+        ]
       },
-      page_size: 1,
     })
-    if (queryResult.results && queryResult.results[0]) {
-      return queryResult.results[0].id || null;
-    }
+
+    return queryResultFromDataSource.results[0]?.id || null;
   }catch (e) {
     console.error(e)
     console.error('error query notion id by path in database ', databaseId)
     return null
   }
-
-  return null;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -129,7 +130,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
-    console.log(recordMap,'public get notion page',recordMap)
+    console.log(notionId,'public get notion page',recordMap)
     // 这里会隐藏作者信息，无法验证
     // if(!recordMap.notion_user[WRITER_ID]){
     //   console.log(recordMap.notion_user)

@@ -7,8 +7,10 @@ export const SEO_MAP: Record<string, string> = {
 }
 
 export const databaseList = [
-    'fd2ef32a46bb42a69711f826cb70a267', // 地图
-    '5c0aa83127014f3791e9c66ce70687dc', // 发布历史
+    'd8423c93-e14c-4089-97c0-eaa23eda1d71',// 地图数据源
+    '20a2d306f3b04b4da32dfa0ddf68ed4f',// 博文列表
+    // 'fd2ef32a46bb42a69711f826cb70a267', // 地图
+    // '5c0aa83127014f3791e9c66ce70687dc', // 发布历史
 ]
 
 export const WRITER_ID = process.env.NOTION_WRITER || '7c55490e-52d4-4bf9-8b86-dc9b51162224'
