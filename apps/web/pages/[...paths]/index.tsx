@@ -9,13 +9,7 @@ import { DEFAULT_BASE_DOC_PATH } from 'const/notion'
 
 export async function getStaticPaths() {
   const pages = await computeStaticPaths()
-  console.log(
-    pages.paths.length,
-    'static paths',
-    pages.paths.map(function (item: { params: { paths: any } }) {
-      return item.params.paths
-    })
-  )
+  console.log(pages,'static paths')
   return pages
 }
 
