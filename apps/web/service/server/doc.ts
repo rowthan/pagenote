@@ -19,7 +19,6 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     }
   }
   try {
-    const cacheContent =  getCacheContent(id);
     let serverContent;
     try{
       serverContent = await getNotionDocByIdOrPathFromServer(id);
@@ -27,7 +26,7 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     }catch (e) {
       console.error(id,'fetch doc detail error')
     }
-    const responseContent = serverContent || cacheContent;
+    const responseContent = serverContent || getCacheContent(id);
     if (responseContent?.recordMap) {
       return {
         props: responseContent,
