@@ -36,7 +36,7 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     if (result?.recordMap) {
       return {
         props: result,
-        revalidate: isDev ? 60 : 2 * 60 * 60, // 单位 秒
+        revalidate: isDev ? 60 : 5 * 60, // 单位 秒
       }
     } else {
       return {
