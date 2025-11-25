@@ -10,6 +10,8 @@ import { TDK } from 'const/tdk'
 import {StrictMode, useEffect} from 'react'
 import { getSessionStorageBridge} from "@pagenote/bridge";
 import {Toaster} from "@/components/ui/toaster";
+// core styles shared by all of react-notion-x (required)
+import 'react-notion-x/src/styles.css'
 
 // 运行在客户端
 function ClientApp({ Component, pageProps }: AppProps) {

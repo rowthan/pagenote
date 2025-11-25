@@ -67,7 +67,7 @@ async function queryIdByPathInDatabase(databaseId: string, path: string) {
   }
   try{
     const queryResultFromDataSource = await officialNotion.dataSources.query({
-      data_source_id: parsePageId(databaseId),
+      data_source_id: parsePageId(databaseId) || '',
       filter: {
         or:  [
           {
@@ -123,7 +123,7 @@ export async function getNotionDocByIdOrPathFromServer(notionIdOrUrlPath: string
   /**
    * 基于notion 查询用于渲染的结构对象详情（非官方API）
    * */
-  notionId = parsePageId(notionId)
+  notionId = parsePageId(notionId) || ''
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)

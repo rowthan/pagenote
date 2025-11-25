@@ -56,7 +56,7 @@ export async function computeStaticPaths() {
   // 从数据库中获取文章列表
   for(let i=0; i<databaseList.length; i++){
     const dataSource = await getOfficialNotion()?.dataSources.query({
-      data_source_id: parsePageId(databaseList[0]),
+      data_source_id: parsePageId(databaseList[0]) || '',
     })
 
     dataSource?.results.forEach(function (item) {
