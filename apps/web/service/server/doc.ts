@@ -19,23 +19,18 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     }
   }
   try {
-    let result =  getCacheContent(id);
-    if(!result){
-      try{
-        result = await getNotionDocByIdOrPathFromServer(id);
-        console.log(id,'get from server ::', result)
-      }catch (e) {
-        console.error(id,'fetch doc detail error')
-      }
+    const cacheContent =  getCacheContent(id);
+    let serverContent;
+    try{
+      serverContent = await getNotionDocByIdOrPathFromServer(id);
+      console.log(id,'get from server ::', serverContent)
+    }catch (e) {
+      console.error(id,'fetch doc detail error')
     }
-    const forceEnableCache = (!result || !result.recordMap);
-    if(forceEnableCache){ // 开发环境不适用缓存
-      result = getCacheContent(id, true);
-      console.log(id,'fallback get doc from local .cache')
-    }
-    if (result?.recordMap) {
+    const responseContent = serverContent || cacheContent;
+    if (responseContent?.recordMap) {
       return {
-        props: result,
+        props: responseContent,
         revalidate: isDev ? 60 : 5 * 60, // 单位 秒
       }
     } else {
