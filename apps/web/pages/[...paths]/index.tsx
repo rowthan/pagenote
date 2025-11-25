@@ -5,7 +5,6 @@ import {
 } from '../../service/server/doc'
 import NotFound from 'components/error/NotFound'
 import Footer from 'components/Footer'
-import { DEFAULT_BASE_DOC_PATH } from 'const/notion'
 
 export async function getStaticPaths() {
   const pages = await computeStaticPaths()
@@ -15,11 +14,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(props: { params: { paths: string[] } }) {
   const { params } = props
-  const basepath = params.paths[0]
   let id = `/${params.paths.join('/')}`
-  if (basepath === DEFAULT_BASE_DOC_PATH) {
-    id = params.paths[1]
-  }
   return await getNotionDocDetail(id)
 }
 
