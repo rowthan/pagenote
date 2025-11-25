@@ -7,9 +7,13 @@ import NotFound from 'components/error/NotFound'
 import Footer from 'components/Footer'
 
 export async function getStaticPaths() {
-  const pages = await computeStaticPaths()
-  console.log(pages,'static paths')
-  return pages
+  return {
+    paths:[],
+    fallback: "blocking"
+  }
+  // const pages = await computeStaticPaths()
+  // console.log(pages,'static paths')
+  // return pages
 }
 
 export async function getStaticProps(props: { params: { paths: string[] } }) {
