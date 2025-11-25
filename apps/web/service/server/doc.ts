@@ -1,10 +1,11 @@
 import {isDev} from '../../const/env'
 import {databaseList, DEFAULT_BASE_DOC_PATH} from '../../const/notion'
 import {getCacheContent} from './cache'
-import { getNotionDetailFromServer, WEB_HOST} from "./api";
 import {NotionDocProp} from "../../components/notion/NotionDoc";
 import {getOfficialNotion} from "./notion";
 import {GetStaticPathsResult} from "next/types";
+import {getNotionDocByIdOrPathFromServer} from "../../pages/api/doc";
+import {parsePageId} from "notion-utils";
 export interface DocNotion {
   notFound?: boolean,
   props?: NotionDocProp,
@@ -21,8 +22,8 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     let result =  getCacheContent(id);
     if(!result){
       try{
-        result = await getNotionDetailFromServer(id);
-        console.log(id,'get from server ',WEB_HOST, result)
+        result = await getNotionDocByIdOrPathFromServer(id);
+        console.log(id,'get from server ::', result)
       }catch (e) {
         console.error(id,'fetch doc detail error')
       }
@@ -61,7 +62,7 @@ export async function computeStaticPaths() {
   // 从数据库中获取文章列表
   for(let i=0; i<databaseList.length; i++){
     const dataSource = await getOfficialNotion()?.dataSources.query({
-      data_source_id: databaseList[0],
+      data_source_id: parsePageId(databaseList[0]),
     })
 
     dataSource?.results.forEach(function (item) {
