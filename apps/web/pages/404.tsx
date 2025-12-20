@@ -20,8 +20,10 @@ const redirectMap: Record<string, string> = {
   '/webpage': '/pagenote',
   '/post': '/sitemap',
   '/data': '/ext/setting#/data',
-  '/backup': '/ext/setting#/backup',
+  '/backup': '/ext/setting#/data/backup',
+    '/skills':'/question',
   '/install':'/download',
+    '/help':'/question',
 }
 
 export default function Custom404(props: NotionDocProp) {
