@@ -7,11 +7,7 @@ import {PlanInfo} from "../typing";
 import {getPlansFromServer} from "../service/server/api";
 import BasicLayout from "../layouts/BasicLayout";
 
-interface Props {
-    children?: ReactNode;
-}
 const NOTION_DOC_ID = '/pro-plan/tips'
-// This function gets called at build time
 export async function getStaticProps() {
     // Call an external API endpoint to get posts
     const res = await getNotionDocDetail(NOTION_DOC_ID);
@@ -38,7 +34,7 @@ export default function expired1(props: {doc: NotionDocProp,plans: PlanInfo[]}) 
             {/*https://page-note.notion.site/da8bdda50ec344f488d7c84ba52faea5?pvs=4*/}
             <NotionContent
                 docId={NOTION_DOC_ID}
-                notionDoc={props.doc}
+                notionDoc={doc}
             />
         </BasicLayout>
     );

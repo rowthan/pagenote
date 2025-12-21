@@ -21,7 +21,7 @@ export default function Plans(props: Props) {
     if (pro > 9) {
       current = 2
     } else if (pro > 1) {
-      current = 1
+      current = 0
     }
   }
   useEffect(

@@ -21,9 +21,10 @@ const redirectMap: Record<string, string> = {
   '/post': '/sitemap',
   '/data': '/ext/setting#/data',
   '/backup': '/ext/setting#/data/backup',
-    '/skills':'/question',
+  '/skills':'/question',
   '/install':'/download',
-    '/help':'/question',
+  '/help':'/question',
+  '/pro-plan':'/vip',
 }
 
 export default function Custom404(props: NotionDocProp) {

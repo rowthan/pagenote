@@ -14,6 +14,7 @@ export async function getNotionDetailFromServer(id: string): Promise<NotionDocPr
 
 
 export async function getPlansFromServer(): Promise<PlanInfo[]> {
+    console.log('api server ',process.env.API_HOST)
     const data = await fetch(
         `${process.env.API_HOST}/api/graph/book?query=query{plans{dataJson}}`,
         {
@@ -28,7 +29,8 @@ export async function getPlansFromServer(): Promise<PlanInfo[]> {
             const plans: PlanInfo[] = JSON.parse(dataJson)
             return plans
         }
-    }).catch(function () {
+    }).catch(function (e) {
+        console.error(e);
         return [{
             title: '终身VIP',
             description: '没有时限的VIP用户。',
