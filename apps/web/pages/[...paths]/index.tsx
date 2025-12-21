@@ -1,10 +1,10 @@
 import NotionDoc, { NotionDocProp } from 'components/notion/NotionDoc'
 import {
-  computeStaticPaths,
   getNotionDocDetail,
 } from '../../service/server/doc'
 import NotFound from 'components/error/NotFound'
 import Footer from 'components/Footer'
+import {RedirectMap} from "../../const/redirectMap";
 
 export async function getStaticPaths() {
   return {
@@ -18,7 +18,17 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(props: { params: { paths: string[] } }) {
   const { params } = props
-  let id = `/${params.paths.join('/')}`
+  const path = `/${params.paths.join('/')}`
+  const redirect = RedirectMap[path];
+  if(redirect){
+    return {
+      redirect: {
+        destination: redirect,
+        permanent: true,
+      },
+    }
+  }
+  const id = `/${params.paths.join('/')}`
   return await getNotionDocDetail(id)
 }
 
