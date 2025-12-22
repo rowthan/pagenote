@@ -24,8 +24,8 @@ var util = {
   },
   fetchAndCache: function (request) {
     return fetch(request).then((response) => {
-      // 跨域的资源直接return
-      if (!response || response.status !== 200) {
+      // 无响应，或非200/0状态吗的异常响应不缓存
+      if (!response || ![200,0].includes(response.status)) {
         return response
       }
       util.putCache(request, response.clone())
@@ -162,19 +162,19 @@ self.addEventListener('fetch', function (e) {
   e.respondWith(
       caches
       .match(e.request)
-      .then(function (response) {
+      .then(function (cacheResponse) {
         const allowCache = util.checkAllowCache(e.request)
         if (allowCache) {
           // 如果没有响应或者请求内容为 doc ,则需要保持最新，重新拉取
           var isDoc = util.checkIsDocument(e.request);
-          var needRefreshCache = !response || isDoc;
+          var needRefreshCache = !cacheResponse || isDoc;
           if (needRefreshCache) {
             // 如果是 document 请求，则传入 etag 标签，比较前后的差异
             setTimeout(function () {
               util.fetchAndCache(e.request).then(function (newResponse) {
                 // 如果是 document 请求，则比较 etag 标签，判断是否需要更新，并通知主页面，提示用户
                 if(isDoc){
-                  var responseChanged = !util.checkSameResponse(response, newResponse)
+                  var responseChanged = !util.checkSameResponse(cacheResponse, newResponse)
                   if(responseChanged){
                     util.sendMessageToDocument({
                       type: 'out_of_date',
@@ -191,8 +191,8 @@ self.addEventListener('fetch', function (e) {
               })
             },4000)
           }
-          if (response) {
-            return response
+          if (cacheResponse) {
+            return cacheResponse
           }
         }
         return fetch(e.request)
