@@ -25,7 +25,7 @@ export const AuthConfig: Record<
     icon: 'https://pagenote-public.oss-cn-beijing.aliyuncs.com/_static/notion.ico',
     platformUrl: 'https://www.notion.so/my-integrations',
     redirectUri: function () {
-      return  'https://pagenote.cn/oauth/callback_notion'
+      return  window.location.origin + '/oauth/callback_notion'
     },
   },
   webdav: {
@@ -47,7 +47,7 @@ export const AuthConfig: Record<
     icon: 'https://github.githubassets.com/favicons/favicon.svg',
     platformUrl: 'https://github.com/settings/installations',
     redirectUri: function () {
-      return 'https://pagenote.cn/oauth/callback_github'
+      return window.location.origin + '/oauth/callback_github'
     },
   },
   email: {
