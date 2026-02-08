@@ -21,7 +21,7 @@
     "lint": "yarn workspaces run lint"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   },
   "keywords": [],
   "author": "",
