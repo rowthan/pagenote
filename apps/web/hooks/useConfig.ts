@@ -1,5 +1,5 @@
-import  {setting} from "@pagenote/shared/lib/extApi";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import  {setting} from "@pagenote/shared";
+import extApi from "@pagenote/shared/pagenote-api";
 import useSWR from "swr";
 import ISearchEngine = setting.ISearchEngine;
 

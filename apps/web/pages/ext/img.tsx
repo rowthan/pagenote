@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router'
 import useTableQuery from 'hooks/table/useTableQuery'
-import { SnapshotResource } from '@pagenote/shared/lib/@types/data'
+import { SnapshotResource } from '@pagenote/shared'
 import RedirectToExt from 'components/RedirectToExt'
 import Empty from 'components/Empty'
 import Head from 'next/head'
 import ForbiddenSvg from 'assets/svg/warn.svg'
 import useWhoAmi from 'hooks/useWhoAmi'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { Collection } from '../../const/collection'
 
 export default function Img() {

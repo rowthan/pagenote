@@ -1,13 +1,13 @@
 import React, {type ReactNode, useCallback, useEffect, useRef} from 'react';
 import useTableQuery from "../../hooks/table/useTableQuery";
-import {Note} from "@pagenote/shared/lib/@types/data";
+import {Note} from "@pagenote/shared";
 import {Collection, dbTableMap} from "../../const/collection";
 import Tiptap, {EditorChangeContent} from "./TipTap";
-import extApi from "@pagenote/shared/lib/pagenote-api";
-import {Editor} from "@tiptap/react/src/Editor";
+import extApi from "@pagenote/shared/pagenote-api";
+import {Editor} from "@tiptap/react";
 import TipEditor from "./TipTap";
 import {debounce} from 'lodash'
-import {EditorContentProps} from "@tiptap/react/src/EditorContent";
+import {EditorContentProps} from "@tiptap/react";
 import dayjs from "dayjs";
 
 interface Props {
@@ -85,7 +85,7 @@ export default function Memo(props: Props  & Partial<EditorContentProps>) {
                 {...left}
                 ref={ref}
                 htmlContent={memo?.html || ''}
-                onUpdate={(data) => {
+                onUpdate={(data:EditorChangeContent) => {
                     onUpdate(data)
                 }}
                 onBlur={()=>{afterBlur && afterBlur(ref?.current?.editor)}}

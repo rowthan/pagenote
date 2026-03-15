@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import MemoComponent from 'components/editor/Memo'
 import useTableQuery from "../../hooks/table/useTableQuery";
-import {Note} from "@pagenote/shared/lib/@types/data";
+import {Note} from "@pagenote/shared";
 import {Collection} from "../../const/collection";
 export default function Memo() {
     const {query} = useRouter();

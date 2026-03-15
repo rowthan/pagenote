@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { RegisterOptions } from 'react-hook-form/dist/types/validator'
+import { RegisterOptions } from 'react-hook-form'
 
 export type CommonFormField = {
   type?: 'text' | string

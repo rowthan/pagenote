@@ -1,7 +1,7 @@
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import {useEffect, useState} from "react";
 import Tab = chrome.tabs.Tab;
-import {Step} from "@pagenote/shared/lib/@types/data";
+import {Step} from "@pagenote/shared";
 
 export default function PopupLights(props:{tab: Tab}) {
     const {tab} = props;

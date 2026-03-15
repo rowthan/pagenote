@@ -1,6 +1,6 @@
 import * as React from "react";
 import {ReactElement, useEffect, useRef, useState} from "react";
-import {Pagination} from "@pagenote/shared/lib/@types/database";
+import {Pagination} from "@pagenote/shared";
 import get from 'lodash/get';
 
 interface Props<T> {

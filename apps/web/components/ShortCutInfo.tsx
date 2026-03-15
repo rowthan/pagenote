@@ -1,5 +1,5 @@
 import useShortcut from '../hooks/useShortcut'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import useWhoAmi from '../hooks/useWhoAmi'
 import BasicSettingLine, {BasicSettingTitle, SettingMoreButton, SettingSection} from './setting/BasicSettingLine'
 import {Button} from "../@/components/ui/button";

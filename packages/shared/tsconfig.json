@@ -1,27 +1,36 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "ES2015",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "outDir": "./lib",
+        // 基础编译目标（兼容现代环境）
+        "target": "ES2020",
+        // 模块系统（输出 CommonJS 适配 Node.js/浏览器，也可设为 ESNext）
+        "module": "ESNext",
+        // 模块解析规则（Node.js 标准）
+        "moduleResolution": "Node",
+        // 源码根目录（仅编译 src 下的文件）
         "rootDir": "./src",
-
-        "allowJs": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
+        // 编译输出目录（最终发布的产物目录）
+        "outDir": "./dist",
+        // 生成类型声明文件（.d.ts，核心）
         "declaration": true,
-        "lib": [
-            "dom",
-            "es5",
-            "scripthost",
-            "es2015.promise",
-            "es2016"
-        ]
+        // 类型声明输出到 dist 目录（与 JS 产物同目录）
+        "declarationDir": "./dist",
+        // 关闭声明映射（避免暴露源码路径）
+        "declarationMap": false,
+        // 关闭源码映射（发布包无需 sourcemap）
+        "sourceMap": false,
+        // 严格模式（保证类型安全）
+        "strict": true,
+        // 兼容 ES 模块导入 CommonJS 模块（如 import lodash from 'lodash'）
+        "esModuleInterop": true,
+        // 跳过第三方库的类型检查（加速编译）
+        "skipLibCheck": true,
+        // 强制文件名大小写一致（避免跨系统问题）
+        "forceConsistentCasingInFileNames": true,
+        // 允许导入 JSON 文件（可选，按需开启）
+        "resolveJsonModule": true
     },
-    "include": [
-        "src/**/*.ts"
-    ]
+    // 仅编译 src 目录的 TS 文件
+    "include": ["src/**/*"],
+    // 排除输出目录和 node_modules
+    "exclude": ["dist", "node_modules", "**/*.test.ts"]
 }

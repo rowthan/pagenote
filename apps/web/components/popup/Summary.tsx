@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import useTableQuery from '../../hooks/table/useTableQuery'
-import { SnapshotResource } from '@pagenote/shared/lib/@types/data'
+import { SnapshotResource } from '@pagenote/shared'
 import useTabPagenoteData from '../../hooks/useTabPagenoteData'
 import { TbCapture } from 'react-icons/tb'
 import { RiDownloadCloudLine } from 'react-icons/ri'

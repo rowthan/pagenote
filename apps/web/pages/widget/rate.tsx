@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect } from 'react'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useCurrentTab from '../../hooks/useCurrentTab'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 
 interface Props {
   children?: ReactNode

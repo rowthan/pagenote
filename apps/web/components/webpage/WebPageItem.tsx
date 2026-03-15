@@ -1,4 +1,4 @@
-import {WebPage} from "@pagenote/shared/lib/@types/data";
+import {WebPage} from "@pagenote/shared";
 import HighLightText from "../HighLightText";
 import dayjs from "dayjs";
 

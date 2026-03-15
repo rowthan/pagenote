@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { unionFetch } from '../utils/fetch'
 import { fetchUserInfo } from '../hooks/useUserInfo'
 

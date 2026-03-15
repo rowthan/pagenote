@@ -1,4 +1,4 @@
-import {setting} from "@pagenote/shared/lib/extApi";
+import {setting} from "@pagenote/shared";
 import ISearchEngine = setting.ISearchEngine;
 export function getSearchKeyFormUrl(url='',engines: ISearchEngine[]): string {
     if(!url){

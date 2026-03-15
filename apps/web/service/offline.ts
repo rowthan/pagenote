@@ -1,4 +1,4 @@
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import {html} from "@pagenote/shared";
 import OfflineHTML = html.OfflineHTML;
 import {basePath} from "../const/env";

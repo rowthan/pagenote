@@ -4,7 +4,7 @@ import useTableQuery from "../hooks/table/useTableQuery";
 import {html} from "@pagenote/shared";
 import {Collection} from "../const/collection";
 import OfflineHTML = html.OfflineHTML;
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import useWhoAmi from "../hooks/useWhoAmi";
 
 interface Props {

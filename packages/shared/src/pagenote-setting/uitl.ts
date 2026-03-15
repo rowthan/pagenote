@@ -1,7 +1,6 @@
 import {getDefaultBrush, LightStatus, LightType} from "../pagenote-brush";
 import {setting} from "../extApi";
 import SDK_SETTING = setting.SDK_SETTING;
-import SDK_VERSION = setting.SDK_VERSION;
 
 export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): SDK_SETTING {
     const defaultBrushes = [

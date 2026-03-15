@@ -1,4 +1,4 @@
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 
 export function checkInExtensionContext(){
     return typeof chrome !== 'undefined' && chrome && chrome.runtime && chrome.tabs

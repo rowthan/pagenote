@@ -1,4 +1,4 @@
-import { Step } from '@pagenote/shared/lib/@types/data'
+import { Step } from '@pagenote/shared'
 
 export default function LightText(props: { light: Step }) {
   const { light } = props

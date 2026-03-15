@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { WebPage } from '@pagenote/shared/lib/@types/data'
+import { WebPage } from '@pagenote/shared'
 import { useLazyEffect } from '../../hooks/userLazyEffect'
 import {  searchInExt } from 'service/ext'
 import WebPageItem from '../webpage/WebPageItem'

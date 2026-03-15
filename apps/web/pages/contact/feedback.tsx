@@ -2,7 +2,7 @@ import BasicLayout from '../../layouts/BasicLayout'
 import ExtensionInfos from 'components/ExtensionInfos'
 import Logs from '../../components/debug/Logs'
 import FeedbackList from '../../components/contact/FeedbackList'
-import { developer } from '@pagenote/shared/lib/extApi'
+import { developer } from '@pagenote/shared'
 import LogLevel = developer.LogLevel
 
 export default function Feedback() {

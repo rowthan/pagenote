@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SnapshotResource } from '@pagenote/shared/lib/@types/data'
+import { SnapshotResource } from '@pagenote/shared'
 import useTableQuery from 'hooks/table/useTableQuery'
 import PhotoAlbum from 'react-photo-album'
 import Head from 'next/head'

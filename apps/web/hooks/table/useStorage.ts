@@ -1,7 +1,7 @@
 import useSWR from 'swr'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { Collection, dbTableMap } from '../../const/collection'
-import { TableStat } from '@pagenote/shared/lib/extApi'
+import { TableStat } from '@pagenote/shared'
 
 export default function useStorage(
   collection: Collection

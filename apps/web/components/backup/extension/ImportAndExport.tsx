@@ -7,7 +7,7 @@ import {
   MetaResourceType,
   SnapshotResource,
   Step
-} from '@pagenote/shared/lib/@types/data'
+} from '@pagenote/shared'
 import {toast} from 'utils/toast'
 import {
   Dialog,

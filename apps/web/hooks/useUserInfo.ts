@@ -1,5 +1,5 @@
-import {user} from '@pagenote/shared/lib/extApi'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import {user} from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import useSWR from 'swr'
 import User = user.User
 

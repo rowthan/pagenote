@@ -1,9 +1,9 @@
 import {useState} from 'react'
-import  {setting} from "@pagenote/shared/lib/extApi";
+import  {setting} from "@pagenote/shared";
 import SETTING = setting.SDK_SETTING;
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import useSWR from "swr";
-import {getDefaultSdkSetting} from "@pagenote/shared/lib/pagenote-setting/uitl";
+import {getDefaultSdkSetting} from "@pagenote/shared/utils";
 
 type SDK_SETTING = SETTING
 

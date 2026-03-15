@@ -19,8 +19,7 @@ export default function Avatar() {
       if (res?.error) {
         toast(res?.error)
       } else {
-        fetchUserInfo(true).then(function (res) {
-          console.log('refresh force', res)
+        fetchUserInfo(true).then(function () {
           refresh()
         })
       }

@@ -2,10 +2,64 @@
   "name": "@pagenote/shared",
   "version": "1.14.40",
   "description": "",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./extApi": {
+      "types": "./dist/extApi.d.ts",
+      "import": "./dist/extApi.js",
+      "require": "./dist/extApi.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js"
+    },
+    "./pagenote-setting": {
+      "types": "./dist/pagenote-setting/index.d.ts",
+      "import": "./dist/pagenote-setting/index.js",
+      "require": "./dist/pagenote-setting/index.js"
+    },
+    "./pagenote-api": {
+      "types": "./dist/pagenote-api/index.d.ts",
+      "import": "./dist/pagenote-api/index.js",
+      "require": "./dist/pagenote-api/index.js"
+    },
+    "./pagenote-appstores": {
+      "types": "./dist/pagenote-appstores/index.d.ts",
+      "import": "./dist/pagenote-appstores/index.js",
+      "require": "./dist/pagenote-appstores/index.js"
+    },
+    "./pagenote-brush": {
+      "types": "./dist/pagenote-brush/index.d.ts",
+      "import": "./dist/pagenote-brush/index.js",
+      "require": "./dist/pagenote-brush/index.js"
+    },
+    "./pagenote-constant": {
+      "types": "./dist/pagenote-constant/index.d.ts",
+      "import": "./dist/pagenote-constant/index.js",
+      "require": "./dist/pagenote-constant/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    },
+    "./**": {
+      "types": "./dist/**/*.d.ts",
+      "import": "./dist/**/*.js",
+      "require": "./dist/**/*.js"
+    }
+  },
   "scripts": {
     "prepare": "yarn run build",
-    "build": "rm -rf lib && tsc -p tsconfig.json",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "publish-npm": "npm run build && npm publish --access public",
     "test": "echo \"skip mocha\"",
@@ -32,7 +86,7 @@
     "typescript": "^5.3.3"
   },
   "files": [
-    "lib/**"
+    "dist/**/*"
   ],
   "author": "",
   "license": "ISC"

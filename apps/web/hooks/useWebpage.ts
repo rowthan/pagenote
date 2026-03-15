@@ -1,6 +1,6 @@
 import useSWR, { useSWRConfig } from 'swr'
-import { WebPage } from '@pagenote/shared/lib/@types/data'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { WebPage } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import { getPageDetail } from '../service/ext'
 import { useEffect } from 'react'
 

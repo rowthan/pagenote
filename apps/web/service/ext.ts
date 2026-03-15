@@ -1,6 +1,6 @@
-import { Step, WebPage } from '@pagenote/shared/lib/@types/data'
-import { QueryValue } from '@pagenote/shared/lib/@types/database'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { Step, WebPage } from '@pagenote/shared'
+import { QueryValue } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import set from 'lodash/set'
 import get from 'lodash/get'
 
@@ -221,7 +221,7 @@ export async function searchInExt(
         if (words.length === 1) {
           callback(pageResult)
         }
-        pageResult.forEach(function (item) {
+        pageResult.forEach(function (item: Partial<WebPage>) {
           const key: string = item.key || item.url || ''
           mark('page', key, i, 1)
           dataMap.page[key] = item
@@ -231,7 +231,7 @@ export async function searchInExt(
 
     tasks.push(
       searchInLight(keyword, '$or').then(function (lights) {
-        lights.forEach(function (item) {
+        lights.forEach(function (item: Partial<Step>) {
           const key: string = item.key || item.url || ''
           mark('light', key, i, 1)
           dataMap.light[key] = item

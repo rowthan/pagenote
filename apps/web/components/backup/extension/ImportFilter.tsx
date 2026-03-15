@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { BackupData, BackupVersion } from '@pagenote/shared/lib/@types/data'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { BackupData, BackupVersion } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import { toast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
 import classNames from "classnames";

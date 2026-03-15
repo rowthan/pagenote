@@ -1,4 +1,4 @@
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import useSWR, {KeyedMutator} from 'swr'
 
 const TEST_FILE_PATH = '/.temp/.connect.txt'

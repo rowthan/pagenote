@@ -178,6 +178,7 @@ const getDetailWebPage = function () {
         icon: "",
         cover: '',
         key: "",
+        lights: [],
         plainData: {
             categories: [],
             snapshots: [],
@@ -188,14 +189,16 @@ const getDetailWebPage = function () {
         title: "",
         updateAt: 0,
         url: "",
+        urlPath: "",
+        urlSearch: "",
+        urlHash: "",
+        pathname: "",
         urls: [],
         version: DataVersion.version6,
         extVersion: "",
         categories: [],
         did: "",
         notion_id: "",
-        urlSearch:"",
-        urlHash:"",
         keywords:[],
         browserBookmarks: []
     }

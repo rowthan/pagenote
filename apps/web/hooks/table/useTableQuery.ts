@@ -1,6 +1,6 @@
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import useSWR from 'swr'
-import { Find } from '@pagenote/shared/lib/@types/database'
+import { Find } from '@pagenote/shared'
 import { Collection, dbTableMap } from '../../const/collection'
 
 export default function useTableQuery<T>(

@@ -2,7 +2,7 @@ import UserCard from '../account/UserCard'
 import {Route, Routes, useNavigate} from 'react-router-dom'
 import React, {JSXElementConstructor, ReactElement} from 'react'
 import SettingDetail from './SettingDetail'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import BasicSettingLine, {SettingMoreButton, SettingSection} from "./BasicSettingLine";
 import useWhoAmi from "../../hooks/useWhoAmi";
 import DeviceInfo from "../account/DeviceInfo";

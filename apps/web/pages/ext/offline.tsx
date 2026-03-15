@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import Head from 'next/head'
 
 import dayjs from 'dayjs'
@@ -9,8 +9,8 @@ import useWhoAmi from 'hooks/useWhoAmi'
 import { basePath } from 'const/env'
 import { appendCss, appendScript } from 'utils/document'
 import RedirectToExt from 'components/RedirectToExt'
-import { contentToFile } from '@pagenote/shared/lib/utils/document'
-import { html } from '@pagenote/shared/lib/extApi'
+import { contentToFile } from '@pagenote/shared/utils'
+import { html } from '@pagenote/shared'
 import OfflineHTML = html.OfflineHTML
 import useTableQuery from '../../hooks/table/useTableQuery'
 import { Collection } from '../../const/collection'

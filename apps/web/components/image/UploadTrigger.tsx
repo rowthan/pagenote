@@ -3,7 +3,7 @@ import React, { ReactElement, useRef, useState } from 'react'
 import ImageShape from './ImageShape'
 import { getPublicUploadClient } from '../../utils/upload'
 import md5 from 'md5'
-import { ContentType } from '@pagenote/shared/lib/@types/data'
+import { ContentType } from '@pagenote/shared'
 import { toast } from '../../utils/toast'
 
 export default function UploadTrigger(props: {

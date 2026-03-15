@@ -9,7 +9,7 @@ import Image from '@tiptap/extension-image'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React, { ReactNode } from 'react'
-import {EditorContentProps} from "@tiptap/react/src/EditorContent";
+import {EditorContentProps} from "@tiptap/react";
 import {Hashtag} from './extension/HashTag'
 import suggestion from './suggestion'
 

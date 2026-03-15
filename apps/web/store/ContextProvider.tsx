@@ -1,7 +1,7 @@
 import { createContext } from 'use-context-selector'
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
-import { WebPage } from '@pagenote/shared/lib/@types/data'
-import { Query } from '@pagenote/shared/lib/@types/database'
+import { WebPage } from '@pagenote/shared'
+import { Query } from '@pagenote/shared'
 
 type State = {
   // 分组方式
