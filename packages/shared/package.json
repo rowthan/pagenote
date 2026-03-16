@@ -68,7 +68,7 @@
   "dependencies": {
     "@pagenote/bridge": "^1.1.1",
     "colord": "^2.9.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "md5": "^2.3.0",
     "mustache": "^4.2.0"
   },

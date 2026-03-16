@@ -60,13 +60,13 @@ jobs:
       #https://github.com/lerna/lerna/tree/main/libs/commands/version#semver-bump
       # 开发阶段的版本号 预发布
       - name: Lerna feature Version
-        if: startsWith(github.ref, 'refs/heads/feat') && contains(github.event.head_commit.message, 'bookmark')
+        if: startsWith(github.ref, 'refs/heads/feat') && (contains(github.event.head_commit.message, 'bookmark') || contains(github.event.head_commit.message, '🔖'))
         run: |
           npx lerna version prerelease --preid next --conventional-commits --no-private --conventional-prerelease --yes
 
-      # 修订版本号
+      # 修订版本号（commit message 需包含 bookmark / release 或 🔖）
       - name: Lerna dev Version
-        if: (github.ref =='refs/heads/dev' && contains(github.event.head_commit.message, 'bookmark')) || contains(github.event.head_commit.message, 'release')
+        if: (github.ref =='refs/heads/dev' && (contains(github.event.head_commit.message, 'bookmark') || contains(github.event.head_commit.message, '🔖'))) || contains(github.event.head_commit.message, 'release')
         run: |
           npx lerna version --conventional-commits --loglevel debug --no-private patch --yes
 
