@@ -7,7 +7,7 @@ import {
   getUnOfficialNotion,
 } from '../../service/server/notion'
 import { writeCacheFile } from '../../service/server/cache'
-import {databaseList, SEO_REVERT_MAP, WRITER_ID} from '../../const/notion'
+import {databaseList, SEO_REVERT_MAP} from '../../const/notion'
 
 /**
  * SEO 优化处理：
@@ -21,15 +21,18 @@ async function fetchDocByPath(path: string): Promise<string | null> {
   }
   for(let i=0; i<databaseList.length; i++){
     const id = await queryIdByPathInDatabase(databaseList[i],path);
+    console.log(`从数据库【${databaseList[i]}】中查询:`,path,'结果：',id)
     if(id){
+      console.log('从预设数据库中查询得到ID')
       return id;
     }
   }
 
+  // 查询所有数据源，遍历数据源
   const { results } = await officialNotion.search({
     filter: {
       property: 'object',
-      value: 'database',
+      value: 'data_source',
     },
     sort:{
       timestamp: "last_edited_time",
@@ -37,10 +40,9 @@ async function fetchDocByPath(path: string): Promise<string | null> {
     },
     page_size: 20,
   })
-  console.log(results.length,'database')
   results.forEach(function (item) {
     // @ts-ignore
-    console.log('database::',item.url)
+    console.log('dataSource::',item.url)
   })
 
   for (let i = 0; i < results.length; i++) {
@@ -50,9 +52,11 @@ async function fetchDocByPath(path: string): Promise<string | null> {
       continue
     }
     const queryResult = await queryIdByPathInDatabase(id,path);
-    return queryResult;
+    if(queryResult){
+      console.log('从遍历数据源中获取ID',path,id)
+      return queryResult;
+    }
   }
-
   return null
 }
 
@@ -62,10 +66,10 @@ async function queryIdByPathInDatabase(databaseId: string, path: string) {
     return null;
   }
   try{
-    const queryResult = await officialNotion.databases.query({
-      database_id: databaseId,
+    const queryResultFromDataSource = await officialNotion.dataSources.query({
+      data_source_id: parsePageId(databaseId) || '',
       filter: {
-        or: [
+        or:  [
           {
             property: 'path',
             type: 'url',
@@ -87,49 +91,43 @@ async function queryIdByPathInDatabase(databaseId: string, path: string) {
               equals: path.replace(/^\//, ''),
             },
           },
-        ],
+        ]
       },
-      page_size: 1,
     })
-    if (queryResult.results && queryResult.results[0]) {
-      return queryResult.results[0].id || null;
-    }
+
+    return queryResultFromDataSource.results[0]?.id || null;
   }catch (e) {
     console.error(e)
     console.error('error query notion id by path in database ', databaseId)
     return null
   }
-
-  return null;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const notionIdOrUrlPath = (req.query.id || '').toString()
-  // 基于文章ID 或 path 查询详情
+export async function getNotionDocByIdOrPathFromServer(notionIdOrUrlPath: string) {
   let notionId = notionIdOrUrlPath
   /**
    * 如果是 URL path，需要查询对应的 notion id
    * */
   if (!/^(\w|\d){8}/.test(notionIdOrUrlPath) || notionIdOrUrlPath.length < 20) {
     notionId =
-      SEO_REVERT_MAP[notionIdOrUrlPath] ||
-      (await fetchDocByPath(notionIdOrUrlPath)) ||
-      ''
+        SEO_REVERT_MAP[notionIdOrUrlPath] ||
+        (await fetchDocByPath(notionIdOrUrlPath)) ||
+        ''
     if (!notionId) {
       console.error(notionIdOrUrlPath, 'no page')
       // throw Error('找不到 notion 页面')
-      return res.status(404).json(null)
+      return null;
     }
   }
 
   /**
    * 基于notion 查询用于渲染的结构对象详情（非官方API）
    * */
-  notionId = parsePageId(notionId)
+  notionId = parsePageId(notionId) || ''
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
-    console.log(recordMap,'public get notion page',recordMap)
+    console.log(notionId,'public get notion page',recordMap)
     // 这里会隐藏作者信息，无法验证
     // if(!recordMap.notion_user[WRITER_ID]){
     //   console.log(recordMap.notion_user)
@@ -137,7 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // }
   } catch (e) {
     console.error(e,'fetch recordMap error')
-    return res.status(200).json(null)
+    return null
   }
   /**
    * 为了通过获取 page 的property属性 title path description keywords
@@ -146,12 +144,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let notionPage = null
   if (recordMap && recordMap.block[notionId]?.value.type === 'page' && getOfficialNotion()) {
     notionPage = await getOfficialNotion()
-      ?.pages.retrieve({
-        page_id: notionId,
-      })
-      .catch(function (e) {
-        console.warn(e, '获取文章详情失败')
-      })
+        ?.pages.retrieve({
+          page_id: notionId,
+        })
+        .catch(function (e) {
+          console.warn(e, '获取文章详情失败')
+        })
   }
   const properties = recordMap?.block[notionId]?.value?.properties
   const title = get(properties, 'title.0.0') || null
@@ -159,9 +157,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // console.log(notionPage.properties,'notionPage')
   const path = get(notionPage, 'properties.path.url') || null
   const description =
-    get(notionPage, 'properties.description.rich_text[0].plain_text') || null
+      get(notionPage, 'properties.description.rich_text[0].plain_text') || null
   const keywords = (
-    get(notionPage, 'properties.keywords.multi_select') || []
+      get(notionPage, 'properties.keywords.multi_select') || []
   ).map(function (item) {
     //@ts-ignore
     return item.name || ''
@@ -179,6 +177,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   /**只有本地运行才有 fs 的写入能力；线上服务器不具备写文件能力*/
   if(recordMap){
     writeCacheFile(notionIdOrUrlPath, responseData)
+  }
+
+  return responseData
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const notionIdOrUrlPath = (req.query.id || '').toString()
+  // 基于文章ID 或 path 查询详情
+  const responseData = await getNotionDocByIdOrPathFromServer(notionIdOrUrlPath);
+  if(!responseData){
+    return res.status(404);
   }
 
   // 增加缓存相应头

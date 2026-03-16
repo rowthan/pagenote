@@ -1,7 +1,6 @@
 import { Client } from '@notionhq/client'
-// todo 这个包，没有跟上 notion 官方的更新，2个月后再看看
-// import { NotionAPI } from 'notion-client'
-import { NotionAPI } from '@texonom/nclient'
+import { NotionAPI } from 'notion-client'
+// import { NotionAPI } from '@texonom/nclient'
 
 export function getOfficialNotion() {
   const token = process.env.NOTION_TOKEN || ''
@@ -17,5 +16,7 @@ export function getOfficialNotion() {
 }
 
 export function getUnOfficialNotion() {
-  return new NotionAPI({})
+  return new NotionAPI({
+    authToken: process.env.NOTION_TOKEN
+  })
 }

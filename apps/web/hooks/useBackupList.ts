@@ -1,4 +1,4 @@
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import useSWR from 'swr'
 
 interface FileItem {

@@ -1,4 +1,4 @@
-import { WebPage } from '@pagenote/shared/lib/@types/data'
+import { WebPage } from '@pagenote/shared'
 import useCurrentTab from './useCurrentTab'
 import useWebpage from './useWebpage'
 

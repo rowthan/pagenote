@@ -1,6 +1,6 @@
 import useSWR from 'swr'
-import extApi from '@pagenote/shared/lib/pagenote-api'
-import {TableSchemaBasicFields} from '@pagenote/shared/lib/extApi'
+import extApi from '@pagenote/shared/pagenote-api'
+import {TableSchemaBasicFields} from '@pagenote/shared'
 
 export default function useOfflineHtml() {
   // TODO key 发生变化后， 缓存仍然存在，没有被销毁，有内存泄漏的问题

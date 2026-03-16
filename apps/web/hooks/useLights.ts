@@ -1,6 +1,6 @@
 import useSWR from 'swr'
-import { Step } from '@pagenote/shared/lib/@types/data'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { Step } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 
 export default function useLights(pageKey: string) {
   // TODO key 发生变化后， 缓存仍然存在，没有被销毁，有内存泄漏的问题

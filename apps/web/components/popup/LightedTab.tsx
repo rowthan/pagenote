@@ -1,7 +1,7 @@
 import { enablePagenote, focus } from '../../utils/popup'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { useEffect, useState } from 'react'
-import { Step } from '@pagenote/shared/lib/@types/data'
+import { Step } from '@pagenote/shared'
 import useTabPagenoteState from 'hooks/useTabPagenoteState'
 import { checkIsBrowserBasicUrl } from 'utils/check'
 import Tab = chrome.tabs.Tab

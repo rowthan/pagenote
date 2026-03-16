@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import {
   BackupData,
   BackupVersion,
   ContentType,
-} from '@pagenote/shared/lib/@types/data'
+} from '@pagenote/shared'
 import dayjs from 'dayjs'
 import useWhoAmi from 'hooks/useWhoAmi'
 import { Button } from '@/components/ui/button'

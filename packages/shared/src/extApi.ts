@@ -91,7 +91,7 @@ export namespace lightpage {
         /**单次请求对网页、标记、快照总体的存储（增量存储）*/
         saveLightPage: IExtenstionMessageListener<PartWebpage, WebPage | null>,
         /**查询网页携带的全量数据： 网页、标记、快照*/
-        getLightPageDetail: IExtenstionMessageListener<{ key?: string, url?: string }, WebPage | null>,
+        getLightPageDetail: IExtenstionMessageListener<{ key?: string, url?: string, urlPath?:string }, WebPage | null>,
 
 
         /**导入备份文件**/
@@ -203,6 +203,7 @@ export namespace browserAction {
 
     export type response = {
         setBrowserActionDisplay: IExtenstionMessageListener<DisplayParams, BadgeProps>
+        /**@deprecated*/
         setBrowserActionClick: IExtenstionMessageListener<ActionClickParams, BadgeProps | undefined>
         getBrowserActionInfo: IExtenstionMessageListener<{ tabId?: number }, BadgeProps>
         [key: string]: IExtenstionMessageListener<any, any>
@@ -211,11 +212,11 @@ export namespace browserAction {
 }
 
 export namespace action {
-    import CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
-    import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
-    import Tab = chrome.tabs.Tab;
-    import QueryInfo = chrome.tabs.QueryInfo;
-    import TabGroup = chrome.tabGroups.TabGroup;
+    type CaptureVisibleTabOptions = chrome.tabs.CaptureVisibleTabOptions;
+    type AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
+    type Tab = chrome.tabs.Tab;
+    type QueryInfo = chrome.tabs.QueryInfo;
+    type TabGroup = chrome.tabGroups.TabGroup;
     export const id = 'action'
 
     export interface injectParams {
@@ -280,8 +281,8 @@ export namespace actions{
 }
 
 export namespace developer {
-    import TabGroup = chrome.tabGroups.TabGroup;
-    import Tab = chrome.tabs.Tab;
+    type TabGroup = chrome.tabGroups.TabGroup;
+    type Tab = chrome.tabs.Tab;
     export const id = 'developer'
 
     export enum LogLevel {
@@ -680,7 +681,7 @@ export namespace snapshot {
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
-    import OfflineHTML = html.OfflineHTML;
+    type OfflineHTML = html.OfflineHTML;
     export const id = 'front-server'
 
     export type TabStat = {
@@ -722,6 +723,9 @@ export namespace frontApi {
 
         // 在标签页启用 pagenote
         start: IExtenstionMessageListener<{ tabId: string }, { injected: boolean }>
+
+        /**通用型的消息传递 API，没有被上列特殊定义的消息传递API，则通过此API通信*/
+        eventBus: IExtenstionMessageListener<{eventType: string, data: unknown},{}>
         [key: string]: IExtenstionMessageListener<any, any>
     }
 

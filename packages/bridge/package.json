@@ -1,28 +1,31 @@
 {
   "name": "@pagenote/bridge",
   "version": "1.1.1",
-  "description": "",
+  "description": "你的库描述",
   "main": "dist/index.js",
-  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "scripts": {
-    "test": "echo \"skip: no test specified\"",
-    "build": "rm -rf lib && tsc -p tsconfig.json",
-    "prepare": "yarn run build",
-    "dev": "tsc --watch -p tsconfig.json",
-    "lint": "echo \"skip\""
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
   },
   "files": [
-    "dist/**"
+    "dist/**/*"
   ],
-  "devDependencies": {
-    "@types/chrome": "0.0.256"
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
+  "keywords": ["typescript", "lib"],
+  "author": "rowthan",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/chrome": "0.0.256"
   }
 }

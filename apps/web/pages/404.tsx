@@ -2,34 +2,14 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { NotionDocProp } from '../components/notion/NotionDoc'
 import BasicLayout from "../layouts/BasicLayout";
-
-const redirectMap: Record<string, string> = {
-  '/log': '/developer/log',
-  '/projects': '/developer/project',
-  '/feedback': '/contact/feedback',
-  '/debug': '',
-  '/demo': '/developer/demo',
-  '/trash': '/manage/trash',
-  '/page': '/manage/page',
-  '/light': '/manage/light',
-  '/manage/pages': '/manage/page',
-  '/setting': '/ext/setting',
-  '/pagenote': '/ext/manage',
-  '/signup': '/signin',
-  '/me': '/pagenote',
-  '/webpage': '/pagenote',
-  '/post': '/sitemap',
-  '/data': '/ext/setting#/data',
-  '/backup': '/ext/setting#/backup',
-  '/install':'/download',
-}
+import {RedirectMap} from "../const/redirectMap";
 
 export default function Custom404(props: NotionDocProp) {
   const router = useRouter()
 
   useEffect(
     function () {
-      const redirectUrl = redirectMap[window.location.pathname]
+      const redirectUrl = RedirectMap[window.location.pathname]
       if (redirectUrl) {
         router.replace(redirectUrl+window.location.search+window.location.hash)
       } else {

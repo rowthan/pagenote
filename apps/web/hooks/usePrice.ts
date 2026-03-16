@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { PlanInfo } from '../typing'
 import { unionFetch } from '../utils/fetch'
 

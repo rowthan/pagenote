@@ -1,4 +1,4 @@
-import {BrowserType, getBrowserTypeAndVersion} from "@pagenote/shared/lib/utils/browser";
+import {BrowserType, getBrowserTypeAndVersion} from "@pagenote/shared/utils";
 
 
 export function checkIsBrowserBasicUrl(url?: string) {

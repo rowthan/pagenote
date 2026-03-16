@@ -1,5 +1,5 @@
 import {type ReactNode, useState} from 'react';
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import BasicSettingLine, {
     BasicSettingDescription,
     BasicSettingTitle,

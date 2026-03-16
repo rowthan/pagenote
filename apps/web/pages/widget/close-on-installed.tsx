@@ -1,11 +1,11 @@
 import { type ReactNode, useEffect } from 'react'
 import useVersionValid from 'hooks/useVersionValid'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import useCurrentTab from 'hooks/useCurrentTab'
 import { useRouter } from 'next/router'
 import useWhoAmi from 'hooks/useWhoAmi'
 import useFrequency from "hooks/useFrequency";
-import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
+import {onVisibilityChange} from "@pagenote/shared/utils";
 
 interface Props {
   children?: ReactNode

@@ -1,12 +1,12 @@
 import dayjs from 'dayjs'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { toast } from '../../utils/toast'
 import TipSvg from 'assets/svg/info.svg'
 import BasicSettingLine, {SettingSection} from '../setting/BasicSettingLine'
 import useSettings from '../../hooks/useSettings'
-import { box } from '@pagenote/shared/lib/extApi'
+import { box } from '@pagenote/shared'
 import Box = box.Box
 
 export default function ClipboardList() {

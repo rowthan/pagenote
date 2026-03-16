@@ -1,9 +1,8 @@
 import {config} from "../extApi";
 import ConfigObject = config.ConfigItem;
 import ConfigItem = config.ConfigObject;
-const get = require('lodash/get')
-const set = require('lodash/set')
-
+import get from 'lodash/get'
+import set from 'lodash/set'
 function getDeepKeys(obj: Record<string, any>, deep: number) {
     let keys: string[] = [];
     for(const key in obj) {

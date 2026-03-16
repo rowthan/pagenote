@@ -1,6 +1,6 @@
 import React, {FC, PropsWithChildren, useEffect} from "react";
 import jsYaml from 'js-yaml';
-import {WorkFlow} from "@pagenote/actions/dist/typing";
+import {WorkFlow} from "@pagenote/actions";
 import ActionItem from "components/actions/ActionItem";
 interface Props {
     css?: string

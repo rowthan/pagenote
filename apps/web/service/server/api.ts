@@ -1,15 +1,11 @@
 // 制定获取 notion 数据源的接口；默认请求自身服务。
 import {NotionDocProp} from "../../components/notion/NotionDoc";
 import {PlanInfo} from "../../typing";
-export const WEB_HOST = process.env.NODE_ENV === 'development'
-    ? "http://localhost:3000"
-    : ( process.env.WEB_HOST || "https://pagenote.cn");
-
 
 
 export async function getNotionDetailFromServer(id: string): Promise<NotionDocProp | undefined> {
     try {
-        const result = await (await fetch(`${WEB_HOST}/api/doc?id=${id}`)).json();
+        const result = await (await fetch(`/api/doc?id=${id}`)).json();
         return result;
     } catch (e) {
         console.error('fetch doc detail error',e)
@@ -18,6 +14,7 @@ export async function getNotionDetailFromServer(id: string): Promise<NotionDocPr
 
 
 export async function getPlansFromServer(): Promise<PlanInfo[]> {
+    console.log('api server ',process.env.API_HOST)
     const data = await fetch(
         `${process.env.API_HOST}/api/graph/book?query=query{plans{dataJson}}`,
         {
@@ -32,7 +29,8 @@ export async function getPlansFromServer(): Promise<PlanInfo[]> {
             const plans: PlanInfo[] = JSON.parse(dataJson)
             return plans
         }
-    }).catch(function () {
+    }).catch(function (e) {
+        console.error(e);
         return [{
             title: '终身VIP',
             description: '没有时限的VIP用户。',

@@ -12,7 +12,7 @@ import {LuCopyCheck} from "react-icons/lu";
 import ActionButton from "./button/ActionButton";
 import useTabPagenoteState from "../hooks/useTabPagenoteState";
 import useCurrentTab from "../hooks/useCurrentTab";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import useWhoAmi from "../hooks/useWhoAmi";
 import usePermissions from "../hooks/usePermissions";
 import { toast } from '@/components/ui/use-toast'

@@ -2,7 +2,7 @@
 import { ReactRenderer } from '@tiptap/react'
 import tippy from 'tippy.js'
 import MentionList from './node/MentionList'
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 
 export default {
   items: ({ query }) => {

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {WebPage} from "@pagenote/shared/lib/@types/data";
+import {WebPage} from "@pagenote/shared";
 import WebPageItem from "../webpage/WebPageItem";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 import dayjs from "dayjs";
 
 export default function TodayRelated() {

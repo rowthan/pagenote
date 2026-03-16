@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import {BackupData} from "@pagenote/shared/lib/@types/data";
+import {BackupData} from "@pagenote/shared";
 //@ts-ignore
 import piexifjs from 'piexifjs';
 

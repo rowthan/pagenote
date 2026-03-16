@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { get } from 'lodash'
 import { getOfficialNotion } from 'service/server/notion'
-import { getCacheContent, writeCacheFile } from 'service/server/cache'
+import { writeCacheFile } from 'service/server/cache'
 
 function fetchAllDocs() {
   return getOfficialNotion()

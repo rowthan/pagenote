@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
-import {WebPage} from "@pagenote/shared/lib/@types/data";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import {WebPage} from "@pagenote/shared";
+import extApi from "@pagenote/shared/pagenote-api";
 import dayjs from "dayjs";
 import * as React from "react";
 import CheckVersion from "../../components/check/CheckVersion";
 import Table from "../../components/Table";
-import {Pagination, QueryValue} from "@pagenote/shared/lib/@types/database";
-import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
+import {Pagination, QueryValue} from "@pagenote/shared";
+import {onVisibilityChange} from "@pagenote/shared/utils";
 import SearchIcon from '../../assets/svg/search.svg'
 import CloseIcon from '../../assets/svg/close.svg'
 import BasicLayout from "layouts/BasicLayout";

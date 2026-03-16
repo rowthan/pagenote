@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { useEffect } from 'react'
 import useCurrentTab from "./useCurrentTab";
 import {checkInExtensionContext} from "../utils/chrome";

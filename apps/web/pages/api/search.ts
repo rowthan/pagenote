@@ -13,9 +13,11 @@ export default async function handler(
       ancestorId: SEO_REVERT_MAP['/'],
     })
     .then(function (res) {
+        console.log('搜索结果',res)
       return res
     })
-    .catch(function () {
+    .catch(function (reason) {
+        console.error('搜索异常',reason)
       return null
     })
   return res.status(200).json(output)

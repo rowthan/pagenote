@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-import {basePath} from "../const/env";
 // 运行在服务端
 export default function Document() {
   return (

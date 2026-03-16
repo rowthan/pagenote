@@ -1,4 +1,4 @@
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import extApi from "@pagenote/shared/pagenote-api";
 
 export function replaceHttpToExt(origin?: string) {
     const isHttp = /^https/.test(window.location.protocol);

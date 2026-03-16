@@ -1,4 +1,4 @@
-const getDomain = function(url:string,main:boolean):string{
+export const getDomain = function(url:string,main:boolean):string{
     const match = url.match(/:\/\/(.*?)\//)
     let domainKey = match?match[1]: url;
     if(domainKey){
@@ -9,8 +9,4 @@ const getDomain = function(url:string,main:boolean):string{
         return words.slice(words.length-2,words.length).join('.')
     }
     return domainKey;
-}
-
-export {
-    getDomain
 }

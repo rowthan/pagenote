@@ -1,6 +1,6 @@
 import { Collection, dbTableMap } from 'const/collection'
 import useSWR from 'swr'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 
 export default function useKeys<T>(collection: Collection, key: string) {
   const { data = [], mutate } = useSWR(function () {

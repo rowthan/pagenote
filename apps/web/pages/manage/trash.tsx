@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
-import {WebPage} from "@pagenote/shared/lib/@types/data";
-import extApi from "@pagenote/shared/lib/pagenote-api";
+import {WebPage} from "@pagenote/shared";
+import extApi from "@pagenote/shared/pagenote-api";
 import dayjs from "dayjs";
 import * as React from "react";
 import CheckVersion from "../../components/check/CheckVersion";
 import Table from "../../components/Table";
-import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
+import {onVisibilityChange} from "@pagenote/shared/utils";
 import BasicLayout from "../../layouts/BasicLayout";
 
 

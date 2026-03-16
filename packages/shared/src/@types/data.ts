@@ -1,9 +1,9 @@
 import {LightStatus, LightType} from "../pagenote-brush";
 import {box, html} from "../extApi";
 import {Query} from "./database";
-import OfflineHTML = html.OfflineHTML;
-import Box = box.Box;
-import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+type OfflineHTML = html.OfflineHTML;
+type Box = box.Box;
+type BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 export enum BackupVersion {
     version1 = 1,
@@ -43,13 +43,17 @@ export type Selection = {
     // anchor: { path: string, offset: number },
     // focus: { path: string, offset: number },
 
+    /**@deprecated*/
     anchorPath?: string;
+    /**@deprecated*/
     anchorOffset?: number;
+    /**@deprecated*/
     focusPath?: string;
+    /**@deprecated*/
     focusOffset?: number;
 }
 
-type Step = Selection & {
+type Step = {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
 
@@ -64,35 +68,50 @@ type Step = Selection & {
     tip?: string, // 标记的笔记（用户输入）
     /**标记背景色，统一使用十六进制*/
     bg?: string,
+    /**@deprecated*/
     isActive?: boolean, // 是否为激活状态
+    /**@deprecated*/
     lightStatus?: LightStatus // 高亮状态
+    /**@deprecated*/
     annotationStatus?: AnnotationStatus,
+    /**@deprecated*/
     annotationShowType?: AnnotationShowType,
-    lightType?: LightType, // 画笔类型，删除线、高亮
+    lightType?: LightType | string, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
     text?: string, // 标记的文本内容
     pre? : string, // 标记的文本内容 上文信息
     suffix?: string, // 标记的文本内容 下文信息
     clientX?: number,
     clientY?: number,
+    /**@deprecated*/
     offsetX?: number, // 批注与高亮元素的相对偏移量
+    /**@deprecated*/
     offsetY?: number, // 批注与高亮元素的相对偏移量
+    /**@deprecated*/
     parentW?: number, // 高亮元素父节点宽度
+    /**@deprecated*/
     lightId?: string, // 每一条标记的唯一 hash id
     images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
+    /**@deprecated*/
     lightBg?: string, // 将废弃
+    /**@deprecated*/
     daskBg?: string, // 将废弃
+    /**@deprecated*/
     isFocusTag?: boolean,
+    /**@deprecated*/
     time?: number,
     createAt?: number, // 创建时间
     updateAt: number, // 修改时间
+    /**@deprecated*/
     score?: number, // 此条笔记重要评分
     originContext?: string, // 原始上下文
     deleted: boolean // 删除标记
     author?: string // 原始作者
     url?: string
     pageKey?: string
+    urlPath?: string
     // 标记关联网页，匹配规则
+    /**@deprecated*/
     matchUrls?: string[]
     hash?: string
     v?: number // 数据版本
@@ -105,7 +124,88 @@ type Position = {
     y:number
 }
 
-type PlainData = {
+/**
+ * 数据结构
+ * webpage
+ *  -light
+ *  -note
+ *  -snapshot
+ *  -html
+ *  -box
+ *  -bookmark
+ * */
+export type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind;
+
+interface WebBasicInfo {
+    // URL 组成部分,完整的URL
+    url: string
+    /**
+     * @deprecated  path 路径，不含origin
+     * */
+    path: string
+
+    pathname: string
+    // 带 origin 的U path
+    urlPath: string
+    // 域名
+    domain: string
+    // search 参数
+    urlSearch?: string
+    // url hash
+    urlHash?: string
+
+    title: string
+    keywords?: string[]
+}
+
+// webpage 的索引ID
+type WebPageIds = WebBasicInfo & {
+    key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
+    sessionId?: string,
+    /**@deprecated*/
+    urls?: string[], // 此条数据绑定的 URL 集合
+    pageType?: PAGE_TYPES | string
+    did?: string
+}
+
+export enum PAGE_TYPES {
+    file= 'file',
+    http= 'http'
+}
+
+type WebPageTimes = {
+    // 数据真实的创建、最后更新时间
+    createAt: number,
+    updateAt: number,
+
+    // @deprecated
+    mtimeMs?: number, // fileSystem 本地文件最后同步时间 待弃用
+    expiredAt?: number, // 时效过期时间
+
+    /**webdav 信息，仅表示文档的相关信息，不能作为数据本身的更新标识 （如笔记是 2021年创建的，但是 2022 年才上传云盘，此时的 lastmod 是2022年）*/
+    lastmod?: string // Thu, 19 Nov 2020 08:08:11 GMT ，对应 webdav meta信息中的值
+    etag?: string, // 对应 webdav 文件的etag信息，用于比较一致性
+    lastSyncTime?: number, // 云盘最后同步时间
+    hash?: string,
+    visitedAt?: number, // 最后访问时间
+
+    filename?: string, // hash + 自定义导出文件名
+
+}
+
+// 链路信息，记录各个网站之间的联系
+type RouteInfo = {
+    sessionId?: string
+}
+
+// 与第三方绑定的附属信息，如对应的 notionid，数据库ID，云盘文件链接等。 eg: {notionid:"", webdavPath:"",dbid:""}
+type ExtraBind = {
+    /**@deprecated*/
+    notion_id?: string
+}
+
+/**@deprecated*/
+export type PlainData = {
     // @deprecated
     categories?: string[],// TODO 删除
     // @deprecated
@@ -118,10 +218,7 @@ type PlainData = {
     offline?: OfflineHTML[] // 关联的离线数据
 }
 
-export enum PAGE_TYPES {
-    file= 'file',
-    http= 'http'
-}
+
 
 export enum DataVersion {
     version3='3', // 携带有 lastmode etag 字段
@@ -137,6 +234,7 @@ export enum MetaResourceType {
 
 export type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
+    /**@deprecated*/
     resourceKey?: string // 映射 source 的ID
     url: string, // 可访问的URL 地址，base64 或链接
     uri?: string // 互联网可访问的链接地址
@@ -171,54 +269,22 @@ export type Resource = {
     data: string | Blob
 }
 
-interface WebBasicInfo {
-    // URL 组成部分
-    url: string
-    path: string
-    domain: string
-    urlSearch?: string
-    urlHash?: string
-
-    title: string
-    keywords?: string[]
-}
-
-type WebPageIds = WebBasicInfo & {
-    key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
-    urls?: string[], // 此条数据绑定的 URL 集合
-    pageType?: PAGE_TYPES
-    did?: string
-}
-type WebPageTimes = {
-    // 数据真实的创建、最后更新时间
-    createAt: number,
-    updateAt: number,
-
-    mtimeMs?: number, // fileSystem 本地文件最后同步时间 待弃用
-    expiredAt?: number, // 时效过期时间
-
-    /**webdav 信息，仅表示文档的相关信息，不能作为数据本身的更新标识 （如笔记是 2021年创建的，但是 2022 年才上传云盘，此时的 lastmod 是2022年）*/
-    lastmod?: string // Thu, 19 Nov 2020 08:08:11 GMT ，对应 webdav meta信息中的值
-    etag?: string, // 对应 webdav 文件的etag信息，用于比较一致性
-    lastSyncTime?: number, // 云盘最后同步时间
-    hash?: string,
-    visitedAt?: number, // 最后访问时间
-
-    filename?: string, // hash + 自定义导出文件名
-
-}
 
 type WebPageLinkedData = {
     extVersion?: string, // 使用的插件版本
-    // @deprecated
+    /**@deprecated  use lights instead*/
     plainData?: PlainData,
 
-    // 实时的浏览器书签信息
+    /**@deprecated 实时的浏览器书签信息*/
     browserBookmarks?: BookmarkTreeNode[],
+
+    /**@deprecated*/
+    lights?: Step[]
 }
 
 type WebPageSiteInfo = {
     deleted: boolean,
+    /**@deprecated*/
     achieved: boolean,
     icon: string,
     title?: string, // 网站标题
@@ -227,10 +293,11 @@ type WebPageSiteInfo = {
     thumb: string, // 预览缩略图
     cover?: string // 网页封面
     categories?: string[],
+    /**@deprecated*/
     directory?: string, // 存放路径
-    //@deprecated
+    /**@deprecated*/
     customTitle?: string, // 自定义标题
-    /**sdk 的设置信息*/
+    /**@deprecated sdk 的设置信息*/
     sdkSetting?: any
 
     domain: string,
@@ -254,19 +321,19 @@ export type Note = WebBasicInfo  & {
 
 
     // 笔记关联的表
-    // @deprecated
-    relatedType: "domain"|"path"
+    /**@deprecated*/
+    relatedType?: "domain"|"path"
     tags?: string[]
 
     // 优先级，1- xxx 数值越小优先级越高
     priority?: number
 
-    deleted: boolean
+    deleted?: boolean
     // 创建时间
-    createAt: number
+    createAt?: number
     // 更新时间
-    updateAt: number
-} & LinkRule<Note>
+    updateAt?: number
+}
 
 /**
  * 特征：记录特征匹配规则
@@ -318,27 +385,8 @@ export interface LinkRule<T> {
     // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>
 }
 
-// 链路信息，记录各个网站之间的联系
-type RouteInfo = {
-    sessionId?: string
-}
 
-// 与第三方绑定的附属信息，如对应的 notionid，数据库ID，云盘文件链接等。 eg: {notionid:"", webdavPath:"",dbid:""}
-type ExtraBind = {
-    notion_id?: string
-}
 
-/**
- * 数据结构
- * webpage
- *  -light
- *  -note
- *  -snapshot
- *  -html
- *  -box
- *  -bookmark
- * */
-export type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind & LinkRule<WebPageIds & WebPageSiteInfo>;
 
 
 type AllowUpdateKeys = keyof  WebPageLinkedData | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
@@ -426,7 +474,6 @@ export type BackupData = {
 }
 
 export type {
-    PlainData,
     Step,
     Position,
     Target,

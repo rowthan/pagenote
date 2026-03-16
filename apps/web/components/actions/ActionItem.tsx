@@ -1,5 +1,5 @@
 import React, {FC, PropsWithChildren, useEffect} from "react";
-import {WorkFlow} from "@pagenote/actions/dist/typing";
+import {WorkFlow} from "@pagenote/actions";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
 

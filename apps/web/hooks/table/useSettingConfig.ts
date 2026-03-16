@@ -1,10 +1,10 @@
-import { config } from '@pagenote/shared/lib/extApi'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { config } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import useSWR from 'swr'
 import {
   configArrayToObject,
   objectToConfigArray,
-} from '@pagenote/shared/lib/pagenote-config/utils'
+} from '@pagenote/shared/utils'
 import ConfigItem = config.ConfigValue
 import { get } from 'lodash'
 

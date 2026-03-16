@@ -1,5 +1,5 @@
 import md5 from "md5";
-import {Step, WebPage} from "@pagenote/shared/lib/@types/data";
+import {Step, WebPage} from "@pagenote/shared";
 
 export function LightFormatFromWebPage(step: Step, webPage: Partial<WebPage>) {
     // @ts-ignore

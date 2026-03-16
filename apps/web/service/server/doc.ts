@@ -1,8 +1,11 @@
 import {isDev} from '../../const/env'
-import {DEFAULT_BASE_DOC_PATH} from '../../const/notion'
+import {databaseList, DEFAULT_BASE_DOC_PATH} from '../../const/notion'
 import {getCacheContent} from './cache'
-import { getNotionDetailFromServer, WEB_HOST} from "./api";
 import {NotionDocProp} from "../../components/notion/NotionDoc";
+import {getOfficialNotion} from "./notion";
+import {GetStaticPathsResult} from "next/types";
+import {getNotionDocByIdOrPathFromServer} from "../../pages/api/doc";
+import {parsePageId} from "notion-utils";
 export interface DocNotion {
   notFound?: boolean,
   props?: NotionDocProp,
@@ -16,24 +19,18 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
     }
   }
   try {
-    let result =  getCacheContent(id);
-    if(!result){
-      try{
-        result = await getNotionDetailFromServer(id);
-        console.log(id,'get from server ',WEB_HOST, result)
-      }catch (e) {
-        console.error(id,'fetch doc detail error')
-      }
+    let serverContent;
+    try{
+      serverContent = await getNotionDocByIdOrPathFromServer(id);
+      console.log(id,'get from server ::', serverContent)
+    }catch (e) {
+      console.error(id,'fetch doc detail error')
     }
-    const forceEnableCache = !isDev && (!result || !result.recordMap);
-    if(forceEnableCache){
-      result = getCacheContent(id, true);
-      console.log(id,'fallback get doc from local .cache')
-    }
-    if (result?.recordMap) {
+    const responseContent = serverContent || getCacheContent(id);
+    if (responseContent?.recordMap) {
       return {
-        props: result,
-        revalidate: isDev ? 60 : 2 * 60 * 60, // 单位 秒
+        props: responseContent,
+        revalidate: isDev ? 60 : 5 * 60, // 单位 秒
       }
     } else {
       return {
@@ -53,44 +50,31 @@ export async function getNotionDocDetail(id: string, notFound: boolean = true):P
 }
 
 export async function computeStaticPaths() {
-  let pages: { path?: string; title?: string; id: string }[] = []
-  try {
-    pages =
-      getCacheContent('docs') ||
-      await(await fetch(`${WEB_HOST}/api/docs`)).json() ||
-      getCacheContent('docs', true)
-  } catch (e) {
-    console.error(e, 'getStaticPaths 请检查 /api/doc')
+  const pathFromDatasource: { params: {
+    paths: string[]
+    } }[] = [];
+  // 从数据库中获取文章列表
+  for(let i=0; i<databaseList.length; i++){
+    const dataSource = await getOfficialNotion()?.dataSources.query({
+      data_source_id: parsePageId(databaseList[0]) || '',
+    })
+
+    dataSource?.results.forEach(function (item) {
+      const page = {
+        params: {
+          paths: [DEFAULT_BASE_DOC_PATH,item.id],
+        }
+      };
+      pathFromDatasource.push(page)
+    })
   }
 
-  const paths = pages
-    .filter(function (item) {
-      return !!item.path
-    })
-    .slice(0, isDev ? 5 : 10) // 最多静态化
-    .map(function (item) {
-      let paths = [DEFAULT_BASE_DOC_PATH, item.id] //[`/${DEFAULT_BASE_DOC_PATH}/${item.id}`]
-      // 如果有自定义路径，解析后封装至数组
-      if (item.path) {
-        item.path = item.path[0] === '/' ? item.path : '/' + item.path
-        paths = item.path.split('/').filter(function (item) {
-          return !!item
-        }) // .replace(/^\/.*?\//, '')
-        console.log(paths, item.id, item.path)
-      }
-      return {
-        params: {
-          paths: paths,
-        },
-      }
-    })
-  console.log(paths.length, '/', pages.length, '待静态化页面数量')
-
-  return {
-    paths: paths,
+  const result: GetStaticPathsResult = {
+    paths: pathFromDatasource,
     // https://nextjs.org/docs/pages/api-reference/functions/get-static-paths#fallback-true
     // fallback: true, // 立即返回，并尝试取重新生成
     // fallback: false, // 直接返回404，不会尝试重新刷新，新增的页面，需要重新部署才会生成
     fallback: 'blocking', // 阻塞响应并重新请求数据
   }
+  return result;
 }

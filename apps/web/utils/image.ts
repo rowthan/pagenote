@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import {SnapshotResource} from "@pagenote/shared/lib/@types/data";
+import {SnapshotResource} from "@pagenote/shared";
 export function downloadBase64Images(base64Images: Partial<SnapshotResource>[]) {
 
     var zip = new JSZip();

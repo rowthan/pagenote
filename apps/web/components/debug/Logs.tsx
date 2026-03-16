@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {developer} from "@pagenote/shared/lib/extApi";
-import extApi from "@pagenote/shared/lib/pagenote-api";
-import {onVisibilityChange} from "@pagenote/shared/lib/utils/document";
+import {developer} from "@pagenote/shared";
+import extApi from "@pagenote/shared/pagenote-api";
+import {onVisibilityChange} from "@pagenote/shared/utils";
 import dayjs from "dayjs";
 import CheckVersion from "../check/CheckVersion";
 import LogInfo = developer.LogInfo;

@@ -4,7 +4,7 @@ function getWebIcon():string {
     return iconEle ? iconEle.href : '';
 }
 
-function getWebTitle():string {
+export function getWebTitle():string {
     const title = document.querySelector('title');
     return title ? title.innerText : ''
 }
@@ -99,7 +99,6 @@ function onElementViewChange(element:Element,option:IntersectionObserverInit={th
 
 export {
     getWebIcon,
-    getWebTitle,
     getWebDescription,
     contentToFile,
     loadScript,

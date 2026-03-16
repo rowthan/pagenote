@@ -1,5 +1,5 @@
-import extApi from '@pagenote/shared/lib/pagenote-api'
-import { network } from '@pagenote/shared/lib/extApi'
+import extApi from '@pagenote/shared/pagenote-api'
+import { network } from '@pagenote/shared'
 import FetchRequest = network.FetchRequest
 import {
   BaseMessageHeader,

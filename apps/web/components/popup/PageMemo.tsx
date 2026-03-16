@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
-import Tiptap, { EditorChangeContent } from '../editor/TipTap'
-import { Note } from '@pagenote/shared/lib/@types/data'
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import { Note } from '@pagenote/shared'
+import extApi from '@pagenote/shared/pagenote-api'
 import md5 from 'md5'
 import useTableQuery from '../../hooks/table/useTableQuery'
 import { Collection, dbTableMap } from '../../const/collection'
@@ -14,7 +13,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from '@/components/ui/menubar'
-import { getDomain } from '@pagenote/shared/lib/utils/filter'
+import { getDomain } from '@pagenote/shared/utils'
 import { CiLink, CiShoppingTag } from 'react-icons/ci'
 import { GiFamilyTree } from 'react-icons/gi'
 import { toast } from '../../@/components/ui/use-toast'
@@ -22,7 +21,7 @@ import { SizeIcon } from '@radix-ui/react-icons'
 import { basePath } from '../../const/env'
 import Memo from '../editor/Memo'
 import {Button} from "../../@/components/ui/button";
-import {Editor} from "@tiptap/react/src/Editor";
+import {Editor} from "@tiptap/react";
 
 const ICONS = {
   ['path']: <CiLink />,
@@ -51,6 +50,8 @@ function createNewNote(url: string, relatedType: 'path' | 'domain') {
     path: getPath(url),
     domain: getDomain(url, false),
     url: url,
+    pathname: window.location.pathname,
+    urlPath: window.location.origin + window.location.pathname,
 
     plainType: 'html',
     tiptap: {},

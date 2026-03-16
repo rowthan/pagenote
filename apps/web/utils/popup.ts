@@ -1,5 +1,5 @@
 import Tab = chrome.tabs.Tab
-import extApi from '@pagenote/shared/lib/pagenote-api'
+import extApi from '@pagenote/shared/pagenote-api'
 import { isExt } from '../const/env'
 
 export function refreshTab(tab?: Tab) {

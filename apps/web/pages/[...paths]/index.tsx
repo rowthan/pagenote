@@ -1,31 +1,34 @@
 import NotionDoc, { NotionDocProp } from 'components/notion/NotionDoc'
 import {
-  computeStaticPaths,
   getNotionDocDetail,
 } from '../../service/server/doc'
 import NotFound from 'components/error/NotFound'
 import Footer from 'components/Footer'
-import { DEFAULT_BASE_DOC_PATH } from 'const/notion'
+import {RedirectMap} from "../../const/redirectMap";
 
 export async function getStaticPaths() {
-  const pages = await computeStaticPaths()
-  console.log(
-    pages.paths.length,
-    'static paths',
-    pages.paths.map(function (item: { params: { paths: any } }) {
-      return item.params.paths
-    })
-  )
-  return pages
+  return {
+    paths:[],
+    fallback: "blocking"
+  }
+  // const pages = await computeStaticPaths()
+  // console.log(pages,'static paths')
+  // return pages
 }
 
 export async function getStaticProps(props: { params: { paths: string[] } }) {
   const { params } = props
-  const basepath = params.paths[0]
-  let id = `/${params.paths.join('/')}`
-  if (basepath === DEFAULT_BASE_DOC_PATH) {
-    id = params.paths[1]
+  const path = `/${params.paths.join('/')}`
+  const redirect = RedirectMap[path];
+  if(redirect){
+    return {
+      redirect: {
+        destination: redirect,
+        permanent: true,
+      },
+    }
   }
+  const id = `/${params.paths.join('/')}`
   return await getNotionDocDetail(id)
 }
 
