@@ -2346,10 +2346,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@notionhq/client@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.npmjs.org/@notionhq/client/-/client-5.4.0.tgz"
-  integrity sha512-SJsprS26S0Wi9CoTQp4vC8/nPpAIo1gMB4H7aJ2E/k0fWnNGIEAg984KwtzK6h9ZGaPcEaryVRSz1VVClJcVUw==
+"@notionhq/client@^5.13.0":
+  version "5.13.0"
+  resolved "https://registry.npmjs.org/@notionhq/client/-/client-5.13.0.tgz"
+  integrity sha512-SWVaqYVNaecLzAAllups4vklxxomaFenEMEkoUs3ylvhK1KFTU5Jevgu9Uwm/TSdhsErV0ru5YHcLd3SNyPi6Q==
 
 "@npmcli/agent@^2.0.0":
   version "2.2.0"
@@ -8469,7 +8469,7 @@ commander@^7.2.0:
 
 commander@^8.3.0:
   version "8.3.0"
-  resolved "https://registry.npmmirror.com/commander/-/commander-8.3.0.tgz"
+  resolved "https://registry.npmjs.org/commander/-/commander-8.3.0.tgz"
   integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
 commander@11.0.0:
@@ -15766,10 +15766,17 @@ jszip@^3.10.1:
     readable-stream "~2.3.6"
     setimmediate "^1.0.5"
 
-katex@^0.16.21, katex@>=0.9:
+katex@>=0.9:
   version "0.16.25"
   resolved "https://registry.npmjs.org/katex/-/katex-0.16.25.tgz"
   integrity sha512-woHRUZ/iF23GBP1dkDQMh1QBad9dmr8/PAwNA54VrSOVYgI12MAcE14TqnDdQOdzyEonGzMepYnqBMYdsoAr8Q==
+  dependencies:
+    commander "^8.3.0"
+
+katex@0.16.21:
+  version "0.16.21"
+  resolved "https://registry.npmjs.org/katex/-/katex-0.16.21.tgz"
+  integrity sha512-XvqR7FgOHtWupfMiigNzmh+MgUVmDGU2kXZm899ZkPfcuoPuFxyHmXsgATDpFZDAXCI8tvinaVcDo8PIIJSo4A==
   dependencies:
     commander "^8.3.0"
 
@@ -16402,12 +16409,7 @@ lodash.upperfirst@^4.3.1:
   resolved "https://registry.npmmirror.com/lodash.upperfirst/-/lodash.upperfirst-4.3.1.tgz"
   integrity sha512-sReKOYJIJf74dhJONhU4e0/shzi1trVbSWDOhKYE5XV2O+H7Sb2Dihwuc7xWxVl+DgFPyTqIN3zMfT9cq5iWDg==
 
-lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.5, lodash@~4.17.15:
-  version "4.17.21"
-  resolved "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
-
-lodash@4.17.23:
+lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.23, lodash@^4.17.5, lodash@~4.17.15, lodash@4.17.23:
   version "4.17.23"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.23.tgz"
   integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
@@ -18293,30 +18295,30 @@ normalize-url@^8.0.1:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-8.1.0.tgz"
   integrity sha512-X06Mfd/5aKsRHc0O0J5CUedwnPmnDtLF2+nq+KN9KSDlJHkPuh0JUviWjEWMe0SW/9TDdSLVPuk7L5gGTIA1/w==
 
-notion-client@^7.7.3:
-  version "7.7.3"
-  resolved "https://registry.npmjs.org/notion-client/-/notion-client-7.7.3.tgz"
-  integrity sha512-rRRghrRDMVrUEEn1lyiyf3eGKCFAqVKvbkVau1X/36cUL7OhbwlP3XLSYVH5PCNJIRRIneB3oWTODOJvTPlppQ==
+notion-client@^7.8.3:
+  version "7.8.3"
+  resolved "https://registry.npmjs.org/notion-client/-/notion-client-7.8.3.tgz"
+  integrity sha512-mzvM83gSRaB9KiYunYOTchEeAGkrS2isqToVWnz5mhRJOsMT7Osngkgj2EZ2smL3mjcGMeJsBLKqVwNEcN1cgQ==
   dependencies:
-    notion-types "7.7.3"
-    notion-utils "7.7.3"
+    notion-types "7.8.3"
+    notion-utils "7.8.3"
     ofetch "^1.4.1"
     p-map "^7.0.3"
 
-notion-types@^7.7.3, notion-types@7.7.3:
-  version "7.7.3"
-  resolved "https://registry.npmjs.org/notion-types/-/notion-types-7.7.3.tgz"
-  integrity sha512-6HCcLi9zEcVJsvVUvCZ2f5o4ANtKsRfQuUcU74Trsv6C5raug8ERtmeM2s7YJfuLuP74YVDDSIXugO+XkUBFxg==
+notion-types@^7.8.3, notion-types@7.8.3:
+  version "7.8.3"
+  resolved "https://registry.npmjs.org/notion-types/-/notion-types-7.8.3.tgz"
+  integrity sha512-4czeSnkoYAkxcujhyTRmiImYzFV7sqUbrIC/5UZ9gK22rpBO65X9Fz/swaK2wOxpaBzJ2GQssUpiWnmLLfEhfA==
 
-notion-utils@^7.7.3, notion-utils@7.7.3:
-  version "7.7.3"
-  resolved "https://registry.npmjs.org/notion-utils/-/notion-utils-7.7.3.tgz"
-  integrity sha512-MpOsUWdJJXKKc01zIYv90cxZZf7zL4dDSTssdqRFlDJsgGFFrD9uoKr0giOrMPiIoGwLka4TNeTORRDMYRZmoQ==
+notion-utils@^7.7.3, notion-utils@7.8.3:
+  version "7.8.3"
+  resolved "https://registry.npmjs.org/notion-utils/-/notion-utils-7.8.3.tgz"
+  integrity sha512-D5h0rJ9WHGHIyf49FCb8ESsvOGpKs4OUC5oToS5qON3c/UOoqLrRi0lzl8WBJhWyomJuuGYuk+7BeKJuBabjLQ==
   dependencies:
     is-url-superb "^6.1.0"
     memoize "^10.1.0"
     normalize-url "^8.0.1"
-    notion-types "7.7.3"
+    notion-types "7.8.3"
     p-queue "^8.1.0"
 
 npm-bundled@^1.1.2:
@@ -19216,7 +19218,7 @@ pacote@^2.7.36:
     react-photo-album "^2.3.0"
     react-tag-input-component "^2.0.2"
     react-use "^17.4.0"
-    swr "^2.0.0"
+    swr "^2.4.1"
     tailwind-merge "^1.14.0"
     tailwindcss-animate "^1.0.7"
     use-context-selector "^1.4.1"
@@ -21594,16 +21596,16 @@ react-modal@^3.16.3:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-notion-x@^7.7.3:
-  version "7.7.3"
-  resolved "https://registry.npmjs.org/react-notion-x/-/react-notion-x-7.7.3.tgz"
-  integrity sha512-3VmReYPXaB4X3LYfo4oBQab/2MJ4GjhY1cExwLDq3MKjInmNdp4CtIONzZkXE4/JYqIujKN+nM1uF25xE5MJMw==
+react-notion-x@^7.8.3:
+  version "7.8.3"
+  resolved "https://registry.npmjs.org/react-notion-x/-/react-notion-x-7.8.3.tgz"
+  integrity sha512-Es/5dOG3jGWkpJCrY5GWzh3zUbpzFyj2bQw6bDEjvKKvMo1oWbeyQdIXm1Im8y7E0shf5qww4jJEr5/D1NNdLA==
   dependencies:
     "@fisch0920/medium-zoom" "^1.0.7"
     "@matejmazur/react-katex" "^3.1.3"
-    katex "^0.16.21"
-    notion-types "7.7.3"
-    notion-utils "7.7.3"
+    katex "0.16.21"
+    notion-types "7.8.3"
+    notion-utils "7.8.3"
     prismjs "^1.30.0"
     react-fast-compare "^3.2.0"
     react-hotkeys-hook "^4.5.1"

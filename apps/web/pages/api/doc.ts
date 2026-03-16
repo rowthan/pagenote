@@ -9,6 +9,19 @@ import {
 import { writeCacheFile } from '../../service/server/cache'
 import {databaseList, SEO_REVERT_MAP} from '../../const/notion'
 
+function unwrapRecordMapBlockValue(recordMap: any, blockId: string) {
+  const raw = recordMap?.block?.[blockId]
+  const v = raw?.value
+  if (!v) return undefined
+
+  // notion-client / notion-types versions sometimes wrap block value as:
+  // { role, value } or even { value: { role, value } }
+  if (v?.properties || v?.type) return v
+  if (v?.value?.properties || v?.value?.type) return v.value
+  if (v?.value?.value?.properties || v?.value?.value?.type) return v.value.value
+  return undefined
+}
+
 /**
  * SEO 优化处理：
  * 根据 path ，搜索对应的文档
@@ -142,7 +155,8 @@ export async function getNotionDocByIdOrPathFromServer(notionIdOrUrlPath: string
    * 非 page 类不做查询，如 collection-page-view
    * */
   let notionPage = null
-  if (recordMap && recordMap.block[notionId]?.value.type === 'page' && getOfficialNotion()) {
+  const pageBlock = unwrapRecordMapBlockValue(recordMap, notionId)
+  if (recordMap && pageBlock?.type === 'page' && getOfficialNotion()) {
     notionPage = await getOfficialNotion()
         ?.pages.retrieve({
           page_id: notionId,
@@ -151,7 +165,8 @@ export async function getNotionDocByIdOrPathFromServer(notionIdOrUrlPath: string
           console.warn(e, '获取文章详情失败')
         })
   }
-  const properties = recordMap?.block[notionId]?.value?.properties
+  const properties = pageBlock?.properties
+  console.log('properties',properties)
   const title = get(properties, 'title.0.0') || null
   // const description = get(properties, 'description.0.0') || null;
   // console.log(notionPage.properties,'notionPage')
