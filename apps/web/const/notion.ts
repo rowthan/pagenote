@@ -10,7 +10,7 @@ export const databaseList = [
     'd093839d-1d66-4880-811c-bb060627dd5d',// 博文列表
     'd8423c93-e14c-4089-97c0-eaa23eda1d71',// 地图数据源
     // 'fd2ef32a46bb42a69711f826cb70a267', // 地图
-    // '5c0aa83127014f3791e9c66ce70687dc', // 发布历史
+    'ecf8941f-24bb-4f66-ab8b-38730bf7747b', // 发布历史
 ]
 
 export const WRITER_ID = process.env.NOTION_WRITER || '7c55490e-52d4-4bf9-8b86-dc9b51162224'
