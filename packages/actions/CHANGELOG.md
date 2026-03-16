@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.5](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4...@pagenote/actions@0.1.5) (2026-03-16)
+
+
+### Bug Fixes
+
+* type error ([e566ccf](https://github.com/rowthan/pagenote/commit/e566ccfbe3958f3f0faf95b6532625a79efe0881))
+
+
+
+
+
 ## [0.1.4](https://github.com/rowthan/pagenote/compare/@pagenote/actions@0.1.4-next.2...@pagenote/actions@0.1.4) (2024-05-28)
 
 

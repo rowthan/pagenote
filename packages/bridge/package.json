@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/bridge",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "pagenote API bridge",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,10 @@
     "test": "echo 'ignore'",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["typescript", "lib"],
+  "keywords": [
+    "typescript",
+    "lib"
+  ],
   "author": "rowthan",
   "license": "MIT",
   "devDependencies": {
