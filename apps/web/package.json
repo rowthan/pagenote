@@ -90,7 +90,7 @@
     "react-photo-album": "^2.3.0",
     "react-tag-input-component": "^2.0.2",
     "react-use": "^17.4.0",
-    "swr": "^2.0.0",
+    "swr": "^2.4.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "use-context-selector": "^1.4.1",
