@@ -70,7 +70,7 @@ export const routes: Record<string, {
                     </CheckVersion>
                 </div>
             </div>
-            <ExportFilter exportBy={'extension'}/>
+            <ExportFilter exportBy={'web'}/>
             <ImportAndExport/>
 
         </>,

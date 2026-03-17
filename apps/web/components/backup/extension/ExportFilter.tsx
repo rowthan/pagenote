@@ -121,7 +121,7 @@ export default function ExportFilter(props:{exportBy: 'web'|'extension'}) {
         disabled={downloading}
         loading={downloading}
         className={'btn btn-sm w-full'}
-        onClick={()=>{exportData('extension')}}
+        onClick={()=>{exportData('web')}}
       >
         下载备份文件
       </Button>
