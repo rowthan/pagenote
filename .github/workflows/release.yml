@@ -57,22 +57,27 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Debug trigger context
+        run: |
+          echo "ref=${{ github.ref }}"
+          echo "head_commit=${{ github.event.head_commit.message }}"
+          echo "all_commits=${{ toJson(github.event.commits) }}"
+
       #https://github.com/lerna/lerna/tree/main/libs/commands/version#semver-bump
       # 开发阶段的版本号 预发布
       - name: Lerna feature Version
-        if: startsWith(github.ref, 'refs/heads/feat') && (contains(github.event.head_commit.message, 'bookmark') || contains(github.event.head_commit.message, '🔖'))
+        if: startsWith(github.ref, 'refs/heads/feat') && (contains(toJson(github.event.commits), 'bookmark') || contains(toJson(github.event.commits), '🔖') || contains(toJson(github.event.commits), 'release'))
         run: |
           npx lerna version prerelease --preid next --conventional-commits --no-private --conventional-prerelease --yes
 
       # 修订版本号（commit message 需包含 bookmark / release 或 🔖）
       - name: Lerna dev Version
-        if: (github.ref =='refs/heads/dev' && (contains(github.event.head_commit.message, 'bookmark') || contains(github.event.head_commit.message, '🔖'))) || contains(github.event.head_commit.message, 'release')
+        if: github.ref =='refs/heads/dev' && (contains(toJson(github.event.commits), 'bookmark') || contains(toJson(github.event.commits), '🔖') || contains(toJson(github.event.commits), 'release'))
         run: |
-          npx lerna version --conventional-commits --loglevel debug --no-private patch --yes
-
+          npx lerna version prerelease --preid dev --conventional-commits --no-private --yes
       # 正式发布
       - name: Lerna main Version
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && (contains(toJson(github.event.commits), 'bookmark') || contains(toJson(github.event.commits), '🔖') || contains(toJson(github.event.commits), 'release'))
         run: |
           npx lerna version --conventional-commits --no-private minor --yes
 

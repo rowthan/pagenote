@@ -53,13 +53,16 @@ export type Selection = {
     focusOffset?: number;
 }
 
-type Step = {
+export type Step = {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
+    /**工作组，可共享的范围*/
+    group?: string
 
     session?: string,
     did?: string,
     l_did?: string, // 最后编辑人
+    /**@deprecated*/
     sortIndex?: number,
     x?: number, // 标记在文档中基于 body 的 x轴 位置
     y?: number, // 标记在文档中基于 body 的 y轴 位置
@@ -78,9 +81,42 @@ type Step = {
     annotationShowType?: AnnotationShowType,
     lightType?: LightType | string, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
+
+    /**选区类型，默认文本选区*/
+    selectionType?: 'text' | 'image',
+
+    /**基于文本的上下文信息*/
     text?: string, // 标记的文本内容
     pre? : string, // 标记的文本内容 上文信息
     suffix?: string, // 标记的文本内容 下文信息
+    /**选择为图片的链接地址*/
+    imgSrc?: string
+    /**@deprecated*/
+    images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
+
+    //兄弟、父节点上下文信息
+    // next?: string,
+    // prev?: string,
+    // parent?: string,
+    // nextSibling?: string,
+
+
+    /**基于选区的存储信息*/
+    range:{
+        start: string, // 选区开始的节点 wid
+        end: string  // 选区结束的节点 wid
+        startOffset?: number,
+        endOffset?: number
+    }
+    /**基于文本的位置信息*/
+    textPosition?: {
+        start: number,
+        end: number
+    }
+
+
+
+
     clientX?: number,
     clientY?: number,
     /**@deprecated*/
@@ -91,7 +127,6 @@ type Step = {
     parentW?: number, // 高亮元素父节点宽度
     /**@deprecated*/
     lightId?: string, // 每一条标记的唯一 hash id
-    images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
     /**@deprecated*/
     lightBg?: string, // 将废弃
     /**@deprecated*/
@@ -110,6 +145,8 @@ type Step = {
     url?: string
     pageKey?: string
     urlPath?: string
+    /**数据源，如来自哪个网页*/
+    source?: string
     // 标记关联网页，匹配规则
     /**@deprecated*/
     matchUrls?: string[]
@@ -474,7 +511,6 @@ export type BackupData = {
 }
 
 export type {
-    Step,
     Position,
     Target,
     AllowUpdateKeys,
