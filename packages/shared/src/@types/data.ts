@@ -322,7 +322,7 @@ export type Note = WebBasicInfo  & {
 
     // 笔记关联的表
     /**@deprecated*/
-    relatedType?: "domain"|"path"
+    relatedType?: "domain"|"url"|"custom"
     tags?: string[]
 
     // 优先级，1- xxx 数值越小优先级越高

@@ -137,7 +137,9 @@ export namespace setting {
         // TODO 删除 提取至一级目录下
         actions: Action[],
         disableList?: string[],
+        /**@deprecated*/
         controlC?: boolean,
+        /**@deprecated*/
         convertMethods?: ConvertMethod[], // TODO 删除
 
         showBarTimeout: number,
