@@ -19,7 +19,9 @@ export interface Brush {
     level: number,
     color: string,
     lightType: LightType,
+    /**@deprecated**/
     defaultStatus: LightStatus
+    /**@deprecated**/
     score?: number // 权重分数，1-10
 }
 
