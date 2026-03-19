@@ -19,7 +19,8 @@ function registerMain() {
                         "localhost",
                         "worker-register.js",
                         "/expired",
-                        "/signin"
+                        "/signin",
+                        "/release",
                     ]
                 })
 
