@@ -3,7 +3,7 @@
   "version": "0.1.18",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/sync.esm.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -15,12 +15,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "tsdx watch",
-    "start": "tsdx watch",
-    "build": "tsdx build",
+    "dev": "tsc -p tsconfig.json --watch",
+    "start": "tsc -p tsconfig.json --watch",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
     "test": "tsdx test",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "prepare": "rm -rf dist && tsc -p tsconfig.json",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },

@@ -1,5 +1,5 @@
 import {omit} from "lodash";
-import marked from 'marked'
+import {marked} from 'marked'
 
 interface Data {
     [key: string]: any;
