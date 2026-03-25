@@ -72,7 +72,7 @@ jobs:
 
       # 修订版本号（commit message 需包含 bookmark / release 或 🔖）
       - name: Lerna dev Version
-        if: github.ref =='refs/heads/dev' && (contains(toJson(github.event.commits), 'bookmark') || contains(toJson(github.event.commits), '🔖') || contains(toJson(github.event.commits), 'release'))
+        if: github.ref =='refs/heads/dev'
         run: |
           npx lerna version prerelease --preid dev --conventional-commits --no-private --yes
       # 正式发布
