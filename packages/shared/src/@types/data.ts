@@ -103,8 +103,8 @@ export type Step = {
 
     /**基于选区的存储信息*/
     range:{
-        start: string, // 选区开始的节点 wid
-        end: string  // 选区结束的节点 wid
+        startContainerWid: string, // 选区开始的节点 wid
+        endContainerWid: string, // 选区结束的节点 wid
         startOffset?: number,
         endOffset?: number
     }
