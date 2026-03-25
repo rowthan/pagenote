@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: '24.x'
 
 
       - name: dependencies cache
@@ -46,9 +46,9 @@ jobs:
           ls -la
           yarn run test
 
-#      - name: Build Packages
-#        run: |
-#           yarn build
+      - name: Build Packages
+        run: |
+          yarn build:packages
 
       - name: Set Git Identity
         run: |
