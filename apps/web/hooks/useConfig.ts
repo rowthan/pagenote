@@ -10,7 +10,7 @@ type IConfig = {
 export default function useConfig(): IConfig{
     const {data} = useSWR<IConfig>('/config',fetchLocalAndServerSetting)
 
-    function fetchLocalAndServerSetting (){
+    function fetchLocalAndServerSetting (): Promise<IConfig>{
         return extApi.setting.getSearchEngines().then((result)=>{
             return {
                 ...data,
@@ -19,5 +19,5 @@ export default function useConfig(): IConfig{
         })
     }
 
-    return data
+    return data as IConfig
 }

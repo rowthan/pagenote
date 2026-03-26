@@ -167,7 +167,10 @@ export const routes: Record<string, {
     }
 }
 function SettingHomeRedirect() {
-    const {width} = useWindowSize(900, 600)
+    const {width} = useWindowSize({
+        initialHeight: 600,
+        initialWidth: 900,
+    })
     return (
         width < 600 ?
             <SettingHome/> :
