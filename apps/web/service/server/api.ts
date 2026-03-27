@@ -2,6 +2,55 @@
 import {NotionDocProp} from "../../components/notion/NotionDoc";
 import {PlanInfo} from "../../typing";
 
+type RightsConfig = {
+    rights?: {
+        label: string
+        disAllowLabel?: string
+        allowFor?: number[]
+        visibleFor?: number[]
+    }[]
+    payments?: { id: string, label: string, url: string }[]
+    types?: {
+        title: string
+        description: string
+        price: number
+        duration: string
+        unit?: string
+        bg: string
+        role: number
+        deduct: boolean
+        final?: boolean
+    }[]
+}
+
+function buildPlansFromRights(cfg: RightsConfig): PlanInfo[] {
+    const rights = cfg?.rights || []
+    const payments = cfg?.payments || []
+    const types = cfg?.types || []
+
+    return (types as any[]).map((t) => {
+        const role = Number(t?.role ?? 0)
+        const planRights = (rights as any[])
+            .filter((r) => Array.isArray(r?.visibleFor) && r.visibleFor.includes(role))
+
+        const unit = t?.unit
+        const final = t?.final
+        return {
+            title: t?.title,
+            description: t?.description,
+            price: Number(t?.price ?? 0),
+            duration: t?.duration,
+            bg: t?.bg,
+            role,
+            deduct: Boolean(t?.deduct),
+            ...(unit ? { unit } : {}),
+            ...(final ? { final: true } : {}),
+            rights: planRights,
+            payments: payments as any,
+        } satisfies PlanInfo
+    })
+}
+
 
 export async function getNotionDetailFromServer(id: string): Promise<NotionDocProp | undefined> {
     try {
@@ -14,46 +63,19 @@ export async function getNotionDetailFromServer(id: string): Promise<NotionDocPr
 
 
 export async function getPlansFromServer(): Promise<PlanInfo[]> {
-    console.log('api server ',process.env.API_HOST)
-    const data = await fetch(
-        `${process.env.API_HOST}/api/graph/book?query=query{plans{dataJson}}`,
-        {
-            headers: {
-                'x-pagenote-priority': '1.1'
-            }
+    const url = 'https://api.jsonbin.io/v3/b/69bb727ac3097a1dd53adeb9'
+    try {
+        const res = await fetch(url, { cache: 'no-store' as any })
+        if (!res.ok) {
+            throw new Error(`fetch jsonbin failed: ${res.status}`)
         }
-    ).then(async function (response) {
-        const res = await response.json()
-        const dataJson = res.data?.plans?.dataJson
-        if (dataJson) {
-            const plans: PlanInfo[] = JSON.parse(dataJson)
-            return plans
-        }
-    }).catch(function (e) {
-        console.error(e);
-        return [{
-            title: '终身VIP',
-            description: '没有时限的VIP用户。',
-            price: 125,
-            duration: '终身',
-            unit: '元(累计)',
-            bg: 'indigo',
-            role: 2,
-            deduct: true,
-            final: true,
-            rights: [{
-                label: '解锁所有功能',
-            }],
-            payments: [{
-                id: 'alipay',
-                label: '支付宝',
-                url: "https://pagenote-public.oss-cn-beijing.aliyuncs.com/_static/alipay.png",
-            },{
-                id:'wechat',
-                label: '微信',
-                url: "https://pagenote-public.oss-cn-beijing.aliyuncs.com/0000/wechat_pay.jpg?x-oss-process=style/q75",
-            }]
-        },]
-    })
-    return data || [];
+        const json = await res.json()
+        const record = (json && (json.record || json)) as RightsConfig
+        const plans = buildPlansFromRights(record)
+        if (plans?.length) return plans
+        return []
+    } catch (e) {
+        console.error('getPlansFromServer error', e)
+        return []
+    }
 }

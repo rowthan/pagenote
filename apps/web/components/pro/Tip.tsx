@@ -4,21 +4,21 @@ import CloseSvg from '../../assets/svg/close.svg'
 import { bindTransition } from '../../service'
 import { toast } from 'utils/toast'
 import CheckUser from 'components/check/CheckUser'
-import { PlanInfo } from '../../typing'
 
 export default function Tip(props: {
   onClose: () => void
   children: React.ReactNode
-  plan: PlanInfo
+  price: number
+  payments?: { id: string; url: string; label: string }[]
 }) {
-  const { onClose, children, plan } = props
+  const { onClose, children, price } = props
   const [paid, setPaid] = useState(false)
   const [userInfo] = useUserInfo()
   const [showButton, setShowButton] = useState(false)
 
   function confirmPaid() {
     if (userInfo) {
-      bindTransition('', plan.price).then(function () {})
+      bindTransition('', price).then(function () {})
       setPaid(true)
     } else {
       window.open('https://pagenote.cn/signin.html')
@@ -33,7 +33,7 @@ export default function Tip(props: {
     }, 5000)
   }, [])
 
-  const payments = plan.payments || [
+  const payments = props.payments || [
     {
       label: '支付宝',
       id: 'alipay',

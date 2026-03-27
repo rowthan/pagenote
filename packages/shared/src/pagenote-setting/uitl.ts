@@ -62,7 +62,7 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         // lastModified: 0,
         // dataVersion: SDK_VERSION.ts_format,
 
-        keyupTimeout: 0,
+        keyupTimeout: 0.5,
         showBarTimeout: 0,
     }
     return {

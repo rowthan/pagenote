@@ -2,13 +2,27 @@ import { Block } from 'notion-types'
 import { get } from 'lodash'
 
 // 这是一个 hack 方法，从返回的对象中 找到 path 属性
-export function getPathFromProperties(block?: Block) {
-  if (!block) {
+export function getPathFromProperties(
+  block?: Block | { role?: unknown; value: Block } | unknown
+) {
+  const normalized =
+    (block as Block | undefined)?.properties
+      ? (block as Block)
+      : (block as { value?: unknown } | undefined)?.value &&
+          (block as { value?: Block } | undefined)?.value &&
+          (block as { value?: Block } | undefined)!.value!.properties
+        ? ((block as { value: Block }).value as Block)
+        : (block as { value?: { value?: Block } } | undefined)?.value?.value
+            ?.properties
+          ? ((block as { value: { value: Block } }).value.value as Block)
+          : undefined
+
+  if (!normalized) {
     return
   }
   //  要求该属性的类型为 URL 才能被正确解析读取
-  for (let i in block.properties) {
-    const prop = block.properties[i]
+  for (let i in normalized.properties) {
+    const prop = normalized.properties[i]
     const plainText = get(prop, '0.0')
     const tag = get(prop, '0.1.0.0')
     const value = get(prop, '0.1.0.1')

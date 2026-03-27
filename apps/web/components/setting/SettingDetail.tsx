@@ -13,7 +13,10 @@ export default function SettingDetail(props: {
     const {children, label} = props
     const navigate = useNavigate();
     const location = useLocation();
-    const {width} = useWindowSize(900, 600)
+    const {width} = useWindowSize({
+        initialHeight: 600,
+        initialWidth: 900,
+    })
 // 计算上一级路由
     const pathList = location.pathname.split('/');
     const parentPath = pathList.slice(0, pathList.length - 1).join('/') || '/';

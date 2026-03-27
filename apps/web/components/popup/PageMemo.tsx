@@ -30,6 +30,7 @@ const ICONS = {
   ['page']: <CiLink />,
   ['tags']: <CiShoppingTag />,
   ['domain']: <GiFamilyTree />,
+  ['custom']: <CiLink />,
 }
 
 interface Props {
@@ -216,11 +217,11 @@ export default function PageMemo(props: Props) {
                       <MenubarCheckboxItem
                         onClick={() => {
                           updateRelatedType(item.key, {
-                            relatedType: 'path',
+                            relatedType: 'url',
                             path: getPath(url),
                           })
                         }}
-                        checked={item.relatedType === 'path'}
+                        checked={item.relatedType === 'url'}
                       >
                         <CiLink />
                         仅本网页可见

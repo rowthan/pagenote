@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.41-dev.0](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.40...@pagenote/shared@1.14.41-dev.0) (2026-03-19)
+
+
+### Features
+
+* about page & custom style function ([f9a2e9f](https://github.com/rowthan/pagenote/commit/f9a2e9f7179cf1bcb2ef28cecf3aa344769c1bbe))
+* upgrade shared config ([26b9633](https://github.com/rowthan/pagenote/commit/26b96336018b620432f770de67cde0bbc4964248))
+* 支持配置网页识别功能 ([172e6ab](https://github.com/rowthan/pagenote/commit/172e6ab9e87d8aa68942a33481a42dbda2c81ae6))
+
+
+
+
+
 ## [1.14.40](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.40-next.0...@pagenote/shared@1.14.40) (2024-05-28)
 
 

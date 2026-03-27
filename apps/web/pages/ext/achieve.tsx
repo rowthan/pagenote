@@ -1,4 +1,4 @@
-import React, {FC, PropsWithChildren, useEffect} from "react";
+import {FC, PropsWithChildren, useEffect} from "react";
 import useTableKeys from "../../hooks/table/useTableKeys";
 import {Collection} from "../../const/collection";
 import {html} from "@pagenote/shared";

@@ -20,4 +20,5 @@ export const RedirectMap: Record<string, string> = {
     '/install':'/download',
     '/help':'/question',
     '/pro-plan':'/vip',
+    '/versions': '/release',
 }
