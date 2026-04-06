@@ -11,7 +11,7 @@ export default function SigninPart() {
         <SignForm
           validateType={'signin'}
           onFinished={() => {
-            window.location.href = '/account'
+            window.location.href = '/pagenote'
           }}
         />
 
