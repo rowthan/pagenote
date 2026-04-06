@@ -34,7 +34,7 @@ async function fetchDocByPath(path: string): Promise<string | null> {
   }
   for(let i=0; i<databaseList.length; i++){
     const id = await queryIdByPathInDatabase(databaseList[i],path);
-    console.log(`从数据库【${databaseList[i]}】中查询:`,path,'结果：',id)
+    console.log(`【${databaseList[i]}】从数据库中查询:`,path,'结果：',id)
     if(id){
       console.log('从预设数据库中查询得到ID')
       return id;
@@ -140,6 +140,16 @@ export async function getNotionDocByIdOrPathFromServer(notionIdOrUrlPath: string
   let recordMap
   try {
     recordMap = await getUnOfficialNotion().getPage(notionId)
+    if (
+      process.env.NODE_ENV === 'development' &&
+      !process.env.NOTION_TOKEN &&
+      recordMap?.collection &&
+      Object.keys(recordMap.collection).length > 0
+    ) {
+      console.warn(
+        '[notion] 页面包含数据库视图，但未设置 NOTION_TOKEN。notion-client 请求 queryCollection 时需要 token_v2，否则本地列表/表格往往为空。请在 apps/web/.env.local 中配置 NOTION_TOKEN。'
+      )
+    }
     console.log(notionId,'public get notion page',recordMap)
     // 这里会隐藏作者信息，无法验证
     // if(!recordMap.notion_user[WRITER_ID]){

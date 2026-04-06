@@ -4,6 +4,8 @@ export const DEFAULT_BASE_DOC_PATH =  'doc';
 export const SEO_MAP: Record<string, string> = {
     '9ba20cf8-0ca1-4551-a93e-ca35f1064077': '/sitemap',
     'cfd9af87-0210-4934-9e04-20bc708c4206': '/',
+    /** 发布日志 https://page-note.notion.site/c5865cde2ef54f369c0fe2dce97f6a1c */
+    'c5865cde-2ef5-4f36-9c0f-e2dce97f6a1c': '/release',
 }
 
 export const databaseList = [
