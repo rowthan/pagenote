@@ -10,6 +10,8 @@ export enum LightType {
     highlight='light', // 背景涂色
     deleteLine='del', // 删除线
     bold='bold', // 加粗
+    wavyline='wavyline', // 波浪线
+    mosaic='mosaic', // 马赛克
 }
 
 export interface Brush {

@@ -69,16 +69,22 @@ export type Step = {
     // TODO 使用 wid 全面替换 ID
     id?: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
     tip?: string, // 标记的笔记（用户输入）
-    /**标记背景色，统一使用十六进制*/
+    /**标记背景色*/
     bg?: string,
+    /**前景色*/
+    color?: string
     /**@deprecated*/
     isActive?: boolean, // 是否为激活状态
     /**@deprecated*/
     lightStatus?: LightStatus // 高亮状态
-    /**@deprecated*/
     annotationStatus?: AnnotationStatus,
-    /**@deprecated*/
     annotationShowType?: AnnotationShowType,
+    /**批注信息*/
+    annotationW?: number
+    annotationH?: number
+    annotationX?: number
+    annotationY?: number
+
     lightType?: LightType | string, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
 
@@ -93,7 +99,7 @@ export type Step = {
     imgSrc?: string
     /**@deprecated*/
     images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
-
+    alt?: string;
     //兄弟、父节点上下文信息
     // next?: string,
     // prev?: string,
@@ -339,6 +345,7 @@ type WebPageSiteInfo = {
 
     domain: string,
     path: string, // 路由path
+    source?: string;
 }
 
 // 笔记富文本结构

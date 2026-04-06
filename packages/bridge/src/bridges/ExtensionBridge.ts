@@ -143,9 +143,10 @@ export default class ExtensionMessage implements Communication<any>{
       if(that.state!==STATUS.READY){
         return false;
       }
+      // 非 API 模式的调用不监听处理
 
       const { data,type,header} = request;
-      const {carrier,targetClientId} = header;
+      const {carrier,targetClientId} = header || {};
 
       const resolveResponse = true;
       // todo 是否处理请求 & 是否响应请求判断。待开放，目前 targetClientId 为 作为namespace 使用，待迁移后可开放监测
