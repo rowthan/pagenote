@@ -2149,9 +2149,9 @@
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
 "@hono/node-server@^1.19.11":
-  version "1.19.11"
-  resolved "https://registry.yarnpkg.com/@hono/node-server/-/node-server-1.19.11.tgz#dc419f0826dd2504e9fc86ad289d5636a0444e2f"
-  integrity sha512-dr8/3zEaB+p0D2n/IUrlPF1HZm586qgJNXK1a9fhg/PzdtkK7Ksd5l312tJX2yBuALqDYBlG20QEbayqPyxn+g==
+  version "1.19.13"
+  resolved "https://registry.yarnpkg.com/@hono/node-server/-/node-server-1.19.13.tgz#4838c766a1237253d4dde3281cf7d5c65186fd32"
+  integrity sha512-TsQLe4i2gvoTtrHje625ngThGBySOgSK3Xo2XRYOdqGN1teR8+I7vchQC46uLJi8OF62YTYA3AhSpumtkhsaKQ==
 
 "@hono/node-ws@^1.3.0":
   version "1.3.0"
@@ -3530,12 +3530,31 @@
     lodash "^4.17.21"
     marked "^11.2.0"
 
+"@pagenote/actions@latest":
+  version "0.1.5-dev.1"
+  resolved "https://registry.yarnpkg.com/@pagenote/actions/-/actions-0.1.5-dev.1.tgz#df7820900f92a1e704905fb943362dcc7e1d70ca"
+  integrity sha512-NxSOkAgPNCivfCuvtLbwcoiVHNEDu3cNulBZ+G3IXMmeV72fCd6xiNC11+r85dWkBYcoS53rw6p+U7UvQo86xQ==
+  dependencies:
+    dayjs "^1.11.10"
+    expr-eval "^2.0.2"
+    handlebars "^4.7.8"
+    js-yaml "4.1.1"
+    lodash "4.17.23"
+    marked "^11.2.0"
+
 "@pagenote/bridge@^1.0.18-next.0", "@pagenote/bridge@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@pagenote/bridge/-/bridge-1.1.1.tgz#812e89d11982bb2dcf199ae39aa5bcd0c4acb6de"
   integrity sha512-nR4tEW6evqYKJhDlhaCPCmUNOy8AWvxCvdTMyOOlTPw/BdC+PK2K4t6oaTdTfHLlolTjpdgHgfTeYG0dlpAAXw==
 
-"@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.36-next.0", "@pagenote/shared@^1.14.36-next.1", "@pagenote/shared@^1.14.40-next.0":
+"@pagenote/bridge@latest":
+  version "1.1.2-dev.0"
+  resolved "https://registry.yarnpkg.com/@pagenote/bridge/-/bridge-1.1.2-dev.0.tgz#45f299ee5b3546084f5eff65155eee3877e6903e"
+  integrity sha512-CKkn0erzmKVCB5uoK4cVac9injuQzb+Grx09fW9UBWz6VvPGNqsWLzJS2HSEW3Spz8Yzc6GxcqHgj66Ie8Forw==
+  dependencies:
+    "@types/chrome" "0.0.256"
+
+"@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.36-next.0", "@pagenote/shared@^1.14.36-next.1":
   version "1.14.40"
   resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.14.40.tgz#b1c804431d03c032d822568045462a53176abc9e"
   integrity sha512-ybTwfKQpvxgLR3eKmTK1UMGkDcP95kINn0sspO+MdddhZYUvKPvAHukxOYGmpw2HGXjZr5x22lgMHmWqAIfmjg==
@@ -3543,6 +3562,17 @@
     "@pagenote/bridge" "^1.1.1"
     colord "^2.9.3"
     lodash "^4.17.21"
+    md5 "^2.3.0"
+    mustache "^4.2.0"
+
+"@pagenote/shared@latest":
+  version "1.14.41-dev.1"
+  resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.14.41-dev.1.tgz#a4db2d2e86d6fc27ac4013be2de2e62084e66632"
+  integrity sha512-xQ7utvBRDX1P/a6OHAVRsifeHGh0527aNrKmFH7WEzihM33sPKt78JDdwmuKec7MzqU9sftUTYUx51jGai1ntg==
+  dependencies:
+    "@pagenote/bridge" "^1.1.2-dev.0"
+    colord "^2.9.3"
+    lodash "^4.17.23"
     md5 "^2.3.0"
     mustache "^4.2.0"
 
