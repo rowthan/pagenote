@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4-dev.0](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.1.1...@pagenote/bridge@1.1.4-dev.0) (2026-04-18)
+
+
+### Features
+
+* add annotation type ([b8bdf27](https://github.com/rowthan/pagenote/commit/b8bdf274f4ee8bde607965b5679fd17bab0e127d))
+* upgrade data config ([81f34d2](https://github.com/rowthan/pagenote/commit/81f34d21a70b4c5828348f58ada453a97eb85168))
+
+
+
+
+
 ## [1.1.2-dev.0](https://github.com/rowthan/pagenote/compare/@pagenote/bridge@1.1.1...@pagenote/bridge@1.1.2-dev.0) (2026-03-19)
 
 **Note:** Version bump only for package @pagenote/bridge
