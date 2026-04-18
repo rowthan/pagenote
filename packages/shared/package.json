@@ -1,6 +1,6 @@
 {
   "name": "@pagenote/shared",
-  "version": "1.14.41-dev.0",
+  "version": "1.15.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

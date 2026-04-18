@@ -84,7 +84,6 @@ export default function Trash() {
             key: key,
             deleted: false,
             updateAt: Date.now(),
-            expiredAt: 0,
         }]).then(function () {
             selectedIds.delete(key)
             loadTrashList()

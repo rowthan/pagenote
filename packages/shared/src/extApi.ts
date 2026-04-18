@@ -1,4 +1,4 @@
-import type {BackupData, ContentType, Step, WebPage,} from "./@types/data";
+import type {BackupData, ContentType,} from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
     BaseMessageHeader,
@@ -10,6 +10,7 @@ import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";
 import type {BrowserType} from "./utils/browser";
+import {Light, WebPage} from "./@types";
 
 type AbstractInfo = {
     id: string // 唯一标识，本地、远程联系的唯一ID
@@ -70,7 +71,7 @@ export namespace lightpage {
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>
-    type PartStep = Partial<Step>
+    type PartLight = Partial<Light>
 
     export type ExportFilters = {
         db: string
@@ -131,19 +132,23 @@ export namespace setting {
 
     // 可在各端同步的设置
     export type COMMON_SDK_SETTING =  {
+        /**@deprecated*/
         lastModified?: number, // TODO 删除
         brushes: Brush[],
-
         // TODO 删除 提取至一级目录下
+        /**@deprecated*/
         actions: Action[],
+        /**@deprecated*/
         disableList?: string[],
         /**@deprecated*/
         controlC?: boolean,
         /**@deprecated*/
         convertMethods?: ConvertMethod[], // TODO 删除
-
-        showBarTimeout: number,
-        keyupTimeout: number,
+        /**@deprecated*/
+        showBarTimeout?: number,
+        /**@deprecated*/
+        keyupTimeout?: number,
+        enableShortcuts?: boolean
     }
 
     export type SDK_SETTING = Inner_Setting & COMMON_SDK_SETTING
@@ -618,13 +623,14 @@ export namespace config {
 //
 // export namespace light {
 //     export const id = 'light';
-//     export type response = TableAPI<Step>
+//     export type response = TableAPI<Light>
 //     export type request = ComputeRequestToBackground<response>
 // }
 
 export namespace html {
     export type OfflineHTML = {
         dataVersion: number, // 数据格式版本标识 1: 已将重要property 写入 html meta 中
+        key?: string,
         resourceId?: string, // 插件本地获取该资源的唯一标识
 
         name?: string, // 文件名
@@ -637,7 +643,7 @@ export namespace html {
         onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
 
         contentType?: ContentType, // 文件类型
-        // contentLength?: number, // 资源size
+        contentLength?: number, // 资源size
         lastModified?: string,
         ETag?: string,
         data: string, // 资源内容，只支持字符串存储，不支持二进制数据

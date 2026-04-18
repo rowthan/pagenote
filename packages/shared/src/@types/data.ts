@@ -19,6 +19,7 @@ export enum BackupVersion {
     version8 = 8, // 仅导出 items ，删除一级备份字段
 
     version9 = 9, // 用于压缩包的导出类型
+    version10 = 10, // 导出html、jepg 图片和索引文件
 }
 
 export enum AnnotationStatus {
@@ -33,7 +34,7 @@ type Target = Step & {
     clientY: number,
 }
 
-enum AnnotationShowType {
+export enum AnnotationShowType {
     float=1, // 浮动
     inject=2 // 嵌入式
 }
@@ -53,7 +54,8 @@ export type Selection = {
     focusOffset?: number;
 }
 
-export type Step = {
+/**@deprecated*/
+export type Step =  {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
     /**工作组，可共享的范围*/
@@ -158,9 +160,9 @@ export type Step = {
     matchUrls?: string[]
     hash?: string
     v?: number // 数据版本
-} & LinkRule<Step>
+}
 
-export type Light = Step;
+type Light = Step;
 
 type Position = {
     x:number,
@@ -168,6 +170,7 @@ type Position = {
 }
 
 /**
+ * @deprecated
  * 数据结构
  * webpage
  *  -light
@@ -177,43 +180,31 @@ type Position = {
  *  -box
  *  -bookmark
  * */
-export type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind;
+type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind;
+
 
 interface WebBasicInfo {
     // URL 组成部分,完整的URL
     url: string
-    /**
-     * @deprecated  path 路径，不含origin
-     * */
-    path: string
-
     pathname: string
-    // 带 origin 的U path
-    urlPath: string
     // 域名
     domain: string
     // search 参数
     urlSearch?: string
     // url hash
     urlHash?: string
-
     title: string
     keywords?: string[]
+    images?: string[]
 }
 
 // webpage 的索引ID
 type WebPageIds = WebBasicInfo & {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
-    sessionId?: string,
-    /**@deprecated*/
+    source?: string,
+    canonical?: string // 同一文档标识地址
     urls?: string[], // 此条数据绑定的 URL 集合
-    pageType?: PAGE_TYPES | string
     did?: string
-}
-
-export enum PAGE_TYPES {
-    file= 'file',
-    http= 'http'
 }
 
 type WebPageTimes = {
@@ -275,7 +266,7 @@ export enum MetaResourceType {
     html='html',
 }
 
-export type SnapshotResource = {
+type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
     /**@deprecated*/
     resourceKey?: string // 映射 source 的ID
@@ -349,7 +340,7 @@ type WebPageSiteInfo = {
 }
 
 // 笔记富文本结构
-export type Note = WebBasicInfo  & {
+ type Note = WebBasicInfo  & {
     // 唯一ID
     key: string;
     // 笔记的数据存储形式
@@ -421,19 +412,7 @@ export type FeatureItem = {
  * 2. 数据库查询出的结果，再次根据 $match 进行匹配
  * */
 
-export interface LinkRule<T> {
-    // 关联特征表ID，当前数据的外链匹配管理
-    // $links?: string[]
 
-    //@deprecated 匹配规则，不使用外键 $links 的情况下使用。存储至原始表，不利于查询（源数据量较大时）
-    // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>
-}
-
-
-
-
-
-type AllowUpdateKeys = keyof  WebPageLinkedData | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
 // 数据的存储形式，blob二进制文件或字符串文件
 export type FileData = Blob | string
@@ -520,5 +499,4 @@ export type BackupData = {
 export type {
     Position,
     Target,
-    AllowUpdateKeys,
 }

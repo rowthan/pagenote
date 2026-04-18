@@ -2,6 +2,7 @@ import {getDefaultBrush, LightStatus, LightType} from "../pagenote-brush";
 import {setting} from "../extApi";
 import SDK_SETTING = setting.SDK_SETTING;
 
+/**@deprecated*/
 export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): SDK_SETTING {
     const defaultBrushes = [
         getDefaultBrush({
@@ -10,8 +11,6 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         }),
         getDefaultBrush({
             bg: '#A6FFE9',
-            label: '删除线',
-            lightType: LightType.deleteLine,
             defaultStatus: LightStatus.un_light,
             shortcut:"2",
         }),
@@ -43,11 +42,6 @@ export function getDefaultSdkSetting(originSetting: Partial<SDK_SETTING> = {}): 
         getDefaultBrush({
             bg: '#195772',
             shortcut:"8",
-            defaultStatus: LightStatus.half_light
-        }),
-        getDefaultBrush({
-            bg: '#4467a8',
-            shortcut:"9",
             defaultStatus: LightStatus.half_light
         }),
     ]
