@@ -1,7 +1,7 @@
 import {LightStatus, LightType} from "../pagenote-brush";
-import {box, html} from "../extApi";
+import {box} from "../extApi";
 import {Query} from "./database";
-type OfflineHTML = html.OfflineHTML;
+import {OfflineHTML} from "./Model";
 type Box = box.Box;
 type BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 

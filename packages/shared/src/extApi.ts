@@ -1,4 +1,4 @@
-import type {BackupData, ContentType,} from "./@types/data";
+import type {BackupData,} from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
     BaseMessageHeader,
