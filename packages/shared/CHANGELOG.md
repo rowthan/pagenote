@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.1-dev.1](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.15.1-dev.0...@pagenote/shared@1.15.1-dev.1) (2026-04-19)
+
+
+### Bug Fixes
+
+* remove offlineHTML ([cd46541](https://github.com/rowthan/pagenote/commit/cd46541009bb6916fe837617afedbb6439b82278))
+
+
+### Features
+
+* remove offlineHTML ([5434fa3](https://github.com/rowthan/pagenote/commit/5434fa36b50a5a3ffa571fd064637cd0ae5169b5))
+
+
+
+
+
 ## [1.15.1-dev.0](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.14.40...@pagenote/shared@1.15.1-dev.0) (2026-04-18)
 
 
