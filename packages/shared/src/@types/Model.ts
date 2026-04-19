@@ -10,7 +10,7 @@ export type BasicIndexFields = {
 
     /**版本号信息*/
     dataV?: number
-    extV?: number
+    extV?: string
     did?: string
     /**本地删除标记*/
     deleted: boolean,
@@ -20,7 +20,9 @@ export type BasicIndexFields = {
 export type LinkPageInfo = {
     webpageKey?: string;
     source?: string
+    canonical?: string // 如果有则说明当前网址和归一化指向的网址不同，用于多个URL映射到同一个网页的指向标准。
     sessionId?: string;
+    domain?: string;
 }
 
 type CommonModelInfo = BasicIndexFields & LinkPageInfo;
@@ -32,6 +34,7 @@ export type WebPage = Omit<CommonModelInfo, 'webpageKey'>  & {
     source?: string,
     canonical?: string // 同一文档标识地址
     urls?: string[], // 此条数据绑定的 URL 集合
+    /**@deprecated use source instead*/
     url: string
     pathname: string
     domain: string  // 域名
@@ -204,6 +207,8 @@ export type SnapshotResource = CommonModelInfo & {
     pageKey: string // 关联的网页key
     /**@deprecated*/
     pageUrl: string // 关联的网页url
+    /**@deprecated*/
+    domain?: string
     type?: string
 }
 
