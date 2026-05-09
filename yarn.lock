@@ -725,9 +725,9 @@
     "@babel/helper-plugin-utils" "^7.28.6"
 
 "@babel/plugin-transform-modules-systemjs@^7.29.0":
-  version "7.29.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.29.0.tgz#e458a95a17807c415924106a3ff188a3b8dee964"
-  integrity sha512-PrujnVFbOdUpw4UHiVwKvKRLMMic8+eC0CuNlxjsyZUiBjhFdPsewdXCkveh2KqBA9/waD0W1b4hXSOBQJezpQ==
+  version "7.29.4"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.29.4.tgz#f621105da99919c15cf4bde6fcc7346ef95e7b20"
+  integrity sha512-N7QmZ0xRZfjHOfZeQLJjwgX2zS9pdGHSVl/cjSGlo4dXMqvurfxXDMKY4RqEKzPozV78VMcd0lxyG13mlbKc4w==
   dependencies:
     "@babel/helper-module-transforms" "^7.28.6"
     "@babel/helper-plugin-utils" "^7.28.6"
@@ -3530,12 +3530,31 @@
     lodash "^4.17.21"
     marked "^11.2.0"
 
+"@pagenote/actions@latest":
+  version "0.1.7-dev.0"
+  resolved "https://registry.yarnpkg.com/@pagenote/actions/-/actions-0.1.7-dev.0.tgz#22e5859a4d9df197086f11e04b15ab3f4913dadd"
+  integrity sha512-fowfXrXd1tHSgXbFA3xcumdp1rPiWbh5azUKerqbzkttyg6VLy3wFdLcOYubhqtaYQR/cYUGSjuhx2VJnDikug==
+  dependencies:
+    dayjs "^1.11.10"
+    expr-eval "^2.0.2"
+    handlebars "^4.7.8"
+    js-yaml "4.1.1"
+    lodash "4.17.23"
+    marked "^11.2.0"
+
 "@pagenote/bridge@^1.0.18-next.0", "@pagenote/bridge@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@pagenote/bridge/-/bridge-1.1.1.tgz#812e89d11982bb2dcf199ae39aa5bcd0c4acb6de"
   integrity sha512-nR4tEW6evqYKJhDlhaCPCmUNOy8AWvxCvdTMyOOlTPw/BdC+PK2K4t6oaTdTfHLlolTjpdgHgfTeYG0dlpAAXw==
 
-"@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.36-next.0", "@pagenote/shared@^1.14.36-next.1", "@pagenote/shared@^1.14.40-next.0":
+"@pagenote/bridge@^1.1.4-dev.0", "@pagenote/bridge@latest":
+  version "1.1.4-dev.0"
+  resolved "https://registry.yarnpkg.com/@pagenote/bridge/-/bridge-1.1.4-dev.0.tgz#7d1c706c1fdfdb7e9e1b35bda5fe547b86fe1bea"
+  integrity sha512-4G3tcqyejY4ndhcGaHLFjIWkhm0J6fDeMEI+XXQjA1aorWlIakwX8ZqW0g81agSA/svfU9fH0+V4bCNndijj5Q==
+  dependencies:
+    "@types/chrome" "0.0.256"
+
+"@pagenote/shared@^1.14.28-next.0", "@pagenote/shared@^1.14.36-next.0", "@pagenote/shared@^1.14.36-next.1":
   version "1.14.40"
   resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.14.40.tgz#b1c804431d03c032d822568045462a53176abc9e"
   integrity sha512-ybTwfKQpvxgLR3eKmTK1UMGkDcP95kINn0sspO+MdddhZYUvKPvAHukxOYGmpw2HGXjZr5x22lgMHmWqAIfmjg==
@@ -3543,6 +3562,17 @@
     "@pagenote/bridge" "^1.1.1"
     colord "^2.9.3"
     lodash "^4.17.21"
+    md5 "^2.3.0"
+    mustache "^4.2.0"
+
+"@pagenote/shared@latest":
+  version "1.15.1-dev.2"
+  resolved "https://registry.yarnpkg.com/@pagenote/shared/-/shared-1.15.1-dev.2.tgz#33f9e431dcc360885cc1e9466be6cbd04d841e77"
+  integrity sha512-G8sa+B0xt7Y3gjKg1SHqoDtne59qliaZNGGIT7XXusQZGwkRAvTyyc4JXWlVSAJuGXNxMq1ZNYstDRmAVFbsYg==
+  dependencies:
+    "@pagenote/bridge" "^1.1.4-dev.0"
+    colord "^2.9.3"
+    lodash "^4.17.23"
     md5 "^2.3.0"
     mustache "^4.2.0"
 
