@@ -132,8 +132,6 @@ export namespace setting {
 
     // 可在各端同步的设置
     export type COMMON_SDK_SETTING =  {
-        /**@deprecated*/
-        lastModified?: number, // TODO 删除
         brushes: Brush[],
         // TODO 删除 提取至一级目录下
         /**@deprecated*/
@@ -146,9 +144,7 @@ export namespace setting {
         convertMethods?: ConvertMethod[], // TODO 删除
         /**@deprecated*/
         showBarTimeout?: number,
-        /**@deprecated*/
         keyupTimeout?: number,
-        enableShortcuts?: boolean
     }
 
     export type SDK_SETTING = Inner_Setting & COMMON_SDK_SETTING
@@ -299,17 +295,14 @@ export namespace developer {
         ERROR = 'error',
     }
 
-    export interface LogInfo<T = any> {
+    export interface LogInfo{
         id?: string;
         createAt: number,
         level: LogLevel | string,
+
         namespace: string,
-        stack?: string,  // TODO 删除
-        meta?: T, // TODO 删除
-        version: string
-        json?: Record<string, any>
         message?: string,
-        tag?: 'remove' | 'add' | 'action' | string
+        data?: any
     }
 
     export interface Permission {

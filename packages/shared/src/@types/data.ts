@@ -20,6 +20,7 @@ export enum BackupVersion {
 
     version9 = 9, // 用于压缩包的导出类型
     version10 = 10, // 导出html、jepg 图片和索引文件
+    version11 = 11, // 支持 csv 数据格式
 }
 
 export enum AnnotationStatus {
@@ -464,7 +465,7 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
-    version?: BackupVersion,
+    version?: BackupVersion | number,
     extension_version?: string,
     backup_at?: number,
     // @deprecated
@@ -488,7 +489,7 @@ export type BackupData = {
     notes?: Partial<Note>[]
     // @deprecated
     htmlList?: Partial<OfflineHTML>[]
-
+    // 多个库，多条数据
     items: {
         db: string
         table: string
