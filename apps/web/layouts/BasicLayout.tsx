@@ -14,6 +14,7 @@ export default function BasicLayout(
     title?: string
     description?: string
     full?: boolean
+    robots?: string
   }>
 ) {
     // const { resolvedTheme, setTheme } = useTheme();
@@ -32,7 +33,7 @@ export default function BasicLayout(
         <>
           <Head>
             <title>{meta.title}</title>
-            <meta name="robots" content="follow, index" />
+            <meta name="robots" content={props.robots || 'follow, index'} />
             <meta content={meta.description} name="description" />
             <meta
               name={'keywords'}

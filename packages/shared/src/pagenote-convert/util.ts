@@ -1,6 +1,6 @@
-import {WebPage} from "../@types/data";
 import {PredefinedSchema, predefinedSchemaMap} from "./predefined";
 import mustache from "mustache";
+import {WebPage} from "../@types";
 
 export const convertDataToString = function(data: WebPage,schema=predefinedSchemaMap[PredefinedSchema.markdown]): string{
     let result = '';

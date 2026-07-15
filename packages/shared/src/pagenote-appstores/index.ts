@@ -34,7 +34,7 @@ export const appstoreInfos: Record<APP_STORES, AppStoreInfo> ={
     chrome:{
         id: "hpekbddiphlmlfjebppjhemobaopekmp",
         name: "Chrome浏览器",
-        installUrl: "https://chrome.google.com/webstore/detail/pagenotehighlight-and-tak/hpekbddiphlmlfjebppjhemobaopekmp"
+        installUrl: "https://chromewebstore.google.com/detail/pagenote/hpekbddiphlmlfjebppjhemobaopekmp"
     },
     edge: {
         id: "ablhdlecfphodoohfacojdngdfkgneaa",

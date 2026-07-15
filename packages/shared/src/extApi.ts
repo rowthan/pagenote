@@ -1,4 +1,4 @@
-import type {BackupData, ContentType, Step, WebPage,} from "./@types/data";
+import type {BackupData,} from "./@types/data";
 import type {Find, FindResponse, Projection, Query} from "./@types/database";
 import type {
     BaseMessageHeader,
@@ -10,6 +10,7 @@ import type {Action} from "./pagenote-actions/@types";
 import type {ConvertMethod} from "./pagenote-convert";
 import type {Brush} from "./pagenote-brush";
 import type {BrowserType} from "./utils/browser";
+import {Light, OfflineHTML, WebPage} from "./@types";
 
 type AbstractInfo = {
     id: string // 唯一标识，本地、远程联系的唯一ID
@@ -70,7 +71,7 @@ export namespace lightpage {
     export const id = 'lightpage';
 
     type PartWebpage = Partial<WebPage>
-    type PartStep = Partial<Step>
+    type PartLight = Partial<Light>
 
     export type ExportFilters = {
         db: string
@@ -131,19 +132,19 @@ export namespace setting {
 
     // 可在各端同步的设置
     export type COMMON_SDK_SETTING =  {
-        lastModified?: number, // TODO 删除
         brushes: Brush[],
-
         // TODO 删除 提取至一级目录下
+        /**@deprecated*/
         actions: Action[],
+        /**@deprecated*/
         disableList?: string[],
         /**@deprecated*/
         controlC?: boolean,
         /**@deprecated*/
         convertMethods?: ConvertMethod[], // TODO 删除
-
-        showBarTimeout: number,
-        keyupTimeout: number,
+        /**@deprecated*/
+        showBarTimeout?: number,
+        keyupTimeout?: number,
     }
 
     export type SDK_SETTING = Inner_Setting & COMMON_SDK_SETTING
@@ -294,17 +295,14 @@ export namespace developer {
         ERROR = 'error',
     }
 
-    export interface LogInfo<T = any> {
+    export interface LogInfo{
         id?: string;
         createAt: number,
         level: LogLevel | string,
+
         namespace: string,
-        stack?: string,  // TODO 删除
-        meta?: T, // TODO 删除
-        version: string
-        json?: Record<string, any>
         message?: string,
-        tag?: 'remove' | 'add' | 'action' | string
+        data?: any
     }
 
     export interface Permission {
@@ -618,42 +616,11 @@ export namespace config {
 //
 // export namespace light {
 //     export const id = 'light';
-//     export type response = TableAPI<Step>
+//     export type response = TableAPI<Light>
 //     export type request = ComputeRequestToBackground<response>
 // }
 
 export namespace html {
-    export type OfflineHTML = {
-        dataVersion: number, // 数据格式版本标识 1: 已将重要property 写入 html meta 中
-        resourceId?: string, // 插件本地获取该资源的唯一标识
-
-        name?: string, // 文件名
-
-        description?: string
-
-        icon?: string // 图标
-
-        originUrl: string // 原始资源对应的链接地址，可能会无法访问的资源
-        onlineUri?: string // 可联网被访问的链接；可能是基于 originUrl 处理上传云盘、图床的二次生成链接。相对稳定的资源。
-
-        contentType?: ContentType, // 文件类型
-        // contentLength?: number, // 资源size
-        lastModified?: string,
-        ETag?: string,
-        data: string, // 资源内容，只支持字符串存储，不支持二进制数据
-
-        relatedPageKey?: string, //关联的网页key
-        relatedPageUrl?: string // 关联的网址
-
-        deleted: boolean,
-        // size?: number
-        domain?: string
-        thumb?: string // 快照缩略图
-        // 数据资源的存储时间信息
-        visitedAt?: number // 资源访问最后时间
-        createAt?: number,
-        updateAt: number
-    }
     export const id = 'html';
 }
 
@@ -683,7 +650,6 @@ export namespace snapshot {
 
 // 前端页面作为服务端的请求集合
 export namespace frontApi {
-    type OfflineHTML = html.OfflineHTML;
     export const id = 'front-server'
 
     export type TabStat = {

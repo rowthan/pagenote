@@ -29,3 +29,7 @@ npm run build-ext
 * [组件库 shadcn](https://ui.shadcn.com/)
 * [图标库1](https://www.radix-ui.com/icons)
 * [图标库2](https://react-icons.github.io/react-icons/search?q=link)
+
+## 卸载反馈页
+
+`/uninstall` 的 Tally、Umami 和插件侧卸载 URL 接入方式见 [UNINSTALL.md](./UNINSTALL.md)。

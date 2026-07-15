@@ -1,7 +1,7 @@
 import {LightStatus, LightType} from "../pagenote-brush";
-import {box, html} from "../extApi";
+import {box} from "../extApi";
 import {Query} from "./database";
-type OfflineHTML = html.OfflineHTML;
+import {OfflineHTML} from "./Model";
 type Box = box.Box;
 type BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
@@ -19,6 +19,8 @@ export enum BackupVersion {
     version8 = 8, // 仅导出 items ，删除一级备份字段
 
     version9 = 9, // 用于压缩包的导出类型
+    version10 = 10, // 导出html、jepg 图片和索引文件
+    version11 = 11, // 支持 csv 数据格式
 }
 
 export enum AnnotationStatus {
@@ -33,7 +35,7 @@ type Target = Step & {
     clientY: number,
 }
 
-enum AnnotationShowType {
+export enum AnnotationShowType {
     float=1, // 浮动
     inject=2 // 嵌入式
 }
@@ -53,7 +55,8 @@ export type Selection = {
     focusOffset?: number;
 }
 
-export type Step = {
+/**@deprecated*/
+export type Step =  {
     key: string // 标记的全局唯一ID
     wid?: string // whats-element id
     /**工作组，可共享的范围*/
@@ -69,16 +72,22 @@ export type Step = {
     // TODO 使用 wid 全面替换 ID
     id?: string, // 标记的元素节点，在文档中唯一标识符，取值参考 whats-element
     tip?: string, // 标记的笔记（用户输入）
-    /**标记背景色，统一使用十六进制*/
+    /**标记背景色*/
     bg?: string,
+    /**前景色*/
+    color?: string
     /**@deprecated*/
     isActive?: boolean, // 是否为激活状态
     /**@deprecated*/
     lightStatus?: LightStatus // 高亮状态
-    /**@deprecated*/
     annotationStatus?: AnnotationStatus,
-    /**@deprecated*/
     annotationShowType?: AnnotationShowType,
+    /**批注信息*/
+    annotationW?: number
+    annotationH?: number
+    annotationX?: number
+    annotationY?: number
+
     lightType?: LightType | string, // 画笔类型，删除线、高亮
     level?: number, // 高亮层级
 
@@ -93,7 +102,7 @@ export type Step = {
     imgSrc?: string
     /**@deprecated*/
     images?: { id?: string, src?: string, alt?: string }[], // 图片高亮，待支持
-
+    alt?: string;
     //兄弟、父节点上下文信息
     // next?: string,
     // prev?: string,
@@ -152,9 +161,9 @@ export type Step = {
     matchUrls?: string[]
     hash?: string
     v?: number // 数据版本
-} & LinkRule<Step>
+}
 
-export type Light = Step;
+type Light = Step;
 
 type Position = {
     x:number,
@@ -162,6 +171,7 @@ type Position = {
 }
 
 /**
+ * @deprecated
  * 数据结构
  * webpage
  *  -light
@@ -171,43 +181,31 @@ type Position = {
  *  -box
  *  -bookmark
  * */
-export type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind;
+type WebPage = WebPageIds & WebPageTimes & WebPageLinkedData & WebPageSiteInfo & RouteInfo & ExtraBind;
+
 
 interface WebBasicInfo {
     // URL 组成部分,完整的URL
     url: string
-    /**
-     * @deprecated  path 路径，不含origin
-     * */
-    path: string
-
     pathname: string
-    // 带 origin 的U path
-    urlPath: string
     // 域名
     domain: string
     // search 参数
     urlSearch?: string
     // url hash
     urlHash?: string
-
     title: string
     keywords?: string[]
+    images?: string[]
 }
 
 // webpage 的索引ID
 type WebPageIds = WebBasicInfo & {
     key: string, // 此数据的唯一标识符，一般为 URL，但也可能是hash值
-    sessionId?: string,
-    /**@deprecated*/
+    source?: string,
+    canonical?: string // 同一文档标识地址
     urls?: string[], // 此条数据绑定的 URL 集合
-    pageType?: PAGE_TYPES | string
     did?: string
-}
-
-export enum PAGE_TYPES {
-    file= 'file',
-    http= 'http'
 }
 
 type WebPageTimes = {
@@ -269,7 +267,7 @@ export enum MetaResourceType {
     html='html',
 }
 
-export type SnapshotResource = {
+type SnapshotResource = {
     key: string, // 唯一标识符，md5 生成
     /**@deprecated*/
     resourceKey?: string // 映射 source 的ID
@@ -339,10 +337,11 @@ type WebPageSiteInfo = {
 
     domain: string,
     path: string, // 路由path
+    source?: string;
 }
 
 // 笔记富文本结构
-export type Note = WebBasicInfo  & {
+ type Note = WebBasicInfo  & {
     // 唯一ID
     key: string;
     // 笔记的数据存储形式
@@ -414,19 +413,7 @@ export type FeatureItem = {
  * 2. 数据库查询出的结果，再次根据 $match 进行匹配
  * */
 
-export interface LinkRule<T> {
-    // 关联特征表ID，当前数据的外链匹配管理
-    // $links?: string[]
 
-    //@deprecated 匹配规则，不使用外键 $links 的情况下使用。存储至原始表，不利于查询（源数据量较大时）
-    // $match?: 0 | Query<Omit<T, '$match'| keyof MongoLikeQueryValue>>
-}
-
-
-
-
-
-type AllowUpdateKeys = keyof  WebPageLinkedData | keyof  WebPageSiteInfo | keyof RouteInfo | 'url' | 'urls'
 
 // 数据的存储形式，blob二进制文件或字符串文件
 export type FileData = Blob | string
@@ -478,7 +465,7 @@ export enum BackupDataType {
 }
 
 export type BackupData = {
-    version?: BackupVersion,
+    version?: BackupVersion | number,
     extension_version?: string,
     backup_at?: number,
     // @deprecated
@@ -502,7 +489,7 @@ export type BackupData = {
     notes?: Partial<Note>[]
     // @deprecated
     htmlList?: Partial<OfflineHTML>[]
-
+    // 多个库，多条数据
     items: {
         db: string
         table: string
@@ -513,5 +500,4 @@ export type BackupData = {
 export type {
     Position,
     Target,
-    AllowUpdateKeys,
 }
