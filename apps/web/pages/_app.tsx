@@ -1,7 +1,7 @@
 import '../styles/globals.scss'
 import '../styles/ext.scss'
 import type { AppProps } from 'next/app'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics, type BeforeSendEvent } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import Script from 'next/script'
 import { basePath, isDev, isExt } from 'const/env'
@@ -15,6 +15,24 @@ import 'react-notion-x/src/styles.css'
 
 // 运行在客户端
 function ClientApp({ Component, pageProps }: AppProps) {
+    useEffect(() => {
+        if (!isDev || !('serviceWorker' in navigator)) {
+            return
+        }
+
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => registration.unregister())
+        })
+
+        if ('caches' in window) {
+            Promise.all([
+                caches.delete('document'),
+                caches.delete('pre_cache'),
+                caches.delete('common_cache'),
+            ])
+        }
+    }, [])
+
     useEffect(() => {
         const sessionBridge = getSessionStorageBridge('document',{
             asServer: true,
@@ -42,11 +60,27 @@ function ClientApp({ Component, pageProps }: AppProps) {
         <title>{TDK.common.title}</title>
       </Head>
       {!isExt && !isDev && <SpeedInsights />}
-      {!isExt && !isDev && <Analytics />}
+      {!isExt && !isDev && (
+        <Analytics
+          beforeSend={(event: BeforeSendEvent) => {
+            try {
+              const url = new URL(event.url)
+              if (url.pathname === '/uninstall') {
+                return { ...event, url: `${url.origin}${url.pathname}` }
+              }
+            } catch {
+              if (event.url.startsWith('/uninstall')) {
+                return { ...event, url: '/uninstall' }
+              }
+            }
+            return event
+          }}
+        />
+      )}
       <Component {...pageProps} />
       <Script src={`${basePath}/components.js`} />
       <Script src={`${basePath}/lib/aliyun-oss-sdk.min.js`} />
-      {!isExt && <Script src={`/worker-register.js`} />}
+      {!isExt && !isDev && <Script src={`/worker-register.js`} />}
       <Toaster />
     </StrictMode>
   )

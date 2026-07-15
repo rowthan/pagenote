@@ -2,10 +2,16 @@ function registerMain() {
     navigator.serviceWorker
         .register('/sw.js')
         .then(function (registration) {
-            // 方法尝试更新service worker
-            registration.update().then(function () {
+            // 等待 active worker 后再发送配置，避免首次注册时 controller 为空。
+            return registration.update().then(function () {
+                return navigator.serviceWorker.ready
+            }).then(function (readyRegistration) {
+                var worker = readyRegistration.active
+                if (!worker) {
+                    return
+                }
                 console.log('Service worker updated.');
-                navigator.serviceWorker.controller.postMessage({
+                worker.postMessage({
                     type: 'add_cache',
                     key: 'document',
                     values: [
@@ -13,11 +19,12 @@ function registerMain() {
                     ]
                 })
 
-                navigator.serviceWorker.controller.postMessage({
+                worker.postMessage({
                     type: 'add_block',
                     values: [
                         "localhost",
                         "worker-register.js",
+                        "/uninstall",
                         "/expired",
                         "/signin",
                         "/release",
