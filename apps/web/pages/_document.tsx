@@ -32,7 +32,7 @@ export default function Document() {
           media="(prefers-color-scheme: dark)"
           content="#4e88e5"
         />
-        <meta property="og:image" content="/images/og.svg" />
+        <meta property="og:image" content="/images/og.png" />
       </Head>
       <body>
         <Main />
