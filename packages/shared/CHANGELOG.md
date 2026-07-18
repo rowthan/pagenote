@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.1-dev.5](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.15.1-dev.4...@pagenote/shared@1.15.1-dev.5) (2026-07-18)
+
+**Note:** Version bump only for package @pagenote/shared
+
+
+
+
+
 ## [1.15.1-dev.4](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.15.1-dev.3...@pagenote/shared@1.15.1-dev.4) (2026-07-15)
 
 
