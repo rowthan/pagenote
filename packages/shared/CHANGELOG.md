@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.1-dev.4](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.15.1-dev.3...@pagenote/shared@1.15.1-dev.4) (2026-07-15)
+
+
+### Features
+
+* uninstall form ([7fb7922](https://github.com/rowthan/pagenote/commit/7fb7922448461f86957f0268ef143bf6fa2250bd))
+
+
+
+
+
 ## [1.15.1-dev.3](https://github.com/rowthan/pagenote/compare/@pagenote/shared@1.15.1-dev.2...@pagenote/shared@1.15.1-dev.3) (2026-05-18)
 
 **Note:** Version bump only for package @pagenote/shared
