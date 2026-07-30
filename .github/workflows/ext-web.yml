@@ -42,7 +42,7 @@ jobs:
       - name: Yarn install
         run: yarn install
       - name: build web
-        run: build
+        run: yarn build
 
 #      - name: build ext-web
 #        run: |
@@ -67,5 +67,4 @@ jobs:
 #          name: ext-web
 #          path: apps/web/out
 #          retention-days: 5
-
 
