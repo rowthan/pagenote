@@ -73,7 +73,7 @@ extenstion/dist/scripts
 dist/pagenote.js.LICENSE.txt
 
 .idea
-docs
+/docs/
 /web/out/
 **/node_modules.nosync/*
 .temp
