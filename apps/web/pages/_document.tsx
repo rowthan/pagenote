@@ -4,21 +4,7 @@ export default function Document() {
   return (
     <Html lang="zh">
       <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;400;700&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          rel="shortcut icon"
-          href="https://pagenote.cn/favicon.ico"
-          type="image/x-icon"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin={'anonymous'}
-        />
+        <link rel="icon" href="/brand/pagenote-icon.png" type="image/png" />
         <meta name="color-scheme" content="dark light" />
         {/*<link rel="manifest" href="/manifest.json" />*/}
         <meta name="theme-color" content="#4e88e5" />
@@ -32,7 +18,6 @@ export default function Document() {
           media="(prefers-color-scheme: dark)"
           content="#4e88e5"
         />
-        <meta property="og:image" content="/images/og.svg" />
       </Head>
       <body>
         <Main />

@@ -1,0 +1,172 @@
+.home {
+  --ink: #15171b;
+  --muted: #68707a;
+  --line: #e5e7eb;
+  --paper: #fcfbf8;
+  --surface: #ffffff;
+  --blue: #315ef4;
+  --blue-soft: #eef3ff;
+  --yellow: #f5d95b;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+}
+
+.home a, .home button { -webkit-tap-highlight-color: transparent; }
+.home a:focus-visible, .home button:focus-visible, .home summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.nav { max-width: 1240px; height: 76px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.logo img { width: 30px; height: 30px; border-radius: 8px; }
+.logo strong { font-size: 14px; font-weight: 800; letter-spacing: .14em; }
+.navLinks { display: flex; align-items: center; gap: 30px; margin-left: 100px; }
+.navLinks a, .footerLinks a { color: #59616b; font-size: 13px; text-decoration: none; transition: color 180ms ease; }
+.navLinks a:hover, .footerLinks a:hover { color: var(--blue); }
+
+.installCta { position: relative; width: fit-content; }
+.installCtaMain { display: flex; min-height: 48px; }
+.installCtaPrimary, .installCtaToggle { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid var(--ink); color: white; background: var(--blue); font-size: 14px; font-weight: 700; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease; }
+.installCtaPrimary { min-width: 194px; padding: 13px 17px; border-radius: 8px 0 0 8px; }
+.installCtaToggle { width: 45px; padding: 0; border-left: 0; border-radius: 0 8px 8px 0; cursor: pointer; }
+.installCtaPrimary:hover, .installCtaToggle:hover { background: #214bd5; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.installCtaHint { display: flex; align-items: center; gap: 6px; margin-top: 13px; color: #747c85; font-size: 12px; }
+.installCtaHint svg { color: var(--blue); }
+.installCtaCompact .installCtaPrimary { min-width: 148px; min-height: 42px; padding: 10px 13px; font-size: 12px; }
+.installCtaCompact .installCtaToggle { width: 38px; min-height: 42px; }
+.installCtaCompact .installCtaHint { display: none; }
+.installCtaMenu { position: absolute; z-index: 10; top: calc(100% + 13px); right: 0; width: 230px; padding: 7px; border: 1px solid var(--ink); border-radius: 10px; background: var(--surface); box-shadow: 5px 5px 0 var(--ink); }
+.installCtaMenu a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 11px; border-radius: 6px; color: var(--ink); font-size: 13px; text-decoration: none; }
+.installCtaMenu a:hover { background: var(--blue-soft); color: var(--blue); }
+
+.hero { max-width: 1240px; min-height: 655px; margin: 0 auto; padding: 74px 32px 92px; display: grid; grid-template-columns: .82fr 1.18fr; align-items: center; gap: 54px; }
+.eyebrow, .sectionLabel { color: #737b85; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow { display: flex; align-items: center; gap: 8px; }
+.eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 5px #e3eaff; }
+.hero h1 { max-width: 620px; margin: 25px 0 22px; font-size: clamp(50px, 5.8vw, 80px); font-weight: 800; letter-spacing: -.075em; line-height: 1.02; }
+.hero h1 em, .workflow h2 em, .featuresSection h2 em, .localFirst h2 em, .faqHeading h2 em, .finalCta h2 em { position: relative; font-style: normal; font-weight: inherit; }
+.hero h1 em::after, .workflow h2 em::after, .featuresSection h2 em::after, .localFirst h2 em::after, .faqHeading h2 em::after, .finalCta h2 em::after { content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: .06em; height: .19em; background: var(--yellow); transform: rotate(-1deg); }
+.heroLead { max-width: 410px; margin: 0 0 30px; color: var(--muted); font-size: 16px; line-height: 1.85; }
+.trustRow { display: flex; flex-wrap: wrap; gap: 17px; margin-top: 22px; color: #7d858d; font-size: 12px; }
+.trustRow span { display: inline-flex; align-items: center; gap: 6px; }
+.trustRow svg { color: var(--blue); }
+
+.heroVisual { overflow: hidden; width: 100%; margin: 0; border: 1px solid #d8dce2; border-radius: 14px; background: #edf4ff; box-shadow: 18px 18px 0 #dbe2ef; }
+.heroVisual img { display: block; width: 100%; height: auto; }
+
+.preview { overflow: hidden; width: 100%; border: 1px solid #d8dce2; border-radius: 12px; background: var(--surface); box-shadow: 18px 18px 0 #e7e9ee; }
+.previewChrome { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 15px; border-bottom: 1px solid var(--line); color: #9199a1; font-size: 11px; }
+.previewChrome > span { width: 8px; height: 8px; border-radius: 50%; background: #d2d6dc; }
+.previewAddress { flex: 1; max-width: 360px; margin-left: 13px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; color: #89919a; }
+.previewChrome > svg { margin-left: auto; }
+.previewBody { display: grid; grid-template-columns: 1.23fr .77fr; min-height: 390px; }
+.previewArticle { position: relative; padding: 48px 44px; }
+.previewKicker { color: #a0a7ae; font-size: 9px; font-weight: 800; letter-spacing: .14em; }
+.previewArticle h2 { max-width: 380px; margin: 16px 0 12px; font-family: Georgia, serif; font-size: clamp(25px, 3vw, 37px); font-weight: 400; letter-spacing: -.045em; line-height: 1.08; }
+.previewMeta { max-width: 290px; margin: 0; color: #9aa1a8; font-size: 11px; line-height: 1.6; }
+.previewRule { height: 1px; margin: 28px 0 23px; background: var(--line); }
+.previewArticle > p:not(.previewMeta) { max-width: 330px; color: #66707a; font-family: Georgia, serif; font-size: 13px; line-height: 1.8; }
+.previewArticle mark { position: absolute; right: 30px; bottom: 76px; padding: 2px 5px; color: #1d2c62; background: var(--yellow); font-family: Georgia, serif; font-size: 11px; }
+.previewNotes { padding: 30px 24px; border-left: 1px solid var(--line); background: #f7f8fa; }
+.previewNotesHeader { display: flex; align-items: center; gap: 9px; color: #7a828b; font-size: 11px; font-weight: 700; }
+.previewNotesHeader b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; color: white; background: var(--blue); font-family: Georgia, serif; }
+.previewNotesHeader svg { margin-left: auto; }
+.previewNoteCard { margin-top: 32px; padding: 17px; border: 1px solid #dfe3e9; border-left: 3px solid var(--yellow); border-radius: 7px; background: white; }
+.previewNoteCard span { color: #89919a; font-size: 9px; text-transform: uppercase; }
+.previewNoteCard p { margin: 12px 0 14px; color: #3e4650; font-size: 13px; line-height: 1.65; }
+.previewNoteCard small { padding: 5px 7px; border-radius: 4px; color: var(--blue); background: var(--blue-soft); font-size: 10px; }
+.previewNoteFooter { display: flex; justify-content: space-between; margin-top: 25px; color: #9299a1; font-size: 10px; }
+
+.strip { display: flex; align-items: center; justify-content: center; gap: 22px; padding: 21px 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #727a84; font-size: 12px; font-weight: 650; }
+.strip i { width: 4px; height: 4px; border-radius: 50%; background: var(--yellow); }
+.workflow, .localFirst, .faqSection, .featuresSection { max-width: 1176px; margin: 0 auto; }
+.workflow { padding: 120px 32px 124px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; }
+.workflow h2, .featuresSection h2, .localFirst h2, .faqHeading h2, .finalCta h2 { margin: 18px 0 0; font-size: clamp(38px, 5vw, 62px); font-weight: 800; letter-spacing: -.065em; line-height: 1.06; }
+.workflow ol { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.workflow li { display: grid; grid-template-columns: 45px 135px 1fr; align-items: baseline; gap: 10px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.workflow li b { color: var(--blue); font-family: Georgia, serif; font-size: 13px; }
+.workflow li span { font-size: 20px; font-weight: 700; }
+.workflow li small { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.featuresSection { padding: 24px 32px 124px; }
+.sectionIntro { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+.inlineLink { display: inline-flex; align-items: center; gap: 8px; color: var(--blue); font-size: 13px; font-weight: 700; text-decoration: none; }
+.inlineLink:hover { text-decoration: underline; text-underline-offset: 4px; }
+.featureGrid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+.featureCard { min-height: 230px; padding: 25px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); transition: background 180ms ease, transform 180ms ease; }
+.featureCard:hover { background: var(--blue-soft); transform: translateY(-3px); }
+.featureTop { display: flex; align-items: center; justify-content: space-between; color: var(--blue); }
+.featureTop span { font-family: Georgia, serif; font-size: 14px; }
+.featureTop svg { font-size: 20px; }
+.featureCard h3 { margin: 43px 0 10px; font-size: 19px; letter-spacing: -.025em; }
+.featureCard p { max-width: 250px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+.productGallery { max-width: 1176px; margin: 0 auto; padding: 0 32px 124px; }
+.galleryHeading { margin-bottom: 42px; }.galleryHeading h2 { margin: 18px 0 0; font-size: clamp(38px, 5vw, 62px); font-weight: 800; letter-spacing: -.065em; line-height: 1.06; }.galleryHeading h2 em { position: relative; z-index: 1; font-style: normal; }.galleryHeading h2 em::after { content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: .06em; height: .19em; background: var(--yellow); transform: rotate(-1deg); }
+.galleryGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }.galleryCard { overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }.galleryCard img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--line); }.galleryCard div { padding: 17px 18px 19px; }.galleryCard h3 { margin: 0 0 6px; font-size: 16px; }.galleryCard p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.localFirst { padding: 72px 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.localCopy { align-self: end; max-width: 420px; }
+.localCopy p { margin: 0 0 22px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+.faqSection { padding: 124px 32px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; }
+.faqHeading .inlineLink { margin-top: 28px; }
+.faqList details { border-top: 1px solid var(--line); }
+.faqList details:last-child { border-bottom: 1px solid var(--line); }
+.faqList summary { display: flex; align-items: center; justify-content: space-between; min-height: 64px; cursor: pointer; font-size: 15px; font-weight: 700; list-style: none; }
+.faqList summary::-webkit-details-marker { display: none; }
+.faqList summary span { color: var(--blue); font-size: 22px; font-weight: 400; }
+.faqList details[open] summary span { transform: rotate(45deg); }
+.faqList details p { max-width: 620px; margin: 0 0 22px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.finalCta { display: flex; flex-direction: column; align-items: center; padding: 118px 24px 130px; text-align: center; background: var(--blue-soft); }
+.finalCta h2 { margin-bottom: 34px; }
+.finalCta h2 em::after { z-index: 0; background: var(--yellow); }
+.finalCta h2 em { z-index: 1; }
+.footer { max-width: 1176px; margin: 0 auto; padding: 34px 32px 45px; display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; }
+.footer p { margin: 12px 0 0; color: #89919a; font-size: 12px; }
+.footerLinks { display: flex; flex-wrap: wrap; gap: 22px; }
+
+@media (max-width: 920px) {
+  .navLinks { margin-left: 0; gap: 18px; }
+  .hero { grid-template-columns: 1fr; padding-top: 56px; }
+  .heroCopy { max-width: 620px; }
+  .heroVisual { max-width: 700px; }
+  .workflow, .faqSection { grid-template-columns: 1fr; gap: 50px; }
+  .localFirst { gap: 40px; }
+}
+@media (max-width: 680px) {
+  .nav { height: 68px; padding: 0 18px; }
+  .navLinks { display: none; }
+  .installCtaCompact .installCtaPrimary { min-width: 120px; padding: 9px 8px; font-size: 11px; }
+  .installCtaCompact .installCtaToggle { width: 32px; }
+  .hero { padding: 48px 20px 72px; gap: 44px; }
+  .hero h1 { font-size: 55px; }
+  .heroLead { font-size: 15px; }
+  .heroVisual { box-shadow: 8px 8px 0 #dbe2ef; }
+  .previewBody { grid-template-columns: 1.12fr .88fr; min-height: 300px; }
+  .previewChrome { height: 32px; padding: 0 9px; }
+  .previewAddress { margin-left: 5px; padding: 5px 7px; font-size: 8px; }
+  .previewArticle { padding: 26px 18px; }
+  .previewArticle h2 { font-size: 21px; }
+  .previewMeta { font-size: 8px; }
+  .previewArticle > p:not(.previewMeta) { font-size: 8px; }
+  .previewArticle mark { right: 10px; bottom: 52px; font-size: 7px; }
+  .previewNotes { padding: 18px 10px; }
+  .previewNoteCard { margin-top: 18px; padding: 10px; }
+  .previewNoteCard p { margin: 8px 0; font-size: 9px; }
+  .previewNoteCard small { font-size: 7px; }
+  .strip { gap: 10px; justify-content: flex-start; overflow: hidden; white-space: nowrap; }
+  .workflow, .featuresSection, .faqSection { padding: 76px 20px; }
+  .workflow li { grid-template-columns: 32px 75px 1fr; gap: 4px; }
+  .workflow li span { font-size: 16px; }
+  .workflow li small { font-size: 12px; }
+  .sectionIntro { display: block; margin-bottom: 34px; }
+  .sectionIntro .inlineLink { margin-top: 24px; }
+  .featureGrid { grid-template-columns: 1fr; }
+  .featureCard { min-height: 195px; }
+  .featureCard h3 { margin-top: 30px; }
+  .productGallery { padding: 0 20px 76px; }.galleryGrid { grid-template-columns: 1fr; }.galleryCard img { aspect-ratio: 16 / 8; }
+  .localFirst { padding: 60px 20px; grid-template-columns: 1fr; gap: 26px; }
+  .faqList summary { min-height: 58px; font-size: 14px; }
+  .finalCta { padding: 86px 20px 94px; }
+  .footer { align-items: flex-start; flex-direction: column; padding: 30px 20px 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .installCtaPrimary, .installCtaToggle, .featureCard { transition: none; }
+}

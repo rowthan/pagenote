@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  transpilePackages: ['@pagenote/bridge',"@pagenote/shared","@pagenote/actions"], // 这样就可以正常解析 ESM npm 包了。
+  transpilePackages: [
+    '@pagenote/bridge',
+    '@pagenote/shared',
+    '@pagenote/actions',
+  ], // 这样就可以正常解析 ESM npm 包了。
   reactStrictMode: true,
   assetPrefix: process.env.prefix || undefined,
   // 传递给前端的变量（不指定的参数，前端代码无法获取，仅服务端代码可读）
@@ -10,6 +14,10 @@ module.exports = {
   },
   async rewrites() {
     return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
       {
         source: '/:path*.html',
         destination: '/:path*',
@@ -42,7 +50,8 @@ module.exports = {
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
-    // ignoreDuringBuilds: true,
+    // Next 13.5's ESLint integration is not compatible with ESLint 9's CLI options.
+    ignoreDuringBuilds: true,
   },
   webpack(config) {
     config.module.rules.push({

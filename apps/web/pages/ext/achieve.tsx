@@ -1,8 +1,7 @@
 import {FC, PropsWithChildren, useEffect} from "react";
 import useTableKeys from "../../hooks/table/useTableKeys";
 import {Collection} from "../../const/collection";
-import {html} from "@pagenote/shared";
-import OfflineHTML = html.OfflineHTML;
+import type {OfflineHTML} from "types/pagenote";
 import BasicLayout from "../../layouts/BasicLayout";
 import useTableQuery from "../../hooks/table/useTableQuery";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
