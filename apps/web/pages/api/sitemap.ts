@@ -32,13 +32,10 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   const files = readDirectoryRecursive(path.join(process.cwd(), '.cache'))
+  const staticPaths = ['/', '/download', '/docs', '/docs/getting-started', '/docs/highlight', '/docs/organize', '/docs/backup', '/docs/privacy', '/faq', '/privacy', '/release']
+  const paths = [...new Set([...staticPaths, ...files.map((item) => item.replace(process.cwd(), '').replace('.cache/', '').replace('.json', ''))])]
   let urlList = ''
-  files.forEach(function (item) {
-    const path = item
-      .replace(process.cwd(), '')
-      .replace('.cache/', '')
-      .replace('.json', '')
-
+  paths.forEach(function (path) {
     urlList += `
         <url>
             <loc>https://pagenote.cn${path}</loc>

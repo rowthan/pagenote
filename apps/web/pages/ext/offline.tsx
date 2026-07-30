@@ -10,8 +10,7 @@ import { basePath } from 'const/env'
 import { appendCss, appendScript } from 'utils/document'
 import RedirectToExt from 'components/RedirectToExt'
 import { contentToFile } from '@pagenote/shared/utils'
-import { html } from '@pagenote/shared'
-import OfflineHTML = html.OfflineHTML
+import type { OfflineHTML } from '@pagenote/shared'
 import useTableQuery from '../../hooks/table/useTableQuery'
 import { Collection } from '../../const/collection'
 import Achieve from "./achieve";

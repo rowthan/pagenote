@@ -1,10 +1,10 @@
 export const TDK = {
   common: {
-    title: 'pagenote 一页一记，小而美的网页标记工具',
+    title: 'PAGENOTE 一页一记：小而美的网页标记、剪藏工具',
     description:
-      'pagenote 一页一记，一个小而美的网页标记工具。一款浏览器插件，支持在Firefox、Chrome、edge等浏览器中使用。',
+      'PAGENOTE（一页一记）是一款小而美的网页标记、剪藏工具，支持在网页、图片和 PDF 中高亮、批注、截图和离线存档。无需登录，轻巧高效。',
     keywords:
-      'pagenote,一页一记,小而美,标记,插件,Firefox,Chrome,Edge,官方,下载,download',
+      'PAGENOTE,一页一记,网页标记,网页剪藏,网页高亮,PDF批注,浏览器插件,Firefox,Chrome,Edge,官方,下载',
     origin: 'https://pagenote.cn',
   },
 }

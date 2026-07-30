@@ -3,15 +3,13 @@ import { ReactNode } from 'react'
 import useCurrentTab from 'hooks/useCurrentTab'
 import { toast } from 'utils/toast'
 import { basePath } from 'const/env'
-import { html } from '@pagenote/shared'
+import { OfflineHTML, SnapshotResource, Step } from '@pagenote/shared'
 import { CameraIcon, CardStackPlusIcon } from '@radix-ui/react-icons'
 import useTableQuery from 'hooks/table/useTableQuery'
-import { SnapshotResource, Step } from '@pagenote/shared'
 import DisableButton from './DisableButton'
 import KeyboardTip from '../../KeyboardTip'
 import IconButton from '../../button/IconButton'
 import { Collection } from '../../../const/collection'
-import OfflineHTML = html.OfflineHTML
 import { BiHighlight } from 'react-icons/bi'
 import useTabPagenoteState from "../../../hooks/useTabPagenoteState";
 
