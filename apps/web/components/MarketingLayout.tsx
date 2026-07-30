@@ -3,9 +3,9 @@ import Link from 'next/link'
 import BrowserInstallCta from './BrowserInstallCta'
 import styles from '../styles/marketing.module.scss'
 
-export default function MarketingLayout({ children, title, description }: { children: React.ReactNode; title: string; description: string }) {
+export default function MarketingLayout({ children, title, description, canonicalPath = '/' }: { children: React.ReactNode; title: string; description: string; canonicalPath?: string }) {
   return <>
-    <Head><title>{`${title} · PAGENOTE`}</title><meta name="description" content={description} /><meta property="og:image" content="/product/promo-marquee.png" /></Head>
+    <Head><title>{`${title} · PAGENOTE`}</title><meta name="description" content={description} /><meta property="og:title" content={`${title} · PAGENOTE`} /><meta property="og:description" content={description} /><meta property="og:image" content="https://pagenote.cn/product/promo-marquee.png" /><meta property="og:url" content={`https://pagenote.cn${canonicalPath}`} /><meta name="twitter:card" content="summary_large_image" /><link rel="canonical" href={`https://pagenote.cn${canonicalPath}`} /></Head>
     <div className={styles.shell}>
       <header className={styles.nav}>
         <Link href="/" className={styles.brand}><img src="/brand/pagenote-icon.png" alt="" /><strong>PAGENOTE</strong></Link>

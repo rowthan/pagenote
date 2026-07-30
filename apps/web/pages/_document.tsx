@@ -18,7 +18,6 @@ export default function Document() {
           media="(prefers-color-scheme: dark)"
           content="#4e88e5"
         />
-        <meta property="og:image" content="/product/promo-marquee.png" />
       </Head>
       <body>
         <Main />

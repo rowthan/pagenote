@@ -1,7 +1,7 @@
 import React, {FC, PropsWithChildren, useEffect} from "react";
 import {useRouter} from "next/router";
 import useTableQuery from "../hooks/table/useTableQuery";
-import type {OfflineHTML} from "@pagenote/shared";
+import type {OfflineHTML} from "types/pagenote";
 import {Collection} from "../const/collection";
 import extApi from "@pagenote/shared/pagenote-api";
 import useWhoAmi from "../hooks/useWhoAmi";

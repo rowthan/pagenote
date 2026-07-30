@@ -1,5 +1,5 @@
 import extApi from "@pagenote/shared/pagenote-api";
-import type {OfflineHTML} from "@pagenote/shared";
+import type {OfflineHTML} from "types/pagenote";
 import {basePath} from "../const/env";
 
 export function openHtml(id?:string,html?:string) {

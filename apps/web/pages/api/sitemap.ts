@@ -1,59 +1,31 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import fs from 'fs';
-import dayjs from 'dayjs'
-import path from 'path';
-
-function readDirectoryRecursive(directoryPath: string) {
-  const files = fs.readdirSync(directoryPath)
-  console.log(files, directoryPath)
-
-  const fileList: string[] = [];
-  files.forEach((file) => {
-    const filePath = path.join(directoryPath, file);
-    const stats = fs.statSync(filePath);
-
-    if (stats.isDirectory()) {
-      // 如果是子目录，则递归读取子目录
-      const subPaths = readDirectoryRecursive(filePath);
-      fileList.push(...subPaths);
-    } else {
-      // 如果是文件，则进行相应的操作
-      fileList.push(filePath);
-      // 这里可以对文件进行处理，例如读取文件内容等
-    }
-  });
-
-  return fileList;
-}
-
+import { generateSitemap } from '../../service/server/sitemap'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any>
+  res: NextApiResponse<string>
 ) {
-  const files = readDirectoryRecursive(path.join(process.cwd(), '.cache'))
-  const staticPaths = ['/', '/download', '/docs', '/docs/getting-started', '/docs/highlight', '/docs/organize', '/docs/backup', '/docs/privacy', '/faq', '/privacy', '/release']
-  const paths = [...new Set([...staticPaths, ...files.map((item) => item.replace(process.cwd(), '').replace('.cache/', '').replace('.json', ''))])]
-  let urlList = ''
-  paths.forEach(function (path) {
-    urlList += `
-        <url>
-            <loc>https://pagenote.cn${path}</loc>
-            <priority>1</priority>
-            <lastmod>${dayjs().format('YYYY-MM-DD')}</lastmod>
-            <changefreq>daily</changefreq>
-        </url> `
-  })
+  if (!['GET', 'HEAD'].includes(req.method || '')) {
+    res.setHeader('Allow', 'GET, HEAD')
+    res.status(405).end()
+    return
+  }
 
+  const sitemap = await generateSitemap()
 
-  const map = `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${urlList}
-  </urlset>`
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8')
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=86400'
+  )
+  res.setHeader('X-Content-Type-Options', 'nosniff')
+  res.setHeader('X-Sitemap-Entries', sitemap.count.toString())
+  res.setHeader('X-Sitemap-Source', sitemap.source)
 
-  // if(process.env.NODE_ENV === 'development'){
-  //   fs.writeFileSync('public/maps/docs.xml',map)
-  // }
+  if (req.method === 'HEAD') {
+    res.status(200).end()
+    return
+  }
 
-  return res.status(200).send(map)
+  res.status(200).send(sitemap.xml)
 }

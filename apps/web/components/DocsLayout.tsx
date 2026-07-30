@@ -6,7 +6,7 @@ import { DOCS, DOC_SECTIONS, DocEntry } from '../const/docs'
 import BrowserInstallCta from './BrowserInstallCta'
 import styles from '../styles/docs.module.scss'
 
-export default function DocsLayout({ children, activeSlug, title, description }: { children: React.ReactNode; activeSlug?: string; title: string; description?: string }) {
+export default function DocsLayout({ children, activeSlug, title, description, canonicalPath = '/docs' }: { children: React.ReactNode; activeSlug?: string; title: string; description?: string; canonicalPath?: string }) {
   const [query, setQuery] = useState('')
   const filteredDocs = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
@@ -19,6 +19,7 @@ export default function DocsLayout({ children, activeSlug, title, description }:
       <Head>
         <title>{`${title} · PAGENOTE 文档`}</title>
         <meta name="description" content={description || 'PAGENOTE 使用文档、功能指南和常见问题。'} />
+        <link rel="canonical" href={`https://pagenote.cn${canonicalPath}`} />
       </Head>
       <div className={styles.docsShell}>
         <header className={styles.docsNav}>

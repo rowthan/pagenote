@@ -36,6 +36,13 @@ export default function Home() {
         <meta property="og:title" content="PAGENOTE 一页一记：小而美的网页标记、剪藏工具" />
         <meta property="og:description" content="看到重点，顺手标记；遇到好内容，随手剪藏。" />
         <meta property="og:image" content="/product/promo-marquee.png" />
+        <meta property="og:url" content="https://pagenote.cn/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="PAGENOTE 一页一记：小而美的网页标记、剪藏工具" />
+        <meta name="twitter:description" content="看到重点，顺手标记；遇到好内容，随手剪藏。" />
+        <meta name="twitter:image" content="https://pagenote.cn/product/promo-marquee.png" />
+        <link rel="canonical" href="https://pagenote.cn/" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'PAGENOTE 一页一记', applicationCategory: 'BrowserApplication', operatingSystem: 'Chrome, Edge, Firefox', description: '小而美的网页标记、剪藏工具，支持网页、图片和 PDF 高亮、批注、截图与离线存档。', url: 'https://pagenote.cn/' }) }} />
       </Head>
       <div className={styles.home}>
         <header className={styles.nav}>

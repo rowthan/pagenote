@@ -8,7 +8,7 @@ const releases = [
 ]
 
 export default function ReleasePage() {
-  return <MarketingLayout title="更新日志" description="PAGENOTE 产品更新、功能改进和版本发布记录。">
+  return <MarketingLayout title="更新日志" canonicalPath="/release" description="PAGENOTE 产品更新、功能改进和版本发布记录。">
     <section className={styles.pageHero}><span className={styles.kicker}>RELEASE NOTES</span><h1>每一次更新，<br /><em>都让阅读更顺手。</em></h1><p>记录 PAGENOTE 的功能变化、体验改进和数据能力。</p></section>
     <section className={styles.releaseList}>{releases.map((release) => <article key={release.version} className={styles.releaseCard}><div className={styles.releaseMeta}><strong>v{release.version}</strong><span>{release.date}</span></div><div><h2>{release.title}</h2><p>{release.summary}</p>{release.image && <img src={release.image} alt={release.title} />}</div></article>)}</section>
   </MarketingLayout>
